@@ -1,0 +1,4 @@
+{
+  "printWidth": 120,
+  "ignorePatterns": [".tmp", "dist", "storybook-static", "bun.lock"]
+}

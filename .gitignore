@@ -1,0 +1,10 @@
+node_modules/
+dist/
+storybook-static/
+.tmp/
+.cache/
+.codegraph/
+.pi-subagents/
+.workspaces/
+*.sqlite-wal
+*.sqlite-shm
