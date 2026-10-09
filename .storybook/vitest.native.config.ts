@@ -7,12 +7,21 @@ import { nativeWheel } from "./nativeWheel.ts";
 
 export default defineConfig({
   cacheDir: ".cache/storybook/native-tests",
-  optimizeDeps: { include: ["@base-ui/react/dialog", "@base-ui/react/drawer", "@base-ui/react/toast", "sonner"] },
+  optimizeDeps: {
+    include: [
+      "@base-ui/react/dialog",
+      "@base-ui/react/drawer",
+      "@base-ui/react/toast",
+      "sonner",
+      "@storybook/react-vite",
+      "react-dom/client",
+    ],
+  },
   plugins: [react(), tailwindcss()],
   test: {
     name: "native-browser",
     attachmentsDir: ".tmp/native-browser-attachments",
-    include: ["src/components/__tests__/*.test.tsx"],
+    include: ["src/components/__tests__/*.test.tsx", ".storybook/__tests__/*.test.tsx"],
     browser: {
       enabled: true,
       headless: true,

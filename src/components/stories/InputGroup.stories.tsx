@@ -111,6 +111,35 @@ export const Disabled: Story = {
     await expect(input).toHaveValue("");
   },
 };
+export const DisabledInputWithAction: Story = {
+  render: function Render(args) {
+    const [details, setDetails] = useState("Choose Details to inspect the project.");
+    return (
+      <Field>
+        <InputGroup {...args}>
+          <InputGroupInput aria-label="Project code" defaultValue="AG-42" disabled />
+          <InputGroupAddon>
+            <InputGroupText>Project</InputGroupText>
+          </InputGroupAddon>
+          <InputGroupAddon align="inline-end">
+            <InputGroupButton onClick={() => setDetails("Project AG-42")}>Details</InputGroupButton>
+          </InputGroupAddon>
+        </InputGroup>
+        <output aria-label="Project details">{details}</output>
+      </Field>
+    );
+  },
+  play: async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByRole("textbox", { name: "Project code" });
+    const action = canvas.getByRole("button", { name: "Details" });
+    await expect(input).toBeDisabled();
+    await expect(input).toHaveValue("AG-42");
+    await expect(action).toBeEnabled();
+    await userEvent.click(action);
+    await expect(canvas.getByRole("status", { name: "Project details" })).toHaveTextContent("Project AG-42");
+  },
+};
 export const Invalid: Story = {
   render: (args) => (
     <Field data-invalid>

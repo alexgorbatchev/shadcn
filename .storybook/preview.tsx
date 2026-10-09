@@ -37,7 +37,11 @@ const preview: Preview = {
     docs: { container: ThemedDocsContainer },
     layout: "fullscreen",
     controls: { expanded: true },
-    a11y: { test: "off" },
+    a11y: {
+      test: "error",
+      context: "body",
+      options: { runOnly: { type: "rule", values: ["color-contrast"] } },
+    },
   },
   decorators: [
     (Story, context) => (

@@ -61,6 +61,16 @@ export const Default: Story = {
     await waitFor(() => expect(body.queryByRole("dialog")).not.toBeInTheDocument());
   },
 };
+export const Open: Story = {
+  ...Default,
+  parameters: { docs: { story: { inline: false, iframeHeight: 320 } } },
+  play: async ({ canvasElement }) => {
+    await userEvent.click(within(canvasElement).getByRole("button", { name: "Open details" }));
+    const dialog = await within(canvasElement.ownerDocument.body).findByRole("dialog", { name: "Project details" });
+    await waitFor(() => expect(dialog).toBeVisible());
+    await expect(dialog).toHaveAccessibleDescription("Review the project before continuing.");
+  },
+};
 export const Up: Story = { ...Default, args: { swipeDirection: "up", showSwipeHandle: true } };
 export const Left: Story = { ...Default, args: { swipeDirection: "left", showSwipeHandle: true } };
 export const Right: Story = { ...Default, args: { swipeDirection: "right", modal: false } };

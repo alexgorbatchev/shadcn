@@ -158,9 +158,10 @@ export const Small: Story = {
   ),
   play: async (context) => {
     await Default.play?.(context);
+    const smallControlHeights: Record<string, number> = { comfortable: 26, compact: 18 };
     await expect(
       within(context.canvasElement).getByRole("combobox", { name: "Runtime" }).getBoundingClientRect().height,
-    ).toBe(26);
+    ).toBe(smallControlHeights[context.globals.density]);
   },
 };
 export const Keyboard: Story = {

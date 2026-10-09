@@ -15,6 +15,7 @@ import { Input } from "../Input";
 import { Popover, PopoverContent, PopoverTitle, PopoverTrigger } from "../Popover";
 import { ToggleGroup, ToggleGroupItem } from "../ToggleGroup";
 import { DateInputPickerExample } from "./helpers";
+import { cn } from "../../utils/cn";
 
 type CalendarStoryProps = Omit<ComponentProps<typeof Calendar>, "mode" | "required" | "selected" | "onSelect">;
 const meta: Meta<CalendarStoryProps> = {
@@ -176,7 +177,11 @@ function PricedCalendarDayButton({
   return (
     <CalendarDayButton day={day} modifiers={modifiers} {...props} className="flex-col gap-1">
       {children}
-      {!modifiers.outside && <span className="text-xs text-muted-foreground">{isWeekend ? "$120" : "$100"}</span>}
+      {!modifiers.outside && (
+        <span className={cn("text-xs", !modifiers.selected && "text-muted-foreground")}>
+          {isWeekend ? "$120" : "$100"}
+        </span>
+      )}
     </CalendarDayButton>
   );
 }

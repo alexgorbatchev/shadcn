@@ -76,6 +76,16 @@ export const Default: Story = {
     await waitFor(() => expect(body.queryByRole("dialog")).not.toBeInTheDocument());
   },
 };
+export const Open: Story = {
+  ...Default,
+  parameters: { docs: { story: { inline: false, iframeHeight: 320 } } },
+  play: async ({ canvasElement }) => {
+    await userEvent.click(within(canvasElement).getByRole("button", { name: "Open preferences" }));
+    const dialog = await within(canvasElement.ownerDocument.body).findByRole("dialog", { name: "Preferences" });
+    await waitFor(() => expect(dialog).toBeVisible());
+    await expect(dialog).toHaveAccessibleDescription("Adjust your workspace preferences.");
+  },
+};
 export const Left: Story = { ...Default, args: { side: "left" } };
 export const Top: Story = { ...Default, args: { side: "top" } };
 export const Bottom: Story = { ...Default, args: { side: "bottom" } };
