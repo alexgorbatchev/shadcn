@@ -3,14 +3,15 @@
 import { useDensity } from "../hooks/useDensity";
 import type { IDensityProps } from "../density/types";
 import type { ComponentProps, ReactElement } from "react";
+import { useDirection } from "@base-ui/react/direction-provider";
 import { Popover as PopoverPrimitive } from "@base-ui/react/popover";
 import { cn } from "../utils/cn";
 
-function Popover({ ...props }: PopoverPrimitive.Root.Props): ReactElement | null {
+function Popover<Payload>({ ...props }: PopoverPrimitive.Root.Props<Payload>): ReactElement | null {
   return <PopoverPrimitive.Root data-slot="popover" {...props} />;
 }
 
-function PopoverTrigger({ ...props }: PopoverPrimitive.Trigger.Props): ReactElement | null {
+function PopoverTrigger<Payload>({ ...props }: PopoverPrimitive.Trigger.Props<Payload>): ReactElement | null {
   return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} />;
 }
 
@@ -28,10 +29,12 @@ function PopoverContent({
   ...props
 }: PopoverContentProps): ReactElement | null {
   const resolvedDensity = useDensity(density);
+  const direction = useDirection();
 
   return (
     <PopoverPrimitive.Portal>
       <PopoverPrimitive.Positioner
+        dir={direction}
         align={align}
         alignOffset={alignOffset}
         side={side}
@@ -39,12 +42,15 @@ function PopoverContent({
         className="isolate "
       >
         <PopoverPrimitive.Popup
+          dir={direction}
           data-density={resolvedDensity}
           data-slot="popover-content"
-          className={cn(
-            "flex w-72 origin-(--transform-origin) flex-col gap-2.5 rounded-md bg-popover p-2.5 text-sm text-popover-foreground shadow-frame border border-frame-edge shadow-frame outline-hidden duration-120 data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
-            className,
-          )}
+          className={(state) =>
+            cn(
+              "flex w-72 origin-(--transform-origin) flex-col gap-2.5 rounded-md bg-popover p-2.5 text-sm text-popover-foreground shadow-frame border border-frame-edge shadow-frame outline-hidden duration-120 data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:data-open:animate-none motion-reduce:data-closed:animate-none",
+              typeof className === "function" ? className(state) : className,
+            )
+          }
           {...props}
         />
       </PopoverPrimitive.Positioner>
@@ -72,7 +78,7 @@ function PopoverTitle({ density, className, ...props }: PopoverTitleProps): Reac
     <PopoverPrimitive.Title
       data-density={density}
       data-slot="popover-title"
-      className={cn("font-medium", className)}
+      className={(state) => cn("font-medium", typeof className === "function" ? className(state) : className)}
       {...props}
     />
   );
@@ -85,7 +91,7 @@ function PopoverDescription({ density, className, ...props }: PopoverDescription
     <PopoverPrimitive.Description
       data-density={density}
       data-slot="popover-description"
-      className={cn("text-muted-foreground", className)}
+      className={(state) => cn("text-muted-foreground", typeof className === "function" ? className(state) : className)}
       {...props}
     />
   );

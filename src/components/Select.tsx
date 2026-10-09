@@ -4,6 +4,7 @@ import { useDensity } from "../hooks/useDensity";
 import type { IDensityProps } from "../density/types";
 import type { ComponentProps, ReactElement } from "react";
 import { Select as SelectPrimitive } from "@base-ui/react/select";
+import { useDirection } from "@base-ui/react/direction-provider";
 import { cn } from "../utils/cn";
 import { ChevronDownIcon, CheckIcon, ChevronUpIcon } from "lucide-react";
 
@@ -16,7 +17,7 @@ function SelectGroup({ density, className, ...props }: SelectGroupProps): ReactE
     <SelectPrimitive.Group
       data-density={density}
       data-slot="select-group"
-      className={cn("scroll-my-1 p-1", className)}
+      className={(state) => cn("scroll-my-1 p-1", typeof className === "function" ? className(state) : className)}
       {...props}
     />
   );
@@ -29,7 +30,9 @@ function SelectValue({ density, className, ...props }: SelectValueProps): ReactE
     <SelectPrimitive.Value
       data-density={density}
       data-slot="select-value"
-      className={cn("flex flex-1 text-left", className)}
+      className={(state) =>
+        cn("flex flex-1 text-start", typeof className === "function" ? className(state) : className)
+      }
       {...props}
     />
   );
@@ -51,10 +54,12 @@ function SelectTrigger({
       data-density={density}
       data-slot="select-trigger"
       data-size={size}
-      className={cn(
-        "flex w-fit items-center justify-between gap-control-gap rounded-sm border border-input bg-transparent py-2 pr-2 pl-2.5 text-sm whitespace-nowrap transition-colors outline-none select-none focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive data-placeholder:text-muted-foreground data-[size=default]:h-control data-[size=sm]:h-control-sm data-[size=sm]:rounded-sm *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-control-gap [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-        className,
-      )}
+      className={(state) =>
+        cn(
+          "flex w-fit items-center justify-between gap-control-gap rounded-sm border border-input bg-transparent py-2 pe-2 ps-2.5 text-sm whitespace-nowrap transition-colors outline-none select-none focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive data-placeholder:text-muted-foreground data-[size=default]:h-control data-[size=sm]:h-control-sm data-[size=sm]:rounded-sm *:data-[slot=select-value]:line-clamp-1 *:data-[slot=select-value]:flex *:data-[slot=select-value]:items-center *:data-[slot=select-value]:gap-control-gap [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+          typeof className === "function" ? className(state) : className,
+        )
+      }
       {...props}
     >
       {children}
@@ -79,6 +84,7 @@ function SelectContent({
   ...props
 }: SelectContentProps): ReactElement | null {
   const resolvedDensity = useDensity(density);
+  const direction = useDirection();
 
   return (
     <SelectPrimitive.Portal>
@@ -91,13 +97,16 @@ function SelectContent({
         className="isolate "
       >
         <SelectPrimitive.Popup
+          dir={direction}
           data-density={resolvedDensity}
           data-slot="select-content"
           data-align-trigger={alignItemWithTrigger}
-          className={cn(
-            "relative isolate max-h-(--available-height) w-(--anchor-width) min-w-36 origin-(--transform-origin) overflow-x-hidden overflow-y-auto rounded-md bg-popover text-popover-foreground shadow-frame border border-frame-edge shadow-frame duration-120 data-[align-trigger=true]:animate-none data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
-            className,
-          )}
+          className={(state) =>
+            cn(
+              "relative isolate max-h-(--available-height) w-(--anchor-width) min-w-36 origin-(--transform-origin) overflow-x-hidden overflow-y-auto rounded-md bg-popover text-popover-foreground border border-frame-edge shadow-frame duration-120 data-[align-trigger=true]:animate-none data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:animate-none",
+              typeof className === "function" ? className(state) : className,
+            )
+          }
           {...props}
         >
           <SelectScrollUpButton />
@@ -116,7 +125,9 @@ function SelectLabel({ density, className, ...props }: SelectLabelProps): ReactE
     <SelectPrimitive.GroupLabel
       data-density={density}
       data-slot="select-label"
-      className={cn("px-1.5 py-1 text-xs text-muted-foreground", className)}
+      className={(state) =>
+        cn("px-1.5 py-1 text-xs text-muted-foreground", typeof className === "function" ? className(state) : className)
+      }
       {...props}
     />
   );
@@ -129,17 +140,19 @@ function SelectItem({ density, className, children, ...props }: SelectItemProps)
     <SelectPrimitive.Item
       data-density={density}
       data-slot="select-item"
-      className={cn(
-        "relative flex w-full cursor-default items-center gap-control-gap rounded-md py-1 pr-8 pl-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground not-data-[variant=destructive]:focus:**:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2",
-        className,
-      )}
+      className={(state) =>
+        cn(
+          "relative flex w-full cursor-default items-center gap-control-gap rounded-md py-1 pe-8 ps-1.5 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground not-data-[variant=destructive]:focus:**:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 *:[span]:last:flex *:[span]:last:items-center *:[span]:last:gap-2",
+          typeof className === "function" ? className(state) : className,
+        )
+      }
       {...props}
     >
       <SelectPrimitive.ItemText className="flex flex-1 shrink-0 gap-2 whitespace-nowrap">
         {children}
       </SelectPrimitive.ItemText>
       <SelectPrimitive.ItemIndicator
-        render={<span className="pointer-events-none absolute right-2 flex size-4 items-center justify-center" />}
+        render={<span className="pointer-events-none absolute end-2 flex size-4 items-center justify-center" />}
       >
         <CheckIcon className="pointer-events-none" />
       </SelectPrimitive.ItemIndicator>
@@ -154,7 +167,12 @@ function SelectSeparator({ density, className, ...props }: SelectSeparatorProps)
     <SelectPrimitive.Separator
       data-density={density}
       data-slot="select-separator"
-      className={cn("pointer-events-none -mx-1 my-1 h-px bg-border", className)}
+      className={(state) =>
+        cn(
+          "pointer-events-none -mx-1 my-1 h-px bg-border",
+          typeof className === "function" ? className(state) : className,
+        )
+      }
       {...props}
     />
   );
@@ -167,10 +185,12 @@ function SelectScrollUpButton({ density, className, ...props }: SelectScrollUpBu
     <SelectPrimitive.ScrollUpArrow
       data-density={density}
       data-slot="select-scroll-up-button"
-      className={cn(
-        "top-0 flex w-full cursor-default items-center justify-center bg-popover py-1 [&_svg:not([class*='size-'])]:size-4",
-        className,
-      )}
+      className={(state) =>
+        cn(
+          "top-0 flex w-full cursor-default items-center justify-center bg-popover py-1 [&_svg:not([class*='size-'])]:size-4",
+          typeof className === "function" ? className(state) : className,
+        )
+      }
       {...props}
     >
       <ChevronUpIcon />
@@ -185,10 +205,12 @@ function SelectScrollDownButton({ density, className, ...props }: SelectScrollDo
     <SelectPrimitive.ScrollDownArrow
       data-density={density}
       data-slot="select-scroll-down-button"
-      className={cn(
-        "bottom-0 flex w-full cursor-default items-center justify-center bg-popover py-1 [&_svg:not([class*='size-'])]:size-4",
-        className,
-      )}
+      className={(state) =>
+        cn(
+          "bottom-0 flex w-full cursor-default items-center justify-center bg-popover py-1 [&_svg:not([class*='size-'])]:size-4",
+          typeof className === "function" ? className(state) : className,
+        )
+      }
       {...props}
     >
       <ChevronDownIcon />

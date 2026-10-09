@@ -1,11 +1,12 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
+import { expect, userEvent, waitFor, within } from "storybook/test";
 import { ThemeProvider } from "../ThemeProvider";
 import { ThemeControlsExample } from "./helpers";
 
 const meta: Meta<typeof ThemeProvider> = {
   title: "shadcn-alexgorbatchev/components/ThemeProvider",
   component: ThemeProvider,
-  tags: ["autodocs", "!test"],
+  tags: ["autodocs", "test"],
   globals: { theme: "system" },
   parameters: {
     controls: { disable: true },
@@ -22,4 +23,54 @@ const meta: Meta<typeof ThemeProvider> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Interactive: Story = {};
+export const Interactive: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const root = canvasElement.ownerDocument.documentElement;
+    const status = canvas.getByRole("status");
+    await userEvent.click(canvas.getByRole("button", { name: "Light" }));
+    await waitFor(() => expect(status).toHaveTextContent("Preference: light. Resolved palette: light."));
+    await expect(root).toHaveAttribute("data-theme", "light");
+    await expect(root.style.colorScheme).toBe("light");
+    const lightBackground = getComputedStyle(canvasElement.ownerDocument.body).backgroundColor;
+    await expect(localStorage.getItem("shadcn-alexgorbatchev-preview")).toBe(JSON.stringify("light"));
+    await userEvent.click(canvas.getByRole("button", { name: "Dark" }));
+    await waitFor(() => expect(status).toHaveTextContent("Preference: dark. Resolved palette: dark."));
+    await expect(root).toHaveAttribute("data-theme", "dark");
+    await expect(root.style.colorScheme).toBe("dark");
+    await expect(getComputedStyle(canvasElement.ownerDocument.body).backgroundColor).not.toBe(lightBackground);
+    await expect(localStorage.getItem("shadcn-alexgorbatchev-preview")).toBe(JSON.stringify("dark"));
+    await userEvent.click(canvas.getByRole("button", { name: "System" }));
+    const media = window.matchMedia("(prefers-color-scheme: dark)");
+    await waitFor(() => expect(root.dataset.theme === "dark").toBe(media.matches));
+    await expect(status).toHaveTextContent("Preference: system. Resolved palette: " + root.dataset.theme + ".");
+    await expect(root.style.colorScheme).toBe(root.dataset.theme);
+    await expect(localStorage.getItem("shadcn-alexgorbatchev-preview")).toBe(JSON.stringify("system"));
+  },
+};
+export const ForcedDark: Story = {
+  globals: { theme: "dark" },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement),
+      root = canvasElement.ownerDocument.documentElement;
+    await userEvent.click(canvas.getByRole("button", { name: "Light" }));
+    await expect(canvas.getByRole("status")).toHaveTextContent("Preference: dark. Resolved palette: dark.");
+    await expect(root).toHaveAttribute("data-theme", "dark");
+    await expect(root.style.colorScheme).toBe("dark");
+    await expect(localStorage.getItem("shadcn-alexgorbatchev-preview")).toBe(JSON.stringify("light"));
+    await userEvent.click(canvas.getByRole("button", { name: "System" }));
+  },
+};
+export const ForcedLight: Story = {
+  globals: { theme: "light" },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement),
+      root = canvasElement.ownerDocument.documentElement;
+    await userEvent.click(canvas.getByRole("button", { name: "Dark" }));
+    await expect(canvas.getByRole("status")).toHaveTextContent("Preference: light. Resolved palette: light.");
+    await expect(root).toHaveAttribute("data-theme", "light");
+    await expect(root.style.colorScheme).toBe("light");
+    await expect(localStorage.getItem("shadcn-alexgorbatchev-preview")).toBe(JSON.stringify("dark"));
+    await userEvent.click(canvas.getByRole("button", { name: "System" }));
+  },
+};

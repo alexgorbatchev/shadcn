@@ -1,4 +1,5 @@
 @import "tailwindcss";
 @import "../src/theme.css";
+@import "../src/typeset.css";
 @import "../src/fonts.css";
 @source "../src";

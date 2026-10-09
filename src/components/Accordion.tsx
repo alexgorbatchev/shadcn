@@ -11,7 +11,7 @@ function Accordion({ density, className, ...props }: AccordionProps): ReactEleme
     <AccordionPrimitive.Root
       data-density={density}
       data-slot="accordion"
-      className={cn("flex w-full flex-col", className)}
+      className={(state) => cn("flex w-full flex-col", typeof className === "function" ? className(state) : className)}
       {...props}
     />
   );
@@ -24,7 +24,7 @@ function AccordionItem({ density, className, ...props }: AccordionItemProps): Re
     <AccordionPrimitive.Item
       data-density={density}
       data-slot="accordion-item"
-      className={cn("not-last:border-b", className)}
+      className={(state) => cn("not-last:border-b", typeof className === "function" ? className(state) : className)}
       {...props}
     />
   );
@@ -38,10 +38,12 @@ function AccordionTrigger({ density, className, children, ...props }: AccordionT
       <AccordionPrimitive.Trigger
         data-density={density}
         data-slot="accordion-trigger"
-        className={cn(
-          "group/accordion-trigger relative flex flex-1 items-start justify-between rounded-sm border border-transparent py-2.5 text-left text-sm font-medium transition-colors outline-none hover:underline focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring focus-visible:after:border-ring aria-disabled:pointer-events-none aria-disabled:opacity-50 **:data-[slot=accordion-trigger-icon]:ml-auto **:data-[slot=accordion-trigger-icon]:size-4 **:data-[slot=accordion-trigger-icon]:text-muted-foreground",
-          className,
-        )}
+        className={(state) =>
+          cn(
+            "group/accordion-trigger relative flex flex-1 items-start justify-between rounded-sm border border-transparent py-2.5 text-start text-sm font-medium transition-colors outline-none hover:underline focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring focus-visible:after:border-ring aria-disabled:pointer-events-none aria-disabled:opacity-50 **:data-[slot=accordion-trigger-icon]:ms-auto **:data-[slot=accordion-trigger-icon]:size-4 **:data-[slot=accordion-trigger-icon]:text-muted-foreground",
+            typeof className === "function" ? className(state) : className,
+          )
+        }
         {...props}
       >
         {children}
@@ -65,15 +67,15 @@ function AccordionContent({ density, className, children, ...props }: AccordionC
     <AccordionPrimitive.Panel
       data-density={density}
       data-slot="accordion-content"
-      className="overflow-hidden text-sm data-open:animate-accordion-down data-closed:animate-accordion-up"
+      className={(state) =>
+        cn(
+          "h-(--accordion-panel-height) overflow-hidden text-sm transition-[height] duration-200 ease-out data-ending-style:h-0 data-starting-style:h-0",
+          typeof className === "function" ? className(state) : className,
+        )
+      }
       {...props}
     >
-      <div
-        className={cn(
-          "h-(--accordion-panel-height) pt-0 pb-2.5 data-ending-style:h-0 data-starting-style:h-0 [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground [&_p:not(:last-child)]:mb-4",
-          className,
-        )}
-      >
+      <div className="pt-0 pb-2.5 [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground [&_p:not(:last-child)]:mb-4">
         {children}
       </div>
     </AccordionPrimitive.Panel>

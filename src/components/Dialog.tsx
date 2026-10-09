@@ -2,16 +2,17 @@ import { useDensity } from "../hooks/useDensity";
 import type { IDensityProps } from "../density/types";
 import type { ComponentProps, ReactElement } from "react";
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
+import { useDirection } from "@base-ui/react/direction-provider";
 import { cn } from "../utils/cn";
 
 import { Button } from "./Button";
 import { XIcon } from "lucide-react";
 
-function Dialog({ ...props }: DialogPrimitive.Root.Props): ReactElement | null {
+function Dialog<Payload>({ ...props }: DialogPrimitive.Root.Props<Payload>): ReactElement | null {
   return <DialogPrimitive.Root data-slot="dialog" {...props} />;
 }
 
-function DialogTrigger({ ...props }: DialogPrimitive.Trigger.Props): ReactElement | null {
+function DialogTrigger<Payload>({ ...props }: DialogPrimitive.Trigger.Props<Payload>): ReactElement | null {
   return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />;
 }
 
@@ -32,10 +33,12 @@ function DialogOverlay({ density, className, ...props }: DialogOverlayProps): Re
     <DialogPrimitive.Backdrop
       data-density={resolvedDensity}
       data-slot="dialog-overlay"
-      className={cn(
-        "fixed inset-0 isolate bg-backdrop duration-120 data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
-        className,
-      )}
+      className={(state) =>
+        cn(
+          "fixed inset-0 isolate bg-backdrop duration-120 data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:data-open:animate-none motion-reduce:data-closed:animate-none",
+          typeof className === "function" ? className(state) : className,
+        )
+      }
       {...props}
     />
   );
@@ -53,24 +56,28 @@ function DialogContent({
   ...props
 }: DialogContentProps): ReactElement | null {
   const resolvedDensity = useDensity(density);
+  const direction = useDirection();
 
   return (
     <DialogPortal>
       <DialogOverlay />
       <DialogPrimitive.Popup
+        dir={direction}
         data-density={resolvedDensity}
         data-slot="dialog-content"
-        className={cn(
-          "fixed top-1/2 left-1/2 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-panel rounded-md bg-popover p-panel text-sm text-popover-foreground border border-frame-edge shadow-frame duration-120 outline-none sm:max-w-sm data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
-          className,
-        )}
+        className={(state) =>
+          cn(
+            "fixed top-1/2 left-1/2 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-panel rounded-md bg-popover p-panel text-sm text-popover-foreground border border-frame-edge shadow-frame duration-120 outline-none sm:max-w-sm data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:data-open:animate-none motion-reduce:data-closed:animate-none",
+            typeof className === "function" ? className(state) : className,
+          )
+        }
         {...props}
       >
         {children}
         {showCloseButton && (
           <DialogPrimitive.Close
             data-slot="dialog-close"
-            render={<Button variant="ghost" className="absolute top-2 right-2" size="icon-sm" />}
+            render={<Button variant="ghost" className="absolute top-2 end-2" size="icon-sm" />}
           >
             <XIcon />
             <span className="sr-only">Close</span>
@@ -123,7 +130,9 @@ function DialogTitle({ density, className, ...props }: DialogTitleProps): ReactE
     <DialogPrimitive.Title
       data-density={density}
       data-slot="dialog-title"
-      className={cn("text-base leading-none font-medium", className)}
+      className={(state) =>
+        cn("text-base leading-none font-medium", typeof className === "function" ? className(state) : className)
+      }
       {...props}
     />
   );
@@ -136,10 +145,12 @@ function DialogDescription({ density, className, ...props }: DialogDescriptionPr
     <DialogPrimitive.Description
       data-density={density}
       data-slot="dialog-description"
-      className={cn(
-        "text-sm text-muted-foreground *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground",
-        className,
-      )}
+      className={(state) =>
+        cn(
+          "text-sm text-muted-foreground *:[a]:underline *:[a]:underline-offset-3 *:[a]:hover:text-foreground",
+          typeof className === "function" ? className(state) : className,
+        )
+      }
       {...props}
     />
   );

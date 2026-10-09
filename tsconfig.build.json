@@ -9,5 +9,5 @@
     "rootDir": "src"
   },
   "include": ["src"],
-  "exclude": ["src/**/stories"]
+  "exclude": ["src/**/stories", "src/**/__tests__"]
 }

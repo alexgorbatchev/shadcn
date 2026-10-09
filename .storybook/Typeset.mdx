@@ -1,0 +1,53 @@
+import { Canvas, Meta } from "@storybook/addon-docs/blocks";
+import * as BubbleStories from "../src/components/stories/Bubble.stories";
+
+<Meta title="shadcn-alexgorbatchev/compositions/Typeset" />
+
+# Typeset
+
+Style rendered HTML with the optional `shadcn-alexgorbatchev/typeset.css` stylesheet. Import it after Tailwind and the package theme, then add `typeset` to the content container. Your layout owns the width; your renderer supplies semantic HTML.
+
+```css
+@import "tailwindcss";
+@import "shadcn-alexgorbatchev/theme.css";
+@import "shadcn-alexgorbatchev/typeset.css";
+@source "../node_modules/shadcn-alexgorbatchev/dist";
+```
+
+```tsx
+<article className="typeset">{renderedContent}</article>
+```
+
+The stylesheet follows the surrounding font size, package font, density leading, and document palette. Small viewports receive the upstream readability bump. Headings, lists, code, quotes, disclosures, task lists, captions, and tables retain native semantics.
+
+<Canvas of={BubbleStories.Typeset} meta={BubbleStories} />
+
+## Reading rhythm
+
+Set `--typeset-size`, `--typeset-leading`, and `--typeset-flow` on a preset class or through arbitrary utilities. Font variables select body, heading, and mono families. Explicit Tailwind utilities on an element win through the normal cascade.
+
+<Canvas of={BubbleStories.TypesetRhythm} meta={BubbleStories} />
+
+## Embedded UI
+
+Add `not-typeset` or `data-not-typeset` to an embedded component. The component, its descendants, and nested Typeset containers stay opted out.
+
+<Canvas of={BubbleStories.TypesetOptOut} meta={BubbleStories} />
+
+## Responsive tables
+
+Bare tables keep their native table display and wrap within the container. Wrap wide tables in `typeset-scroll` for horizontal scrolling. Give a keyboard-scrollable wrapper a region name and `tabIndex={0}`.
+
+<Canvas of={BubbleStories.TypesetTables} meta={BubbleStories} />
+
+## Streaming content
+
+Appending complete blocks preserves earlier paragraph geometry and cell separators. Incomplete text can still wrap as it grows.
+
+<Canvas of={BubbleStories.TypesetStreaming} meta={BubbleStories} />
+
+## Right-to-left content
+
+Lists and quotes use logical spacing and borders. Code blocks retain left-to-right direction.
+
+<Canvas of={BubbleStories.TypesetRtl} meta={BubbleStories} />

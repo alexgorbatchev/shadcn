@@ -1,4 +1,5 @@
 import { mkdir, rm } from "node:fs/promises";
+import manifest from "../package.json";
 
 await rm("dist", { recursive: true, force: true });
 await mkdir("dist", { recursive: true });
@@ -7,7 +8,12 @@ const result = await Bun.build({
   outdir: "dist",
   target: "browser",
   format: "esm",
-  packages: "external",
+  jsx: { development: false },
+  packages: "bundle",
+  external: [
+    ...Object.keys(manifest.dependencies).filter((name) => !["@shadcn/react", "sonner", "input-otp"].includes(name)),
+    ...Object.keys(manifest.peerDependencies),
+  ],
   minify: false,
 });
 if (!result.success) {
@@ -15,6 +21,7 @@ if (!result.success) {
 }
 await Promise.all([
   Bun.write("dist/theme.css", Bun.file("src/theme.css")),
+  Bun.write("dist/typeset.css", Bun.file("src/typeset.css")),
   Bun.write("dist/fonts.css", Bun.file("src/fonts.css")),
 ]);
 console.log(`Built ${result.outputs.length} JavaScript asset(s) and exported theme/font stylesheets.`);

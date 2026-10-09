@@ -139,7 +139,7 @@ function FieldDescription({ density, className, ...props }: FieldDescriptionProp
       data-density={density}
       data-slot="field-description"
       className={cn(
-        "text-left text-sm leading-normal font-normal text-muted-foreground group-has-data-horizontal/field:text-balance [[data-variant=legend]+&]:-mt-1.5",
+        "text-start text-sm leading-normal font-normal text-muted-foreground group-data-[orientation=horizontal]/field:text-balance @md/field-group:group-data-[orientation=responsive]/field:text-balance [[data-variant=legend]+&]:-mt-1.5",
         "last:mt-0 nth-last-2:-mt-1",
         "[&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary",
         className,
@@ -176,7 +176,7 @@ function FieldSeparator({ density, children, className, ...props }: FieldSeparat
 }
 
 type FieldErrorProps = ComponentProps<"div"> & {
-  errors?: Array<{ message?: string } | undefined>;
+  errors?: ReadonlyArray<{ message?: string } | undefined>;
 } & IDensityProps;
 
 function FieldError({ density, className, children, errors, ...props }: FieldErrorProps): ReactElement | null {
@@ -189,15 +189,25 @@ function FieldError({ density, className, children, errors, ...props }: FieldErr
       return null;
     }
 
-    const uniqueErrors = [...new Map(errors.map((error) => [error?.message, error])).values()];
+    const uniqueMessages = [
+      ...new Set(
+        errors
+          .map((error) => error?.message)
+          .filter((message): message is string => typeof message === "string" && message.length > 0),
+      ),
+    ];
 
-    if (uniqueErrors?.length == 1) {
-      return uniqueErrors[0]?.message;
+    if (!uniqueMessages.length) return null;
+
+    if (uniqueMessages.length === 1) {
+      return uniqueMessages[0];
     }
 
     return (
-      <ul className="ml-4 flex list-disc flex-col gap-1">
-        {uniqueErrors.map((error, index) => error?.message && <li key={index}>{error.message}</li>)}
+      <ul className="ms-4 flex list-disc flex-col gap-1">
+        {uniqueMessages.map((message) => (
+          <li key={message}>{message}</li>
+        ))}
       </ul>
     );
   }, [children, errors]);

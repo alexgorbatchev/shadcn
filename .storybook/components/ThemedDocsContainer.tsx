@@ -6,7 +6,12 @@ import { themes } from "storybook/theming";
 import { useTernaryDarkMode } from "usehooks-ts";
 
 export function ThemedDocsContainer({ context, children }: PropsWithChildren<DocsContainerProps>): ReactElement {
-  const [globals, setGlobals] = useState(() => context.getStoryContext(context.storyById()).globals);
+  const [globals, setGlobals] = useState(() => {
+    const story = context.componentStories()[0];
+    if (story) return context.getStoryContext(story).globals;
+    const lastEvent: [GlobalsUpdatedPayload] | undefined = context.channel.last(GLOBALS_UPDATED);
+    return lastEvent?.[0].globals ?? context.projectAnnotations.initialGlobals;
+  });
   const { isDarkMode } = useTernaryDarkMode({
     defaultValue: "system",
     localStorageKey: "shadcn-alexgorbatchev-preview",

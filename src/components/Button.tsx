@@ -23,10 +23,10 @@ const buttonVariants = cva(
       },
       size: {
         default:
-          "h-control gap-control-gap px-control-x has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
-        xs: "h-control-xs gap-1 rounded-sm px-2 text-xs in-data-[slot=button-group]:rounded-sm has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3",
-        sm: "h-control-sm gap-1 rounded-sm px-control-x text-sm in-data-[slot=button-group]:rounded-sm has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 [&_svg:not([class*='size-'])]:size-3.5",
-        lg: "h-control-lg gap-control-gap px-control-x has-data-[icon=inline-end]:pr-2 has-data-[icon=inline-start]:pl-2",
+          "h-control gap-control-gap px-control-x has-data-[icon=inline-end]:pe-2 has-data-[icon=inline-start]:ps-2",
+        xs: "h-control-xs gap-1 rounded-sm px-2 text-xs in-data-[slot=button-group]:rounded-sm has-data-[icon=inline-end]:pe-1.5 has-data-[icon=inline-start]:ps-1.5 [&_svg:not([class*='size-'])]:size-3",
+        sm: "h-control-sm gap-1 rounded-sm px-control-x text-sm in-data-[slot=button-group]:rounded-sm has-data-[icon=inline-end]:pe-1.5 has-data-[icon=inline-start]:ps-1.5 [&_svg:not([class*='size-'])]:size-3.5",
+        lg: "h-control-lg gap-control-gap px-control-x has-data-[icon=inline-end]:pe-2 has-data-[icon=inline-start]:ps-2",
         icon: "size-control",
         "icon-xs":
           "size-control-xs rounded-sm in-data-[slot=button-group]:rounded-sm [&_svg:not([class*='size-'])]:size-3",
@@ -54,7 +54,9 @@ function Button({
     <ButtonPrimitive
       data-density={density}
       data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
+      className={(state) =>
+        cn(buttonVariants({ variant, size }), typeof className === "function" ? className(state) : className)
+      }
       {...props}
     />
   );

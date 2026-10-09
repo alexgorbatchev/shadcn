@@ -1,0 +1,87 @@
+diff --git a/node_modules/sonner/.bun-tag-eec9caba2bab3780 b/.bun-tag-eec9caba2bab3780
+new file mode 100644
+index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/dist/index.js b/dist/index.js
+index 394dbc2272f43b84642b0f9d5cc7eb1eacb0ffb3..6d141781a4faa9cc312f8c421c67dfe3717111f4 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -597,8 +597,8 @@ const Toast = (props)=>{
+         toast.id
+     ]);
+     React__default.default.useLayoutEffect(()=>{
+-        // Keep height up to date with the content in case it updates
+-        if (!mounted) return;
++        // Measure after every render, including host density and presentation changes.
++        if (!mounted || removed) return;
+         const toastNode = toastRef.current;
+         const originalHeight = toastNode.style.height;
+         toastNode.style.height = 'auto';
+@@ -616,23 +616,15 @@ const Toast = (props)=>{
+                     },
+                     ...heights
+                 ];
+-            } else {
++            } else if (alreadyExists.height !== newHeight) {
+                 return heights.map((height)=>height.toastId === toast.id ? {
+                         ...height,
+                         height: newHeight
+                     } : height);
+             }
++            return heights;
+         });
+-    }, [
+-        mounted,
+-        toast.title,
+-        toast.description,
+-        setHeights,
+-        toast.id,
+-        toast.jsx,
+-        toast.action,
+-        toast.cancel
+-    ]);
++    });
+     const deleteToast = React__default.default.useCallback(()=>{
+         // Save the offset for the exit swipe animation
+         setRemoved(true);
+diff --git a/dist/index.mjs b/dist/index.mjs
+index c124f821a68f7070647a5a04441d0caa53689662..de84213523dc4ca54593cecacc40ab2d883a4f11 100644
+--- a/dist/index.mjs
++++ b/dist/index.mjs
+@@ -590,8 +590,8 @@ const Toast = (props)=>{
+         toast.id
+     ]);
+     React.useLayoutEffect(()=>{
+-        // Keep height up to date with the content in case it updates
+-        if (!mounted) return;
++        // Measure after every render, including host density and presentation changes.
++        if (!mounted || removed) return;
+         const toastNode = toastRef.current;
+         const originalHeight = toastNode.style.height;
+         toastNode.style.height = 'auto';
+@@ -609,23 +609,15 @@ const Toast = (props)=>{
+                     },
+                     ...heights
+                 ];
+-            } else {
++            } else if (alreadyExists.height !== newHeight) {
+                 return heights.map((height)=>height.toastId === toast.id ? {
+                         ...height,
+                         height: newHeight
+                     } : height);
+             }
++            return heights;
+         });
+-    }, [
+-        mounted,
+-        toast.title,
+-        toast.description,
+-        setHeights,
+-        toast.id,
+-        toast.jsx,
+-        toast.action,
+-        toast.cancel
+-    ]);
++    });
+     const deleteToast = React.useCallback(()=>{
+         // Save the offset for the exit swipe animation
+         setRemoved(true);

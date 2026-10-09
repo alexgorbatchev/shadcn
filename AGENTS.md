@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-08 06:13
-last_modified: 2026-10-08 12:54
+last_modified: 2026-10-09 08:31
 status: current
 ---
 
@@ -15,13 +15,18 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - Routed preview: `devhost start` (`devhost.toml` serves `https://shadcn.example.com` through the running shared Caddy instance)
 - Stop this project's routed preview: `devhost stop --manifest ./devhost.toml`
 - Format: `just fix`
-- Validate: `just check` (typecheck, lint/format check, declarations/package build, static Storybook build)
+- Validate: `just check` (typecheck, lint/format check, declarations/package build, development/production package rendering, static Storybook build)
+- Package rendering: `bun run test:package` (builds the public package and checks Button, Chart, InputOTP, MessageScroller and Questionnaire rendering with development and production React)
+- Browser interactions: `bun run test` (Storybook stories tagged `test` in headless Chromium, then native browser checks and package-render tests)
+- Native browser checks: `bun run test:native` (Chromium checks including Carousel with reduced motion; Drawer also runs in Linux WebKit)
+- Reduced-motion interactions: `bun run test:reduced-motion` (full Storybook catalog with native reduced-motion preference)
+- Coverage gate: `bun run test:coverage` (90% statements, branches, functions, and lines across runtime source)
 - Build package: `just build`
 - Prepare local archive: `just pack` (runs the package build and writes `.tmp/packs/shadcn-alexgorbatchev-0.1.0.tgz`)
 
 ## Development Setup
 
-- Run commands from this standalone repository, not from the sibling devhost checkout. Use Bun 1.4.0 as declared in `package.json`; `just` is required for the validation and packaging recipes.
+- Run commands from this standalone repository, not from the sibling devhost checkout. Use Bun 1.4.2 as declared in `package.json`; `just` is required for the validation and packaging recipes.
 - Install dependencies with `bun install` before running the commands above. Keep the single repository `bun.lock` in sync with manifest changes.
 - The direct Storybook preview needs no devhost service. The routed preview needs the devhost CLI, a running managed Caddy instance, and the configured hostname resolving to that machine; see [README.md](./README.md#devhost-preview).
 - `dist/`, `storybook-static/`, `.cache/`, and `.tmp/` are generated or transient outputs. Edit their source files and regenerate them; keep those directories untracked.
@@ -32,7 +37,7 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - Use Base UI primitives and official shadcn Base UI compositions. Prefer maintained libraries for behavior; preserve native accessibility and state contracts.
 - Keep the package root API explicit in `src/index.ts`. Components live in `src/components/`, runtime hooks in `src/hooks/`, and stories in `src/components/stories/`.
 - Define standalone Tailwind v4 tokens in `src/theme.css`. Keep consumers independent of absolute devhost imports, symlinks, and workspace dependencies.
-- Keep React and React DOM external peers. Bun builds browser ESM; TypeScript emits declarations separately. Consumers generate utilities by scanning `dist`, so package class strings must remain discoverable by Tailwind.
+- Keep React and React DOM external peers. Bun builds browser ESM with production JSX (`jsx.development: false`); TypeScript emits declarations separately. Consumers generate utilities by scanning `dist`, so package class strings must remain discoverable by Tailwind.
 - Keep optional font imports in `src/fonts.css`. Preserve shadcn source attribution in `THIRD_PARTY_NOTICES.md` when adding components.
 - Follow `src/components/Button.tsx` for primitive props, semantic utility classes, variants, and density overrides; follow `src/components/stories/Button.stories.tsx` for typed metadata and interactive controls. Add public exports to `src/index.ts` and include each component family in the Storybook catalog.
 - ThemeProvider owns the document palette. DensityProvider supplies both React context and CSS variables; portal content must resolve density through context.
@@ -47,11 +52,14 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - Use isolated iframe documentation for default-open overlays; inline examples can interfere through their document-wide portals.
 - Scope TypeScript docgen to component source; preview infrastructure and stories are not public component APIs.
 - Keep Vite dependency caches and development asset URL prefixes isolated by the actual Storybook port, with a separate production-build cache. Concurrent servers sharing optimized files can mix React instances and fail hooks in Docs; immutable browser caches can retain imports into an older server's cache. After a port changes, reload an already-open preview so it uses the current server's module graph.
-- Keep development responses `no-store`. `createPreviewAssetBasePlugin` also prefixes Storybook's root-relative bootstrap scripts; Vite's `base` alone leaves those URLs shared across ports, allowing the external gateway to cache a stale module graph.
+- Keep development responses `no-store`. `createPreviewAssetBasePlugin` also prefixes Storybook's root-relative bootstrap scripts; Vite's `base` alone leaves those URLs shared across ports, allowing the external gateway to cache a stale module graph. Reload open Docs after dependency optimization changes as well as port changes; an already-loaded React module can differ from the renderer's new dependency graph.
 - Storybook Docs has an independent theme. Keep `ThemedDocsContainer` connected to theme globals and the shared preview preference through Storybook's native Docs theme API; validate Docs backgrounds as well as story canvases.
-- The current preview has no play tests or automated interaction runner. Stories carry `!test`; `just check` verifies compilation and builds, not interaction coverage. Do not report those checks as behavioral tests.
-- For future runtime behavior changes, update a corresponding test file and require 90% code coverage, excluding `scripts/`. Establish an executable behavioral runner before claiming that requirement is enforced.
-- When an executable behavioral suite exists, reproduce the regression before fixing it, verify the corrected behavior, then temporarily disable only the fix and confirm the regression test fails. Test interactions and rendered behavior rather than static class strings, token values, or raw configuration objects.
+- Use the Storybook Vitest addon with Playwright Chromium for browser interactions. Enable new tested stories with `test`; stories carrying `!test` are excluded. Install browser binaries with `bun x --bun playwright install chromium webkit` when needed; WebKit also needs Playwright's system dependencies on Linux. Native Drawer checks run both engines; Linux WebKit does not exercise the iOS-only touch-callout CSS feature. `just check` verifies compilation and builds; run the browser and coverage commands separately and report exclusions and coverage failures.
+- For runtime behavior changes, update corresponding behavioral stories or tests and require 90% code coverage, excluding `scripts/`. The coverage command measures runtime source, excluding story/test infrastructure and type-only files; a passing build does not establish coverage.
+- Reproduce the regression before fixing it, verify the corrected behavior, then temporarily disable only the fix and confirm the regression test fails. Test interactions and rendered behavior rather than static class strings, token values, or raw configuration objects.
+- Keep browser-test dependency caches separate from previews and static builds. Pre-optimize imported primitives in the Vitest configuration; optimization during execution can reload the test module and invalidate the run.
+- Scope Storybook Vitest runs with CLI file filters; the addon ignores Vitest's `test.include`. Match reduced-motion selector specificity to state-dependent animation rules and validate using native browser preference emulation.
+- Preserve Base UI function-valued `className` and `style` props by evaluating them with native primitive state. Passing those functions to `cn` silently discards the callback.
 - Validate package changes in a separate Bun React consumer installed from the packed archive; repository aliases can hide package export, CSS scanning, and font asset failures.
 
 ## Boundaries

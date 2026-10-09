@@ -1,6 +1,7 @@
 import { useDensity } from "../hooks/useDensity";
 import type { IDensityProps } from "../density/types";
 import type { ComponentPropsWithRef, ReactElement } from "react";
+import { useDirection } from "@base-ui/react/direction-provider";
 import { Combobox as ComboboxPrimitive } from "@base-ui/react/combobox";
 import { cn } from "../utils/cn";
 
@@ -11,7 +12,7 @@ import { ChevronDownIcon, XIcon, CheckIcon } from "lucide-react";
 const Combobox = ComboboxPrimitive.Root;
 
 function ComboboxValue({ ...props }: ComboboxPrimitive.Value.Props): ReactElement | null {
-  return <ComboboxPrimitive.Value data-slot="combobox-value" {...props} />;
+  return <ComboboxPrimitive.Value {...props} />;
 }
 
 type ComboboxTriggerProps = ComboboxPrimitive.Trigger.Props & IDensityProps;
@@ -21,7 +22,9 @@ function ComboboxTrigger({ density, className, children, ...props }: ComboboxTri
     <ComboboxPrimitive.Trigger
       data-density={density}
       data-slot="combobox-trigger"
-      className={cn("[&_svg:not([class*='size-'])]:size-4", className)}
+      className={(state) =>
+        cn("[&_svg:not([class*='size-'])]:size-4", typeof className === "function" ? className(state) : className)
+      }
       {...props}
     >
       {children}
@@ -38,7 +41,7 @@ function ComboboxClear({ density, className, ...props }: ComboboxClearProps): Re
       data-density={density}
       data-slot="combobox-clear"
       render={<InputGroupButton variant="ghost" size="icon-xs" />}
-      className={cn(className)}
+      className={(state) => cn(typeof className === "function" ? className(state) : className)}
       {...props}
     >
       <XIcon className="pointer-events-none" />
@@ -49,6 +52,9 @@ function ComboboxClear({ density, className, ...props }: ComboboxClearProps): Re
 type ComboboxInputProps = ComboboxPrimitive.Input.Props & {
   showTrigger?: boolean;
   showClear?: boolean;
+  frameClassName?: string;
+  triggerLabel?: string;
+  clearLabel?: string;
 } & IDensityProps;
 
 function ComboboxInput({
@@ -58,24 +64,28 @@ function ComboboxInput({
   disabled = false,
   showTrigger = true,
   showClear = false,
+  frameClassName,
+  triggerLabel = "Open popup",
+  clearLabel = "Clear selection",
   ...props
 }: ComboboxInputProps): ReactElement | null {
   return (
-    <InputGroup density={density} className={cn("w-auto", className)}>
-      <ComboboxPrimitive.Input render={<InputGroupInput disabled={disabled} />} {...props} />
+    <InputGroup density={density} className={cn("w-auto", frameClassName)}>
+      <ComboboxPrimitive.Input disabled={disabled} className={className} render={<InputGroupInput />} {...props} />
       <InputGroupAddon align="inline-end">
         {showTrigger && (
           <InputGroupButton
             size="icon-xs"
             variant="ghost"
             render={<ComboboxTrigger />}
+            aria-label={triggerLabel}
             data-density={density}
             data-slot="input-group-button"
             className="group-has-data-[slot=combobox-clear]/input-group:hidden data-pressed:bg-transparent"
             disabled={disabled}
           />
         )}
-        {showClear && <ComboboxClear disabled={disabled} />}
+        {showClear && <ComboboxClear disabled={disabled} aria-label={clearLabel} />}
       </InputGroupAddon>
       {children}
     </InputGroup>
@@ -97,6 +107,7 @@ function ComboboxContent({
   ...props
 }: ComboboxContentProps): ReactElement | null {
   const resolvedDensity = useDensity(density);
+  const direction = useDirection();
 
   return (
     <ComboboxPrimitive.Portal>
@@ -109,13 +120,16 @@ function ComboboxContent({
         className="isolate "
       >
         <ComboboxPrimitive.Popup
+          dir={direction}
           data-density={resolvedDensity}
           data-slot="combobox-content"
           data-chips={!!anchor}
-          className={cn(
-            "group/combobox-content relative max-h-(--available-height) w-(--anchor-width) max-w-(--available-width) min-w-[calc(var(--anchor-width)+--spacing(7))] origin-(--transform-origin) overflow-hidden rounded-md bg-popover text-popover-foreground border border-frame-edge shadow-frame duration-120 data-[chips=true]:min-w-(--anchor-width) *:data-[slot=input-group]:m-1 *:data-[slot=input-group]:mb-0 *:data-[slot=input-group]:h-control *:data-[slot=input-group]:border-input/30 *:data-[slot=input-group]:bg-input/30 *:data-[slot=input-group]:shadow-none data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0",
-            className,
-          )}
+          className={(state) =>
+            cn(
+              "group/combobox-content relative max-h-(--available-height) w-(--anchor-width) max-w-(--available-width) min-w-[calc(var(--anchor-width)+--spacing(7))] origin-(--transform-origin) overflow-hidden rounded-md bg-popover text-popover-foreground border border-frame-edge shadow-frame duration-120 data-[chips=true]:min-w-(--anchor-width) *:data-[slot=input-group]:m-1 *:data-[slot=input-group]:mb-0 *:data-[slot=input-group]:h-control *:data-[slot=input-group]:border-input/30 *:data-[slot=input-group]:bg-input/30 *:data-[slot=input-group]:shadow-none data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:data-open:animate-none motion-reduce:data-closed:animate-none",
+              typeof className === "function" ? className(state) : className,
+            )
+          }
           {...props}
         />
       </ComboboxPrimitive.Positioner>
@@ -130,10 +144,12 @@ function ComboboxList({ density, className, ...props }: ComboboxListProps): Reac
     <ComboboxPrimitive.List
       data-density={density}
       data-slot="combobox-list"
-      className={cn(
-        "no-scrollbar max-h-[min(calc(--spacing(72)---spacing(9)),calc(var(--available-height)---spacing(9)))] scroll-py-1 overflow-y-auto overscroll-contain p-1 data-empty:p-0",
-        className,
-      )}
+      className={(state) =>
+        cn(
+          "no-scrollbar max-h-[min(calc(--spacing(72)---spacing(9)),calc(var(--available-height)---spacing(9)))] scroll-py-1 overflow-y-auto overscroll-contain p-1 data-empty:p-0",
+          typeof className === "function" ? className(state) : className,
+        )
+      }
       {...props}
     />
   );
@@ -146,15 +162,17 @@ function ComboboxItem({ density, className, children, ...props }: ComboboxItemPr
     <ComboboxPrimitive.Item
       data-density={density}
       data-slot="combobox-item"
-      className={cn(
-        "relative flex w-full cursor-default items-center gap-2 rounded-md py-1 pr-8 pl-1.5 text-sm outline-hidden select-none data-highlighted:bg-accent data-highlighted:text-accent-foreground not-data-[variant=destructive]:data-highlighted:**:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
-        className,
-      )}
+      className={(state) =>
+        cn(
+          "relative flex w-full cursor-default items-center gap-2 rounded-md py-1 pe-8 ps-1.5 text-sm outline-hidden select-none data-highlighted:bg-accent data-highlighted:text-accent-foreground not-data-[variant=destructive]:data-highlighted:**:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+          typeof className === "function" ? className(state) : className,
+        )
+      }
       {...props}
     >
       {children}
       <ComboboxPrimitive.ItemIndicator
-        render={<span className="pointer-events-none absolute right-2 flex size-4 items-center justify-center" />}
+        render={<span className="pointer-events-none absolute end-2 flex size-4 items-center justify-center" />}
       >
         <CheckIcon className="pointer-events-none" />
       </ComboboxPrimitive.ItemIndicator>
@@ -166,7 +184,12 @@ type ComboboxGroupProps = ComboboxPrimitive.Group.Props & IDensityProps;
 
 function ComboboxGroup({ density, className, ...props }: ComboboxGroupProps): ReactElement | null {
   return (
-    <ComboboxPrimitive.Group data-density={density} data-slot="combobox-group" className={cn(className)} {...props} />
+    <ComboboxPrimitive.Group
+      data-density={density}
+      data-slot="combobox-group"
+      className={(state) => cn(typeof className === "function" ? className(state) : className)}
+      {...props}
+    />
   );
 }
 
@@ -177,14 +200,16 @@ function ComboboxLabel({ density, className, ...props }: ComboboxLabelProps): Re
     <ComboboxPrimitive.GroupLabel
       data-density={density}
       data-slot="combobox-label"
-      className={cn("px-2 py-1.5 text-xs text-muted-foreground", className)}
+      className={(state) =>
+        cn("px-2 py-1.5 text-xs text-muted-foreground", typeof className === "function" ? className(state) : className)
+      }
       {...props}
     />
   );
 }
 
 function ComboboxCollection({ ...props }: ComboboxPrimitive.Collection.Props): ReactElement | null {
-  return <ComboboxPrimitive.Collection data-slot="combobox-collection" {...props} />;
+  return <ComboboxPrimitive.Collection {...props} />;
 }
 
 type ComboboxEmptyProps = ComboboxPrimitive.Empty.Props & IDensityProps;
@@ -194,10 +219,12 @@ function ComboboxEmpty({ density, className, ...props }: ComboboxEmptyProps): Re
     <ComboboxPrimitive.Empty
       data-density={density}
       data-slot="combobox-empty"
-      className={cn(
-        "hidden w-full justify-center py-2 text-center text-sm text-muted-foreground group-data-empty/combobox-content:flex",
-        className,
-      )}
+      className={(state) =>
+        cn(
+          "flex w-full justify-center py-2 empty:p-0 text-center text-sm text-muted-foreground",
+          typeof className === "function" ? className(state) : className,
+        )
+      }
       {...props}
     />
   );
@@ -210,7 +237,9 @@ function ComboboxSeparator({ density, className, ...props }: ComboboxSeparatorPr
     <ComboboxPrimitive.Separator
       data-density={density}
       data-slot="combobox-separator"
-      className={cn("-mx-1 my-1 h-px bg-border", className)}
+      className={(state) =>
+        cn("-mx-1 my-1 h-px bg-border", typeof className === "function" ? className(state) : className)
+      }
       {...props}
     />
   );
@@ -225,10 +254,12 @@ function ComboboxChips({ density, className, ...props }: ComboboxChipsProps): Re
     <ComboboxPrimitive.Chips
       data-density={density}
       data-slot="combobox-chips"
-      className={cn(
-        "flex min-h-control flex-wrap items-center gap-1 rounded-sm border border-input bg-transparent bg-clip-padding px-control-x py-1 text-sm transition-colors focus-within:border-ring focus-within:ring-1 focus-within:ring-ring has-aria-invalid:border-destructive has-aria-invalid:ring-3 has-aria-invalid:ring-destructive has-data-[slot=combobox-chip]:px-1",
-        className,
-      )}
+      className={(state) =>
+        cn(
+          "flex min-h-control flex-wrap items-center gap-1 rounded-sm border border-input bg-transparent bg-clip-padding px-control-x py-px text-sm transition-colors focus-within:border-ring focus-within:ring-1 focus-within:ring-ring has-aria-invalid:border-destructive has-aria-invalid:ring-3 has-aria-invalid:ring-destructive has-data-[slot=combobox-chip]:px-1",
+          typeof className === "function" ? className(state) : className,
+        )
+      }
       {...props}
     />
   );
@@ -249,18 +280,21 @@ function ComboboxChip({
     <ComboboxPrimitive.Chip
       data-density={density}
       data-slot="combobox-chip"
-      className={cn(
-        "flex h-[calc(--spacing(5.25))] w-fit items-center justify-center gap-1 rounded-sm bg-muted px-1.5 text-xs font-medium whitespace-nowrap text-foreground has-disabled:pointer-events-none has-disabled:cursor-not-allowed has-disabled:opacity-50 has-data-[slot=combobox-chip-remove]:pr-0",
-        className,
-      )}
+      className={(state) =>
+        cn(
+          "flex h-tag w-fit items-center justify-center gap-1 rounded-sm bg-muted px-1.5 text-xs font-medium whitespace-nowrap text-foreground has-disabled:pointer-events-none has-disabled:cursor-not-allowed has-disabled:opacity-50 has-data-[slot=combobox-chip-remove]:pe-0",
+          typeof className === "function" ? className(state) : className,
+        )
+      }
       {...props}
     >
       {children}
       {showRemove && (
         <ComboboxPrimitive.ChipRemove
           render={<Button variant="ghost" size="icon-xs" />}
-          className="-ml-1 opacity-50 hover:opacity-100"
+          className="size-tag -ms-1 opacity-50 hover:opacity-100"
           data-slot="combobox-chip-remove"
+          aria-label="Remove item"
         >
           <XIcon className="pointer-events-none" />
         </ComboboxPrimitive.ChipRemove>
@@ -276,7 +310,12 @@ function ComboboxChipsInput({ density, className, ...props }: ComboboxChipsInput
     <ComboboxPrimitive.Input
       data-density={density}
       data-slot="combobox-chip-input"
-      className={cn("min-w-16 flex-1 outline-none", className)}
+      className={(state) =>
+        cn(
+          "h-tag min-w-16 flex-1 py-0 text-sm leading-none outline-none",
+          typeof className === "function" ? className(state) : className,
+        )
+      }
       {...props}
     />
   );
