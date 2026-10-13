@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-08 06:13
-last_modified: 2026-10-09 11:03
+last_modified: 2026-10-12 17:08
 status: current
 ---
 
@@ -12,7 +12,7 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 
 - Install: `bun install`
 - Preview: `bun run storybook` (loopback port 6006, no automatic browser launch)
-- Routed preview: `devhost start` (`devhost.toml` serves `https://shadcn.example.com` through the running shared Caddy instance)
+- Routed preview: `devhost start` (replace the `shadcn.example.com` placeholder in both `devhost.toml` hostname fields with a locally configured hostname before starting the shared Caddy route; keep private hostnames out of commits)
 - Stop this project's routed preview: `devhost stop --manifest ./devhost.toml`
 - Format: `just fix`
 - Validate: `just check` (typecheck, lint/format check, declarations/package build, development/production package rendering, static Storybook build)
@@ -23,7 +23,7 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - Reduced-motion interactions: `bun run test:reduced-motion` (full Storybook catalog with native reduced-motion preference)
 - Coverage gate: `bun run test:coverage` (90% statements, branches, functions, and lines across runtime source)
 - Build package: `just build`
-- Prepare local archive: `just pack` (runs the package build and writes `.tmp/packs/shadcn-alexgorbatchev-0.1.0.tgz`)
+- Prepare local archive: `just pack` (runs the package build and writes `.tmp/packs/shadcn-alexgorbatchev-0.0.1.tgz`)
 
 ## Development Setup
 
@@ -31,7 +31,7 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - Install dependencies with `bun install` before running the commands above. Keep the single repository `bun.lock` in sync with manifest changes.
 - The direct Storybook preview needs no devhost service. The routed preview needs the devhost CLI, a running managed Caddy instance, and the configured hostname resolving to that machine; see [README.md](./README.md#devhost-preview).
 - `dist/`, `storybook-static/`, `.cache/`, and `.tmp/` are generated or transient outputs. Edit their source files and regenerate them; keep those directories untracked.
-- This repository has no CI or release workflow. `just check` is the local validation entrypoint; do not describe it as CI enforcement.
+- `just check` is the local validation entrypoint. `.github/workflows/storybook-pages.yml` validates and deploys static Storybook only when a GitHub Release is published; see [Pages setup](./docs/internal/storybook-pages.md). It does not run on branch pushes or pull requests.
 
 ## Contracts
 

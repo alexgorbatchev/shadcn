@@ -32,7 +32,7 @@ The package targets client-rendered Bun React applications.
 Install the local archive from a consuming project:
 
 ```sh
-bun add /home/alex/development/projects/shadcn-alexgorbatchev/.tmp/packs/shadcn-alexgorbatchev-0.1.0.tgz
+bun add /home/alex/development/projects/shadcn-alexgorbatchev/.tmp/packs/shadcn-alexgorbatchev-0.0.1.tgz
 ```
 
 The archive must exist before installation. Package preparation and contributor commands are documented in [AGENTS.md](./AGENTS.md#commands). Its filename includes the package version.
@@ -230,13 +230,15 @@ Compose `QuestionnaireItem`, `QuestionnaireTitle`, and answer controls inside `Q
 
 # Devhost Preview
 
+The manifest uses `shadcn.example.com` as a documentation placeholder. Before using the routed preview, replace both `services.storybook.host` and `services.storybook.env.__VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS` in `devhost.toml` with your locally configured hostname. Keep private hostnames out of commits.
+
 From this repository, start the configured Storybook service:
 
 ```sh
 devhost start
 ```
 
-Open [shadcn.example.com](https://shadcn.example.com). The manifest allocates a port automatically and serves Storybook through the shared devhost HTTPS proxy. The hostname must resolve to the machine running devhost, and the managed Caddy instance must be running (`devhost caddy start`).
+Open your configured hostname over HTTPS. The manifest allocates a port automatically and serves Storybook through the shared devhost HTTPS proxy. The hostname must resolve to the machine running devhost, and the managed Caddy instance must be running (`devhost caddy start`).
 
 Storybook binds to IPv4 loopback and allows the configured hostname in both Storybook and Vite. Caddy listens on all interfaces and serves HTTP as well as HTTPS, so the external devbox gateway can reach it. The direct `bun run storybook` preview remains available on `127.0.0.1:6006`.
 
