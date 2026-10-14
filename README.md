@@ -1,4 +1,4 @@
-`shadcn-alexgorbatchev` is a standalone React component library for Bun applications that need the sharp, monospace devhost design language. Install it as an npm-compatible package and explore its components in the local interactive Storybook catalog. Consuming apps do not depend on the devhost project.
+`@alexgorbatchev/shadcn` is a standalone React component library for Bun applications that need the sharp, monospace devhost design language. Install it as an npm-compatible package and explore its components in the local interactive Storybook catalog. Consuming apps do not depend on the devhost project.
 
 # What It Does
 
@@ -32,7 +32,7 @@ The package targets client-rendered Bun React applications.
 Install the local archive from a consuming project:
 
 ```sh
-bun add /home/alex/development/projects/shadcn-alexgorbatchev/.tmp/packs/shadcn-alexgorbatchev-0.0.1.tgz
+bun add /home/alex/development/projects/shadcn-alexgorbatchev/.tmp/packs/alexgorbatchev-shadcn-0.0.1.tgz
 ```
 
 The archive must exist before installation. Package preparation and contributor commands are documented in [AGENTS.md](./AGENTS.md#commands). Its filename includes the package version.
@@ -58,9 +58,9 @@ In `src/styles.css`, import the theme after Tailwind and explicitly scan the ins
 
 ```css
 @import "tailwindcss";
-@import "shadcn-alexgorbatchev/theme.css";
-@import "shadcn-alexgorbatchev/fonts.css";
-@source "../node_modules/shadcn-alexgorbatchev/dist";
+@import "@alexgorbatchev/shadcn/theme.css";
+@import "@alexgorbatchev/shadcn/fonts.css";
+@source "../node_modules/@alexgorbatchev/shadcn/dist";
 ```
 
 Omit the `fonts.css` import if your app supplies its own font. Bun's plugin registration is documented in [HTML and static sites](https://bun.com/docs/bundler/html-static#tailwind-css).
@@ -73,7 +73,7 @@ Import that stylesheet from your app entry, then render:
 
 ```tsx
 import { useState, type ReactElement } from "react";
-import { Button, DensityProvider, ThemeProvider } from "shadcn-alexgorbatchev";
+import { Button, DensityProvider, ThemeProvider } from "@alexgorbatchev/shadcn";
 import "./styles.css";
 
 export function App(): ReactElement {
@@ -180,7 +180,7 @@ Compose grouped controls with InputGroupInput or InputGroupTextarea, then place 
 
 Compose a date picker from `Popover`, `Button`, and `Calendar`. The Calendar catalog demonstrates selection with popup dismissal and focus restoration, ranges, birth-date dropdowns, presets, a native time input, and editable date inputs. Input examples use `chrono-node` for strict dates or natural-language phrases such as “tomorrow”; install that dependency in apps using those examples. Invalid or cleared text clears the selected date. ArrowDown opens the calendar, and dismissal restores input focus. Keep the selected date in your app's state; there is no separate `DatePicker` export. See the [official date picker guide](https://ui.shadcn.com/docs/components/base/date-picker).
 
-For rendered HTML or Markdown output, import `shadcn-alexgorbatchev/typeset.css` after Tailwind and the package theme, then wrap the content in a native element with `className="typeset"`. Text follows its container's font size, document palette, and density leading. Set `--typeset-size`, `--typeset-leading`, and `--typeset-flow` in your own preset to tune reading rhythm. Your layout owns the content width. Add `not-typeset` or `data-not-typeset` to keep embedded UI and nested containers outside the prose styles. Wide tables can use a named, keyboard-focusable `typeset-scroll` wrapper; bare tables retain table semantics and wrap to fit. The Storybook Typeset composition page demonstrates these contracts. See the [official Typeset guide](https://ui.shadcn.com/docs/typeset).
+For rendered HTML or Markdown output, import `@alexgorbatchev/shadcn/typeset.css` after Tailwind and the package theme, then wrap the content in a native element with `className="typeset"`. Text follows its container's font size, document palette, and density leading. Set `--typeset-size`, `--typeset-leading`, and `--typeset-flow` in your own preset to tune reading rhythm. Your layout owns the content width. Add `not-typeset` or `data-not-typeset` to keep embedded UI and nested containers outside the prose styles. Wide tables can use a named, keyboard-focusable `typeset-scroll` wrapper; bare tables retain table semantics and wrap to fit. The Storybook Typeset composition page demonstrates these contracts. See the [official Typeset guide](https://ui.shadcn.com/docs/typeset).
 
 Compose data tables with the exported Table parts and `@tanstack/react-table@9.2.8`, installed directly in your app. `Table dir="rtl"` sets both column direction and the overflow container's reading edge; headers align to the inline start. The Table catalog demonstrates TanStack v9's native `useTable` with sorting, filtering, pagination, column visibility, selection across pages, and row actions that copy invoice IDs or open invoice details. Pass the checkbox's original event to the row-selection handler to retain Shift range selection. There is no separate `DataTable` export. Both the [TanStack v9 quick start](https://tanstack.com/table/latest/docs/framework/react/quick-start) and [shadcn composition guide](https://ui.shadcn.com/docs/components/base/data-table) use the v9 API.
 

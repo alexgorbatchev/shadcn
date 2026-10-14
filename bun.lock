@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "shadcn-alexgorbatchev",
+      "name": "@alexgorbatchev/shadcn",
       "dependencies": {
         "@base-ui/react": "^1.9.0",
         "@daypicker/persian": "^10.0.2",

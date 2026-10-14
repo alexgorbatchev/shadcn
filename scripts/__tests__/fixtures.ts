@@ -1,7 +1,7 @@
 export const fixture_packageRenderSource: string = `
 import { renderToStaticMarkup } from "react-dom/server";
 import { jsx } from "react/jsx-runtime";
-import { Button } from "shadcn-alexgorbatchev";
+import { Button } from "@alexgorbatchev/shadcn";
 
 const buttons = [];
 const markup = renderToStaticMarkup(jsx("main", {
@@ -22,7 +22,7 @@ console.log(JSON.stringify(buttons));
 export const fixture_otpServerRenderSource: string = `
 import { renderToString } from "react-dom/server";
 import { jsx } from "react/jsx-runtime";
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "shadcn-alexgorbatchev";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@alexgorbatchev/shadcn";
 
 const inputs = [];
 const markup = renderToString(jsx("main", {
@@ -50,7 +50,7 @@ export const fixture_chartServerRenderSource: string = `
 import { renderToString } from "react-dom/server";
 import { jsx } from "react/jsx-runtime";
 import { Bar, BarChart } from "recharts";
-import { ChartContainer, ChartStyle } from "shadcn-alexgorbatchev";
+import { ChartContainer, ChartStyle } from "@alexgorbatchev/shadcn";
 
 const config = { desktop: { label: "Desktop", theme: { light: "var(--primary)", dark: "var(--success)" } } };
 const markup = renderToString(jsx("main", {
@@ -79,7 +79,7 @@ export const fixture_questionnaireServerRenderSource: string = `
 import { renderToString } from "react-dom/server";
 import { jsx, jsxs } from "react/jsx-runtime";
 import { Questionnaire, QuestionnaireProgress, QuestionnaireItem, QuestionnaireTitle, QuestionnaireChoice,
-  QuestionnaireActions, QuestionnairePrevious, QuestionnaireNext, QuestionnaireSubmit } from "shadcn-alexgorbatchev";
+  QuestionnaireActions, QuestionnairePrevious, QuestionnaireNext, QuestionnaireSubmit } from "@alexgorbatchev/shadcn";
 const markup = renderToString(jsxs(Questionnaire, {
   defaultItem: "review", shortcuts: "numbers",
   items: [
@@ -109,7 +109,7 @@ export const fixture_scrollerServerRenderSource: string = `
 import { renderToString } from "react-dom/server";
 import { jsx, jsxs } from "react/jsx-runtime";
 import { MessageScrollerProvider, MessageScroller, MessageScrollerViewport, MessageScrollerContent,
-  MessageScrollerItem, MessageScrollerButton } from "shadcn-alexgorbatchev";
+  MessageScrollerItem, MessageScrollerButton } from "@alexgorbatchev/shadcn";
 const transcripts = [];
 for (const position of ["start", "end", "last-anchor"]) {
   const markup = renderToString(jsx(MessageScrollerProvider, {

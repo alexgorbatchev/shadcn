@@ -1,10 +1,10 @@
 ---
 created_on: 2026-10-08 06:13
-last_modified: 2026-10-12 17:08
+last_modified: 2026-10-14 06:47
 status: current
 ---
 
-# shadcn-alexgorbatchev
+# @alexgorbatchev/shadcn
 
 Standalone Bun/TypeScript React component package with a local Storybook preview. This repository owns its design tokens; devhost is a design reference, not a runtime dependency.
 
@@ -23,7 +23,7 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - Reduced-motion interactions: `bun run test:reduced-motion` (full Storybook catalog with native reduced-motion preference)
 - Coverage gate: `bun run test:coverage` (90% statements, branches, functions, and lines across runtime source)
 - Build package: `just build`
-- Prepare local archive: `just pack` (runs the package build and writes `.tmp/packs/shadcn-alexgorbatchev-0.0.1.tgz`)
+- Prepare local archive: `just pack` (runs the package build and writes `.tmp/packs/alexgorbatchev-shadcn-0.0.1.tgz`)
 
 ## Development Setup
 
