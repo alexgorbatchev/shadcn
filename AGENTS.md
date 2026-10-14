@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-08 06:13
-last_modified: 2026-10-14 06:47
+last_modified: 2026-10-14 12:33
 status: current
 ---
 
@@ -24,7 +24,7 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - Reduced-motion interactions: `bun run test:reduced-motion` (full Storybook catalog with native reduced-motion preference)
 - Coverage gate: `bun run test:coverage` (90% statements, branches, functions, and lines across runtime source)
 - Build package: `just build`
-- Prepare local archive: `just pack` (runs the package build and writes `.tmp/packs/alexgorbatchev-shadcn-0.0.1.tgz`)
+- Prepare local archive: `just pack` (runs the package build and writes `.tmp/packs/alexgorbatchev-shadcn-0.0.2.tgz`)
 
 ## Development Setup
 

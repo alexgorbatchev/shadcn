@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-14 06:35
-last_modified: 2026-10-14 06:43
+last_modified: 2026-10-14 12:33
 status: current
 ---
 
@@ -22,7 +22,7 @@ The workflow uses npm OIDC authentication on a GitHub-hosted runner, with no npm
 
 ```sh
 just pack
-npm publish ./.tmp/packs/alexgorbatchev-shadcn-0.0.1.tgz --access public --ignore-scripts
+npm publish ./.tmp/packs/alexgorbatchev-shadcn-0.0.2.tgz --access public --ignore-scripts
 ```
 
 Use the archive for the intended version; its filename changes with `package.json`. This first publication is a separate authorized action. Configure trusted publishing afterward, and use a new version for the first automated release; npm versions cannot be republished. See [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/) for setup and first-publish expiry requirements.

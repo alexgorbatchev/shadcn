@@ -32,7 +32,7 @@ The package targets client-rendered Bun React applications.
 Install the local archive from a consuming project:
 
 ```sh
-bun add /home/alex/development/projects/shadcn-alexgorbatchev/.tmp/packs/alexgorbatchev-shadcn-0.0.1.tgz
+bun add /home/alex/development/projects/shadcn-alexgorbatchev/.tmp/packs/alexgorbatchev-shadcn-0.0.2.tgz
 ```
 
 The archive must exist before installation. Package preparation and contributor commands are documented in [AGENTS.md](./AGENTS.md#commands). Its filename includes the package version.
