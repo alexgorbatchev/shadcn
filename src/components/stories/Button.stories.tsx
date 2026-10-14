@@ -25,6 +25,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  tags: ["visual"],
   play: async ({ canvasElement, args }) => {
     const button = within(canvasElement).getByRole("button");
     await userEvent.click(button);
@@ -33,14 +34,15 @@ export const Default: Story = {
     await expect(args.onClick).toHaveBeenCalledTimes(3);
   },
 };
-export const Outline: Story = { ...Default, args: { variant: "outline" } };
+export const Outline: Story = { tags: ["visual"], ...Default, args: { variant: "outline" } };
 export const Secondary: Story = { ...Default, args: { variant: "secondary" } };
 export const Ghost: Story = { ...Default, args: { variant: "ghost" } };
-export const Destructive: Story = { ...Default, args: { variant: "destructive" } };
+export const Destructive: Story = { tags: ["visual"], ...Default, args: { variant: "destructive" } };
 export const Success: Story = { ...Default, args: { variant: "success" } };
 export const Warning: Story = { ...Default, args: { variant: "warning" } };
 export const Link: Story = { ...Default, args: { variant: "link" } };
 export const Disabled: Story = {
+  tags: ["visual"],
   args: { disabled: true },
   play: async ({ canvasElement, args }) => {
     const button = within(canvasElement).getByRole("button");
@@ -62,6 +64,7 @@ export const WithIcon: Story = {
   },
 };
 export const Loading: Story = {
+  tags: ["visual"],
   ...Disabled,
   args: {
     disabled: true,

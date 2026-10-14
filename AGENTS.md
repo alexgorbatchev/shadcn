@@ -19,6 +19,7 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - Package rendering: `bun run test:package` (builds the public package and checks Button, Chart, InputOTP, MessageScroller and Questionnaire rendering with development and production React)
 - Browser interactions: `bun run test` (Storybook stories tagged `test` in headless Chromium, then native browser checks and package-render tests)
 - Text contrast: `bun run test:contrast` (all tested stories in Chromium across light/dark themes and comfortable/compact density; violations fail)
+- Visual regression: `bun run test:visual` (selected stories across themes, densities, desktop and mobile widths); review intentional baseline updates with `bun run test:visual:update` on Ubuntu 24.04
 - Native browser checks: `bun run test:native` (Chromium checks including Carousel with reduced motion; Drawer also runs in Linux WebKit)
 - Reduced-motion interactions: `bun run test:reduced-motion` (full Storybook catalog with native reduced-motion preference)
 - Coverage gate: `bun run test:coverage` (90% statements, branches, functions, and lines across runtime source)
@@ -79,4 +80,5 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - [Consumer setup and customization](./README.md)
 - [Source and license attribution](./THIRD_PARTY_NOTICES.md)
 - [Storybook contrast testing and manual-review limits](./docs/internal/accessibility.md)
+- [Visual regression baselines and CI](./docs/internal/visual-regression.md)
 - [Session handoff and validation evidence](./docs/internal/handoff.md)

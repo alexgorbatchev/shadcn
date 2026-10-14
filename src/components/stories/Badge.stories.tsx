@@ -21,6 +21,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  tags: ["visual"],
   play: async ({ canvasElement }) => {
     const badge = within(canvasElement).getByText("Active");
     await expect(badge).toBeVisible();
@@ -35,8 +36,8 @@ export const Secondary: Story = { ...Default, args: { variant: "secondary" } };
 export const Outline: Story = { ...Default, args: { variant: "outline" } };
 export const Destructive: Story = { ...Default, args: { variant: "destructive" } };
 export const Ghost: Story = { ...Default, args: { variant: "ghost" } };
-export const Success: Story = { ...Default, args: { variant: "success" } };
-export const Warning: Story = { ...Default, args: { variant: "warning" } };
+export const Success: Story = { tags: ["visual"], ...Default, args: { variant: "success" } };
+export const Warning: Story = { tags: ["visual"], ...Default, args: { variant: "warning" } };
 export const Link: Story = { ...Default, args: { variant: "link" } };
 export const AsLink: Story = {
   args: {

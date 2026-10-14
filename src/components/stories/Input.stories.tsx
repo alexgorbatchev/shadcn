@@ -40,6 +40,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
+  tags: ["visual"],
   play: async ({ canvasElement, userEvent, args }) => {
     const canvas = within(canvasElement);
     const input = canvas.getByRole("textbox", { name: "Email" });
@@ -62,6 +63,7 @@ export const Filled: Story = {
   },
 };
 export const Disabled: Story = {
+  tags: ["visual"],
   args: { disabled: true },
   play: async ({ canvasElement, userEvent, args }) => {
     const input = within(canvasElement).getByRole("textbox", { name: "Email" });
@@ -74,6 +76,7 @@ export const Disabled: Story = {
   },
 };
 export const Invalid: Story = {
+  tags: ["visual"],
   ...Default,
   args: { "aria-invalid": true },
   play: async (context) => {

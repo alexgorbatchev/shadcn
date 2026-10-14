@@ -53,6 +53,7 @@ type Story = StoryObj<typeof meta>;
 type CardSpacingStyle = CSSProperties & { "--card-spacing": string };
 
 export const Default: Story = {
+  tags: ["visual"],
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
     const card = canvas.getByRole("region", { name: "Project settings" });
@@ -84,7 +85,7 @@ export const Default: Story = {
     await expect(args.onClick).toHaveBeenCalledTimes(1);
   },
 };
-export const Small: Story = { ...Default, args: { size: "sm" } };
+export const Small: Story = { tags: ["visual"], ...Default, args: { size: "sm" } };
 export const Compact: Story = { ...Default, args: { density: "compact" } };
 export const CompactSmall: Story = { ...Default, args: { density: "compact", size: "sm" } };
 
