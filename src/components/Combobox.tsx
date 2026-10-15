@@ -11,13 +11,13 @@ import { ChevronDownIcon, XIcon, CheckIcon } from "lucide-react";
 
 const Combobox = ComboboxPrimitive.Root;
 
-function ComboboxValue({ ...props }: ComboboxPrimitive.Value.Props): ReactElement | null {
+function ComboboxValue({ ...props }: ComboboxPrimitive.Value.Props): ReactElement {
   return <ComboboxPrimitive.Value {...props} />;
 }
 
 type ComboboxTriggerProps = ComboboxPrimitive.Trigger.Props & IDensityProps;
 
-function ComboboxTrigger({ density, className, children, ...props }: ComboboxTriggerProps): ReactElement | null {
+function ComboboxTrigger({ density, className, children, ...props }: ComboboxTriggerProps): ReactElement {
   return (
     <ComboboxPrimitive.Trigger
       data-density={density}
@@ -35,7 +35,7 @@ function ComboboxTrigger({ density, className, children, ...props }: ComboboxTri
 
 type ComboboxClearProps = ComboboxPrimitive.Clear.Props & IDensityProps;
 
-function ComboboxClear({ density, className, ...props }: ComboboxClearProps): ReactElement | null {
+function ComboboxClear({ density, className, ...props }: ComboboxClearProps): ReactElement {
   return (
     <ComboboxPrimitive.Clear
       data-density={density}
@@ -68,7 +68,7 @@ function ComboboxInput({
   triggerLabel = "Open popup",
   clearLabel = "Clear selection",
   ...props
-}: ComboboxInputProps): ReactElement | null {
+}: ComboboxInputProps): ReactElement {
   return (
     <InputGroup density={density} className={cn("w-auto", frameClassName)}>
       <ComboboxPrimitive.Input disabled={disabled} className={className} render={<InputGroupInput />} {...props} />
@@ -105,7 +105,7 @@ function ComboboxContent({
   alignOffset = 0,
   anchor,
   ...props
-}: ComboboxContentProps): ReactElement | null {
+}: ComboboxContentProps): ReactElement {
   const resolvedDensity = useDensity(density);
   const direction = useDirection();
 
@@ -139,7 +139,7 @@ function ComboboxContent({
 
 type ComboboxListProps = ComboboxPrimitive.List.Props & IDensityProps;
 
-function ComboboxList({ density, className, ...props }: ComboboxListProps): ReactElement | null {
+function ComboboxList({ density, className, ...props }: ComboboxListProps): ReactElement {
   return (
     <ComboboxPrimitive.List
       data-density={density}
@@ -157,7 +157,7 @@ function ComboboxList({ density, className, ...props }: ComboboxListProps): Reac
 
 type ComboboxItemProps = ComboboxPrimitive.Item.Props & IDensityProps;
 
-function ComboboxItem({ density, className, children, ...props }: ComboboxItemProps): ReactElement | null {
+function ComboboxItem({ density, className, children, ...props }: ComboboxItemProps): ReactElement {
   return (
     <ComboboxPrimitive.Item
       data-density={density}
@@ -182,7 +182,7 @@ function ComboboxItem({ density, className, children, ...props }: ComboboxItemPr
 
 type ComboboxGroupProps = ComboboxPrimitive.Group.Props & IDensityProps;
 
-function ComboboxGroup({ density, className, ...props }: ComboboxGroupProps): ReactElement | null {
+function ComboboxGroup({ density, className, ...props }: ComboboxGroupProps): ReactElement {
   return (
     <ComboboxPrimitive.Group
       data-density={density}
@@ -195,7 +195,7 @@ function ComboboxGroup({ density, className, ...props }: ComboboxGroupProps): Re
 
 type ComboboxLabelProps = ComboboxPrimitive.GroupLabel.Props & IDensityProps;
 
-function ComboboxLabel({ density, className, ...props }: ComboboxLabelProps): ReactElement | null {
+function ComboboxLabel({ density, className, ...props }: ComboboxLabelProps): ReactElement {
   return (
     <ComboboxPrimitive.GroupLabel
       data-density={density}
@@ -208,13 +208,13 @@ function ComboboxLabel({ density, className, ...props }: ComboboxLabelProps): Re
   );
 }
 
-function ComboboxCollection({ ...props }: ComboboxPrimitive.Collection.Props): ReactElement | null {
+function ComboboxCollection({ ...props }: ComboboxPrimitive.Collection.Props): ReactElement {
   return <ComboboxPrimitive.Collection {...props} />;
 }
 
 type ComboboxEmptyProps = ComboboxPrimitive.Empty.Props & IDensityProps;
 
-function ComboboxEmpty({ density, className, ...props }: ComboboxEmptyProps): ReactElement | null {
+function ComboboxEmpty({ density, className, ...props }: ComboboxEmptyProps): ReactElement {
   return (
     <ComboboxPrimitive.Empty
       data-density={density}
@@ -232,7 +232,7 @@ function ComboboxEmpty({ density, className, ...props }: ComboboxEmptyProps): Re
 
 type ComboboxSeparatorProps = ComboboxPrimitive.Separator.Props & IDensityProps;
 
-function ComboboxSeparator({ density, className, ...props }: ComboboxSeparatorProps): ReactElement | null {
+function ComboboxSeparator({ density, className, ...props }: ComboboxSeparatorProps): ReactElement {
   return (
     <ComboboxPrimitive.Separator
       data-density={density}
@@ -249,7 +249,7 @@ type ComboboxChipsProps = ComponentPropsWithRef<typeof ComboboxPrimitive.Chips> 
   ComboboxPrimitive.Chips.Props &
   IDensityProps;
 
-function ComboboxChips({ density, className, ...props }: ComboboxChipsProps): ReactElement | null {
+function ComboboxChips({ density, className, ...props }: ComboboxChipsProps): ReactElement {
   return (
     <ComboboxPrimitive.Chips
       data-density={density}
@@ -269,13 +269,7 @@ type ComboboxChipProps = ComboboxPrimitive.Chip.Props & {
   showRemove?: boolean;
 } & IDensityProps;
 
-function ComboboxChip({
-  density,
-  className,
-  children,
-  showRemove = true,
-  ...props
-}: ComboboxChipProps): ReactElement | null {
+function ComboboxChip({ density, className, children, showRemove = true, ...props }: ComboboxChipProps): ReactElement {
   return (
     <ComboboxPrimitive.Chip
       data-density={density}
@@ -305,7 +299,7 @@ function ComboboxChip({
 
 type ComboboxChipsInputProps = ComboboxPrimitive.Input.Props & IDensityProps;
 
-function ComboboxChipsInput({ density, className, ...props }: ComboboxChipsInputProps): ReactElement | null {
+function ComboboxChipsInput({ density, className, ...props }: ComboboxChipsInputProps): ReactElement {
   return (
     <ComboboxPrimitive.Input
       data-density={density}

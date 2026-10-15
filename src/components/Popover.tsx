@@ -7,11 +7,11 @@ import { useDirection } from "@base-ui/react/direction-provider";
 import { Popover as PopoverPrimitive } from "@base-ui/react/popover";
 import { cn } from "../utils/cn";
 
-function Popover<Payload>({ ...props }: PopoverPrimitive.Root.Props<Payload>): ReactElement | null {
+function Popover<Payload>({ ...props }: PopoverPrimitive.Root.Props<Payload>): ReactElement {
   return <PopoverPrimitive.Root data-slot="popover" {...props} />;
 }
 
-function PopoverTrigger<Payload>({ ...props }: PopoverPrimitive.Trigger.Props<Payload>): ReactElement | null {
+function PopoverTrigger<Payload>({ ...props }: PopoverPrimitive.Trigger.Props<Payload>): ReactElement {
   return <PopoverPrimitive.Trigger data-slot="popover-trigger" {...props} />;
 }
 
@@ -27,7 +27,7 @@ function PopoverContent({
   side = "bottom",
   sideOffset = 4,
   ...props
-}: PopoverContentProps): ReactElement | null {
+}: PopoverContentProps): ReactElement {
   const resolvedDensity = useDensity(density);
   const direction = useDirection();
 
@@ -60,7 +60,7 @@ function PopoverContent({
 
 type PopoverHeaderProps = ComponentProps<"div"> & IDensityProps;
 
-function PopoverHeader({ density, className, ...props }: PopoverHeaderProps): ReactElement | null {
+function PopoverHeader({ density, className, ...props }: PopoverHeaderProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -73,7 +73,7 @@ function PopoverHeader({ density, className, ...props }: PopoverHeaderProps): Re
 
 type PopoverTitleProps = PopoverPrimitive.Title.Props & IDensityProps;
 
-function PopoverTitle({ density, className, ...props }: PopoverTitleProps): ReactElement | null {
+function PopoverTitle({ density, className, ...props }: PopoverTitleProps): ReactElement {
   return (
     <PopoverPrimitive.Title
       data-density={density}
@@ -86,7 +86,7 @@ function PopoverTitle({ density, className, ...props }: PopoverTitleProps): Reac
 
 type PopoverDescriptionProps = PopoverPrimitive.Description.Props & IDensityProps;
 
-function PopoverDescription({ density, className, ...props }: PopoverDescriptionProps): ReactElement | null {
+function PopoverDescription({ density, className, ...props }: PopoverDescriptionProps): ReactElement {
   return (
     <PopoverPrimitive.Description
       data-density={density}

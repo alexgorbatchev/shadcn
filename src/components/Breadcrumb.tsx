@@ -7,7 +7,7 @@ import { cn } from "../utils/cn";
 
 type BreadcrumbProps = ComponentProps<"nav"> & IDensityProps;
 
-function Breadcrumb({ density, className, ...props }: BreadcrumbProps): ReactElement | null {
+function Breadcrumb({ density, className, ...props }: BreadcrumbProps): ReactElement {
   return (
     <nav aria-label="breadcrumb" data-density={density} data-slot="breadcrumb" className={cn(className)} {...props} />
   );
@@ -15,7 +15,7 @@ function Breadcrumb({ density, className, ...props }: BreadcrumbProps): ReactEle
 
 type BreadcrumbListProps = ComponentProps<"ol"> & IDensityProps;
 
-function BreadcrumbList({ density, className, ...props }: BreadcrumbListProps): ReactElement | null {
+function BreadcrumbList({ density, className, ...props }: BreadcrumbListProps): ReactElement {
   return (
     <ol
       data-density={density}
@@ -31,7 +31,7 @@ function BreadcrumbList({ density, className, ...props }: BreadcrumbListProps): 
 
 type BreadcrumbItemProps = ComponentProps<"li"> & IDensityProps;
 
-function BreadcrumbItem({ density, className, ...props }: BreadcrumbItemProps): ReactElement | null {
+function BreadcrumbItem({ density, className, ...props }: BreadcrumbItemProps): ReactElement {
   return (
     <li
       data-density={density}
@@ -44,7 +44,7 @@ function BreadcrumbItem({ density, className, ...props }: BreadcrumbItemProps): 
 
 type BreadcrumbLinkProps = useRender.ComponentProps<"a"> & IDensityProps;
 
-function BreadcrumbLink({ density, className, render, ...props }: BreadcrumbLinkProps): ReactElement | null {
+function BreadcrumbLink({ density, className, render, ...props }: BreadcrumbLinkProps): ReactElement {
   return useRender({
     defaultTagName: "a",
     props: mergeProps<"a">(
@@ -63,7 +63,7 @@ function BreadcrumbLink({ density, className, render, ...props }: BreadcrumbLink
 
 type BreadcrumbPageProps = ComponentProps<"span"> & IDensityProps;
 
-function BreadcrumbPage({ density, className, ...props }: BreadcrumbPageProps): ReactElement | null {
+function BreadcrumbPage({ density, className, ...props }: BreadcrumbPageProps): ReactElement {
   return (
     <span
       data-density={density}
@@ -79,12 +79,7 @@ function BreadcrumbPage({ density, className, ...props }: BreadcrumbPageProps): 
 
 type BreadcrumbSeparatorProps = ComponentProps<"li"> & IDensityProps;
 
-function BreadcrumbSeparator({
-  density,
-  children,
-  className,
-  ...props
-}: BreadcrumbSeparatorProps): ReactElement | null {
+function BreadcrumbSeparator({ density, children, className, ...props }: BreadcrumbSeparatorProps): ReactElement {
   return (
     <li
       data-density={density}
@@ -101,7 +96,7 @@ function BreadcrumbSeparator({
 
 type BreadcrumbEllipsisProps = ComponentProps<"span"> & IDensityProps;
 
-function BreadcrumbEllipsis({ density, className, ...props }: BreadcrumbEllipsisProps): ReactElement | null {
+function BreadcrumbEllipsis({ density, className, ...props }: BreadcrumbEllipsisProps): ReactElement {
   return (
     <span
       data-density={density}

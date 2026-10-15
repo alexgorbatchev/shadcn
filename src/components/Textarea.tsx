@@ -4,7 +4,7 @@ import { cn } from "../utils/cn";
 
 type TextareaProps = ComponentProps<"textarea"> & IDensityProps;
 
-function Textarea({ density, className, ...props }: TextareaProps): ReactElement | null {
+function Textarea({ density, className, ...props }: TextareaProps): ReactElement {
   return (
     <textarea
       data-density={density}

@@ -26,7 +26,7 @@ const buttonGroupVariants = cva(
 
 type ButtonGroupProps = ComponentProps<"div"> & VariantProps<typeof buttonGroupVariants> & IDensityProps;
 
-function ButtonGroup({ density, className, orientation, ...props }: ButtonGroupProps): ReactElement | null {
+function ButtonGroup({ density, className, orientation, ...props }: ButtonGroupProps): ReactElement {
   return (
     <div
       role="group"
@@ -41,7 +41,7 @@ function ButtonGroup({ density, className, orientation, ...props }: ButtonGroupP
 
 type ButtonGroupTextProps = useRender.ComponentProps<"div"> & IDensityProps;
 
-function ButtonGroupText({ density, className, render, ...props }: ButtonGroupTextProps): ReactElement | null {
+function ButtonGroupText({ density, className, render, ...props }: ButtonGroupTextProps): ReactElement {
   return useRender({
     defaultTagName: "div",
     props: mergeProps<"div">(
@@ -68,7 +68,7 @@ function ButtonGroupSeparator({
   className,
   orientation = "vertical",
   ...props
-}: ButtonGroupSeparatorProps): ReactElement | null {
+}: ButtonGroupSeparatorProps): ReactElement {
   return (
     <Separator
       data-density={density}

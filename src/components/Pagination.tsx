@@ -8,7 +8,7 @@ import type { VariantProps } from "class-variance-authority";
 
 type PaginationProps = ComponentProps<"nav"> & IDensityProps;
 
-function Pagination({ density, className, ...props }: PaginationProps): ReactElement | null {
+function Pagination({ density, className, ...props }: PaginationProps): ReactElement {
   return (
     <nav
       role="navigation"
@@ -23,7 +23,7 @@ function Pagination({ density, className, ...props }: PaginationProps): ReactEle
 
 type PaginationContentProps = ComponentProps<"ul"> & IDensityProps;
 
-function PaginationContent({ density, className, ...props }: PaginationContentProps): ReactElement | null {
+function PaginationContent({ density, className, ...props }: PaginationContentProps): ReactElement {
   return (
     <ul
       data-density={density}
@@ -34,7 +34,7 @@ function PaginationContent({ density, className, ...props }: PaginationContentPr
   );
 }
 
-function PaginationItem({ ...props }: ComponentProps<"li">): ReactElement | null {
+function PaginationItem({ ...props }: ComponentProps<"li">): ReactElement {
   return <li data-slot="pagination-item" {...props} />;
 }
 
@@ -49,7 +49,7 @@ function PaginationLink({
   isActive,
   size = "icon",
   ...props
-}: PaginationLinkProps & IDensityProps): ReactElement | null {
+}: PaginationLinkProps & IDensityProps): ReactElement {
   return (
     <a
       data-density={density}
@@ -62,14 +62,14 @@ function PaginationLink({
   );
 }
 
-type PaginationPreviousProps = ComponentProps<typeof PaginationLink> & { text?: string } & IDensityProps;
+type PaginationDirectionProps = ComponentProps<typeof PaginationLink> & { text?: string };
 
 function PaginationPrevious({
   density,
   className,
   text = "Previous",
   ...props
-}: PaginationPreviousProps): ReactElement | null {
+}: PaginationDirectionProps): ReactElement {
   return (
     <PaginationLink
       density={density}
@@ -84,9 +84,7 @@ function PaginationPrevious({
   );
 }
 
-type PaginationNextProps = ComponentProps<typeof PaginationLink> & { text?: string } & IDensityProps;
-
-function PaginationNext({ density, className, text = "Next", ...props }: PaginationNextProps): ReactElement | null {
+function PaginationNext({ density, className, text = "Next", ...props }: PaginationDirectionProps): ReactElement {
   return (
     <PaginationLink
       density={density}
@@ -103,7 +101,7 @@ function PaginationNext({ density, className, text = "Next", ...props }: Paginat
 
 type PaginationEllipsisProps = ComponentProps<"span"> & IDensityProps;
 
-function PaginationEllipsis({ density, className, ...props }: PaginationEllipsisProps): ReactElement | null {
+function PaginationEllipsis({ density, className, ...props }: PaginationEllipsisProps): ReactElement {
   return (
     <span
       aria-hidden

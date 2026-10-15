@@ -22,7 +22,7 @@ const markerVariants = cva(
 type MarkerState = { slot: "marker"; variant: VariantProps<typeof markerVariants>["variant"]; density?: Density };
 type MarkerProps = useRender.ComponentProps<"div", MarkerState> & VariantProps<typeof markerVariants> & IDensityProps;
 
-function Marker({ density, className, variant = "default", render, ...props }: MarkerProps): ReactElement | null {
+function Marker({ density, className, variant = "default", render, ...props }: MarkerProps): ReactElement {
   return useRender({
     defaultTagName: "div",
     props: mergeProps<"div">({ className: cn(markerVariants({ variant, className })) }, props),
@@ -33,7 +33,7 @@ function Marker({ density, className, variant = "default", render, ...props }: M
 
 type MarkerIconProps = ComponentProps<"span"> & IDensityProps;
 
-function MarkerIcon({ density, className, ...props }: MarkerIconProps): ReactElement | null {
+function MarkerIcon({ density, className, ...props }: MarkerIconProps): ReactElement {
   return (
     <span
       data-density={density}
@@ -47,7 +47,7 @@ function MarkerIcon({ density, className, ...props }: MarkerIconProps): ReactEle
 
 type MarkerContentProps = ComponentProps<"span"> & IDensityProps;
 
-function MarkerContent({ density, className, ...props }: MarkerContentProps): ReactElement | null {
+function MarkerContent({ density, className, ...props }: MarkerContentProps): ReactElement {
   return (
     <span
       data-density={density}

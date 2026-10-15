@@ -5,7 +5,7 @@ import { cn } from "../utils/cn";
 
 type EmptyProps = ComponentProps<"div"> & IDensityProps;
 
-function Empty({ density, className, ...props }: EmptyProps): ReactElement | null {
+function Empty({ density, className, ...props }: EmptyProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -21,7 +21,7 @@ function Empty({ density, className, ...props }: EmptyProps): ReactElement | nul
 
 type EmptyHeaderProps = ComponentProps<"div"> & IDensityProps;
 
-function EmptyHeader({ density, className, ...props }: EmptyHeaderProps): ReactElement | null {
+function EmptyHeader({ density, className, ...props }: EmptyHeaderProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -49,7 +49,7 @@ const emptyMediaVariants = cva(
 
 type EmptyMediaProps = ComponentProps<"div"> & VariantProps<typeof emptyMediaVariants> & IDensityProps;
 
-function EmptyMedia({ density, className, variant = "default", ...props }: EmptyMediaProps): ReactElement | null {
+function EmptyMedia({ density, className, variant = "default", ...props }: EmptyMediaProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -63,7 +63,7 @@ function EmptyMedia({ density, className, variant = "default", ...props }: Empty
 
 type EmptyTitleProps = ComponentProps<"div"> & IDensityProps;
 
-function EmptyTitle({ density, className, ...props }: EmptyTitleProps): ReactElement | null {
+function EmptyTitle({ density, className, ...props }: EmptyTitleProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -76,7 +76,7 @@ function EmptyTitle({ density, className, ...props }: EmptyTitleProps): ReactEle
 
 type EmptyDescriptionProps = ComponentProps<"div"> & IDensityProps;
 
-function EmptyDescription({ density, className, ...props }: EmptyDescriptionProps): ReactElement | null {
+function EmptyDescription({ density, className, ...props }: EmptyDescriptionProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -92,7 +92,7 @@ function EmptyDescription({ density, className, ...props }: EmptyDescriptionProp
 
 type EmptyContentProps = ComponentProps<"div"> & IDensityProps;
 
-function EmptyContent({ density, className, ...props }: EmptyContentProps): ReactElement | null {
+function EmptyContent({ density, className, ...props }: EmptyContentProps): ReactElement {
   return (
     <div
       data-density={density}

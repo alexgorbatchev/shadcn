@@ -8,7 +8,7 @@ type AvatarProps = AvatarPrimitive.Root.Props & {
   size?: "default" | "sm" | "lg";
 } & IDensityProps;
 
-function Avatar({ density, className, size = "default", ...props }: AvatarProps): ReactElement | null {
+function Avatar({ density, className, size = "default", ...props }: AvatarProps): ReactElement {
   return (
     <AvatarPrimitive.Root
       data-density={density}
@@ -27,7 +27,7 @@ function Avatar({ density, className, size = "default", ...props }: AvatarProps)
 
 type AvatarImageProps = AvatarPrimitive.Image.Props & IDensityProps;
 
-function AvatarImage({ density, className, ...props }: AvatarImageProps): ReactElement | null {
+function AvatarImage({ density, className, ...props }: AvatarImageProps): ReactElement {
   return (
     <AvatarPrimitive.Image
       data-density={density}
@@ -45,7 +45,7 @@ function AvatarImage({ density, className, ...props }: AvatarImageProps): ReactE
 
 type AvatarFallbackProps = AvatarPrimitive.Fallback.Props & IDensityProps;
 
-function AvatarFallback({ density, className, ...props }: AvatarFallbackProps): ReactElement | null {
+function AvatarFallback({ density, className, ...props }: AvatarFallbackProps): ReactElement {
   return (
     <AvatarPrimitive.Fallback
       data-density={density}
@@ -63,7 +63,7 @@ function AvatarFallback({ density, className, ...props }: AvatarFallbackProps): 
 
 type AvatarBadgeProps = ComponentProps<"span"> & IDensityProps;
 
-function AvatarBadge({ density, className, ...props }: AvatarBadgeProps): ReactElement | null {
+function AvatarBadge({ density, className, ...props }: AvatarBadgeProps): ReactElement {
   return (
     <span
       data-density={density}
@@ -82,7 +82,7 @@ function AvatarBadge({ density, className, ...props }: AvatarBadgeProps): ReactE
 
 type AvatarGroupProps = ComponentProps<"div"> & IDensityProps;
 
-function AvatarGroup({ density, className, ...props }: AvatarGroupProps): ReactElement | null {
+function AvatarGroup({ density, className, ...props }: AvatarGroupProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -98,7 +98,7 @@ function AvatarGroup({ density, className, ...props }: AvatarGroupProps): ReactE
 
 type AvatarGroupCountProps = ComponentProps<"div"> & IDensityProps;
 
-function AvatarGroupCount({ density, className, ...props }: AvatarGroupCountProps): ReactElement | null {
+function AvatarGroupCount({ density, className, ...props }: AvatarGroupCountProps): ReactElement {
   return (
     <div
       data-density={density}

@@ -4,7 +4,7 @@ import { cn } from "../utils/cn";
 
 type CardProps = ComponentProps<"div"> & { size?: "default" | "sm" } & IDensityProps;
 
-function Card({ density, className, size = "default", ...props }: CardProps): ReactElement | null {
+function Card({ density, className, size = "default", ...props }: CardProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -21,7 +21,7 @@ function Card({ density, className, size = "default", ...props }: CardProps): Re
 
 type CardHeaderProps = ComponentProps<"div"> & IDensityProps;
 
-function CardHeader({ density, className, ...props }: CardHeaderProps): ReactElement | null {
+function CardHeader({ density, className, ...props }: CardHeaderProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -37,7 +37,7 @@ function CardHeader({ density, className, ...props }: CardHeaderProps): ReactEle
 
 type CardTitleProps = ComponentProps<"div"> & IDensityProps;
 
-function CardTitle({ density, className, ...props }: CardTitleProps): ReactElement | null {
+function CardTitle({ density, className, ...props }: CardTitleProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -50,7 +50,7 @@ function CardTitle({ density, className, ...props }: CardTitleProps): ReactEleme
 
 type CardDescriptionProps = ComponentProps<"div"> & IDensityProps;
 
-function CardDescription({ density, className, ...props }: CardDescriptionProps): ReactElement | null {
+function CardDescription({ density, className, ...props }: CardDescriptionProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -63,7 +63,7 @@ function CardDescription({ density, className, ...props }: CardDescriptionProps)
 
 type CardActionProps = ComponentProps<"div"> & IDensityProps;
 
-function CardAction({ density, className, ...props }: CardActionProps): ReactElement | null {
+function CardAction({ density, className, ...props }: CardActionProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -76,7 +76,7 @@ function CardAction({ density, className, ...props }: CardActionProps): ReactEle
 
 type CardContentProps = ComponentProps<"div"> & IDensityProps;
 
-function CardContent({ density, className, ...props }: CardContentProps): ReactElement | null {
+function CardContent({ density, className, ...props }: CardContentProps): ReactElement {
   return (
     <div data-density={density} data-slot="card-content" className={cn("px-(--card-spacing)", className)} {...props} />
   );
@@ -84,7 +84,7 @@ function CardContent({ density, className, ...props }: CardContentProps): ReactE
 
 type CardFooterProps = ComponentProps<"div"> & IDensityProps;
 
-function CardFooter({ density, className, ...props }: CardFooterProps): ReactElement | null {
+function CardFooter({ density, className, ...props }: CardFooterProps): ReactElement {
   return (
     <div
       data-density={density}

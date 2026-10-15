@@ -6,7 +6,7 @@ import { CheckIcon } from "lucide-react";
 
 type CheckboxProps = CheckboxPrimitive.Root.Props & IDensityProps;
 
-function Checkbox({ density, className, ...props }: CheckboxProps): ReactElement | null {
+function Checkbox({ density, className, ...props }: CheckboxProps): ReactElement {
   return (
     <CheckboxPrimitive.Root
       data-density={density}

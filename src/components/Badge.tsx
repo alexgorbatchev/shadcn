@@ -29,7 +29,7 @@ const badgeVariants = cva(
 type BadgeState = { slot: "badge"; variant: VariantProps<typeof badgeVariants>["variant"]; density?: Density };
 type BadgeProps = useRender.ComponentProps<"span", BadgeState> & VariantProps<typeof badgeVariants> & IDensityProps;
 
-function Badge({ density, className, variant = "default", render, ...props }: BadgeProps): ReactElement | null {
+function Badge({ density, className, variant = "default", render, ...props }: BadgeProps): ReactElement {
   return useRender({
     defaultTagName: "span",
     props: mergeProps<"span">(

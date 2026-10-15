@@ -6,11 +6,11 @@ import { PreviewCard as PreviewCardPrimitive } from "@base-ui/react/preview-card
 import { useDirection } from "@base-ui/react/direction-provider";
 import { cn } from "../utils/cn";
 
-function HoverCard<Payload>({ ...props }: PreviewCardPrimitive.Root.Props<Payload>): ReactElement | null {
+function HoverCard<Payload>({ ...props }: PreviewCardPrimitive.Root.Props<Payload>): ReactElement {
   return <PreviewCardPrimitive.Root data-slot="hover-card" {...props} />;
 }
 
-function HoverCardTrigger<Payload>({ ...props }: PreviewCardPrimitive.Trigger.Props<Payload>): ReactElement | null {
+function HoverCardTrigger<Payload>({ ...props }: PreviewCardPrimitive.Trigger.Props<Payload>): ReactElement {
   return <PreviewCardPrimitive.Trigger data-slot="hover-card-trigger" {...props} />;
 }
 
@@ -26,7 +26,7 @@ function HoverCardContent({
   align = "center",
   alignOffset = 4,
   ...props
-}: HoverCardContentProps): ReactElement | null {
+}: HoverCardContentProps): ReactElement {
   const resolvedDensity = useDensity(density);
   const direction = useDirection();
 

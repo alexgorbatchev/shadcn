@@ -13,7 +13,7 @@ function NativeSelect({
   dir,
   size = "default",
   ...props
-}: NativeSelectProps & IDensityProps): ReactElement | null {
+}: NativeSelectProps & IDensityProps): ReactElement {
   return (
     <div
       dir={dir}
@@ -40,7 +40,7 @@ function NativeSelect({
 
 type NativeSelectOptionProps = ComponentProps<"option"> & IDensityProps;
 
-function NativeSelectOption({ density, className, ...props }: NativeSelectOptionProps): ReactElement | null {
+function NativeSelectOption({ density, className, ...props }: NativeSelectOptionProps): ReactElement {
   return (
     <option
       data-density={density}
@@ -53,7 +53,7 @@ function NativeSelectOption({ density, className, ...props }: NativeSelectOption
 
 type NativeSelectOptGroupProps = ComponentProps<"optgroup"> & IDensityProps;
 
-function NativeSelectOptGroup({ density, className, ...props }: NativeSelectOptGroupProps): ReactElement | null {
+function NativeSelectOptGroup({ density, className, ...props }: NativeSelectOptGroupProps): ReactElement {
   return (
     <optgroup
       data-density={density}

@@ -6,7 +6,7 @@ import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 
 type AccordionProps = AccordionPrimitive.Root.Props & IDensityProps;
 
-function Accordion({ density, className, ...props }: AccordionProps): ReactElement | null {
+function Accordion({ density, className, ...props }: AccordionProps): ReactElement {
   return (
     <AccordionPrimitive.Root
       data-density={density}
@@ -19,7 +19,7 @@ function Accordion({ density, className, ...props }: AccordionProps): ReactEleme
 
 type AccordionItemProps = AccordionPrimitive.Item.Props & IDensityProps;
 
-function AccordionItem({ density, className, ...props }: AccordionItemProps): ReactElement | null {
+function AccordionItem({ density, className, ...props }: AccordionItemProps): ReactElement {
   return (
     <AccordionPrimitive.Item
       data-density={density}
@@ -32,7 +32,7 @@ function AccordionItem({ density, className, ...props }: AccordionItemProps): Re
 
 type AccordionTriggerProps = AccordionPrimitive.Trigger.Props & IDensityProps;
 
-function AccordionTrigger({ density, className, children, ...props }: AccordionTriggerProps): ReactElement | null {
+function AccordionTrigger({ density, className, children, ...props }: AccordionTriggerProps): ReactElement {
   return (
     <AccordionPrimitive.Header className="flex">
       <AccordionPrimitive.Trigger
@@ -62,7 +62,7 @@ function AccordionTrigger({ density, className, children, ...props }: AccordionT
 
 type AccordionContentProps = AccordionPrimitive.Panel.Props & IDensityProps;
 
-function AccordionContent({ density, className, children, ...props }: AccordionContentProps): ReactElement | null {
+function AccordionContent({ density, className, children, ...props }: AccordionContentProps): ReactElement {
   return (
     <AccordionPrimitive.Panel
       data-density={density}

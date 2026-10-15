@@ -6,7 +6,7 @@ import { cn } from "../utils/cn";
 
 type LabelProps = ComponentProps<"label"> & IDensityProps;
 
-function Label({ density, className, ...props }: LabelProps): ReactElement | null {
+function Label({ density, className, ...props }: LabelProps): ReactElement {
   return (
     <label
       data-density={density}

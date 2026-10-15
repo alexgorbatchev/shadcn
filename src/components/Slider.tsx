@@ -18,7 +18,7 @@ function Slider<Value extends number | readonly number[] = number | readonly num
   getAriaLabel,
   getAriaValueText,
   ...props
-}: SliderProps<Value>): ReactElement | null {
+}: SliderProps<Value>): ReactElement {
   const values = value ?? defaultValue ?? min;
   const thumbCount = typeof values === "number" ? 1 : values.length;
 

@@ -10,7 +10,7 @@ import { Textarea } from "./Textarea";
 
 type InputGroupProps = ComponentProps<"div"> & IDensityProps;
 
-function InputGroup({ density, className, ...props }: InputGroupProps): ReactElement | null {
+function InputGroup({ density, className, ...props }: InputGroupProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -46,12 +46,7 @@ const inputGroupAddonVariants = cva(
 
 type InputGroupAddonProps = ComponentProps<"div"> & VariantProps<typeof inputGroupAddonVariants> & IDensityProps;
 
-function InputGroupAddon({
-  density,
-  className,
-  align = "inline-start",
-  ...props
-}: InputGroupAddonProps): ReactElement | null {
+function InputGroupAddon({ density, className, align = "inline-start", ...props }: InputGroupAddonProps): ReactElement {
   return (
     <div
       role="group"
@@ -109,7 +104,7 @@ function InputGroupButton({
   variant = "ghost",
   size = "xs",
   ...props
-}: InputGroupButtonProps): ReactElement | null {
+}: InputGroupButtonProps): ReactElement {
   return (
     <Button
       density={density}
@@ -126,7 +121,7 @@ function InputGroupButton({
 
 type InputGroupTextProps = ComponentProps<"span"> & IDensityProps;
 
-function InputGroupText({ density, className, ...props }: InputGroupTextProps): ReactElement | null {
+function InputGroupText({ density, className, ...props }: InputGroupTextProps): ReactElement {
   return (
     <span
       data-density={density}
@@ -141,7 +136,7 @@ function InputGroupText({ density, className, ...props }: InputGroupTextProps): 
 
 type InputGroupInputProps = ComponentProps<typeof Input>;
 
-function InputGroupInput({ density, className, ...props }: InputGroupInputProps): ReactElement | null {
+function InputGroupInput({ density, className, ...props }: InputGroupInputProps): ReactElement {
   return (
     <Input
       density={density}
@@ -159,7 +154,7 @@ function InputGroupInput({ density, className, ...props }: InputGroupInputProps)
 
 type InputGroupTextareaProps = ComponentProps<"textarea"> & IDensityProps;
 
-function InputGroupTextarea({ density, className, ...props }: InputGroupTextareaProps): ReactElement | null {
+function InputGroupTextarea({ density, className, ...props }: InputGroupTextareaProps): ReactElement {
   return (
     <Textarea
       density={density}

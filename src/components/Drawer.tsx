@@ -17,7 +17,7 @@ function Drawer<Payload>({
   snapPoints,
   swipeDirection = "down",
   ...props
-}: DrawerProps<Payload>): ReactElement | null {
+}: DrawerProps<Payload>): ReactElement {
   const hasSnapPoints = snapPoints != null && snapPoints.length > 0;
   const contextValue = useMemo(
     () => ({ hasSnapPoints, modal, showSwipeHandle, swipeDirection }),
@@ -37,21 +37,21 @@ function Drawer<Payload>({
   );
 }
 
-function DrawerTrigger<Payload>({ ...props }: DrawerPrimitive.Trigger.Props<Payload>): ReactElement | null {
+function DrawerTrigger<Payload>({ ...props }: DrawerPrimitive.Trigger.Props<Payload>): ReactElement {
   return <DrawerPrimitive.Trigger<Payload> data-slot="drawer-trigger" {...props} />;
 }
 
-function DrawerPortal({ ...props }: DrawerPrimitive.Portal.Props): ReactElement | null {
+function DrawerPortal({ ...props }: DrawerPrimitive.Portal.Props): ReactElement {
   return <DrawerPrimitive.Portal data-slot="drawer-portal" {...props} />;
 }
 
-function DrawerClose({ ...props }: DrawerPrimitive.Close.Props): ReactElement | null {
+function DrawerClose({ ...props }: DrawerPrimitive.Close.Props): ReactElement {
   return <DrawerPrimitive.Close data-slot="drawer-close" {...props} />;
 }
 
 type DrawerOverlayProps = DrawerPrimitive.Backdrop.Props & IDensityProps;
 
-function DrawerOverlay({ density, className, ...props }: DrawerOverlayProps): ReactElement | null {
+function DrawerOverlay({ density, className, ...props }: DrawerOverlayProps): ReactElement {
   const resolvedDensity = useDensity(density);
 
   return (
@@ -71,7 +71,7 @@ function DrawerOverlay({ density, className, ...props }: DrawerOverlayProps): Re
 
 type DrawerSwipeHandleProps = ComponentProps<"div"> & IDensityProps;
 
-function DrawerSwipeHandle({ density, className, ...props }: DrawerSwipeHandleProps): ReactElement | null {
+function DrawerSwipeHandle({ density, className, ...props }: DrawerSwipeHandleProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -88,7 +88,7 @@ function DrawerSwipeHandle({ density, className, ...props }: DrawerSwipeHandlePr
 
 type DrawerContentProps = DrawerPrimitive.Popup.Props & IDensityProps;
 
-function DrawerContent({ density, className, children, ...props }: DrawerContentProps): ReactElement | null {
+function DrawerContent({ density, className, children, ...props }: DrawerContentProps): ReactElement {
   const resolvedDensity = useDensity(density);
   const direction = useDirection();
 
@@ -155,7 +155,7 @@ function DrawerContent({ density, className, children, ...props }: DrawerContent
 
 type DrawerHeaderProps = ComponentProps<"div"> & IDensityProps;
 
-function DrawerHeader({ density, className, ...props }: DrawerHeaderProps): ReactElement | null {
+function DrawerHeader({ density, className, ...props }: DrawerHeaderProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -171,7 +171,7 @@ function DrawerHeader({ density, className, ...props }: DrawerHeaderProps): Reac
 
 type DrawerFooterProps = ComponentProps<"div"> & IDensityProps;
 
-function DrawerFooter({ density, className, ...props }: DrawerFooterProps): ReactElement | null {
+function DrawerFooter({ density, className, ...props }: DrawerFooterProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -184,7 +184,7 @@ function DrawerFooter({ density, className, ...props }: DrawerFooterProps): Reac
 
 type DrawerTitleProps = DrawerPrimitive.Title.Props & IDensityProps;
 
-function DrawerTitle({ density, className, ...props }: DrawerTitleProps): ReactElement | null {
+function DrawerTitle({ density, className, ...props }: DrawerTitleProps): ReactElement {
   return (
     <DrawerPrimitive.Title
       data-density={density}
@@ -199,7 +199,7 @@ function DrawerTitle({ density, className, ...props }: DrawerTitleProps): ReactE
 
 type DrawerDescriptionProps = DrawerPrimitive.Description.Props & IDensityProps;
 
-function DrawerDescription({ density, className, ...props }: DrawerDescriptionProps): ReactElement | null {
+function DrawerDescription({ density, className, ...props }: DrawerDescriptionProps): ReactElement {
   return (
     <DrawerPrimitive.Description
       data-density={density}

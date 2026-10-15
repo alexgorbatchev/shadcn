@@ -8,25 +8,25 @@ import { cn } from "../utils/cn";
 import { Button } from "./Button";
 import { XIcon } from "lucide-react";
 
-function Dialog<Payload>({ ...props }: DialogPrimitive.Root.Props<Payload>): ReactElement | null {
+function Dialog<Payload>({ ...props }: DialogPrimitive.Root.Props<Payload>): ReactElement {
   return <DialogPrimitive.Root data-slot="dialog" {...props} />;
 }
 
-function DialogTrigger<Payload>({ ...props }: DialogPrimitive.Trigger.Props<Payload>): ReactElement | null {
+function DialogTrigger<Payload>({ ...props }: DialogPrimitive.Trigger.Props<Payload>): ReactElement {
   return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />;
 }
 
-function DialogPortal({ ...props }: DialogPrimitive.Portal.Props): ReactElement | null {
+function DialogPortal({ ...props }: DialogPrimitive.Portal.Props): ReactElement {
   return <DialogPrimitive.Portal data-slot="dialog-portal" {...props} />;
 }
 
-function DialogClose({ ...props }: DialogPrimitive.Close.Props): ReactElement | null {
+function DialogClose({ ...props }: DialogPrimitive.Close.Props): ReactElement {
   return <DialogPrimitive.Close data-slot="dialog-close" {...props} />;
 }
 
 type DialogOverlayProps = DialogPrimitive.Backdrop.Props & IDensityProps;
 
-function DialogOverlay({ density, className, ...props }: DialogOverlayProps): ReactElement | null {
+function DialogOverlay({ density, className, ...props }: DialogOverlayProps): ReactElement {
   const resolvedDensity = useDensity(density);
 
   return (
@@ -54,7 +54,7 @@ function DialogContent({
   children,
   showCloseButton = true,
   ...props
-}: DialogContentProps): ReactElement | null {
+}: DialogContentProps): ReactElement {
   const resolvedDensity = useDensity(density);
   const direction = useDirection();
 
@@ -90,7 +90,7 @@ function DialogContent({
 
 type DialogHeaderProps = ComponentProps<"div"> & IDensityProps;
 
-function DialogHeader({ density, className, ...props }: DialogHeaderProps): ReactElement | null {
+function DialogHeader({ density, className, ...props }: DialogHeaderProps): ReactElement {
   return (
     <div data-density={density} data-slot="dialog-header" className={cn("flex flex-col gap-2", className)} {...props} />
   );
@@ -106,7 +106,7 @@ function DialogFooter({
   showCloseButton = false,
   children,
   ...props
-}: DialogFooterProps): ReactElement | null {
+}: DialogFooterProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -125,7 +125,7 @@ function DialogFooter({
 
 type DialogTitleProps = DialogPrimitive.Title.Props & IDensityProps;
 
-function DialogTitle({ density, className, ...props }: DialogTitleProps): ReactElement | null {
+function DialogTitle({ density, className, ...props }: DialogTitleProps): ReactElement {
   return (
     <DialogPrimitive.Title
       data-density={density}
@@ -140,7 +140,7 @@ function DialogTitle({ density, className, ...props }: DialogTitleProps): ReactE
 
 type DialogDescriptionProps = DialogPrimitive.Description.Props & IDensityProps;
 
-function DialogDescription({ density, className, ...props }: DialogDescriptionProps): ReactElement | null {
+function DialogDescription({ density, className, ...props }: DialogDescriptionProps): ReactElement {
   return (
     <DialogPrimitive.Description
       data-density={density}

@@ -5,7 +5,7 @@ import { cn } from "../utils/cn";
 
 type SeparatorProps = SeparatorPrimitive.Props & IDensityProps;
 
-function Separator({ density, className, orientation = "horizontal", ...props }: SeparatorProps): ReactElement | null {
+function Separator({ density, className, orientation = "horizontal", ...props }: SeparatorProps): ReactElement {
   return (
     <SeparatorPrimitive
       data-density={density}

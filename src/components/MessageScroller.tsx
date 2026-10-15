@@ -6,11 +6,11 @@ import { useMediaQuery } from "usehooks-ts";
 import { cn } from "../utils/cn";
 import { Button } from "./Button";
 
-function MessageScrollerProvider(props: ComponentProps<typeof MessageScrollerPrimitive.Provider>): ReactElement | null {
+function MessageScrollerProvider(props: ComponentProps<typeof MessageScrollerPrimitive.Provider>): ReactElement {
   return <MessageScrollerPrimitive.Provider {...props} />;
 }
 type MessageScrollerProps = ComponentProps<typeof MessageScrollerPrimitive.Root> & IDensityProps;
-function MessageScroller({ density, className, ...props }: MessageScrollerProps): ReactElement | null {
+function MessageScroller({ density, className, ...props }: MessageScrollerProps): ReactElement {
   return (
     <MessageScrollerPrimitive.Root
       data-slot="message-scroller"
@@ -21,7 +21,7 @@ function MessageScroller({ density, className, ...props }: MessageScrollerProps)
   );
 }
 type MessageScrollerViewportProps = ComponentProps<typeof MessageScrollerPrimitive.Viewport> & IDensityProps;
-function MessageScrollerViewport({ density, className, ...props }: MessageScrollerViewportProps): ReactElement | null {
+function MessageScrollerViewport({ density, className, ...props }: MessageScrollerViewportProps): ReactElement {
   return (
     <MessageScrollerPrimitive.Viewport
       data-slot="message-scroller-viewport"
@@ -35,7 +35,7 @@ function MessageScrollerViewport({ density, className, ...props }: MessageScroll
   );
 }
 type MessageScrollerContentProps = ComponentProps<typeof MessageScrollerPrimitive.Content> & IDensityProps;
-function MessageScrollerContent({ density, className, ...props }: MessageScrollerContentProps): ReactElement | null {
+function MessageScrollerContent({ density, className, ...props }: MessageScrollerContentProps): ReactElement {
   return (
     <MessageScrollerPrimitive.Content
       data-slot="message-scroller-content"
@@ -51,7 +51,7 @@ function MessageScrollerItem({
   className,
   scrollAnchor = false,
   ...props
-}: MessageScrollerItemProps): ReactElement | null {
+}: MessageScrollerItemProps): ReactElement {
   return (
     <MessageScrollerPrimitive.Item
       data-slot="message-scroller-item"
@@ -75,7 +75,7 @@ function MessageScrollerButton({
   variant = "secondary",
   size = "icon-sm",
   ...props
-}: MessageScrollerButtonProps): ReactElement | null {
+}: MessageScrollerButtonProps): ReactElement {
   const isReducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
   return (
     <MessageScrollerPrimitive.Button

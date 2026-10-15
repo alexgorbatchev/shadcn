@@ -5,7 +5,7 @@ import { cn } from "../utils/cn";
 
 type TableProps = ComponentProps<"table"> & IDensityProps;
 
-function Table({ density, className, dir, ...props }: TableProps): ReactElement | null {
+function Table({ density, className, dir, ...props }: TableProps): ReactElement {
   return (
     <div data-density={density} data-slot="table-container" dir={dir} className="relative w-full overflow-x-auto">
       <table data-slot="table" dir={dir} className={cn("w-full caption-bottom text-sm", className)} {...props} />
@@ -15,7 +15,7 @@ function Table({ density, className, dir, ...props }: TableProps): ReactElement 
 
 type TableHeaderProps = ComponentProps<"thead"> & IDensityProps;
 
-function TableHeader({ density, className, ...props }: TableHeaderProps): ReactElement | null {
+function TableHeader({ density, className, ...props }: TableHeaderProps): ReactElement {
   return (
     <thead data-density={density} data-slot="table-header" className={cn("[&_tr]:border-b", className)} {...props} />
   );
@@ -23,7 +23,7 @@ function TableHeader({ density, className, ...props }: TableHeaderProps): ReactE
 
 type TableBodyProps = ComponentProps<"tbody"> & IDensityProps;
 
-function TableBody({ density, className, ...props }: TableBodyProps): ReactElement | null {
+function TableBody({ density, className, ...props }: TableBodyProps): ReactElement {
   return (
     <tbody
       data-density={density}
@@ -36,7 +36,7 @@ function TableBody({ density, className, ...props }: TableBodyProps): ReactEleme
 
 type TableFooterProps = ComponentProps<"tfoot"> & IDensityProps;
 
-function TableFooter({ density, className, ...props }: TableFooterProps): ReactElement | null {
+function TableFooter({ density, className, ...props }: TableFooterProps): ReactElement {
   return (
     <tfoot
       data-density={density}
@@ -49,7 +49,7 @@ function TableFooter({ density, className, ...props }: TableFooterProps): ReactE
 
 type TableRowProps = ComponentProps<"tr"> & IDensityProps;
 
-function TableRow({ density, className, ...props }: TableRowProps): ReactElement | null {
+function TableRow({ density, className, ...props }: TableRowProps): ReactElement {
   return (
     <tr
       data-density={density}
@@ -65,7 +65,7 @@ function TableRow({ density, className, ...props }: TableRowProps): ReactElement
 
 type TableHeadProps = ComponentProps<"th"> & IDensityProps;
 
-function TableHead({ density, className, ...props }: TableHeadProps): ReactElement | null {
+function TableHead({ density, className, ...props }: TableHeadProps): ReactElement {
   return (
     <th
       data-density={density}
@@ -81,7 +81,7 @@ function TableHead({ density, className, ...props }: TableHeadProps): ReactEleme
 
 type TableCellProps = ComponentProps<"td"> & IDensityProps;
 
-function TableCell({ density, className, ...props }: TableCellProps): ReactElement | null {
+function TableCell({ density, className, ...props }: TableCellProps): ReactElement {
   return (
     <td
       data-density={density}
@@ -97,7 +97,7 @@ function TableCell({ density, className, ...props }: TableCellProps): ReactEleme
 
 type TableCaptionProps = ComponentProps<"caption"> & IDensityProps;
 
-function TableCaption({ density, className, ...props }: TableCaptionProps): ReactElement | null {
+function TableCaption({ density, className, ...props }: TableCaptionProps): ReactElement {
   return (
     <caption
       data-density={density}

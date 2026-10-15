@@ -9,25 +9,25 @@ import { cn } from "../utils/cn";
 import { Button } from "./Button";
 import { useDirection } from "./DirectionProvider";
 
-function Sheet<Payload>({ ...props }: SheetPrimitive.Root.Props<Payload>): ReactElement | null {
+function Sheet<Payload>({ ...props }: SheetPrimitive.Root.Props<Payload>): ReactElement {
   return <SheetPrimitive.Root<Payload> data-slot="sheet" {...props} />;
 }
 
-function SheetTrigger<Payload>({ ...props }: SheetPrimitive.Trigger.Props<Payload>): ReactElement | null {
+function SheetTrigger<Payload>({ ...props }: SheetPrimitive.Trigger.Props<Payload>): ReactElement {
   return <SheetPrimitive.Trigger<Payload> data-slot="sheet-trigger" {...props} />;
 }
 
-function SheetClose({ ...props }: SheetPrimitive.Close.Props): ReactElement | null {
+function SheetClose({ ...props }: SheetPrimitive.Close.Props): ReactElement {
   return <SheetPrimitive.Close data-slot="sheet-close" {...props} />;
 }
 
-function SheetPortal({ ...props }: SheetPrimitive.Portal.Props): ReactElement | null {
+function SheetPortal({ ...props }: SheetPrimitive.Portal.Props): ReactElement {
   return <SheetPrimitive.Portal data-slot="sheet-portal" {...props} />;
 }
 
 type SheetOverlayProps = SheetPrimitive.Backdrop.Props & IDensityProps;
 
-function SheetOverlay({ density, className, ...props }: SheetOverlayProps): ReactElement | null {
+function SheetOverlay({ density, className, ...props }: SheetOverlayProps): ReactElement {
   const resolvedDensity = useDensity(density);
 
   return (
@@ -57,7 +57,7 @@ function SheetContent({
   side = "right",
   showCloseButton = true,
   ...props
-}: SheetContentProps): ReactElement | null {
+}: SheetContentProps): ReactElement {
   const resolvedDensity = useDensity(density);
   const direction = useDirection();
 
@@ -94,7 +94,7 @@ function SheetContent({
 
 type SheetHeaderProps = ComponentProps<"div"> & IDensityProps;
 
-function SheetHeader({ density, className, ...props }: SheetHeaderProps): ReactElement | null {
+function SheetHeader({ density, className, ...props }: SheetHeaderProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -107,7 +107,7 @@ function SheetHeader({ density, className, ...props }: SheetHeaderProps): ReactE
 
 type SheetFooterProps = ComponentProps<"div"> & IDensityProps;
 
-function SheetFooter({ density, className, ...props }: SheetFooterProps): ReactElement | null {
+function SheetFooter({ density, className, ...props }: SheetFooterProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -120,7 +120,7 @@ function SheetFooter({ density, className, ...props }: SheetFooterProps): ReactE
 
 type SheetTitleProps = SheetPrimitive.Title.Props & IDensityProps;
 
-function SheetTitle({ density, className, ...props }: SheetTitleProps): ReactElement | null {
+function SheetTitle({ density, className, ...props }: SheetTitleProps): ReactElement {
   return (
     <SheetPrimitive.Title
       data-density={density}
@@ -135,7 +135,7 @@ function SheetTitle({ density, className, ...props }: SheetTitleProps): ReactEle
 
 type SheetDescriptionProps = SheetPrimitive.Description.Props & IDensityProps;
 
-function SheetDescription({ density, className, ...props }: SheetDescriptionProps): ReactElement | null {
+function SheetDescription({ density, className, ...props }: SheetDescriptionProps): ReactElement {
   return (
     <SheetPrimitive.Description
       data-density={density}

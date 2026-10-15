@@ -1,3 +1,10 @@
+import type {
+  MenuLabelProps,
+  MenuItemProps,
+  MenuSubTriggerProps,
+  MenuCheckboxItemProps,
+  MenuRadioItemProps,
+} from "../menu/types";
 import type { IDensityProps } from "../density/types";
 import { useDensity } from "../hooks/useDensity";
 import type { ComponentProps, ReactElement } from "react";
@@ -7,17 +14,17 @@ import { useDirection } from "@base-ui/react/direction-provider";
 import { ContextMenu as ContextMenuPrimitive } from "@base-ui/react/context-menu";
 import { cn } from "../utils/cn";
 
-function ContextMenu({ ...props }: ContextMenuPrimitive.Root.Props): ReactElement | null {
+function ContextMenu({ ...props }: ContextMenuPrimitive.Root.Props): ReactElement {
   return <ContextMenuPrimitive.Root data-slot="context-menu" {...props} />;
 }
 
-function ContextMenuPortal({ ...props }: ContextMenuPrimitive.Portal.Props): ReactElement | null {
+function ContextMenuPortal({ ...props }: ContextMenuPrimitive.Portal.Props): ReactElement {
   return <ContextMenuPrimitive.Portal data-slot="context-menu-portal" {...props} />;
 }
 
 type ContextMenuTriggerProps = ContextMenuPrimitive.Trigger.Props & IDensityProps;
 
-function ContextMenuTrigger({ density, className, ...props }: ContextMenuTriggerProps): ReactElement | null {
+function ContextMenuTrigger({ density, className, ...props }: ContextMenuTriggerProps): ReactElement {
   return (
     <ContextMenuPrimitive.Trigger
       data-density={density}
@@ -40,7 +47,7 @@ function ContextMenuContent({
   side = "right",
   sideOffset = 0,
   ...props
-}: ContextMenuContentProps): ReactElement | null {
+}: ContextMenuContentProps): ReactElement {
   const resolvedDensity = useDensity(density);
   const direction = useDirection();
   return (
@@ -70,15 +77,11 @@ function ContextMenuContent({
   );
 }
 
-function ContextMenuGroup({ ...props }: ContextMenuPrimitive.Group.Props): ReactElement | null {
+function ContextMenuGroup({ ...props }: ContextMenuPrimitive.Group.Props): ReactElement {
   return <ContextMenuPrimitive.Group data-slot="context-menu-group" {...props} />;
 }
 
-type ContextMenuLabelProps = ContextMenuPrimitive.GroupLabel.Props & {
-  inset?: boolean;
-} & IDensityProps;
-
-function ContextMenuLabel({ density, className, inset, ...props }: ContextMenuLabelProps): ReactElement | null {
+function ContextMenuLabel({ density, className, inset, ...props }: MenuLabelProps): ReactElement {
   return (
     <ContextMenuPrimitive.GroupLabel
       data-density={density}
@@ -95,18 +98,7 @@ function ContextMenuLabel({ density, className, inset, ...props }: ContextMenuLa
   );
 }
 
-type ContextMenuItemProps = ContextMenuPrimitive.Item.Props & {
-  inset?: boolean;
-  variant?: "default" | "destructive";
-} & IDensityProps;
-
-function ContextMenuItem({
-  density,
-  className,
-  inset,
-  variant = "default",
-  ...props
-}: ContextMenuItemProps): ReactElement | null {
+function ContextMenuItem({ density, className, inset, variant = "default", ...props }: MenuItemProps): ReactElement {
   return (
     <ContextMenuPrimitive.Item
       data-density={density}
@@ -124,21 +116,11 @@ function ContextMenuItem({
   );
 }
 
-function ContextMenuSub({ ...props }: ContextMenuPrimitive.SubmenuRoot.Props): ReactElement | null {
+function ContextMenuSub({ ...props }: ContextMenuPrimitive.SubmenuRoot.Props): ReactElement {
   return <ContextMenuPrimitive.SubmenuRoot data-slot="context-menu-sub" {...props} />;
 }
 
-type ContextMenuSubTriggerProps = ContextMenuPrimitive.SubmenuTrigger.Props & {
-  inset?: boolean;
-} & IDensityProps;
-
-function ContextMenuSubTrigger({
-  density,
-  className,
-  inset,
-  children,
-  ...props
-}: ContextMenuSubTriggerProps): ReactElement | null {
+function ContextMenuSubTrigger({ density, className, inset, children, ...props }: MenuSubTriggerProps): ReactElement {
   return (
     <ContextMenuPrimitive.SubmenuTrigger
       data-density={density}
@@ -158,7 +140,7 @@ function ContextMenuSubTrigger({
   );
 }
 
-function ContextMenuSubContent({ ...props }: ComponentProps<typeof ContextMenuContent>): ReactElement | null {
+function ContextMenuSubContent({ ...props }: ComponentProps<typeof ContextMenuContent>): ReactElement {
   return (
     <ContextMenuContent
       data-slot="context-menu-sub-content"
@@ -169,10 +151,6 @@ function ContextMenuSubContent({ ...props }: ComponentProps<typeof ContextMenuCo
   );
 }
 
-type ContextMenuCheckboxItemProps = ContextMenuPrimitive.CheckboxItem.Props & {
-  inset?: boolean;
-} & IDensityProps;
-
 function ContextMenuCheckboxItem({
   density,
   className,
@@ -180,7 +158,7 @@ function ContextMenuCheckboxItem({
   checked,
   inset,
   ...props
-}: ContextMenuCheckboxItemProps): ReactElement | null {
+}: MenuCheckboxItemProps): ReactElement {
   return (
     <ContextMenuPrimitive.CheckboxItem
       data-density={density}
@@ -205,21 +183,11 @@ function ContextMenuCheckboxItem({
   );
 }
 
-function ContextMenuRadioGroup({ ...props }: ContextMenuPrimitive.RadioGroup.Props): ReactElement | null {
+function ContextMenuRadioGroup({ ...props }: ContextMenuPrimitive.RadioGroup.Props): ReactElement {
   return <ContextMenuPrimitive.RadioGroup data-slot="context-menu-radio-group" {...props} />;
 }
 
-type ContextMenuRadioItemProps = ContextMenuPrimitive.RadioItem.Props & {
-  inset?: boolean;
-} & IDensityProps;
-
-function ContextMenuRadioItem({
-  density,
-  className,
-  children,
-  inset,
-  ...props
-}: ContextMenuRadioItemProps): ReactElement | null {
+function ContextMenuRadioItem({ density, className, children, inset, ...props }: MenuRadioItemProps): ReactElement {
   return (
     <ContextMenuPrimitive.RadioItem
       data-density={density}
@@ -245,7 +213,7 @@ function ContextMenuRadioItem({
 
 type ContextMenuSeparatorProps = ContextMenuPrimitive.Separator.Props & IDensityProps;
 
-function ContextMenuSeparator({ density, className, ...props }: ContextMenuSeparatorProps): ReactElement | null {
+function ContextMenuSeparator({ density, className, ...props }: ContextMenuSeparatorProps): ReactElement {
   return (
     <ContextMenuPrimitive.Separator
       data-density={density}
@@ -260,7 +228,7 @@ function ContextMenuSeparator({ density, className, ...props }: ContextMenuSepar
 
 type ContextMenuShortcutProps = ComponentProps<"span"> & IDensityProps;
 
-function ContextMenuShortcut({ density, className, ...props }: ContextMenuShortcutProps): ReactElement | null {
+function ContextMenuShortcut({ density, className, ...props }: ContextMenuShortcutProps): ReactElement {
   return (
     <span
       data-density={density}

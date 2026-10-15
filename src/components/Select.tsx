@@ -12,7 +12,7 @@ const Select = SelectPrimitive.Root;
 
 type SelectGroupProps = SelectPrimitive.Group.Props & IDensityProps;
 
-function SelectGroup({ density, className, ...props }: SelectGroupProps): ReactElement | null {
+function SelectGroup({ density, className, ...props }: SelectGroupProps): ReactElement {
   return (
     <SelectPrimitive.Group
       data-density={density}
@@ -25,7 +25,7 @@ function SelectGroup({ density, className, ...props }: SelectGroupProps): ReactE
 
 type SelectValueProps = SelectPrimitive.Value.Props & IDensityProps;
 
-function SelectValue({ density, className, ...props }: SelectValueProps): ReactElement | null {
+function SelectValue({ density, className, ...props }: SelectValueProps): ReactElement {
   return (
     <SelectPrimitive.Value
       data-density={density}
@@ -42,13 +42,7 @@ type SelectTriggerProps = SelectPrimitive.Trigger.Props & {
   size?: "sm" | "default";
 } & IDensityProps;
 
-function SelectTrigger({
-  density,
-  className,
-  size = "default",
-  children,
-  ...props
-}: SelectTriggerProps): ReactElement | null {
+function SelectTrigger({ density, className, size = "default", children, ...props }: SelectTriggerProps): ReactElement {
   return (
     <SelectPrimitive.Trigger
       data-density={density}
@@ -82,7 +76,7 @@ function SelectContent({
   alignOffset = 0,
   alignItemWithTrigger = true,
   ...props
-}: SelectContentProps): ReactElement | null {
+}: SelectContentProps): ReactElement {
   const resolvedDensity = useDensity(density);
   const direction = useDirection();
 
@@ -120,7 +114,7 @@ function SelectContent({
 
 type SelectLabelProps = SelectPrimitive.GroupLabel.Props & IDensityProps;
 
-function SelectLabel({ density, className, ...props }: SelectLabelProps): ReactElement | null {
+function SelectLabel({ density, className, ...props }: SelectLabelProps): ReactElement {
   return (
     <SelectPrimitive.GroupLabel
       data-density={density}
@@ -135,7 +129,7 @@ function SelectLabel({ density, className, ...props }: SelectLabelProps): ReactE
 
 type SelectItemProps = SelectPrimitive.Item.Props & IDensityProps;
 
-function SelectItem({ density, className, children, ...props }: SelectItemProps): ReactElement | null {
+function SelectItem({ density, className, children, ...props }: SelectItemProps): ReactElement {
   return (
     <SelectPrimitive.Item
       data-density={density}
@@ -162,7 +156,7 @@ function SelectItem({ density, className, children, ...props }: SelectItemProps)
 
 type SelectSeparatorProps = SelectPrimitive.Separator.Props & IDensityProps;
 
-function SelectSeparator({ density, className, ...props }: SelectSeparatorProps): ReactElement | null {
+function SelectSeparator({ density, className, ...props }: SelectSeparatorProps): ReactElement {
   return (
     <SelectPrimitive.Separator
       data-density={density}
@@ -180,7 +174,7 @@ function SelectSeparator({ density, className, ...props }: SelectSeparatorProps)
 
 type SelectScrollUpButtonProps = ComponentProps<typeof SelectPrimitive.ScrollUpArrow> & IDensityProps;
 
-function SelectScrollUpButton({ density, className, ...props }: SelectScrollUpButtonProps): ReactElement | null {
+function SelectScrollUpButton({ density, className, ...props }: SelectScrollUpButtonProps): ReactElement {
   return (
     <SelectPrimitive.ScrollUpArrow
       data-density={density}
@@ -200,7 +194,7 @@ function SelectScrollUpButton({ density, className, ...props }: SelectScrollUpBu
 
 type SelectScrollDownButtonProps = ComponentProps<typeof SelectPrimitive.ScrollDownArrow> & IDensityProps;
 
-function SelectScrollDownButton({ density, className, ...props }: SelectScrollDownButtonProps): ReactElement | null {
+function SelectScrollDownButton({ density, className, ...props }: SelectScrollDownButtonProps): ReactElement {
   return (
     <SelectPrimitive.ScrollDownArrow
       data-density={density}

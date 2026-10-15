@@ -10,7 +10,7 @@ function Questionnaire({
   density,
   className,
   ...props
-}: ComponentProps<typeof QuestionnairePrimitive.Root> & IDensityProps): ReactElement | null {
+}: ComponentProps<typeof QuestionnairePrimitive.Root> & IDensityProps): ReactElement {
   return (
     <QuestionnairePrimitive.Root
       data-density={density}
@@ -25,7 +25,7 @@ function QuestionnaireProgress({
   density,
   className,
   ...props
-}: ComponentProps<typeof QuestionnairePrimitive.Progress> & IDensityProps): ReactElement | null {
+}: ComponentProps<typeof QuestionnairePrimitive.Progress> & IDensityProps): ReactElement {
   return (
     <QuestionnairePrimitive.Progress
       data-density={density}
@@ -40,7 +40,7 @@ function QuestionnaireItem({
   density,
   className,
   ...props
-}: ComponentProps<typeof QuestionnairePrimitive.Item> & IDensityProps): ReactElement | null {
+}: ComponentProps<typeof QuestionnairePrimitive.Item> & IDensityProps): ReactElement {
   return (
     <QuestionnairePrimitive.Item
       data-density={density}
@@ -55,7 +55,7 @@ function QuestionnaireTitle({
   density,
   className,
   ...props
-}: ComponentProps<typeof QuestionnairePrimitive.Title> & IDensityProps): ReactElement | null {
+}: ComponentProps<typeof QuestionnairePrimitive.Title> & IDensityProps): ReactElement {
   return (
     <QuestionnairePrimitive.Title
       data-density={density}
@@ -73,7 +73,7 @@ function QuestionnaireDescription({
   density,
   className,
   ...props
-}: ComponentProps<typeof QuestionnairePrimitive.Description> & IDensityProps): ReactElement | null {
+}: ComponentProps<typeof QuestionnairePrimitive.Description> & IDensityProps): ReactElement {
   return (
     <QuestionnairePrimitive.Description
       data-density={density}
@@ -88,7 +88,7 @@ function QuestionnaireChoices({
   density,
   className,
   ...props
-}: ComponentProps<typeof QuestionnairePrimitive.Choices> & IDensityProps): ReactElement | null {
+}: ComponentProps<typeof QuestionnairePrimitive.Choices> & IDensityProps): ReactElement {
   return (
     <QuestionnairePrimitive.Choices
       data-density={density}
@@ -104,7 +104,7 @@ function QuestionnaireChoice({
   density,
   className,
   ...props
-}: ComponentProps<typeof QuestionnairePrimitive.Choice> & IDensityProps): ReactElement | null {
+}: ComponentProps<typeof QuestionnairePrimitive.Choice> & IDensityProps): ReactElement {
   return (
     <QuestionnairePrimitive.Choice
       data-density={density}
@@ -158,7 +158,7 @@ function QuestionnaireChoiceDescription({
   density,
   className,
   ...props
-}: ComponentProps<"span"> & IDensityProps): ReactElement | null {
+}: ComponentProps<"span"> & IDensityProps): ReactElement {
   return (
     <span
       data-density={density}
@@ -173,7 +173,7 @@ function QuestionnaireInput({
   density,
   className,
   ...props
-}: ComponentProps<typeof QuestionnairePrimitive.Input> & IDensityProps): ReactElement | null {
+}: ComponentProps<typeof QuestionnairePrimitive.Input> & IDensityProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -198,7 +198,7 @@ function QuestionnaireError({
   density,
   className,
   ...props
-}: ComponentProps<typeof QuestionnairePrimitive.Error> & IDensityProps): ReactElement | null {
+}: ComponentProps<typeof QuestionnairePrimitive.Error> & IDensityProps): ReactElement {
   return (
     <QuestionnairePrimitive.Error
       data-density={density}
@@ -209,11 +209,7 @@ function QuestionnaireError({
   );
 }
 
-function QuestionnaireActions({
-  density,
-  className,
-  ...props
-}: ComponentProps<"div"> & IDensityProps): ReactElement | null {
+function QuestionnaireActions({ density, className, ...props }: ComponentProps<"div"> & IDensityProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -236,7 +232,7 @@ function QuestionnairePrevious({
   ...props
 }: ComponentProps<typeof QuestionnairePrimitive.Previous> &
   Pick<ComponentProps<typeof Button>, "size" | "variant"> &
-  IDensityProps): ReactElement | null {
+  IDensityProps): ReactElement {
   return (
     <QuestionnairePrimitive.Previous
       data-density={density}
@@ -264,7 +260,7 @@ function QuestionnaireSkip({
   ...props
 }: ComponentProps<typeof QuestionnairePrimitive.Skip> &
   Pick<ComponentProps<typeof Button>, "size" | "variant"> &
-  IDensityProps): ReactElement | null {
+  IDensityProps): ReactElement {
   return (
     <QuestionnairePrimitive.Skip
       data-density={density}
@@ -292,7 +288,7 @@ function QuestionnaireNext({
   ...props
 }: ComponentProps<typeof QuestionnairePrimitive.Next> &
   Pick<ComponentProps<typeof Button>, "size" | "variant"> &
-  IDensityProps): ReactElement | null {
+  IDensityProps): ReactElement {
   return (
     <QuestionnairePrimitive.Next
       data-density={density}
@@ -320,7 +316,7 @@ function QuestionnaireSubmit({
   ...props
 }: ComponentProps<typeof QuestionnairePrimitive.Submit> &
   Pick<ComponentProps<typeof Button>, "size" | "variant"> &
-  IDensityProps): ReactElement | null {
+  IDensityProps): ReactElement {
   return (
     <QuestionnairePrimitive.Submit
       data-density={density}

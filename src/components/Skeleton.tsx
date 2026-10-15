@@ -4,7 +4,7 @@ import { cn } from "../utils/cn";
 
 type SkeletonProps = ComponentProps<"div"> & IDensityProps;
 
-function Skeleton({ density, className, ...props }: SkeletonProps): ReactElement | null {
+function Skeleton({ density, className, ...props }: SkeletonProps): ReactElement {
   return (
     <div
       data-density={density}

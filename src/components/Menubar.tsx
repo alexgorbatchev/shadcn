@@ -1,3 +1,10 @@
+import type {
+  MenuLabelProps,
+  MenuItemProps,
+  MenuSubTriggerProps,
+  MenuCheckboxItemProps,
+  MenuRadioItemProps,
+} from "../menu/types";
 import type { IDensityProps } from "../density/types";
 import type { ComponentProps, ReactElement } from "react";
 import { CheckIcon } from "lucide-react";
@@ -24,7 +31,7 @@ import {
 
 type MenubarProps = MenubarPrimitive.Props & IDensityProps;
 
-function Menubar({ density, className, ...props }: MenubarProps): ReactElement | null {
+function Menubar({ density, className, ...props }: MenubarProps): ReactElement {
   return (
     <MenubarPrimitive
       data-density={density}
@@ -40,21 +47,21 @@ function Menubar({ density, className, ...props }: MenubarProps): ReactElement |
   );
 }
 
-function MenubarMenu<Payload>({ ...props }: MenuPrimitive.Root.Props<Payload>): ReactElement | null {
+function MenubarMenu<Payload>({ ...props }: MenuPrimitive.Root.Props<Payload>): ReactElement {
   return <DropdownMenu data-slot="menubar-menu" {...props} />;
 }
 
-function MenubarGroup({ ...props }: ComponentProps<typeof DropdownMenuGroup>): ReactElement | null {
+function MenubarGroup({ ...props }: ComponentProps<typeof DropdownMenuGroup>): ReactElement {
   return <DropdownMenuGroup data-slot="menubar-group" {...props} />;
 }
 
-function MenubarPortal({ ...props }: ComponentProps<typeof DropdownMenuPortal>): ReactElement | null {
+function MenubarPortal({ ...props }: ComponentProps<typeof DropdownMenuPortal>): ReactElement {
   return <DropdownMenuPortal data-slot="menubar-portal" {...props} />;
 }
 
 type MenubarTriggerProps<Payload> = MenuPrimitive.Trigger.Props<Payload> & IDensityProps;
 
-function MenubarTrigger<Payload>({ density, className, ...props }: MenubarTriggerProps<Payload>): ReactElement | null {
+function MenubarTrigger<Payload>({ density, className, ...props }: MenubarTriggerProps<Payload>): ReactElement {
   return (
     <DropdownMenuTrigger
       data-density={density}
@@ -79,7 +86,7 @@ function MenubarContent({
   alignOffset = -4,
   sideOffset = 8,
   ...props
-}: MenubarContentProps): ReactElement | null {
+}: MenubarContentProps): ReactElement {
   return (
     <DropdownMenuContent
       density={density}
@@ -98,15 +105,7 @@ function MenubarContent({
   );
 }
 
-type MenubarItemProps = ComponentProps<typeof DropdownMenuItem> & IDensityProps;
-
-function MenubarItem({
-  density,
-  className,
-  inset,
-  variant = "default",
-  ...props
-}: MenubarItemProps): ReactElement | null {
+function MenubarItem({ density, className, inset, variant = "default", ...props }: MenuItemProps): ReactElement {
   return (
     <DropdownMenuItem
       density={density}
@@ -124,10 +123,6 @@ function MenubarItem({
   );
 }
 
-type MenubarCheckboxItemProps = MenuPrimitive.CheckboxItem.Props & {
-  inset?: boolean;
-} & IDensityProps;
-
 function MenubarCheckboxItem({
   density,
   className,
@@ -135,7 +130,7 @@ function MenubarCheckboxItem({
   checked,
   inset,
   ...props
-}: MenubarCheckboxItemProps): ReactElement | null {
+}: MenuCheckboxItemProps): ReactElement {
   return (
     <MenuPrimitive.CheckboxItem
       data-density={density}
@@ -160,21 +155,11 @@ function MenubarCheckboxItem({
   );
 }
 
-function MenubarRadioGroup({ ...props }: ComponentProps<typeof DropdownMenuRadioGroup>): ReactElement | null {
+function MenubarRadioGroup({ ...props }: ComponentProps<typeof DropdownMenuRadioGroup>): ReactElement {
   return <DropdownMenuRadioGroup data-slot="menubar-radio-group" {...props} />;
 }
 
-type MenubarRadioItemProps = MenuPrimitive.RadioItem.Props & {
-  inset?: boolean;
-} & IDensityProps;
-
-function MenubarRadioItem({
-  density,
-  className,
-  children,
-  inset,
-  ...props
-}: MenubarRadioItemProps): ReactElement | null {
+function MenubarRadioItem({ density, className, children, inset, ...props }: MenuRadioItemProps): ReactElement {
   return (
     <MenuPrimitive.RadioItem
       data-density={density}
@@ -198,11 +183,7 @@ function MenubarRadioItem({
   );
 }
 
-type MenubarLabelProps = ComponentProps<typeof DropdownMenuLabel> & {
-  inset?: boolean;
-} & IDensityProps;
-
-function MenubarLabel({ density, className, inset, ...props }: MenubarLabelProps): ReactElement | null {
+function MenubarLabel({ density, className, inset, ...props }: MenuLabelProps): ReactElement {
   return (
     <DropdownMenuLabel
       density={density}
@@ -221,7 +202,7 @@ function MenubarLabel({ density, className, inset, ...props }: MenubarLabelProps
 
 type MenubarSeparatorProps = ComponentProps<typeof DropdownMenuSeparator> & IDensityProps;
 
-function MenubarSeparator({ density, className, ...props }: MenubarSeparatorProps): ReactElement | null {
+function MenubarSeparator({ density, className, ...props }: MenubarSeparatorProps): ReactElement {
   return (
     <DropdownMenuSeparator
       density={density}
@@ -236,7 +217,7 @@ function MenubarSeparator({ density, className, ...props }: MenubarSeparatorProp
 
 type MenubarShortcutProps = ComponentProps<typeof DropdownMenuShortcut> & IDensityProps;
 
-function MenubarShortcut({ density, className, ...props }: MenubarShortcutProps): ReactElement | null {
+function MenubarShortcut({ density, className, ...props }: MenubarShortcutProps): ReactElement {
   return (
     <DropdownMenuShortcut
       data-density={density}
@@ -250,15 +231,11 @@ function MenubarShortcut({ density, className, ...props }: MenubarShortcutProps)
   );
 }
 
-function MenubarSub({ ...props }: ComponentProps<typeof DropdownMenuSub>): ReactElement | null {
+function MenubarSub({ ...props }: ComponentProps<typeof DropdownMenuSub>): ReactElement {
   return <DropdownMenuSub data-slot="menubar-sub" {...props} />;
 }
 
-type MenubarSubTriggerProps = ComponentProps<typeof DropdownMenuSubTrigger> & {
-  inset?: boolean;
-} & IDensityProps;
-
-function MenubarSubTrigger({ density, className, inset, ...props }: MenubarSubTriggerProps): ReactElement | null {
+function MenubarSubTrigger({ density, className, inset, ...props }: MenuSubTriggerProps): ReactElement {
   return (
     <DropdownMenuSubTrigger
       density={density}
@@ -277,7 +254,7 @@ function MenubarSubTrigger({ density, className, inset, ...props }: MenubarSubTr
 
 type MenubarSubContentProps = ComponentProps<typeof DropdownMenuSubContent> & IDensityProps;
 
-function MenubarSubContent({ density, className, ...props }: MenubarSubContentProps): ReactElement | null {
+function MenubarSubContent({ density, className, ...props }: MenubarSubContentProps): ReactElement {
   return (
     <DropdownMenuSubContent
       density={density}

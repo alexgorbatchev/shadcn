@@ -7,7 +7,7 @@ import { cn } from "../utils/cn";
 
 type BubbleGroupProps = ComponentProps<"div"> & IDensityProps;
 
-function BubbleGroup({ density, className, ...props }: BubbleGroupProps): ReactElement | null {
+function BubbleGroup({ density, className, ...props }: BubbleGroupProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -47,13 +47,7 @@ type BubbleProps = ComponentProps<"div"> &
   VariantProps<typeof bubbleVariants> &
   IDensityProps & { align?: "start" | "end" };
 
-function Bubble({
-  density,
-  variant = "default",
-  align = "start",
-  className,
-  ...props
-}: BubbleProps): ReactElement | null {
+function Bubble({ density, variant = "default", align = "start", className, ...props }: BubbleProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -69,7 +63,7 @@ function Bubble({
 type BubbleContentState = { slot: "bubble-content"; density?: Density };
 type BubbleContentProps = useRender.ComponentProps<"div", BubbleContentState> & IDensityProps;
 
-function BubbleContent({ density, className, render, ...props }: BubbleContentProps): ReactElement | null {
+function BubbleContent({ density, className, render, ...props }: BubbleContentProps): ReactElement {
   return useRender({
     defaultTagName: "div",
     props: mergeProps<"div">(
@@ -106,7 +100,7 @@ function BubbleReactions({
   align = "end",
   className,
   ...props
-}: BubbleReactionsProps): ReactElement | null {
+}: BubbleReactionsProps): ReactElement {
   return (
     <div
       data-density={density}

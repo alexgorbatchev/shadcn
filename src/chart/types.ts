@@ -6,14 +6,14 @@ import type {
   TooltipValueType,
 } from "recharts";
 import type { Density, IDensityProps } from "../density/types";
+import type { ResolvedTheme } from "../theme/types";
 
-export type ChartTheme = "light" | "dark";
 export type ChartConfig = Record<
   string,
   {
     label?: ReactNode;
     icon?: ComponentType;
-  } & ({ color?: string; theme?: never } | { color?: never; theme: Record<ChartTheme, string> })
+  } & ({ color?: string; theme?: never } | { color?: never; theme: Record<ResolvedTheme, string> })
 >;
 export interface IChartContextValue {
   config: ChartConfig;

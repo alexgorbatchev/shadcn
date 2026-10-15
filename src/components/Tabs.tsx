@@ -6,7 +6,7 @@ import { cn } from "../utils/cn";
 
 type TabsProps = TabsPrimitive.Root.Props & IDensityProps;
 
-function Tabs({ density, className, orientation = "horizontal", ...props }: TabsProps): ReactElement | null {
+function Tabs({ density, className, orientation = "horizontal", ...props }: TabsProps): ReactElement {
   return (
     <TabsPrimitive.Root
       data-density={density}
@@ -40,7 +40,7 @@ const tabsListVariants = cva(
 
 type TabsListProps = TabsPrimitive.List.Props & VariantProps<typeof tabsListVariants> & IDensityProps;
 
-function TabsList({ density, className, variant = "default", ...props }: TabsListProps): ReactElement | null {
+function TabsList({ density, className, variant = "default", ...props }: TabsListProps): ReactElement {
   return (
     <TabsPrimitive.List
       data-density={density}
@@ -56,7 +56,7 @@ function TabsList({ density, className, variant = "default", ...props }: TabsLis
 
 type TabsTriggerProps = TabsPrimitive.Tab.Props & IDensityProps;
 
-function TabsTrigger({ density, className, ...props }: TabsTriggerProps): ReactElement | null {
+function TabsTrigger({ density, className, ...props }: TabsTriggerProps): ReactElement {
   return (
     <TabsPrimitive.Tab
       data-density={density}
@@ -77,7 +77,7 @@ function TabsTrigger({ density, className, ...props }: TabsTriggerProps): ReactE
 
 type TabsContentProps = TabsPrimitive.Panel.Props & IDensityProps;
 
-function TabsContent({ density, className, ...props }: TabsContentProps): ReactElement | null {
+function TabsContent({ density, className, ...props }: TabsContentProps): ReactElement {
   return (
     <TabsPrimitive.Panel
       data-density={density}

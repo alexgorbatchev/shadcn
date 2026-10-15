@@ -228,7 +228,7 @@ function SidebarTrigger({
   className,
   onClick,
   ...props
-}: ComponentProps<typeof Button> & IDensityProps): ReactElement | null {
+}: ComponentProps<typeof Button> & IDensityProps): ReactElement {
   const { toggleSidebar, open, isMobile, openMobile } = useSidebar();
 
   return (
@@ -259,7 +259,7 @@ function SidebarRail({
   onClick,
   type = "button",
   ...props
-}: ComponentProps<"button"> & IDensityProps): ReactElement | null {
+}: ComponentProps<"button"> & IDensityProps): ReactElement {
   const { toggleSidebar, open, isMobile, openMobile } = useSidebar();
   return (
     <button
@@ -286,7 +286,7 @@ function SidebarRail({
   );
 }
 
-function SidebarInset({ density, className, ...props }: ComponentProps<"main"> & IDensityProps): ReactElement | null {
+function SidebarInset({ density, className, ...props }: ComponentProps<"main"> & IDensityProps): ReactElement {
   return (
     <main
       data-density={density}
@@ -300,11 +300,7 @@ function SidebarInset({ density, className, ...props }: ComponentProps<"main"> &
   );
 }
 
-function SidebarInput({
-  density,
-  className,
-  ...props
-}: ComponentProps<typeof Input> & IDensityProps): ReactElement | null {
+function SidebarInput({ density, className, ...props }: ComponentProps<typeof Input> & IDensityProps): ReactElement {
   return (
     <Input
       density={density}
@@ -321,7 +317,7 @@ function SidebarInput({
   );
 }
 
-function SidebarHeader({ density, className, ...props }: ComponentProps<"div"> & IDensityProps): ReactElement | null {
+function SidebarHeader({ density, className, ...props }: ComponentProps<"div"> & IDensityProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -333,7 +329,7 @@ function SidebarHeader({ density, className, ...props }: ComponentProps<"div"> &
   );
 }
 
-function SidebarFooter({ density, className, ...props }: ComponentProps<"div"> & IDensityProps): ReactElement | null {
+function SidebarFooter({ density, className, ...props }: ComponentProps<"div"> & IDensityProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -349,7 +345,7 @@ function SidebarSeparator({
   density,
   className,
   ...props
-}: ComponentProps<typeof Separator> & IDensityProps): ReactElement | null {
+}: ComponentProps<typeof Separator> & IDensityProps): ReactElement {
   return (
     <Separator
       data-density={density}
@@ -366,7 +362,7 @@ function SidebarSeparator({
   );
 }
 
-function SidebarContent({ density, className, ...props }: ComponentProps<"div"> & IDensityProps): ReactElement | null {
+function SidebarContent({ density, className, ...props }: ComponentProps<"div"> & IDensityProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -381,7 +377,7 @@ function SidebarContent({ density, className, ...props }: ComponentProps<"div"> 
   );
 }
 
-function SidebarGroup({ density, className, ...props }: ComponentProps<"div"> & IDensityProps): ReactElement | null {
+function SidebarGroup({ density, className, ...props }: ComponentProps<"div"> & IDensityProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -401,7 +397,7 @@ function SidebarGroupLabel({
   className,
   render,
   ...props
-}: useRender.ComponentProps<"div", SidebarPartState> & ComponentProps<"div"> & IDensityProps): ReactElement | null {
+}: useRender.ComponentProps<"div", SidebarPartState> & ComponentProps<"div"> & IDensityProps): ReactElement {
   return useRender({
     defaultTagName: "div",
     props: mergeProps<"div">(
@@ -428,9 +424,7 @@ function SidebarGroupAction({
   render,
   type,
   ...props
-}: useRender.ComponentProps<"button", SidebarPartState> &
-  ComponentProps<"button"> &
-  IDensityProps): ReactElement | null {
+}: useRender.ComponentProps<"button", SidebarPartState> & ComponentProps<"button"> & IDensityProps): ReactElement {
   return useRender({
     defaultTagName: "button",
     props: mergeProps<"button">(
@@ -452,11 +446,7 @@ function SidebarGroupAction({
   });
 }
 
-function SidebarGroupContent({
-  density,
-  className,
-  ...props
-}: ComponentProps<"div"> & IDensityProps): ReactElement | null {
+function SidebarGroupContent({ density, className, ...props }: ComponentProps<"div"> & IDensityProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -468,7 +458,7 @@ function SidebarGroupContent({
   );
 }
 
-function SidebarMenu({ density, className, ...props }: ComponentProps<"ul"> & IDensityProps): ReactElement | null {
+function SidebarMenu({ density, className, ...props }: ComponentProps<"ul"> & IDensityProps): ReactElement {
   return (
     <ul
       data-density={density}
@@ -480,7 +470,7 @@ function SidebarMenu({ density, className, ...props }: ComponentProps<"ul"> & ID
   );
 }
 
-function SidebarMenuItem({ density, className, ...props }: ComponentProps<"li"> & IDensityProps): ReactElement | null {
+function SidebarMenuItem({ density, className, ...props }: ComponentProps<"li"> & IDensityProps): ReactElement {
   return (
     <li
       data-density={density}
@@ -529,7 +519,7 @@ function SidebarMenuButton({
     isActive?: boolean;
     tooltip?: string | ComponentProps<typeof TooltipContent>;
   } & VariantProps<typeof sidebarMenuButtonVariants> &
-  IDensityProps): ReactElement | null {
+  IDensityProps): ReactElement {
   const { isMobile, state } = useSidebar();
   const comp = useRender({
     defaultTagName: "button",
@@ -573,7 +563,7 @@ function SidebarMenuAction({
 }: useRender.ComponentProps<"button", SidebarPartState> &
   ComponentProps<"button"> & {
     showOnHover?: boolean;
-  } & IDensityProps): ReactElement | null {
+  } & IDensityProps): ReactElement {
   return useRender({
     defaultTagName: "button",
     props: mergeProps<"button">(
@@ -597,11 +587,7 @@ function SidebarMenuAction({
   });
 }
 
-function SidebarMenuBadge({
-  density,
-  className,
-  ...props
-}: ComponentProps<"div"> & IDensityProps): ReactElement | null {
+function SidebarMenuBadge({ density, className, ...props }: ComponentProps<"div"> & IDensityProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -623,7 +609,7 @@ function SidebarMenuSkeleton({
   ...props
 }: ComponentProps<"div"> & {
   showIcon?: boolean;
-} & IDensityProps): ReactElement | null {
+} & IDensityProps): ReactElement {
   // Random width between 50 to 90%.
   const [width] = useState(() => {
     return `${Math.floor(Math.random() * 40) + 50}%`;
@@ -648,7 +634,7 @@ function SidebarMenuSkeleton({
   );
 }
 
-function SidebarMenuSub({ density, className, ...props }: ComponentProps<"ul"> & IDensityProps): ReactElement | null {
+function SidebarMenuSub({ density, className, ...props }: ComponentProps<"ul"> & IDensityProps): ReactElement {
   return (
     <ul
       data-density={density}
@@ -663,11 +649,7 @@ function SidebarMenuSub({ density, className, ...props }: ComponentProps<"ul"> &
   );
 }
 
-function SidebarMenuSubItem({
-  density,
-  className,
-  ...props
-}: ComponentProps<"li"> & IDensityProps): ReactElement | null {
+function SidebarMenuSubItem({ density, className, ...props }: ComponentProps<"li"> & IDensityProps): ReactElement {
   return (
     <li
       data-density={density}
@@ -690,7 +672,7 @@ function SidebarMenuSubButton({
   ComponentProps<"a"> & {
     size?: "sm" | "md";
     isActive?: boolean;
-  } & IDensityProps): ReactElement | null {
+  } & IDensityProps): ReactElement {
   return useRender({
     defaultTagName: "a",
     props: mergeProps<"a">(

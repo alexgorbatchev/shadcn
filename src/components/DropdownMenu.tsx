@@ -2,21 +2,28 @@
 
 import { useDensity } from "../hooks/useDensity";
 import { useDirection } from "./DirectionProvider";
+import type {
+  MenuLabelProps,
+  MenuItemProps,
+  MenuSubTriggerProps,
+  MenuCheckboxItemProps,
+  MenuRadioItemProps,
+} from "../menu/types";
 import type { IDensityProps } from "../density/types";
 import type { ComponentProps, ReactElement } from "react";
 import { Menu as MenuPrimitive } from "@base-ui/react/menu";
 import { cn } from "../utils/cn";
 import { ChevronRightIcon, CheckIcon } from "lucide-react";
 
-function DropdownMenu<Payload>({ ...props }: MenuPrimitive.Root.Props<Payload>): ReactElement | null {
+function DropdownMenu<Payload>({ ...props }: MenuPrimitive.Root.Props<Payload>): ReactElement {
   return <MenuPrimitive.Root data-slot="dropdown-menu" {...props} />;
 }
 
-function DropdownMenuPortal({ ...props }: MenuPrimitive.Portal.Props): ReactElement | null {
+function DropdownMenuPortal({ ...props }: MenuPrimitive.Portal.Props): ReactElement {
   return <MenuPrimitive.Portal data-slot="dropdown-menu-portal" {...props} />;
 }
 
-function DropdownMenuTrigger<Payload>({ ...props }: MenuPrimitive.Trigger.Props<Payload>): ReactElement | null {
+function DropdownMenuTrigger<Payload>({ ...props }: MenuPrimitive.Trigger.Props<Payload>): ReactElement {
   return <MenuPrimitive.Trigger data-slot="dropdown-menu-trigger" {...props} />;
 }
 
@@ -32,7 +39,7 @@ function DropdownMenuContent({
   sideOffset = 4,
   className,
   ...props
-}: DropdownMenuContentProps): ReactElement | null {
+}: DropdownMenuContentProps): ReactElement {
   const resolvedDensity = useDensity(density);
   const direction = useDirection();
 
@@ -62,15 +69,11 @@ function DropdownMenuContent({
   );
 }
 
-function DropdownMenuGroup({ ...props }: MenuPrimitive.Group.Props): ReactElement | null {
+function DropdownMenuGroup({ ...props }: MenuPrimitive.Group.Props): ReactElement {
   return <MenuPrimitive.Group data-slot="dropdown-menu-group" {...props} />;
 }
 
-type DropdownMenuLabelProps = MenuPrimitive.GroupLabel.Props & {
-  inset?: boolean;
-} & IDensityProps;
-
-function DropdownMenuLabel({ density, className, inset, ...props }: DropdownMenuLabelProps): ReactElement | null {
+function DropdownMenuLabel({ density, className, inset, ...props }: MenuLabelProps): ReactElement {
   return (
     <MenuPrimitive.GroupLabel
       data-density={density}
@@ -87,18 +90,7 @@ function DropdownMenuLabel({ density, className, inset, ...props }: DropdownMenu
   );
 }
 
-type DropdownMenuItemProps = MenuPrimitive.Item.Props & {
-  inset?: boolean;
-  variant?: "default" | "destructive";
-} & IDensityProps;
-
-function DropdownMenuItem({
-  density,
-  className,
-  inset,
-  variant = "default",
-  ...props
-}: DropdownMenuItemProps): ReactElement | null {
+function DropdownMenuItem({ density, className, inset, variant = "default", ...props }: MenuItemProps): ReactElement {
   return (
     <MenuPrimitive.Item
       data-density={density}
@@ -116,21 +108,11 @@ function DropdownMenuItem({
   );
 }
 
-function DropdownMenuSub({ ...props }: MenuPrimitive.SubmenuRoot.Props): ReactElement | null {
+function DropdownMenuSub({ ...props }: MenuPrimitive.SubmenuRoot.Props): ReactElement {
   return <MenuPrimitive.SubmenuRoot data-slot="dropdown-menu-sub" {...props} />;
 }
 
-type DropdownMenuSubTriggerProps = MenuPrimitive.SubmenuTrigger.Props & {
-  inset?: boolean;
-} & IDensityProps;
-
-function DropdownMenuSubTrigger({
-  density,
-  className,
-  inset,
-  children,
-  ...props
-}: DropdownMenuSubTriggerProps): ReactElement | null {
+function DropdownMenuSubTrigger({ density, className, inset, children, ...props }: MenuSubTriggerProps): ReactElement {
   return (
     <MenuPrimitive.SubmenuTrigger
       data-density={density}
@@ -160,7 +142,7 @@ function DropdownMenuSubContent({
   sideOffset = 0,
   className,
   ...props
-}: DropdownMenuSubContentProps): ReactElement | null {
+}: DropdownMenuSubContentProps): ReactElement {
   const resolvedDensity = useDensity(density);
 
   return (
@@ -182,10 +164,6 @@ function DropdownMenuSubContent({
   );
 }
 
-type DropdownMenuCheckboxItemProps = MenuPrimitive.CheckboxItem.Props & {
-  inset?: boolean;
-} & IDensityProps;
-
 function DropdownMenuCheckboxItem({
   density,
   className,
@@ -193,7 +171,7 @@ function DropdownMenuCheckboxItem({
   checked,
   inset,
   ...props
-}: DropdownMenuCheckboxItemProps): ReactElement | null {
+}: MenuCheckboxItemProps): ReactElement {
   return (
     <MenuPrimitive.CheckboxItem
       data-density={density}
@@ -221,21 +199,11 @@ function DropdownMenuCheckboxItem({
   );
 }
 
-function DropdownMenuRadioGroup({ ...props }: MenuPrimitive.RadioGroup.Props): ReactElement | null {
+function DropdownMenuRadioGroup({ ...props }: MenuPrimitive.RadioGroup.Props): ReactElement {
   return <MenuPrimitive.RadioGroup data-slot="dropdown-menu-radio-group" {...props} />;
 }
 
-type DropdownMenuRadioItemProps = MenuPrimitive.RadioItem.Props & {
-  inset?: boolean;
-} & IDensityProps;
-
-function DropdownMenuRadioItem({
-  density,
-  className,
-  children,
-  inset,
-  ...props
-}: DropdownMenuRadioItemProps): ReactElement | null {
+function DropdownMenuRadioItem({ density, className, children, inset, ...props }: MenuRadioItemProps): ReactElement {
   return (
     <MenuPrimitive.RadioItem
       data-density={density}
@@ -264,7 +232,7 @@ function DropdownMenuRadioItem({
 
 type DropdownMenuSeparatorProps = MenuPrimitive.Separator.Props & IDensityProps;
 
-function DropdownMenuSeparator({ density, className, ...props }: DropdownMenuSeparatorProps): ReactElement | null {
+function DropdownMenuSeparator({ density, className, ...props }: DropdownMenuSeparatorProps): ReactElement {
   return (
     <MenuPrimitive.Separator
       data-density={density}
@@ -279,7 +247,7 @@ function DropdownMenuSeparator({ density, className, ...props }: DropdownMenuSep
 
 type DropdownMenuShortcutProps = ComponentProps<"span"> & IDensityProps;
 
-function DropdownMenuShortcut({ density, className, ...props }: DropdownMenuShortcutProps): ReactElement | null {
+function DropdownMenuShortcut({ density, className, ...props }: DropdownMenuShortcutProps): ReactElement {
   return (
     <span
       data-density={density}

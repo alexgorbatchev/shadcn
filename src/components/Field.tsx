@@ -1,7 +1,7 @@
 "use client";
 
 import type { IDensityProps } from "../density/types";
-import type { ComponentProps, ReactNode, ReactElement } from "react";
+import type { ComponentProps, ReactElement } from "react";
 import { useMemo } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../utils/cn";
@@ -11,7 +11,7 @@ import { Separator } from "./Separator";
 
 type FieldSetProps = ComponentProps<"fieldset"> & IDensityProps;
 
-function FieldSet({ density, className, ...props }: FieldSetProps): ReactElement | null {
+function FieldSet({ density, className, ...props }: FieldSetProps): ReactElement {
   return (
     <fieldset
       data-density={density}
@@ -27,7 +27,7 @@ function FieldSet({ density, className, ...props }: FieldSetProps): ReactElement
 
 type FieldLegendProps = ComponentProps<"legend"> & { variant?: "legend" | "label" } & IDensityProps;
 
-function FieldLegend({ density, className, variant = "legend", ...props }: FieldLegendProps): ReactElement | null {
+function FieldLegend({ density, className, variant = "legend", ...props }: FieldLegendProps): ReactElement {
   return (
     <legend
       data-density={density}
@@ -41,7 +41,7 @@ function FieldLegend({ density, className, variant = "legend", ...props }: Field
 
 type FieldGroupProps = ComponentProps<"div"> & IDensityProps;
 
-function FieldGroup({ density, className, ...props }: FieldGroupProps): ReactElement | null {
+function FieldGroup({ density, className, ...props }: FieldGroupProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -72,7 +72,7 @@ const fieldVariants = cva("group/field flex w-full gap-2 data-[invalid=true]:tex
 
 type FieldProps = ComponentProps<"div"> & VariantProps<typeof fieldVariants> & IDensityProps;
 
-function Field({ density, className, orientation = "vertical", ...props }: FieldProps): ReactElement | null {
+function Field({ density, className, orientation = "vertical", ...props }: FieldProps): ReactElement {
   return (
     <div
       role="group"
@@ -87,7 +87,7 @@ function Field({ density, className, orientation = "vertical", ...props }: Field
 
 type FieldContentProps = ComponentProps<"div"> & IDensityProps;
 
-function FieldContent({ density, className, ...props }: FieldContentProps): ReactElement | null {
+function FieldContent({ density, className, ...props }: FieldContentProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -100,7 +100,7 @@ function FieldContent({ density, className, ...props }: FieldContentProps): Reac
 
 type FieldLabelProps = ComponentProps<typeof Label> & IDensityProps;
 
-function FieldLabel({ density, className, ...props }: FieldLabelProps): ReactElement | null {
+function FieldLabel({ density, className, ...props }: FieldLabelProps): ReactElement {
   return (
     <Label
       data-density={density}
@@ -117,7 +117,7 @@ function FieldLabel({ density, className, ...props }: FieldLabelProps): ReactEle
 
 type FieldTitleProps = ComponentProps<"div"> & IDensityProps;
 
-function FieldTitle({ density, className, ...props }: FieldTitleProps): ReactElement | null {
+function FieldTitle({ density, className, ...props }: FieldTitleProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -133,7 +133,7 @@ function FieldTitle({ density, className, ...props }: FieldTitleProps): ReactEle
 
 type FieldDescriptionProps = ComponentProps<"p"> & IDensityProps;
 
-function FieldDescription({ density, className, ...props }: FieldDescriptionProps): ReactElement | null {
+function FieldDescription({ density, className, ...props }: FieldDescriptionProps): ReactElement {
   return (
     <p
       data-density={density}
@@ -149,11 +149,9 @@ function FieldDescription({ density, className, ...props }: FieldDescriptionProp
   );
 }
 
-type FieldSeparatorProps = ComponentProps<"div"> & {
-  children?: ReactNode;
-} & IDensityProps;
+type FieldSeparatorProps = ComponentProps<"div"> & IDensityProps;
 
-function FieldSeparator({ density, children, className, ...props }: FieldSeparatorProps): ReactElement | null {
+function FieldSeparator({ density, children, className, ...props }: FieldSeparatorProps): ReactElement {
   return (
     <div
       data-density={density}

@@ -21,7 +21,7 @@ const alertVariants = cva(
 
 type AlertProps = ComponentProps<"div"> & VariantProps<typeof alertVariants> & IDensityProps;
 
-function Alert({ density, className, variant, ...props }: AlertProps): ReactElement | null {
+function Alert({ density, className, variant, ...props }: AlertProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -35,7 +35,7 @@ function Alert({ density, className, variant, ...props }: AlertProps): ReactElem
 
 type AlertTitleProps = ComponentProps<"div"> & IDensityProps;
 
-function AlertTitle({ density, className, ...props }: AlertTitleProps): ReactElement | null {
+function AlertTitle({ density, className, ...props }: AlertTitleProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -51,7 +51,7 @@ function AlertTitle({ density, className, ...props }: AlertTitleProps): ReactEle
 
 type AlertDescriptionProps = ComponentProps<"div"> & IDensityProps;
 
-function AlertDescription({ density, className, ...props }: AlertDescriptionProps): ReactElement | null {
+function AlertDescription({ density, className, ...props }: AlertDescriptionProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -67,7 +67,7 @@ function AlertDescription({ density, className, ...props }: AlertDescriptionProp
 
 type AlertActionProps = ComponentProps<"div"> & IDensityProps;
 
-function AlertAction({ density, className, ...props }: AlertActionProps): ReactElement | null {
+function AlertAction({ density, className, ...props }: AlertActionProps): ReactElement {
   return (
     <div data-density={density} data-slot="alert-action" className={cn("absolute top-2 end-2", className)} {...props} />
   );

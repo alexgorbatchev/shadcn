@@ -4,7 +4,7 @@ import { cn } from "../utils/cn";
 
 type KbdProps = ComponentProps<"kbd"> & IDensityProps;
 
-function Kbd({ density, className, ...props }: KbdProps): ReactElement | null {
+function Kbd({ density, className, ...props }: KbdProps): ReactElement {
   return (
     <kbd
       data-density={density}
@@ -20,7 +20,7 @@ function Kbd({ density, className, ...props }: KbdProps): ReactElement | null {
 
 type KbdGroupProps = ComponentProps<"kbd"> & IDensityProps;
 
-function KbdGroup({ density, className, ...props }: KbdGroupProps): ReactElement | null {
+function KbdGroup({ density, className, ...props }: KbdGroupProps): ReactElement {
   return (
     <kbd
       data-density={density}

@@ -1,7 +1,8 @@
 import type { ReactElement } from "react";
-import type { ChartStyleProps, ChartTheme } from "../chart/types";
+import type { ChartStyleProps } from "../chart/types";
+import type { ResolvedTheme } from "../theme/types";
 import cssesc from "cssesc";
-const themes: ChartTheme[] = ["light", "dark"];
+const themes: ResolvedTheme[] = ["light", "dark"];
 export function ChartStyle({ id, config }: ChartStyleProps): ReactElement | null {
   const colors = Object.entries(config).filter(([, item]) => item.theme ?? item.color);
   if (!colors.length) return null;

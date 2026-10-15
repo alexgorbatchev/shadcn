@@ -15,7 +15,7 @@ function ScrollArea({
   children,
   scrollbars = <ScrollBar />,
   ...props
-}: ScrollAreaProps): ReactElement | null {
+}: ScrollAreaProps): ReactElement {
   return (
     <ScrollAreaPrimitive.Root
       data-density={density}
@@ -37,7 +37,7 @@ function ScrollArea({
 
 type ScrollBarProps = ScrollAreaPrimitive.Scrollbar.Props & IDensityProps;
 
-function ScrollBar({ density, className, orientation = "vertical", ...props }: ScrollBarProps): ReactElement | null {
+function ScrollBar({ density, className, orientation = "vertical", ...props }: ScrollBarProps): ReactElement {
   return (
     <ScrollAreaPrimitive.Scrollbar
       data-density={density}

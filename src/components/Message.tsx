@@ -8,7 +8,7 @@ import { cn } from "../utils/cn";
 
 type MessageGroupProps = ComponentProps<"div"> & IDensityProps;
 
-function MessageGroup({ density, className, ...props }: MessageGroupProps): ReactElement | null {
+function MessageGroup({ density, className, ...props }: MessageGroupProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -21,7 +21,7 @@ function MessageGroup({ density, className, ...props }: MessageGroupProps): Reac
 
 type MessageProps = ComponentProps<"div"> & IDensityProps & { align?: "start" | "end" };
 
-function Message({ density, className, align = "start", style, ...props }: MessageProps): ReactElement | null {
+function Message({ density, className, align = "start", style, ...props }: MessageProps): ReactElement {
   const [footerOffset, setFooterOffset] = useState(0);
   const context = useMemo<IMessageContextValue>(() => ({ setFooterOffset }), []);
   const messageStyle: MessageStyle = { ...style, "--message-footer-offset": `${footerOffset}px` };
@@ -44,7 +44,7 @@ function Message({ density, className, align = "start", style, ...props }: Messa
 
 type MessageAvatarProps = ComponentProps<"div"> & IDensityProps;
 
-function MessageAvatar({ density, className, ...props }: MessageAvatarProps): ReactElement | null {
+function MessageAvatar({ density, className, ...props }: MessageAvatarProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -60,7 +60,7 @@ function MessageAvatar({ density, className, ...props }: MessageAvatarProps): Re
 
 type MessageContentProps = ComponentProps<"div"> & IDensityProps;
 
-function MessageContent({ density, className, ...props }: MessageContentProps): ReactElement | null {
+function MessageContent({ density, className, ...props }: MessageContentProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -76,7 +76,7 @@ function MessageContent({ density, className, ...props }: MessageContentProps): 
 
 type MessageHeaderProps = ComponentProps<"div"> & IDensityProps;
 
-function MessageHeader({ density, className, ...props }: MessageHeaderProps): ReactElement | null {
+function MessageHeader({ density, className, ...props }: MessageHeaderProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -92,7 +92,7 @@ function MessageHeader({ density, className, ...props }: MessageHeaderProps): Re
 
 type MessageFooterProps = ComponentProps<"div"> & IDensityProps;
 
-function MessageFooter({ density, className, ...props }: MessageFooterProps): ReactElement | null {
+function MessageFooter({ density, className, ...props }: MessageFooterProps): ReactElement {
   const context = useContext(MessageContext);
   const footerRef = useRef<HTMLDivElement>(null);
   useLayoutEffect(() => {

@@ -9,7 +9,7 @@ import { Separator } from "./Separator";
 
 type ItemGroupProps = ComponentProps<"div"> & IDensityProps;
 
-function ItemGroup({ density, className, ...props }: ItemGroupProps): ReactElement | null {
+function ItemGroup({ density, className, ...props }: ItemGroupProps): ReactElement {
   return (
     <div
       role="list"
@@ -26,7 +26,7 @@ function ItemGroup({ density, className, ...props }: ItemGroupProps): ReactEleme
 
 type ItemSeparatorProps = ComponentProps<typeof Separator> & IDensityProps;
 
-function ItemSeparator({ density, className, ...props }: ItemSeparatorProps): ReactElement | null {
+function ItemSeparator({ density, className, ...props }: ItemSeparatorProps): ReactElement {
   return (
     <Separator
       data-density={density}
@@ -69,7 +69,7 @@ function Item({
   size = "default",
   render,
   ...props
-}: ItemProps): ReactElement | null {
+}: ItemProps): ReactElement {
   return useRender({
     defaultTagName: "div",
     props: mergeProps<"div">(
@@ -107,7 +107,7 @@ const itemMediaVariants = cva(
 
 type ItemMediaProps = ComponentProps<"div"> & VariantProps<typeof itemMediaVariants> & IDensityProps;
 
-function ItemMedia({ density, className, variant = "default", ...props }: ItemMediaProps): ReactElement | null {
+function ItemMedia({ density, className, variant = "default", ...props }: ItemMediaProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -121,7 +121,7 @@ function ItemMedia({ density, className, variant = "default", ...props }: ItemMe
 
 type ItemContentProps = ComponentProps<"div"> & IDensityProps;
 
-function ItemContent({ density, className, ...props }: ItemContentProps): ReactElement | null {
+function ItemContent({ density, className, ...props }: ItemContentProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -137,7 +137,7 @@ function ItemContent({ density, className, ...props }: ItemContentProps): ReactE
 
 type ItemTitleProps = ComponentProps<"div"> & IDensityProps;
 
-function ItemTitle({ density, className, ...props }: ItemTitleProps): ReactElement | null {
+function ItemTitle({ density, className, ...props }: ItemTitleProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -153,7 +153,7 @@ function ItemTitle({ density, className, ...props }: ItemTitleProps): ReactEleme
 
 type ItemDescriptionProps = ComponentProps<"p"> & IDensityProps;
 
-function ItemDescription({ density, className, ...props }: ItemDescriptionProps): ReactElement | null {
+function ItemDescription({ density, className, ...props }: ItemDescriptionProps): ReactElement {
   return (
     <p
       data-density={density}
@@ -169,7 +169,7 @@ function ItemDescription({ density, className, ...props }: ItemDescriptionProps)
 
 type ItemActionsProps = ComponentProps<"div"> & IDensityProps;
 
-function ItemActions({ density, className, ...props }: ItemActionsProps): ReactElement | null {
+function ItemActions({ density, className, ...props }: ItemActionsProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -182,7 +182,7 @@ function ItemActions({ density, className, ...props }: ItemActionsProps): ReactE
 
 type ItemHeaderProps = ComponentProps<"div"> & IDensityProps;
 
-function ItemHeader({ density, className, ...props }: ItemHeaderProps): ReactElement | null {
+function ItemHeader({ density, className, ...props }: ItemHeaderProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -195,7 +195,7 @@ function ItemHeader({ density, className, ...props }: ItemHeaderProps): ReactEle
 
 type ItemFooterProps = ComponentProps<"div"> & IDensityProps;
 
-function ItemFooter({ density, className, ...props }: ItemFooterProps): ReactElement | null {
+function ItemFooter({ density, className, ...props }: ItemFooterProps): ReactElement {
   return (
     <div
       data-density={density}

@@ -35,7 +35,7 @@ function Attachment({
   size = "default",
   orientation = "horizontal",
   ...props
-}: AttachmentProps): ReactElement | null {
+}: AttachmentProps): ReactElement {
   return (
     <div
       data-slot="attachment"
@@ -62,12 +62,7 @@ const attachmentMediaVariants = cva(
   },
 );
 type AttachmentMediaProps = ComponentProps<"div"> & VariantProps<typeof attachmentMediaVariants> & IDensityProps;
-function AttachmentMedia({
-  density,
-  className,
-  variant = "icon",
-  ...props
-}: AttachmentMediaProps): ReactElement | null {
+function AttachmentMedia({ density, className, variant = "icon", ...props }: AttachmentMediaProps): ReactElement {
   return (
     <div
       data-slot="attachment-media"
@@ -79,7 +74,7 @@ function AttachmentMedia({
   );
 }
 type AttachmentContentProps = ComponentProps<"div"> & IDensityProps;
-function AttachmentContent({ density, className, ...props }: AttachmentContentProps): ReactElement | null {
+function AttachmentContent({ density, className, ...props }: AttachmentContentProps): ReactElement {
   return (
     <div
       data-slot="attachment-content"
@@ -93,7 +88,7 @@ function AttachmentContent({ density, className, ...props }: AttachmentContentPr
   );
 }
 type AttachmentTitleProps = ComponentProps<"span"> & IDensityProps;
-function AttachmentTitle({ density, className, ...props }: AttachmentTitleProps): ReactElement | null {
+function AttachmentTitle({ density, className, ...props }: AttachmentTitleProps): ReactElement {
   return (
     <span
       data-slot="attachment-title"
@@ -107,7 +102,7 @@ function AttachmentTitle({ density, className, ...props }: AttachmentTitleProps)
   );
 }
 type AttachmentDescriptionProps = ComponentProps<"span"> & IDensityProps;
-function AttachmentDescription({ density, className, ...props }: AttachmentDescriptionProps): ReactElement | null {
+function AttachmentDescription({ density, className, ...props }: AttachmentDescriptionProps): ReactElement {
   return (
     <span
       data-slot="attachment-description"
@@ -121,7 +116,7 @@ function AttachmentDescription({ density, className, ...props }: AttachmentDescr
   );
 }
 type AttachmentActionsProps = ComponentProps<"div"> & IDensityProps;
-function AttachmentActions({ density, className, ...props }: AttachmentActionsProps): ReactElement | null {
+function AttachmentActions({ density, className, ...props }: AttachmentActionsProps): ReactElement {
   return (
     <div
       data-slot="attachment-actions"
@@ -139,18 +134,12 @@ function AttachmentAction({
   variant = "ghost",
   size = "icon-xs",
   ...props
-}: ComponentProps<typeof Button>): ReactElement | null {
+}: ComponentProps<typeof Button>): ReactElement {
   return <Button data-slot="attachment-action" variant={variant} size={size} className={className} {...props} />;
 }
 type AttachmentTriggerState = { slot: "attachment-trigger"; density?: Density };
 type AttachmentTriggerProps = useRender.ComponentProps<"button", AttachmentTriggerState> & IDensityProps;
-function AttachmentTrigger({
-  density,
-  className,
-  render,
-  type,
-  ...props
-}: AttachmentTriggerProps): ReactElement | null {
+function AttachmentTrigger({ density, className, render, type, ...props }: AttachmentTriggerProps): ReactElement {
   return useRender({
     defaultTagName: "button",
     props: mergeProps<"button">(
@@ -162,7 +151,7 @@ function AttachmentTrigger({
   });
 }
 type AttachmentGroupProps = ComponentProps<"div"> & IDensityProps;
-function AttachmentGroup({ density, className, ...props }: AttachmentGroupProps): ReactElement | null {
+function AttachmentGroup({ density, className, ...props }: AttachmentGroupProps): ReactElement {
   return (
     <div
       data-slot="attachment-group"

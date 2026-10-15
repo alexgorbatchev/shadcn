@@ -5,7 +5,7 @@ import { cn } from "../utils/cn";
 
 type InputProps = InputPrimitive.Props & IDensityProps;
 
-function Input({ density, className, type, ...props }: InputProps): ReactElement | null {
+function Input({ density, className, type, ...props }: InputProps): ReactElement {
   return (
     <InputPrimitive
       type={type}

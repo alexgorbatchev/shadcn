@@ -43,13 +43,7 @@ const buttonVariants = cva(
 
 type ButtonProps = ButtonPrimitive.Props & VariantProps<typeof buttonVariants> & IDensityProps;
 
-function Button({
-  density,
-  className,
-  variant = "default",
-  size = "default",
-  ...props
-}: ButtonProps): ReactElement | null {
+function Button({ density, className, variant = "default", size = "default", ...props }: ButtonProps): ReactElement {
   return (
     <ButtonPrimitive
       data-density={density}

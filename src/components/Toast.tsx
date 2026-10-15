@@ -90,7 +90,7 @@ function ToastAction({
   className,
   render = <Button variant="outline" size="sm" />,
   ...props
-}: ToastPrimitive.Action.Props): ReactElement | null {
+}: ToastPrimitive.Action.Props): ReactElement {
   return (
     <ToastPrimitive.Action
       data-slot="toast-action"

@@ -8,7 +8,7 @@ import { cn } from "../utils/cn";
 
 type RadioGroupProps = RadioGroupPrimitive.Props & IDensityProps;
 
-function RadioGroup({ density, className, ...props }: RadioGroupProps): ReactElement | null {
+function RadioGroup({ density, className, ...props }: RadioGroupProps): ReactElement {
   return (
     <RadioGroupPrimitive
       data-density={density}
@@ -21,7 +21,7 @@ function RadioGroup({ density, className, ...props }: RadioGroupProps): ReactEle
 
 type RadioGroupItemProps = RadioPrimitive.Root.Props & IDensityProps;
 
-function RadioGroupItem({ density, className, ...props }: RadioGroupItemProps): ReactElement | null {
+function RadioGroupItem({ density, className, ...props }: RadioGroupItemProps): ReactElement {
   return (
     <RadioPrimitive.Root
       data-density={density}

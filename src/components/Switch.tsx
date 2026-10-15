@@ -7,7 +7,7 @@ type SwitchProps = SwitchPrimitive.Root.Props & {
   size?: "sm" | "default";
 } & IDensityProps;
 
-function Switch({ density, className, size = "default", ...props }: SwitchProps): ReactElement | null {
+function Switch({ density, className, size = "default", ...props }: SwitchProps): ReactElement {
   return (
     <SwitchPrimitive.Root
       data-density={density}

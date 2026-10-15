@@ -17,7 +17,7 @@ function NavigationMenu<Value>({
   className,
   children,
   ...props
-}: NavigationMenuProps<Value>): ReactElement | null {
+}: NavigationMenuProps<Value>): ReactElement {
   const resolvedDensity = useDensity(density);
   return (
     <NavigationMenuPrimitive.Root
@@ -39,7 +39,7 @@ function NavigationMenu<Value>({
 
 type NavigationMenuListProps = ComponentPropsWithRef<typeof NavigationMenuPrimitive.List> & IDensityProps;
 
-function NavigationMenuList({ density, className, ...props }: NavigationMenuListProps): ReactElement | null {
+function NavigationMenuList({ density, className, ...props }: NavigationMenuListProps): ReactElement {
   return (
     <NavigationMenuPrimitive.List
       data-density={density}
@@ -57,7 +57,7 @@ function NavigationMenuList({ density, className, ...props }: NavigationMenuList
 
 type NavigationMenuItemProps = ComponentPropsWithRef<typeof NavigationMenuPrimitive.Item> & IDensityProps;
 
-function NavigationMenuItem({ density, className, ...props }: NavigationMenuItemProps): ReactElement | null {
+function NavigationMenuItem({ density, className, ...props }: NavigationMenuItemProps): ReactElement {
   return (
     <NavigationMenuPrimitive.Item
       data-density={density}
@@ -74,12 +74,7 @@ const navigationMenuTriggerStyle = cva(
 
 type NavigationMenuTriggerProps = NavigationMenuPrimitive.Trigger.Props & IDensityProps;
 
-function NavigationMenuTrigger({
-  density,
-  className,
-  children,
-  ...props
-}: NavigationMenuTriggerProps): ReactElement | null {
+function NavigationMenuTrigger({ density, className, children, ...props }: NavigationMenuTriggerProps): ReactElement {
   return (
     <NavigationMenuPrimitive.Trigger
       data-density={density}
@@ -96,7 +91,7 @@ function NavigationMenuTrigger({
 
 type NavigationMenuContentProps = NavigationMenuPrimitive.Content.Props & IDensityProps;
 
-function NavigationMenuContent({ density, className, ...props }: NavigationMenuContentProps): ReactElement | null {
+function NavigationMenuContent({ density, className, ...props }: NavigationMenuContentProps): ReactElement {
   return (
     <NavigationMenuPrimitive.Content
       data-density={density}
@@ -122,7 +117,7 @@ function NavigationMenuPositioner({
   align = "start",
   alignOffset = 0,
   ...props
-}: NavigationMenuPositionerProps): ReactElement | null {
+}: NavigationMenuPositionerProps): ReactElement {
   const resolvedDensity = useDensity(density);
   const direction = useDirection();
   return (
@@ -155,7 +150,7 @@ function NavigationMenuPositioner({
 
 type NavigationMenuLinkProps = NavigationMenuPrimitive.Link.Props & IDensityProps;
 
-function NavigationMenuLink({ density, className, ...props }: NavigationMenuLinkProps): ReactElement | null {
+function NavigationMenuLink({ density, className, ...props }: NavigationMenuLinkProps): ReactElement {
   return (
     <NavigationMenuPrimitive.Link
       data-density={density}
@@ -178,7 +173,7 @@ function NavigationMenuIndicator({
   className,
   children,
   ...props
-}: NavigationMenuIndicatorProps): ReactElement | null {
+}: NavigationMenuIndicatorProps): ReactElement {
   return (
     <NavigationMenuPrimitive.Icon
       data-density={density}

@@ -6,7 +6,7 @@ import { cn } from "../utils/cn";
 
 type ProgressProps = ProgressPrimitive.Root.Props & IDensityProps;
 
-function Progress({ density, className, children, value, ...props }: ProgressProps): ReactElement | null {
+function Progress({ density, className, children, value, ...props }: ProgressProps): ReactElement {
   return (
     <ProgressPrimitive.Root
       value={value}
@@ -25,7 +25,7 @@ function Progress({ density, className, children, value, ...props }: ProgressPro
 
 type ProgressTrackProps = ProgressPrimitive.Track.Props & IDensityProps;
 
-function ProgressTrack({ density, className, ...props }: ProgressTrackProps): ReactElement | null {
+function ProgressTrack({ density, className, ...props }: ProgressTrackProps): ReactElement {
   return (
     <ProgressPrimitive.Track
       className={(state) =>
@@ -43,7 +43,7 @@ function ProgressTrack({ density, className, ...props }: ProgressTrackProps): Re
 
 type ProgressIndicatorProps = ProgressPrimitive.Indicator.Props & IDensityProps;
 
-function ProgressIndicator({ density, className, ...props }: ProgressIndicatorProps): ReactElement | null {
+function ProgressIndicator({ density, className, ...props }: ProgressIndicatorProps): ReactElement {
   return (
     <ProgressPrimitive.Indicator
       data-density={density}
@@ -58,7 +58,7 @@ function ProgressIndicator({ density, className, ...props }: ProgressIndicatorPr
 
 type ProgressLabelProps = ProgressPrimitive.Label.Props & IDensityProps;
 
-function ProgressLabel({ density, className, ...props }: ProgressLabelProps): ReactElement | null {
+function ProgressLabel({ density, className, ...props }: ProgressLabelProps): ReactElement {
   return (
     <ProgressPrimitive.Label
       className={(state) => cn("text-sm font-medium", typeof className === "function" ? className(state) : className)}
@@ -71,7 +71,7 @@ function ProgressLabel({ density, className, ...props }: ProgressLabelProps): Re
 
 type ProgressValueProps = ProgressPrimitive.Value.Props & IDensityProps;
 
-function ProgressValue({ density, className, ...props }: ProgressValueProps): ReactElement | null {
+function ProgressValue({ density, className, ...props }: ProgressValueProps): ReactElement {
   return (
     <ProgressPrimitive.Value
       className={(state) =>

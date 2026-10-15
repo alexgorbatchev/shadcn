@@ -5,15 +5,15 @@ import { Tooltip as TooltipPrimitive } from "@base-ui/react/tooltip";
 import { useDirection } from "./DirectionProvider";
 import { cn } from "../utils/cn";
 
-function TooltipProvider({ delay = 0, ...props }: TooltipPrimitive.Provider.Props): ReactElement | null {
+function TooltipProvider({ delay = 0, ...props }: TooltipPrimitive.Provider.Props): ReactElement {
   return <TooltipPrimitive.Provider data-slot="tooltip-provider" delay={delay} {...props} />;
 }
 
-function Tooltip<Payload>({ ...props }: TooltipPrimitive.Root.Props<Payload>): ReactElement | null {
+function Tooltip<Payload>({ ...props }: TooltipPrimitive.Root.Props<Payload>): ReactElement {
   return <TooltipPrimitive.Root<Payload> data-slot="tooltip" {...props} />;
 }
 
-function TooltipTrigger<Payload>({ ...props }: TooltipPrimitive.Trigger.Props<Payload>): ReactElement | null {
+function TooltipTrigger<Payload>({ ...props }: TooltipPrimitive.Trigger.Props<Payload>): ReactElement {
   return <TooltipPrimitive.Trigger<Payload> data-slot="tooltip-trigger" {...props} />;
 }
 
@@ -30,7 +30,7 @@ function TooltipContent({
   alignOffset = 0,
   children,
   ...props
-}: TooltipContentProps): ReactElement | null {
+}: TooltipContentProps): ReactElement {
   const resolvedDensity = useDensity(density);
   const direction = useDirection();
 

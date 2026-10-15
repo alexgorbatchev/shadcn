@@ -9,21 +9,21 @@ import { cn } from "../utils/cn";
 
 import { Button } from "./Button";
 
-function AlertDialog<Payload>({ ...props }: AlertDialogPrimitive.Root.Props<Payload>): ReactElement | null {
+function AlertDialog<Payload>({ ...props }: AlertDialogPrimitive.Root.Props<Payload>): ReactElement {
   return <AlertDialogPrimitive.Root data-slot="alert-dialog" {...props} />;
 }
 
-function AlertDialogTrigger<Payload>({ ...props }: AlertDialogPrimitive.Trigger.Props<Payload>): ReactElement | null {
+function AlertDialogTrigger<Payload>({ ...props }: AlertDialogPrimitive.Trigger.Props<Payload>): ReactElement {
   return <AlertDialogPrimitive.Trigger data-slot="alert-dialog-trigger" {...props} />;
 }
 
-function AlertDialogPortal({ ...props }: AlertDialogPrimitive.Portal.Props): ReactElement | null {
+function AlertDialogPortal({ ...props }: AlertDialogPrimitive.Portal.Props): ReactElement {
   return <AlertDialogPrimitive.Portal data-slot="alert-dialog-portal" {...props} />;
 }
 
 type AlertDialogOverlayProps = AlertDialogPrimitive.Backdrop.Props & IDensityProps;
 
-function AlertDialogOverlay({ density, className, ...props }: AlertDialogOverlayProps): ReactElement | null {
+function AlertDialogOverlay({ density, className, ...props }: AlertDialogOverlayProps): ReactElement {
   const resolvedDensity = useDensity(density);
 
   return (
@@ -45,12 +45,7 @@ type AlertDialogContentProps = AlertDialogPrimitive.Popup.Props & {
   size?: "default" | "sm";
 } & IDensityProps;
 
-function AlertDialogContent({
-  density,
-  className,
-  size = "default",
-  ...props
-}: AlertDialogContentProps): ReactElement | null {
+function AlertDialogContent({ density, className, size = "default", ...props }: AlertDialogContentProps): ReactElement {
   const resolvedDensity = useDensity(density);
   const direction = useDirection();
 
@@ -76,7 +71,7 @@ function AlertDialogContent({
 
 type AlertDialogHeaderProps = ComponentProps<"div"> & IDensityProps;
 
-function AlertDialogHeader({ density, className, ...props }: AlertDialogHeaderProps): ReactElement | null {
+function AlertDialogHeader({ density, className, ...props }: AlertDialogHeaderProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -92,7 +87,7 @@ function AlertDialogHeader({ density, className, ...props }: AlertDialogHeaderPr
 
 type AlertDialogFooterProps = ComponentProps<"div"> & IDensityProps;
 
-function AlertDialogFooter({ density, className, ...props }: AlertDialogFooterProps): ReactElement | null {
+function AlertDialogFooter({ density, className, ...props }: AlertDialogFooterProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -108,7 +103,7 @@ function AlertDialogFooter({ density, className, ...props }: AlertDialogFooterPr
 
 type AlertDialogMediaProps = ComponentProps<"div"> & IDensityProps;
 
-function AlertDialogMedia({ density, className, ...props }: AlertDialogMediaProps): ReactElement | null {
+function AlertDialogMedia({ density, className, ...props }: AlertDialogMediaProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -124,7 +119,7 @@ function AlertDialogMedia({ density, className, ...props }: AlertDialogMediaProp
 
 type AlertDialogTitleProps = ComponentProps<typeof AlertDialogPrimitive.Title> & IDensityProps;
 
-function AlertDialogTitle({ density, className, ...props }: AlertDialogTitleProps): ReactElement | null {
+function AlertDialogTitle({ density, className, ...props }: AlertDialogTitleProps): ReactElement {
   return (
     <AlertDialogPrimitive.Title
       data-density={density}
@@ -142,7 +137,7 @@ function AlertDialogTitle({ density, className, ...props }: AlertDialogTitleProp
 
 type AlertDialogDescriptionProps = ComponentProps<typeof AlertDialogPrimitive.Description> & IDensityProps;
 
-function AlertDialogDescription({ density, className, ...props }: AlertDialogDescriptionProps): ReactElement | null {
+function AlertDialogDescription({ density, className, ...props }: AlertDialogDescriptionProps): ReactElement {
   return (
     <AlertDialogPrimitive.Description
       data-density={density}
@@ -160,7 +155,7 @@ function AlertDialogDescription({ density, className, ...props }: AlertDialogDes
 
 type AlertDialogActionProps = ComponentProps<typeof Button> & IDensityProps;
 
-function AlertDialogAction({ density, className, ...props }: AlertDialogActionProps): ReactElement | null {
+function AlertDialogAction({ density, className, ...props }: AlertDialogActionProps): ReactElement {
   return <Button data-density={density} data-slot="alert-dialog-action" className={className} {...props} />;
 }
 
@@ -174,7 +169,7 @@ function AlertDialogCancel({
   variant = "outline",
   size = "default",
   ...props
-}: AlertDialogCancelProps): ReactElement | null {
+}: AlertDialogCancelProps): ReactElement {
   return (
     <AlertDialogPrimitive.Close
       data-density={density}
