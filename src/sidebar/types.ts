@@ -1,5 +1,5 @@
 import type { CSSProperties, Dispatch, SetStateAction } from "react";
-import type { IDensityProps } from "../density/types";
+import type { IDensityProps } from "../density/types.js";
 
 export type SidebarPartState = IDensityProps & { slot: string; sidebar: string };
 export type SidebarMenuButtonState = SidebarPartState & { active: boolean; size: "default" | "sm" | "lg" | null };

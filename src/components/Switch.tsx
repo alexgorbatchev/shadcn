@@ -1,7 +1,7 @@
-import type { IDensityProps } from "../density/types";
+import type { IDensityProps } from "../density/types.js";
 import type { ReactElement } from "react";
 import { Switch as SwitchPrimitive } from "@base-ui/react/switch";
-import { cn } from "../utils/cn";
+import { cn } from "../utils/cn.js";
 
 type SwitchProps = SwitchPrimitive.Root.Props & {
   size?: "sm" | "default";

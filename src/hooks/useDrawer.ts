@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import { DrawerContext } from "../drawer/DrawerContext";
-import type { IDrawerContext } from "../drawer/types";
+import { DrawerContext } from "../drawer/DrawerContext.js";
+import type { IDrawerContext } from "../drawer/types.js";
 
 export function useDrawer(): IDrawerContext {
   const context = useContext(DrawerContext);

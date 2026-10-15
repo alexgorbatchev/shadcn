@@ -1,7 +1,7 @@
-import type { IDensityProps } from "../density/types";
+import type { IDensityProps } from "../density/types.js";
 import type { ReactElement } from "react";
 import { Checkbox as CheckboxPrimitive } from "@base-ui/react/checkbox";
-import { cn } from "../utils/cn";
+import { cn } from "../utils/cn.js";
 import { CheckIcon } from "lucide-react";
 
 type CheckboxProps = CheckboxPrimitive.Root.Props & IDensityProps;

@@ -1,7 +1,7 @@
 import { useMemo, type ReactElement, type ReactNode } from "react";
 import { useIsomorphicLayoutEffect, useTernaryDarkMode } from "usehooks-ts";
-import { ThemeContext } from "../theme/ThemeContext";
-import type { IThemeContextValue, ResolvedTheme, ThemeMode } from "../theme/types";
+import { ThemeContext } from "../theme/ThemeContext.js";
+import type { IThemeContextValue, ResolvedTheme, ThemeMode } from "../theme/types.js";
 
 export interface IThemeProviderProps {
   children: ReactNode;

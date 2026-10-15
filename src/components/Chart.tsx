@@ -4,17 +4,17 @@ import type {
   ChartTooltipContentProps,
   ChartLegendContentProps,
   ChartIndicatorStyle,
-} from "../chart/types";
+} from "../chart/types.js";
 import { useId, useMemo } from "react";
 import { ResponsiveContainer, Tooltip, Legend } from "recharts";
 import sortBy from "es-toolkit/compat/sortBy";
-import { ChartContext } from "../chart/ChartContext";
-import { getPayloadConfigFromPayload } from "../chart/getPayloadConfigFromPayload";
-import { useChart } from "../hooks/useChart";
-import { useDensity } from "../hooks/useDensity";
-import { cn } from "../utils/cn";
-import { ChartStyle } from "./ChartStyle";
-import { useDirection } from "./DirectionProvider";
+import { ChartContext } from "../chart/ChartContext.js";
+import { getPayloadConfigFromPayload } from "../chart/getPayloadConfigFromPayload.js";
+import { useChart } from "../hooks/useChart.js";
+import { useDensity } from "../hooks/useDensity.js";
+import { cn } from "../utils/cn.js";
+import { ChartStyle } from "./ChartStyle.js";
+import { useDirection } from "./DirectionProvider.js";
 
 function Chart({
   id,

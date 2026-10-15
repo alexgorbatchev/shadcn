@@ -1,11 +1,11 @@
 import type { ReactElement } from "react";
-import type { IDensityProps } from "../density/types";
+import type { IDensityProps } from "../density/types.js";
 import { Toast as ToastPrimitive } from "@base-ui/react/toast";
 import { CircleCheckIcon, InfoIcon, TriangleAlertIcon, OctagonXIcon, LoaderCircleIcon, XIcon } from "lucide-react";
-import { useDensity } from "../hooks/useDensity";
-import { useDirection } from "./DirectionProvider";
-import { cn } from "../utils/cn";
-import { Button } from "./Button";
+import { useDensity } from "../hooks/useDensity.js";
+import { useDirection } from "./DirectionProvider.js";
+import { cn } from "../utils/cn.js";
+import { Button } from "./Button.js";
 
 function ToastProvider(props: ToastPrimitive.Provider.Props): ReactElement {
   return <ToastPrimitive.Provider {...props} />;

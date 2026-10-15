@@ -1,11 +1,11 @@
-import type { IDensityProps } from "../density/types";
+import type { IDensityProps } from "../density/types.js";
 import type { ComponentProps, ReactElement } from "react";
 import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "../utils/cn";
+import { cn } from "../utils/cn.js";
 
-import { Separator } from "./Separator";
+import { Separator } from "./Separator.js";
 
 type ItemGroupProps = ComponentProps<"div"> & IDensityProps;
 

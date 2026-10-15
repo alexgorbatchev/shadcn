@@ -1,12 +1,12 @@
-import { useDensity } from "../hooks/useDensity";
-import type { IDensityProps } from "../density/types";
+import { useDensity } from "../hooks/useDensity.js";
+import type { IDensityProps } from "../density/types.js";
 import type { ComponentPropsWithRef, ReactElement } from "react";
 import { useDirection } from "@base-ui/react/direction-provider";
 import { Combobox as ComboboxPrimitive } from "@base-ui/react/combobox";
-import { cn } from "../utils/cn";
+import { cn } from "../utils/cn.js";
 
-import { Button } from "./Button";
-import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "./InputGroup";
+import { Button } from "./Button.js";
+import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "./InputGroup.js";
 import { ChevronDownIcon, XIcon, CheckIcon } from "lucide-react";
 
 const Combobox = ComboboxPrimitive.Root;

@@ -1,11 +1,11 @@
 "use client";
 
-import { useDensity } from "../hooks/useDensity";
-import type { IDensityProps } from "../density/types";
+import { useDensity } from "../hooks/useDensity.js";
+import type { IDensityProps } from "../density/types.js";
 import type { ComponentProps, ReactElement } from "react";
 import { useDirection } from "@base-ui/react/direction-provider";
 import { Popover as PopoverPrimitive } from "@base-ui/react/popover";
-import { cn } from "../utils/cn";
+import { cn } from "../utils/cn.js";
 
 function Popover<Payload>({ ...props }: PopoverPrimitive.Root.Props<Payload>): ReactElement {
   return <PopoverPrimitive.Root data-slot="popover" {...props} />;

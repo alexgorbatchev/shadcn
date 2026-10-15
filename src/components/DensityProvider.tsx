@@ -1,6 +1,6 @@
 import type { ReactNode, ReactElement } from "react";
-import { DensityContext } from "../density/DensityContext";
-import type { Density } from "../density/types";
+import { DensityContext } from "../density/DensityContext.js";
+import type { Density } from "../density/types.js";
 
 export interface IDensityProviderProps {
   children: ReactNode;

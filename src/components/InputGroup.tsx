@@ -1,12 +1,12 @@
-import type { IDensityProps } from "../density/types";
+import type { IDensityProps } from "../density/types.js";
 import type { ComponentProps, ReactElement } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { mergeProps } from "@base-ui/react/merge-props";
-import { cn } from "../utils/cn";
+import { cn } from "../utils/cn.js";
 
-import { Button } from "./Button";
-import { Input } from "./Input";
-import { Textarea } from "./Textarea";
+import { Button } from "./Button.js";
+import { Input } from "./Input.js";
+import { Textarea } from "./Textarea.js";
 
 type InputGroupProps = ComponentProps<"div"> & IDensityProps;
 

@@ -1,5 +1,5 @@
 import type { ComponentProps, ReactElement } from "react";
-import { cn } from "../utils/cn";
+import { cn } from "../utils/cn.js";
 
 export interface IAspectRatioProps extends ComponentProps<"div"> {
   ratio: number;

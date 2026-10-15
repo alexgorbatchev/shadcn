@@ -1,13 +1,13 @@
 "use client";
 
-import type { IDensityProps } from "../density/types";
+import type { IDensityProps } from "../density/types.js";
 import type { ComponentProps, ReactElement } from "react";
 import { useMemo } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "../utils/cn";
+import { cn } from "../utils/cn.js";
 
-import { Label } from "./Label";
-import { Separator } from "./Separator";
+import { Label } from "./Label.js";
+import { Separator } from "./Separator.js";
 
 type FieldSetProps = ComponentProps<"fieldset"> & IDensityProps;
 

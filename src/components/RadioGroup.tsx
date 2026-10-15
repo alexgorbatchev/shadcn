@@ -1,10 +1,10 @@
 "use client";
 
-import type { IDensityProps } from "../density/types";
+import type { IDensityProps } from "../density/types.js";
 import type { ReactElement } from "react";
 import { Radio as RadioPrimitive } from "@base-ui/react/radio";
 import { RadioGroup as RadioGroupPrimitive } from "@base-ui/react/radio-group";
-import { cn } from "../utils/cn";
+import { cn } from "../utils/cn.js";
 
 type RadioGroupProps = RadioGroupPrimitive.Props & IDensityProps;
 

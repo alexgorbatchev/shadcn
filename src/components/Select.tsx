@@ -1,11 +1,11 @@
 "use client";
 
-import { useDensity } from "../hooks/useDensity";
-import type { IDensityProps } from "../density/types";
+import { useDensity } from "../hooks/useDensity.js";
+import type { IDensityProps } from "../density/types.js";
 import type { ComponentProps, ReactElement } from "react";
 import { Select as SelectPrimitive } from "@base-ui/react/select";
 import { useDirection } from "@base-ui/react/direction-provider";
-import { cn } from "../utils/cn";
+import { cn } from "../utils/cn.js";
 import { ChevronDownIcon, CheckIcon, ChevronUpIcon } from "lucide-react";
 
 const Select = SelectPrimitive.Root;

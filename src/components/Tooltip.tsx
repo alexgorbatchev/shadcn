@@ -1,9 +1,9 @@
-import { useDensity } from "../hooks/useDensity";
-import type { IDensityProps } from "../density/types";
+import { useDensity } from "../hooks/useDensity.js";
+import type { IDensityProps } from "../density/types.js";
 import type { ReactElement } from "react";
 import { Tooltip as TooltipPrimitive } from "@base-ui/react/tooltip";
-import { useDirection } from "./DirectionProvider";
-import { cn } from "../utils/cn";
+import { useDirection } from "./DirectionProvider.js";
+import { cn } from "../utils/cn.js";
 
 function TooltipProvider({ delay = 0, ...props }: TooltipPrimitive.Provider.Props): ReactElement {
   return <TooltipPrimitive.Provider data-slot="tooltip-provider" delay={delay} {...props} />;

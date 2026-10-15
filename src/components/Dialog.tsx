@@ -1,11 +1,11 @@
-import { useDensity } from "../hooks/useDensity";
-import type { IDensityProps } from "../density/types";
+import { useDensity } from "../hooks/useDensity.js";
+import type { IDensityProps } from "../density/types.js";
 import type { ComponentProps, ReactElement } from "react";
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
 import { useDirection } from "@base-ui/react/direction-provider";
-import { cn } from "../utils/cn";
+import { cn } from "../utils/cn.js";
 
-import { Button } from "./Button";
+import { Button } from "./Button.js";
 import { XIcon } from "lucide-react";
 
 function Dialog<Payload>({ ...props }: DialogPrimitive.Root.Props<Payload>): ReactElement {

@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import { CarouselContext } from "../carousel/CarouselContext";
-import type { ICarouselContextValue } from "../carousel/types";
+import { CarouselContext } from "../carousel/CarouselContext.js";
+import type { ICarouselContextValue } from "../carousel/types.js";
 
 export function useCarousel(): ICarouselContextValue {
   const context = useContext(CarouselContext);

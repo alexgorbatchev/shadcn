@@ -2,10 +2,10 @@ import { useContext, type ReactElement } from "react";
 import { Toggle as TogglePrimitive } from "@base-ui/react/toggle";
 import { ToggleGroup as ToggleGroupPrimitive } from "@base-ui/react/toggle-group";
 import type { VariantProps } from "class-variance-authority";
-import type { IDensityProps } from "../density/types";
-import { ToggleGroupContext } from "../toggle-group/ToggleGroupContext";
-import { toggleVariants, type ToggleProps } from "./Toggle";
-import { cn } from "../utils/cn";
+import type { IDensityProps } from "../density/types.js";
+import { ToggleGroupContext } from "../toggle-group/ToggleGroupContext.js";
+import { toggleVariants, type ToggleProps } from "./Toggle.js";
+import { cn } from "../utils/cn.js";
 
 export type ToggleGroupProps = ToggleGroupPrimitive.Props &
   VariantProps<typeof toggleVariants> &

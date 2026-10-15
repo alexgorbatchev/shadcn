@@ -1,10 +1,10 @@
-import type { IDensityProps } from "../density/types";
-import { useDensity } from "../hooks/useDensity";
+import type { IDensityProps } from "../density/types.js";
+import { useDensity } from "../hooks/useDensity.js";
 import type { ReactElement } from "react";
 
 import { PreviewCard as PreviewCardPrimitive } from "@base-ui/react/preview-card";
 import { useDirection } from "@base-ui/react/direction-provider";
-import { cn } from "../utils/cn";
+import { cn } from "../utils/cn.js";
 
 function HoverCard<Payload>({ ...props }: PreviewCardPrimitive.Root.Props<Payload>): ReactElement {
   return <PreviewCardPrimitive.Root data-slot="hover-card" {...props} />;

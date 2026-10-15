@@ -1,13 +1,13 @@
-import type { IDensityProps } from "../density/types";
-import { useDensity } from "../hooks/useDensity";
+import type { IDensityProps } from "../density/types.js";
+import { useDensity } from "../hooks/useDensity.js";
 import type { ComponentProps, ReactElement } from "react";
 import { XIcon } from "lucide-react";
 
 import { Dialog as SheetPrimitive } from "@base-ui/react/dialog";
-import { cn } from "../utils/cn";
+import { cn } from "../utils/cn.js";
 
-import { Button } from "./Button";
-import { useDirection } from "./DirectionProvider";
+import { Button } from "./Button.js";
+import { useDirection } from "./DirectionProvider.js";
 
 function Sheet<Payload>({ ...props }: SheetPrimitive.Root.Props<Payload>): ReactElement {
   return <SheetPrimitive.Root<Payload> data-slot="sheet" {...props} />;

@@ -1,8 +1,8 @@
-import type { IDensityProps } from "../density/types";
+import type { IDensityProps } from "../density/types.js";
 import type { ReactElement, ReactNode } from "react";
 
 import { ScrollArea as ScrollAreaPrimitive } from "@base-ui/react/scroll-area";
-import { cn } from "../utils/cn";
+import { cn } from "../utils/cn.js";
 
 type ScrollAreaProps = ScrollAreaPrimitive.Root.Props &
   IDensityProps & {

@@ -1,7 +1,7 @@
-import type { IDensityProps } from "../density/types";
+import type { IDensityProps } from "../density/types.js";
 import type { ReactElement } from "react";
 import { Separator as SeparatorPrimitive } from "@base-ui/react/separator";
-import { cn } from "../utils/cn";
+import { cn } from "../utils/cn.js";
 
 type SeparatorProps = SeparatorPrimitive.Props & IDensityProps;
 

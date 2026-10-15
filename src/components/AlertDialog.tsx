@@ -1,13 +1,13 @@
 "use client";
 
-import { useDensity } from "../hooks/useDensity";
-import type { IDensityProps } from "../density/types";
+import { useDensity } from "../hooks/useDensity.js";
+import type { IDensityProps } from "../density/types.js";
 import type { ComponentProps, ReactElement } from "react";
 import { AlertDialog as AlertDialogPrimitive } from "@base-ui/react/alert-dialog";
 import { useDirection } from "@base-ui/react/direction-provider";
-import { cn } from "../utils/cn";
+import { cn } from "../utils/cn.js";
 
-import { Button } from "./Button";
+import { Button } from "./Button.js";
 
 function AlertDialog<Payload>({ ...props }: AlertDialogPrimitive.Root.Props<Payload>): ReactElement {
   return <AlertDialogPrimitive.Root data-slot="alert-dialog" {...props} />;

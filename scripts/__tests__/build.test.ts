@@ -1,11 +1,52 @@
 import { expect, test } from "bun:test";
+import { mkdir } from "node:fs/promises";
 import {
   fixture_chartServerRenderSource,
   fixture_otpServerRenderSource,
   fixture_packageRenderSource,
   fixture_questionnaireServerRenderSource,
   fixture_scrollerServerRenderSource,
+  fixture_packageTypeConsumerSource,
 } from "./fixtures";
+
+test.each([
+  ["Bundler", "ESNext"],
+  ["NodeNext", "NodeNext"],
+])(
+  "built declarations compile in a strict %s consumer",
+  async (resolution, module) => {
+    const consumerPath = `.tmp/package-types/${resolution}`;
+    await mkdir(consumerPath, { recursive: true });
+    await Bun.write(`${consumerPath}/consumer.tsx`, fixture_packageTypeConsumerSource);
+    await Bun.write(
+      `${consumerPath}/tsconfig.json`,
+      JSON.stringify({
+        compilerOptions: {
+          strict: true,
+          noEmit: true,
+          skipLibCheck: false,
+          target: "ESNext",
+          module,
+          moduleResolution: resolution,
+          jsx: "react-jsx",
+          types: ["react"],
+        },
+        include: ["consumer.tsx"],
+      }),
+    );
+    const child = Bun.spawn(
+      [process.execPath, "node_modules/typescript/bin/tsc", "--project", `${consumerPath}/tsconfig.json`],
+      { stdout: "pipe", stderr: "pipe" },
+    );
+    const [stdout, stderr, exitCode] = await Promise.all([
+      new Response(child.stdout).text(),
+      new Response(child.stderr).text(),
+      child.exited,
+    ]);
+    expect({ stdout, stderr, exitCode }).toEqual({ stdout: "", stderr: "", exitCode: 0 });
+  },
+  30_000,
+);
 
 test.each(["development", "production"])(
   "built OTP inputs initialize saved values without React warnings in %s",

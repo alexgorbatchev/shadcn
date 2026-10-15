@@ -1,7 +1,7 @@
-import type { IDensityProps } from "../density/types";
+import type { IDensityProps } from "../density/types.js";
 import type { ReactElement } from "react";
 import { Slider as SliderPrimitive } from "@base-ui/react/slider";
-import { cn } from "../utils/cn";
+import { cn } from "../utils/cn.js";
 
 type SliderProps<Value extends number | readonly number[] = number | readonly number[]> =
   SliderPrimitive.Root.Props<Value> &

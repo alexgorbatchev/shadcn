@@ -4,14 +4,14 @@ import type {
   MenuSubTriggerProps,
   MenuCheckboxItemProps,
   MenuRadioItemProps,
-} from "../menu/types";
-import type { IDensityProps } from "../density/types";
+} from "../menu/types.js";
+import type { IDensityProps } from "../density/types.js";
 import type { ComponentProps, ReactElement } from "react";
 import { CheckIcon } from "lucide-react";
 
 import { Menu as MenuPrimitive } from "@base-ui/react/menu";
 import { Menubar as MenubarPrimitive } from "@base-ui/react/menubar";
-import { cn } from "../utils/cn";
+import { cn } from "../utils/cn.js";
 
 import {
   DropdownMenu,
@@ -27,7 +27,7 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "./DropdownMenu";
+} from "./DropdownMenu.js";
 
 type MenubarProps = MenubarPrimitive.Props & IDensityProps;
 

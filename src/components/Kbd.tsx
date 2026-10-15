@@ -1,6 +1,6 @@
-import type { IDensityProps } from "../density/types";
+import type { IDensityProps } from "../density/types.js";
 import type { ComponentProps, ReactElement } from "react";
-import { cn } from "../utils/cn";
+import { cn } from "../utils/cn.js";
 
 type KbdProps = ComponentProps<"kbd"> & IDensityProps;
 

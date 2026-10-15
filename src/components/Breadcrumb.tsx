@@ -1,9 +1,9 @@
-import type { IDensityProps } from "../density/types";
+import type { IDensityProps } from "../density/types.js";
 import type { ComponentProps, ReactElement } from "react";
 import { ChevronRightIcon, MoreHorizontalIcon } from "lucide-react";
 import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
-import { cn } from "../utils/cn";
+import { cn } from "../utils/cn.js";
 
 type BreadcrumbProps = ComponentProps<"nav"> & IDensityProps;
 

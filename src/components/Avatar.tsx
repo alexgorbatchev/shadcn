@@ -1,8 +1,8 @@
-import type { IDensityProps } from "../density/types";
+import type { IDensityProps } from "../density/types.js";
 import type { ComponentProps, ReactElement } from "react";
 
 import { Avatar as AvatarPrimitive } from "@base-ui/react/avatar";
-import { cn } from "../utils/cn";
+import { cn } from "../utils/cn.js";
 
 type AvatarProps = AvatarPrimitive.Root.Props & {
   size?: "default" | "sm" | "lg";

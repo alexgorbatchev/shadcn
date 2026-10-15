@@ -1,5 +1,5 @@
 import type { Menu } from "@base-ui/react/menu";
-import type { IDensityProps } from "../density/types";
+import type { IDensityProps } from "../density/types.js";
 
 interface IMenuInsetProps extends IDensityProps {
   inset?: boolean;

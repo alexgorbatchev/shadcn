@@ -1,10 +1,10 @@
 import type { ComponentProps, ReactElement } from "react";
 import { useContext, useLayoutEffect, useMemo, useRef, useState } from "react";
-import type { IDensityProps } from "../density/types";
-import type { IMessageContextValue, MessageStyle } from "../message/types";
+import type { IDensityProps } from "../density/types.js";
+import type { IMessageContextValue, MessageStyle } from "../message/types.js";
 import { useRender } from "@base-ui/react/use-render";
-import { MessageContext } from "../message/MessageContext";
-import { cn } from "../utils/cn";
+import { MessageContext } from "../message/MessageContext.js";
+import { cn } from "../utils/cn.js";
 
 type MessageGroupProps = ComponentProps<"div"> & IDensityProps;
 

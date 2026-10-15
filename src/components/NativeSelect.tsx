@@ -1,7 +1,7 @@
-import type { IDensityProps } from "../density/types";
+import type { IDensityProps } from "../density/types.js";
 import type { ComponentProps, ReactElement } from "react";
 import { ChevronDownIcon } from "lucide-react";
-import { cn } from "../utils/cn";
+import { cn } from "../utils/cn.js";
 
 type NativeSelectProps = Omit<ComponentProps<"select">, "size"> & {
   size?: "sm" | "default";

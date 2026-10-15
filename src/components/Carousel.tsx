@@ -1,13 +1,13 @@
 import type { ComponentProps, KeyboardEvent, ReactElement } from "react";
-import type { CarouselProps } from "../carousel/types";
+import type { CarouselProps } from "../carousel/types.js";
 import { useCallback, useEffect, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { useDirection } from "@base-ui/react/direction-provider";
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, ChevronUpIcon } from "lucide-react";
-import { CarouselContext } from "../carousel/CarouselContext";
-import { useCarousel } from "../hooks/useCarousel";
-import { cn } from "../utils/cn";
-import { Button } from "./Button";
+import { CarouselContext } from "../carousel/CarouselContext.js";
+import { useCarousel } from "../hooks/useCarousel.js";
+import { cn } from "../utils/cn.js";
+import { Button } from "./Button.js";
 
 function Carousel({
   density,

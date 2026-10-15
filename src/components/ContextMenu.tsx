@@ -4,15 +4,15 @@ import type {
   MenuSubTriggerProps,
   MenuCheckboxItemProps,
   MenuRadioItemProps,
-} from "../menu/types";
-import type { IDensityProps } from "../density/types";
-import { useDensity } from "../hooks/useDensity";
+} from "../menu/types.js";
+import type { IDensityProps } from "../density/types.js";
+import { useDensity } from "../hooks/useDensity.js";
 import type { ComponentProps, ReactElement } from "react";
 import { ChevronRightIcon, CheckIcon } from "lucide-react";
 
 import { useDirection } from "@base-ui/react/direction-provider";
 import { ContextMenu as ContextMenuPrimitive } from "@base-ui/react/context-menu";
-import { cn } from "../utils/cn";
+import { cn } from "../utils/cn.js";
 
 function ContextMenu({ ...props }: ContextMenuPrimitive.Root.Props): ReactElement {
   return <ContextMenuPrimitive.Root data-slot="context-menu" {...props} />;

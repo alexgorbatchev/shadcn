@@ -1,3 +1,19 @@
+export const fixture_packageTypeConsumerSource: string = `
+import { Button, ContextMenuCheckboxItem, DropdownMenuCheckboxItem, MenubarCheckboxItem,
+  PaginationPrevious, PaginationNext, FieldSeparator } from "@alexgorbatchev/shadcn";
+
+const elements = [
+  <Button density="compact" onClick={(event) => event.currentTarget.focus()}>Save</Button>,
+  <ContextMenuCheckboxItem checked onCheckedChange={(checked) => checked.valueOf()}>Show</ContextMenuCheckboxItem>,
+  <DropdownMenuCheckboxItem checked onCheckedChange={(checked) => checked.valueOf()}>Show</DropdownMenuCheckboxItem>,
+  <MenubarCheckboxItem checked onCheckedChange={(checked) => checked.valueOf()}>Show</MenubarCheckboxItem>,
+  <PaginationPrevious href="?page=1" text="Back" density="compact" />,
+  <PaginationNext href="?page=3" text="Forward" density="comfortable" />,
+  <FieldSeparator density="compact"><span>Or</span></FieldSeparator>,
+];
+void elements;
+`;
+
 export const fixture_packageRenderSource: string = `
 import { renderToStaticMarkup } from "react-dom/server";
 import { jsx } from "react/jsx-runtime";

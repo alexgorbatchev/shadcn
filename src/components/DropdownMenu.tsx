@@ -1,18 +1,18 @@
 "use client";
 
-import { useDensity } from "../hooks/useDensity";
-import { useDirection } from "./DirectionProvider";
+import { useDensity } from "../hooks/useDensity.js";
+import { useDirection } from "./DirectionProvider.js";
 import type {
   MenuLabelProps,
   MenuItemProps,
   MenuSubTriggerProps,
   MenuCheckboxItemProps,
   MenuRadioItemProps,
-} from "../menu/types";
-import type { IDensityProps } from "../density/types";
+} from "../menu/types.js";
+import type { IDensityProps } from "../density/types.js";
 import type { ComponentProps, ReactElement } from "react";
 import { Menu as MenuPrimitive } from "@base-ui/react/menu";
-import { cn } from "../utils/cn";
+import { cn } from "../utils/cn.js";
 import { ChevronRightIcon, CheckIcon } from "lucide-react";
 
 function DropdownMenu<Payload>({ ...props }: MenuPrimitive.Root.Props<Payload>): ReactElement {

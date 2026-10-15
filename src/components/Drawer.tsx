@@ -1,13 +1,13 @@
-import type { IDensityProps } from "../density/types";
-import { useDensity } from "../hooks/useDensity";
+import type { IDensityProps } from "../density/types.js";
+import { useDensity } from "../hooks/useDensity.js";
 import type { ComponentProps, ReactElement } from "react";
 import { useMemo } from "react";
-import { DrawerContext } from "../drawer/DrawerContext";
-import { useDrawer } from "../hooks/useDrawer";
-import { useDirection } from "./DirectionProvider";
+import { DrawerContext } from "../drawer/DrawerContext.js";
+import { useDrawer } from "../hooks/useDrawer.js";
+import { useDirection } from "./DirectionProvider.js";
 
 import { Drawer as DrawerPrimitive } from "@base-ui/react/drawer";
-import { cn } from "../utils/cn";
+import { cn } from "../utils/cn.js";
 
 type DrawerProps<Payload> = DrawerPrimitive.Root.Props<Payload> & { showSwipeHandle?: boolean };
 

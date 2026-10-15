@@ -1,7 +1,7 @@
-import type { IDensityProps } from "../density/types";
+import type { IDensityProps } from "../density/types.js";
 import type { ReactElement } from "react";
 import { Accordion as AccordionPrimitive } from "@base-ui/react/accordion";
-import { cn } from "../utils/cn";
+import { cn } from "../utils/cn.js";
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 
 type AccordionProps = AccordionPrimitive.Root.Props & IDensityProps;

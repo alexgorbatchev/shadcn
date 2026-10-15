@@ -1,4 +1,4 @@
-export { Button, buttonVariants } from "./components/Button";
+export { Button, buttonVariants } from "./components/Button.js";
 export {
   DropdownMenu,
   DropdownMenuPortal,
@@ -15,8 +15,8 @@ export {
   DropdownMenuSub,
   DropdownMenuSubTrigger,
   DropdownMenuSubContent,
-} from "./components/DropdownMenu";
-export { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "./components/Accordion";
+} from "./components/DropdownMenu.js";
+export { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "./components/Accordion.js";
 export {
   Popover,
   PopoverContent,
@@ -24,9 +24,9 @@ export {
   PopoverHeader,
   PopoverTitle,
   PopoverTrigger,
-} from "./components/Popover";
-export { Skeleton } from "./components/Skeleton";
-export { Input } from "./components/Input";
+} from "./components/Popover.js";
+export { Skeleton } from "./components/Skeleton.js";
+export { Input } from "./components/Input.js";
 export {
   Field,
   FieldLabel,
@@ -38,7 +38,7 @@ export {
   FieldSet,
   FieldContent,
   FieldTitle,
-} from "./components/Field";
+} from "./components/Field.js";
 export {
   Dialog,
   DialogClose,
@@ -50,15 +50,23 @@ export {
   DialogPortal,
   DialogTitle,
   DialogTrigger,
-} from "./components/Dialog";
-export { Separator } from "./components/Separator";
-export { Slider } from "./components/Slider";
-export { Switch } from "./components/Switch";
-export { Textarea } from "./components/Textarea";
-export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "./components/Tooltip";
-export { Label } from "./components/Label";
-export { RadioGroup, RadioGroupItem } from "./components/RadioGroup";
-export { Card, CardHeader, CardFooter, CardTitle, CardAction, CardDescription, CardContent } from "./components/Card";
+} from "./components/Dialog.js";
+export { Separator } from "./components/Separator.js";
+export { Slider } from "./components/Slider.js";
+export { Switch } from "./components/Switch.js";
+export { Textarea } from "./components/Textarea.js";
+export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "./components/Tooltip.js";
+export { Label } from "./components/Label.js";
+export { RadioGroup, RadioGroupItem } from "./components/RadioGroup.js";
+export {
+  Card,
+  CardHeader,
+  CardFooter,
+  CardTitle,
+  CardAction,
+  CardDescription,
+  CardContent,
+} from "./components/Card.js";
 export {
   Combobox,
   ComboboxInput,
@@ -75,8 +83,8 @@ export {
   ComboboxChipsInput,
   ComboboxTrigger,
   ComboboxValue,
-} from "./components/Combobox";
-export { Tabs, TabsList, TabsTrigger, TabsContent, tabsListVariants } from "./components/Tabs";
+} from "./components/Combobox.js";
+export { Tabs, TabsList, TabsTrigger, TabsContent, tabsListVariants } from "./components/Tabs.js";
 export {
   InputGroup,
   InputGroupAddon,
@@ -84,8 +92,8 @@ export {
   InputGroupText,
   InputGroupInput,
   InputGroupTextarea,
-} from "./components/InputGroup";
-export { Badge, badgeVariants } from "./components/Badge";
+} from "./components/InputGroup.js";
+export { Badge, badgeVariants } from "./components/Badge.js";
 export {
   AlertDialog,
   AlertDialogAction,
@@ -99,8 +107,8 @@ export {
   AlertDialogPortal,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "./components/AlertDialog";
-export { Checkbox } from "./components/Checkbox";
+} from "./components/AlertDialog.js";
+export { Checkbox } from "./components/Checkbox.js";
 export {
   Select,
   SelectContent,
@@ -112,27 +120,34 @@ export {
   SelectSeparator,
   SelectTrigger,
   SelectValue,
-} from "./components/Select";
-export { DensityProvider } from "./components/DensityProvider";
-export type { IDensityProviderProps } from "./components/DensityProvider";
-export type { Density, IDensityProps } from "./density/types";
-export { ThemeProvider } from "./components/ThemeProvider";
-export type { IThemeProviderProps } from "./components/ThemeProvider";
-export { useTheme } from "./hooks/useTheme";
-export type { ThemeMode, ResolvedTheme, IThemeContextValue } from "./theme/types";
-export { useComboboxAnchor } from "./hooks/useComboboxAnchor";
-export { cn } from "./utils/cn";
-export { Toggle, toggleVariants } from "./components/Toggle";
-export type { ToggleProps } from "./components/Toggle";
-export { ToggleGroup, ToggleGroupItem } from "./components/ToggleGroup";
-export type { ToggleGroupProps } from "./components/ToggleGroup";
-export { AspectRatio } from "./components/AspectRatio";
-export type { IAspectRatioProps } from "./components/AspectRatio";
-export { DirectionProvider, useDirection } from "./components/DirectionProvider";
+} from "./components/Select.js";
+export { DensityProvider } from "./components/DensityProvider.js";
+export type { IDensityProviderProps } from "./components/DensityProvider.js";
+export type { Density, IDensityProps } from "./density/types.js";
+export { ThemeProvider } from "./components/ThemeProvider.js";
+export type { IThemeProviderProps } from "./components/ThemeProvider.js";
+export { useTheme } from "./hooks/useTheme.js";
+export type { ThemeMode, ResolvedTheme, IThemeContextValue } from "./theme/types.js";
+export { useComboboxAnchor } from "./hooks/useComboboxAnchor.js";
+export { cn } from "./utils/cn.js";
+export { Toggle, toggleVariants } from "./components/Toggle.js";
+export type { ToggleProps } from "./components/Toggle.js";
+export { ToggleGroup, ToggleGroupItem } from "./components/ToggleGroup.js";
+export type { ToggleGroupProps } from "./components/ToggleGroup.js";
+export { AspectRatio } from "./components/AspectRatio.js";
+export type { IAspectRatioProps } from "./components/AspectRatio.js";
+export { DirectionProvider, useDirection } from "./components/DirectionProvider.js";
 
-export { Alert, AlertTitle, AlertDescription, AlertAction } from "./components/Alert";
+export { Alert, AlertTitle, AlertDescription, AlertAction } from "./components/Alert.js";
 
-export { Avatar, AvatarImage, AvatarFallback, AvatarGroup, AvatarGroupCount, AvatarBadge } from "./components/Avatar";
+export {
+  Avatar,
+  AvatarImage,
+  AvatarFallback,
+  AvatarGroup,
+  AvatarGroupCount,
+  AvatarBadge,
+} from "./components/Avatar.js";
 
 export {
   Breadcrumb,
@@ -142,17 +157,17 @@ export {
   BreadcrumbPage,
   BreadcrumbSeparator,
   BreadcrumbEllipsis,
-} from "./components/Breadcrumb";
+} from "./components/Breadcrumb.js";
 
-export { ButtonGroup, ButtonGroupSeparator, ButtonGroupText, buttonGroupVariants } from "./components/ButtonGroup";
+export { ButtonGroup, ButtonGroupSeparator, ButtonGroupText, buttonGroupVariants } from "./components/ButtonGroup.js";
 
-export { Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyContent, EmptyMedia } from "./components/Empty";
+export { Empty, EmptyHeader, EmptyTitle, EmptyDescription, EmptyContent, EmptyMedia } from "./components/Empty.js";
 
-export { Progress, ProgressTrack, ProgressIndicator, ProgressLabel, ProgressValue } from "./components/Progress";
+export { Progress, ProgressTrack, ProgressIndicator, ProgressLabel, ProgressValue } from "./components/Progress.js";
 
-export { Collapsible, CollapsibleTrigger, CollapsibleContent } from "./components/Collapsible";
+export { Collapsible, CollapsibleTrigger, CollapsibleContent } from "./components/Collapsible.js";
 
-export { Spinner } from "./components/Spinner";
+export { Spinner } from "./components/Spinner.js";
 
 export {
   Table,
@@ -163,11 +178,11 @@ export {
   TableRow,
   TableCell,
   TableCaption,
-} from "./components/Table";
+} from "./components/Table.js";
 
-export { NativeSelect, NativeSelectOptGroup, NativeSelectOption } from "./components/NativeSelect";
+export { NativeSelect, NativeSelectOptGroup, NativeSelectOption } from "./components/NativeSelect.js";
 
-export { Kbd, KbdGroup } from "./components/Kbd";
+export { Kbd, KbdGroup } from "./components/Kbd.js";
 
 export {
   Item,
@@ -180,7 +195,7 @@ export {
   ItemDescription,
   ItemHeader,
   ItemFooter,
-} from "./components/Item";
+} from "./components/Item.js";
 
 export {
   Pagination,
@@ -190,11 +205,11 @@ export {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "./components/Pagination";
+} from "./components/Pagination.js";
 
-export { ScrollArea, ScrollBar } from "./components/ScrollArea";
+export { ScrollArea, ScrollBar } from "./components/ScrollArea.js";
 
-export { HoverCard, HoverCardTrigger, HoverCardContent } from "./components/HoverCard";
+export { HoverCard, HoverCardTrigger, HoverCardContent } from "./components/HoverCard.js";
 
 export {
   Sheet,
@@ -205,7 +220,7 @@ export {
   SheetFooter,
   SheetTitle,
   SheetDescription,
-} from "./components/Sheet";
+} from "./components/Sheet.js";
 
 export {
   Drawer,
@@ -219,7 +234,7 @@ export {
   DrawerFooter,
   DrawerTitle,
   DrawerDescription,
-} from "./components/Drawer";
+} from "./components/Drawer.js";
 
 export {
   ContextMenu,
@@ -237,7 +252,7 @@ export {
   ContextMenuSubContent,
   ContextMenuSubTrigger,
   ContextMenuRadioGroup,
-} from "./components/ContextMenu";
+} from "./components/ContextMenu.js";
 
 export {
   Menubar,
@@ -256,7 +271,7 @@ export {
   MenubarSub,
   MenubarSubTrigger,
   MenubarSubContent,
-} from "./components/Menubar";
+} from "./components/Menubar.js";
 
 export {
   NavigationMenu,
@@ -268,9 +283,9 @@ export {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
   NavigationMenuPositioner,
-} from "./components/NavigationMenu";
-export { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator } from "./components/InputOTP";
-export { Resizable, ResizablePanelGroup, ResizablePanel, ResizableHandle } from "./components/Resizable";
+} from "./components/NavigationMenu.js";
+export { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator } from "./components/InputOTP.js";
+export { Resizable, ResizablePanelGroup, ResizablePanel, ResizableHandle } from "./components/Resizable.js";
 export {
   Command,
   CommandDialog,
@@ -281,12 +296,12 @@ export {
   CommandItem,
   CommandSeparator,
   CommandShortcut,
-} from "./components/Command";
-export { Calendar, CalendarDayButton } from "./components/Calendar";
-export { PersianCalendar } from "./components/PersianCalendar";
-export { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "./components/Carousel";
-export type { CarouselApi, CarouselOptions, CarouselPlugins, CarouselProps } from "./carousel/types";
-export { useCarousel } from "./hooks/useCarousel";
+} from "./components/Command.js";
+export { Calendar, CalendarDayButton } from "./components/Calendar.js";
+export { PersianCalendar } from "./components/PersianCalendar.js";
+export { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "./components/Carousel.js";
+export type { CarouselApi, CarouselOptions, CarouselPlugins, CarouselProps } from "./carousel/types.js";
+export { useCarousel } from "./hooks/useCarousel.js";
 export {
   Toast,
   ToastToaster,
@@ -299,10 +314,10 @@ export {
   ToastAction,
   ToastClose,
   createToastManager,
-} from "./components/Toast";
-export { useToastManager } from "./hooks/useToastManager";
-export { Sonner, SonnerToaster, Toaster, toast } from "./components/Sonner";
-export { useSonner } from "./hooks/useSonner";
+} from "./components/Toast.js";
+export { useToastManager } from "./hooks/useToastManager.js";
+export { Sonner, SonnerToaster, Toaster, toast } from "./components/Sonner.js";
+export { useSonner } from "./hooks/useSonner.js";
 export {
   Chart,
   ChartContainer,
@@ -311,11 +326,11 @@ export {
   ChartLegend,
   ChartLegendContent,
   ChartStyle,
-} from "./components/Chart";
-export type { ChartConfig, ChartProps, ChartTooltipContentProps, ChartLegendContentProps } from "./chart/types";
-export { useChart } from "./hooks/useChart";
-export { Marker, MarkerIcon, MarkerContent, markerVariants } from "./components/Marker";
-export { Bubble, BubbleGroup, BubbleContent, BubbleReactions } from "./components/Bubble";
+} from "./components/Chart.js";
+export type { ChartConfig, ChartProps, ChartTooltipContentProps, ChartLegendContentProps } from "./chart/types.js";
+export { useChart } from "./hooks/useChart.js";
+export { Marker, MarkerIcon, MarkerContent, markerVariants } from "./components/Marker.js";
+export { Bubble, BubbleGroup, BubbleContent, BubbleReactions } from "./components/Bubble.js";
 export {
   Message,
   MessageGroup,
@@ -323,7 +338,7 @@ export {
   MessageContent,
   MessageHeader,
   MessageFooter,
-} from "./components/Message";
+} from "./components/Message.js";
 export {
   Attachment,
   AttachmentGroup,
@@ -334,7 +349,7 @@ export {
   AttachmentActions,
   AttachmentAction,
   AttachmentTrigger,
-} from "./components/Attachment";
+} from "./components/Attachment.js";
 export {
   MessageScrollerProvider,
   MessageScroller,
@@ -342,10 +357,10 @@ export {
   MessageScrollerContent,
   MessageScrollerItem,
   MessageScrollerButton,
-} from "./components/MessageScroller";
-export { useMessageScroller } from "./hooks/useMessageScroller";
-export { useMessageScrollerScrollable } from "./hooks/useMessageScrollerScrollable";
-export { useMessageScrollerVisibility } from "./hooks/useMessageScrollerVisibility";
+} from "./components/MessageScroller.js";
+export { useMessageScroller } from "./hooks/useMessageScroller.js";
+export { useMessageScrollerScrollable } from "./hooks/useMessageScrollerScrollable.js";
+export { useMessageScrollerVisibility } from "./hooks/useMessageScrollerVisibility.js";
 export type {
   MessageScrollerDefaultScrollPosition,
   MessageScrollerScrollAlign,
@@ -369,7 +384,7 @@ export {
   QuestionnaireSkip,
   QuestionnaireSubmit,
   QuestionnaireTitle,
-} from "./components/Questionnaire";
+} from "./components/Questionnaire.js";
 export type {
   QuestionnaireChoiceDefinition,
   QuestionnaireInputType,
@@ -402,11 +417,11 @@ export {
   SidebarRail,
   SidebarSeparator,
   SidebarTrigger,
-} from "./components/Sidebar";
-export { useSidebar } from "./hooks/useSidebar";
+} from "./components/Sidebar.js";
+export { useSidebar } from "./hooks/useSidebar.js";
 export type {
   SidebarStyle,
   SidebarPartState,
   SidebarMenuButtonState,
   SidebarMenuSubButtonState,
-} from "./sidebar/types";
+} from "./sidebar/types.js";

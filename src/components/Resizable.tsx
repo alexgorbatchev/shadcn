@@ -1,7 +1,7 @@
 import type { ReactElement } from "react";
 import type { GroupProps, PanelProps, SeparatorProps } from "react-resizable-panels";
 import { Group, Panel, Separator } from "react-resizable-panels";
-import { cn } from "../utils/cn";
+import { cn } from "../utils/cn.js";
 
 function Resizable({ className, ...props }: GroupProps): ReactElement {
   return <Group data-slot="resizable-panel-group" className={cn("size-full", className)} {...props} />;

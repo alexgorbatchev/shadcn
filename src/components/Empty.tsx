@@ -1,7 +1,7 @@
-import type { IDensityProps } from "../density/types";
+import type { IDensityProps } from "../density/types.js";
 import type { ComponentProps, ReactElement } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "../utils/cn";
+import { cn } from "../utils/cn.js";
 
 type EmptyProps = ComponentProps<"div"> & IDensityProps;
 

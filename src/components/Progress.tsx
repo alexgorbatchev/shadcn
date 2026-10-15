@@ -1,8 +1,8 @@
-import type { IDensityProps } from "../density/types";
+import type { IDensityProps } from "../density/types.js";
 import type { ReactElement } from "react";
 
 import { Progress as ProgressPrimitive } from "@base-ui/react/progress";
-import { cn } from "../utils/cn";
+import { cn } from "../utils/cn.js";
 
 type ProgressProps = ProgressPrimitive.Root.Props & IDensityProps;
 

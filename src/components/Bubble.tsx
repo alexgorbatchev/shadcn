@@ -1,9 +1,9 @@
 import type { ComponentProps, ReactElement } from "react";
-import type { Density, IDensityProps } from "../density/types";
+import type { Density, IDensityProps } from "../density/types.js";
 import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "../utils/cn";
+import { cn } from "../utils/cn.js";
 
 type BubbleGroupProps = ComponentProps<"div"> & IDensityProps;
 

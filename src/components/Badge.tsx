@@ -1,9 +1,9 @@
-import type { Density, IDensityProps } from "../density/types";
+import type { Density, IDensityProps } from "../density/types.js";
 import type { ReactElement } from "react";
 import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "../utils/cn";
+import { cn } from "../utils/cn.js";
 
 const badgeVariants = cva(
   "group/badge inline-flex h-tag w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-sm border border-transparent px-tag-x py-0 text-xs font-medium whitespace-nowrap transition-colors focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring has-data-[icon=inline-end]:pe-1.5 has-data-[icon=inline-start]:ps-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive [&>svg]:pointer-events-none [&>svg]:size-3!",

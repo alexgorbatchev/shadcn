@@ -1,5 +1,5 @@
 import type { ComponentProps, ReactElement, SetStateAction } from "react";
-import type { IDensityProps } from "../density/types";
+import type { IDensityProps } from "../density/types.js";
 import type {
   SidebarContextProps,
   SidebarStyle,
@@ -7,25 +7,25 @@ import type {
   SidebarPartState,
   SidebarMenuButtonState,
   SidebarMenuSubButtonState,
-} from "../sidebar/types";
+} from "../sidebar/types.js";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
 import { cva, type VariantProps } from "class-variance-authority";
 import { PanelLeftIcon } from "lucide-react";
-import { cn } from "../utils/cn";
-import { useSidebar } from "../hooks/useSidebar";
-import { useDensity } from "../hooks/useDensity";
-import { SidebarContext } from "../sidebar/SidebarContext";
-import { DensityContext } from "../density/DensityContext";
-import { Button } from "./Button";
-import { Input } from "./Input";
-import { Separator } from "./Separator";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "./Sheet";
-import { Skeleton } from "./Skeleton";
-import { Tooltip, TooltipContent, TooltipTrigger } from "./Tooltip";
-import { useDirection } from "./DirectionProvider";
+import { cn } from "../utils/cn.js";
+import { useSidebar } from "../hooks/useSidebar.js";
+import { useDensity } from "../hooks/useDensity.js";
+import { SidebarContext } from "../sidebar/SidebarContext.js";
+import { DensityContext } from "../density/DensityContext.js";
+import { Button } from "./Button.js";
+import { Input } from "./Input.js";
+import { Separator } from "./Separator.js";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from "./Sheet.js";
+import { Skeleton } from "./Skeleton.js";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./Tooltip.js";
+import { useDirection } from "./DirectionProvider.js";
 
 type SidebarProviderProps = Omit<ComponentProps<"div">, "style"> &
   IDensityProps & {

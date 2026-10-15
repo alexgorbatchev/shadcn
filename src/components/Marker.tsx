@@ -1,9 +1,9 @@
 import type { ComponentProps, ReactElement } from "react";
-import type { Density, IDensityProps } from "../density/types";
+import type { Density, IDensityProps } from "../density/types.js";
 import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "../utils/cn";
+import { cn } from "../utils/cn.js";
 
 const markerVariants = cva(
   "group/marker relative flex min-h-4 w-full items-center gap-control-gap text-start text-sm text-muted-foreground [&_svg:not([class*='size-'])]:size-4 [a]:underline [a]:underline-offset-3 [a]:hover:text-foreground [&:is(a,button)]:outline-none [&:is(a,button)]:focus-visible:outline-1 [&:is(a,button)]:focus-visible:outline-ring",

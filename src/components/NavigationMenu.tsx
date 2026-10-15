@@ -1,11 +1,11 @@
-import type { IDensityProps } from "../density/types";
-import { useDensity } from "../hooks/useDensity";
-import { useDirection } from "./DirectionProvider";
+import type { IDensityProps } from "../density/types.js";
+import { useDensity } from "../hooks/useDensity.js";
+import { useDirection } from "./DirectionProvider.js";
 import type { ComponentPropsWithRef, ReactElement } from "react";
 import { ChevronDownIcon } from "lucide-react";
 import { NavigationMenu as NavigationMenuPrimitive } from "@base-ui/react/navigation-menu";
 import { cva } from "class-variance-authority";
-import { cn } from "../utils/cn";
+import { cn } from "../utils/cn.js";
 
 type NavigationMenuProps<Value> = NavigationMenuPrimitive.Root.Props<Value> &
   Pick<NavigationMenuPrimitive.Positioner.Props, "align"> &

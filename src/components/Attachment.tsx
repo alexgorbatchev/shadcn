@@ -1,10 +1,10 @@
 import type { ComponentProps, ReactElement } from "react";
-import type { Density, IDensityProps } from "../density/types";
+import type { Density, IDensityProps } from "../density/types.js";
 import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
 import { cva, type VariantProps } from "class-variance-authority";
-import { cn } from "../utils/cn";
-import { Button } from "./Button";
+import { cn } from "../utils/cn.js";
+import { Button } from "./Button.js";
 
 const attachmentVariants = cva(
   "group/attachment relative flex w-fit max-w-full min-w-0 shrink-0 flex-wrap rounded-md border bg-card text-card-foreground transition-colors motion-reduce:transition-none focus-within:ring-1 focus-within:ring-ring has-[>a,>button]:hover:bg-muted/50 data-[state=error]:border-destructive data-[state=idle]:border-dashed",

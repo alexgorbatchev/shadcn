@@ -1,9 +1,9 @@
-import type { IDensityProps } from "../density/types";
+import type { IDensityProps } from "../density/types.js";
 import type { ComponentProps, ReactElement } from "react";
 import { ChevronLeftIcon, ChevronRightIcon, MoreHorizontalIcon } from "lucide-react";
-import { cn } from "../utils/cn";
+import { cn } from "../utils/cn.js";
 
-import { buttonVariants } from "./Button";
+import { buttonVariants } from "./Button.js";
 import type { VariantProps } from "class-variance-authority";
 
 type PaginationProps = ComponentProps<"nav"> & IDensityProps;
