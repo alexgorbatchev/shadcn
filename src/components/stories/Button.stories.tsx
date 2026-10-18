@@ -225,6 +225,19 @@ export const StartAligned: Story = {
     );
   },
 };
+
+export const Inline: Story = {
+  args: { variant: "link", size: "inline", align: "start", children: "Track title" },
+  play: async ({ canvasElement }) => {
+    const button = within(canvasElement).getByRole("button", { name: "Track title" });
+    const text = canvasElement.ownerDocument.createRange();
+    text.selectNodeContents(button);
+    await expect(text.getBoundingClientRect().left).toBe(button.getBoundingClientRect().left);
+    await expect(button.getBoundingClientRect().height).toBeLessThanOrEqual(
+      parseFloat(getComputedStyle(button).lineHeight),
+    );
+  },
+};
 export const EndAligned: Story = {
   args: { align: "end", className: "w-64", children: "End aligned" },
   play: async ({ canvasElement }) => {

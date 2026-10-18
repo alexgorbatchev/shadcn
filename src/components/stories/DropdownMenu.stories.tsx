@@ -37,6 +37,56 @@ import { fixture_avatarImage } from "./fixtures";
 
 type IconMenuProps = { hasIcons?: boolean };
 
+export const AnchorWidth: Story = {
+  render: () => (
+    <DropdownMenu>
+      <DropdownMenuTrigger render={<Button variant="outline" />}>Choose a workspace action</DropdownMenuTrigger>
+      <DropdownMenuContent width="anchor">
+        <DropdownMenuGroup>
+          <DropdownMenuItem>Open</DropdownMenuItem>
+        </DropdownMenuGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  ),
+  play: async ({ canvasElement }) => {
+    const trigger = within(canvasElement).getByRole("button", { name: "Choose a workspace action" });
+    await userEvent.click(trigger);
+    const menu = await within(canvasElement.ownerDocument.body).findByRole("menu");
+    await waitFor(() =>
+      expect(Math.abs(menu.getBoundingClientRect().width - trigger.getBoundingClientRect().width)).toBeLessThanOrEqual(
+        1,
+      ),
+    );
+    await userEvent.keyboard("{Escape}");
+  },
+};
+
+export const IconTriggerContentWidth: Story = {
+  render: () => (
+    <DropdownMenu>
+      <DropdownMenuTrigger render={<Button size="icon-sm" aria-label="Track actions" />}>
+        <FileIcon />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuGroup>
+          <DropdownMenuItem>Remove from collection…</DropdownMenuItem>
+        </DropdownMenuGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  ),
+  play: async ({ canvasElement }) => {
+    await userEvent.click(within(canvasElement).getByRole("button", { name: "Track actions" }));
+    const item = await within(canvasElement.ownerDocument.body).findByRole("menuitem", {
+      name: "Remove from collection…",
+    });
+    const text = canvasElement.ownerDocument.createRange();
+    text.selectNodeContents(item);
+    await expect(text.getClientRects()).toHaveLength(1);
+    await expect(item.scrollWidth).toBeLessThanOrEqual(item.clientWidth);
+    await userEvent.keyboard("{Escape}");
+  },
+};
+
 function NotificationMenu({ hasIcons = false }: IconMenuProps): ReactElement {
   const [email, setEmail] = useState(true);
   const [sms, setSms] = useState(false);

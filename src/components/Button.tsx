@@ -23,6 +23,7 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
+        inline: "h-auto gap-1 border-0 p-0",
         default:
           "h-control gap-control-gap px-control-x has-data-[icon=inline-end]:pe-2 has-data-[icon=inline-start]:ps-2",
         xs: "h-control-xs gap-1 rounded-sm px-2 text-xs in-data-[slot=button-group]:rounded-sm has-data-[icon=inline-end]:pe-1.5 has-data-[icon=inline-start]:ps-1.5 [&_svg:not([class*='size-'])]:size-3",
