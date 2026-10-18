@@ -160,6 +160,9 @@ export const AnimatedNewTurn: Story = {
     expect(canvas.getByRole("article", { name: "Streamed reply 0" })).toBe(firstReply);
     expect(firstReply.getBoundingClientRect().height).toBe(firstHeight);
     expect(within(firstReply).queryByText("Review detail 1")).not.toBeInTheDocument();
+    await waitFor(() =>
+      expect(getComputedStyle(canvas.getByRole("article", { name: "Sent turn 1" })).opacity).toBe("1"),
+    );
   },
 };
 
