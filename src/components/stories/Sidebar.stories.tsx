@@ -671,3 +671,33 @@ export const NativeInputCallback: Story = {
     await expect(inputValueChange).toHaveBeenLastCalledWith("project-new", expect.anything());
   },
 };
+
+export const TrailingContent: Story = {
+  render: () => (
+    <SidebarProvider>
+      <div style={{ width: 180 }}>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton trailing={123456} onClick={fn()}>
+              <FileIcon />
+              <span>A very long playlist title that must truncate</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </div>
+    </SidebarProvider>
+  ),
+  play: async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+    const button = canvas.getByRole("button", { name: "A very long playlist title that must truncate 123456" });
+    const count = canvas.getByText("123456");
+    await expect(count).toBeVisible();
+    const bounds = button.getBoundingClientRect();
+    const countBounds = count.getBoundingClientRect();
+    await expect(countBounds.right).toBeLessThanOrEqual(bounds.right);
+    await expect(countBounds.left).toBeGreaterThan(bounds.left);
+    await expect(button.scrollWidth).toBe(button.clientWidth);
+    await userEvent.click(button);
+    await expect(button).toHaveFocus();
+  },
+};

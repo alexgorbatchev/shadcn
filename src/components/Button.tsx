@@ -5,9 +5,10 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../utils/cn.js";
 
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 items-center justify-center rounded-sm border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-colors outline-none select-none focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:border-dashed disabled:border-border disabled:bg-transparent disabled:text-faint-foreground disabled:font-normal aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "group/button inline-flex shrink-0 items-center rounded-sm border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-colors outline-none select-none focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:border-dashed disabled:border-border disabled:bg-transparent disabled:text-faint-foreground disabled:font-normal aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
+      align: { start: "justify-start", center: "justify-center", end: "justify-end" },
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary/80",
         outline:
@@ -35,6 +36,7 @@ const buttonVariants = cva(
       },
     },
     defaultVariants: {
+      align: "center",
       variant: "default",
       size: "default",
     },
@@ -43,13 +45,20 @@ const buttonVariants = cva(
 
 type ButtonProps = ButtonPrimitive.Props & VariantProps<typeof buttonVariants> & IDensityProps;
 
-function Button({ density, className, variant = "default", size = "default", ...props }: ButtonProps): ReactElement {
+function Button({
+  density,
+  className,
+  variant = "default",
+  size = "default",
+  align = "center",
+  ...props
+}: ButtonProps): ReactElement {
   return (
     <ButtonPrimitive
       data-density={density}
       data-slot="button"
       className={(state) =>
-        cn(buttonVariants({ variant, size }), typeof className === "function" ? className(state) : className)
+        cn(buttonVariants({ variant, size, align }), typeof className === "function" ? className(state) : className)
       }
       {...props}
     />

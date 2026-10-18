@@ -1,4 +1,4 @@
-import type { ComponentProps, ReactElement, SetStateAction } from "react";
+import type { ComponentProps, ReactElement, ReactNode, SetStateAction } from "react";
 import type { IDensityProps } from "../density/types.js";
 import type {
   SidebarContextProps,
@@ -513,9 +513,12 @@ function SidebarMenuButton({
   type,
   density,
   className,
+  children,
+  trailing,
   ...props
 }: useRender.ComponentProps<"button", SidebarMenuButtonState> &
   ComponentProps<"button"> & {
+    trailing?: ReactNode;
     isActive?: boolean;
     tooltip?: string | ComponentProps<typeof TooltipContent>;
   } & VariantProps<typeof sidebarMenuButtonVariants> &
@@ -525,6 +528,17 @@ function SidebarMenuButton({
     defaultTagName: "button",
     props: mergeProps<"button">(
       {
+        children:
+          trailing === undefined ? (
+            children
+          ) : (
+            <>
+              <span className="flex min-w-0 flex-1 items-center gap-control-gap [&>span]:truncate">{children}</span>
+              <span data-slot="sidebar-menu-button-trailing" className="shrink-0 text-xs tabular-nums">
+                {trailing}
+              </span>
+            </>
+          ),
         type: type ?? (render ? undefined : "button"),
         className: cn(sidebarMenuButtonVariants({ variant, size }), className),
       },

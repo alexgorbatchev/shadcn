@@ -211,3 +211,30 @@ export const AsLink: Story = {
     await expect(onLogin).toHaveBeenCalledOnce();
   },
 };
+
+export const StartAligned: Story = {
+  args: { align: "start", className: "w-64", children: "Start aligned" },
+  play: async ({ canvasElement }) => {
+    const button = within(canvasElement).getByRole("button", { name: "Start aligned" });
+    const range = button.ownerDocument.createRange();
+    range.selectNodeContents(button);
+    const style = getComputedStyle(button);
+    await expect(range.getBoundingClientRect().left).toBeCloseTo(
+      button.getBoundingClientRect().left + parseFloat(style.paddingLeft) + parseFloat(style.borderLeftWidth),
+      1,
+    );
+  },
+};
+export const EndAligned: Story = {
+  args: { align: "end", className: "w-64", children: "End aligned" },
+  play: async ({ canvasElement }) => {
+    const button = within(canvasElement).getByRole("button", { name: "End aligned" });
+    const range = button.ownerDocument.createRange();
+    range.selectNodeContents(button);
+    const style = getComputedStyle(button);
+    await expect(range.getBoundingClientRect().right).toBeCloseTo(
+      button.getBoundingClientRect().right - parseFloat(style.paddingRight) - parseFloat(style.borderRightWidth),
+      1,
+    );
+  },
+};

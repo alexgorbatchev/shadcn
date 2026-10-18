@@ -484,3 +484,35 @@ export const DataTableRowActions: Story = {
     await waitFor(() => expect(nextTrigger).toHaveFocus());
   },
 };
+
+export const FixedLayout: Story = {
+  render: () => (
+    <div style={{ width: 280 }}>
+      <Table layout="fixed">
+        <TableHeader>
+          <TableRow>
+            <TableHead truncate>Title</TableHead>
+            <TableHead>Album</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          <TableRow>
+            <TableCell truncate title="A very long track title that exceeds its column">
+              A very long track title that exceeds its column
+            </TableCell>
+            <TableCell truncate>A very long album title that exceeds its column</TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const table = canvas.getByRole("table");
+    const cell = canvas.getByRole("cell", { name: "A very long track title that exceeds its column" });
+    await expect(table.parentElement!.scrollWidth).toBe(table.parentElement!.clientWidth);
+    await expect(cell.scrollWidth).toBeGreaterThan(cell.clientWidth);
+    await expect(getComputedStyle(cell).textOverflow).toBe("ellipsis");
+    await expect(table.getBoundingClientRect().width).toBe(280);
+  },
+};

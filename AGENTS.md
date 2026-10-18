@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-08 06:13
-last_modified: 2026-10-14 12:33
+last_modified: 2026-10-18 15:08
 status: current
 ---
 
@@ -37,6 +37,7 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 ## Contracts
 
 - Use Base UI primitives and official shadcn Base UI compositions. Prefer maintained libraries for behavior; preserve native accessibility and state contracts.
+- Add missing reusable consumer capabilities to this package's public components instead of applying consumer-side overrides or styling hacks.
 - Keep the package root API explicit in `src/index.ts`. Components live in `src/components/`, runtime hooks in `src/hooks/`, and stories in `src/components/stories/`.
 - Define standalone Tailwind v4 tokens in `src/theme.css`. Keep consumers independent of absolute devhost imports, symlinks, and workspace dependencies.
 - Keep React and React DOM external peers. Bun builds browser ESM with production JSX (`jsx.development: false`); TypeScript emits declarations separately. Consumers generate utilities by scanning `dist`, so package class strings must remain discoverable by Tailwind.

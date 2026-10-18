@@ -3,12 +3,22 @@ import type { ComponentProps, ReactElement } from "react";
 
 import { cn } from "../utils/cn.js";
 
-type TableProps = ComponentProps<"table"> & IDensityProps;
+type TableProps = ComponentProps<"table"> & IDensityProps & { layout?: "auto" | "fixed" };
 
-function Table({ density, className, dir, ...props }: TableProps): ReactElement {
+function Table({ density, className, dir, layout = "auto", ...props }: TableProps): ReactElement {
   return (
-    <div data-density={density} data-slot="table-container" dir={dir} className="relative w-full overflow-x-auto">
-      <table data-slot="table" dir={dir} className={cn("w-full caption-bottom text-sm", className)} {...props} />
+    <div
+      data-density={density}
+      data-slot="table-container"
+      dir={dir}
+      className={cn("relative min-w-0 w-full", layout === "fixed" ? "overflow-x-hidden" : "overflow-x-auto")}
+    >
+      <table
+        data-slot="table"
+        dir={dir}
+        className={cn("w-full caption-bottom text-sm", layout === "fixed" && "table-fixed", className)}
+        {...props}
+      />
     </div>
   );
 }
@@ -63,15 +73,16 @@ function TableRow({ density, className, ...props }: TableRowProps): ReactElement
   );
 }
 
-type TableHeadProps = ComponentProps<"th"> & IDensityProps;
+type TableHeadProps = ComponentProps<"th"> & IDensityProps & { truncate?: boolean };
 
-function TableHead({ density, className, ...props }: TableHeadProps): ReactElement {
+function TableHead({ density, className, truncate = false, ...props }: TableHeadProps): ReactElement {
   return (
     <th
       data-density={density}
       data-slot="table-head"
       className={cn(
         "h-control-lg px-control-x text-start align-middle font-medium whitespace-nowrap text-foreground [&:has([role=checkbox])]:pe-0",
+        truncate && "truncate",
         className,
       )}
       {...props}
@@ -79,15 +90,16 @@ function TableHead({ density, className, ...props }: TableHeadProps): ReactEleme
   );
 }
 
-type TableCellProps = ComponentProps<"td"> & IDensityProps;
+type TableCellProps = ComponentProps<"td"> & IDensityProps & { truncate?: boolean };
 
-function TableCell({ density, className, ...props }: TableCellProps): ReactElement {
+function TableCell({ density, className, truncate = false, ...props }: TableCellProps): ReactElement {
   return (
     <td
       data-density={density}
       data-slot="table-cell"
       className={cn(
         "px-control-x py-control-gap align-middle whitespace-nowrap [&:has([role=checkbox])]:pe-0",
+        truncate && "truncate",
         className,
       )}
       {...props}
