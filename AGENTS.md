@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-08 06:13
-last_modified: 2026-10-18 15:08
+last_modified: 2026-10-18 16:23
 status: current
 ---
 
@@ -24,7 +24,7 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - Reduced-motion interactions: `bun run test:reduced-motion` (full Storybook catalog with native reduced-motion preference)
 - Coverage gate: `bun run test:coverage` (90% statements, branches, functions, and lines across runtime source)
 - Build package: `just build`
-- Prepare local archive: `just pack` (runs the package build and writes `.tmp/packs/alexgorbatchev-shadcn-0.0.2.tgz`)
+- Prepare local archive: `just pack` (runs the package build and writes `.tmp/packs/alexgorbatchev-shadcn-<version>.tgz` using the manifest version)
 
 ## Development Setup
 
@@ -38,6 +38,7 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 
 - Use Base UI primitives and official shadcn Base UI compositions. Prefer maintained libraries for behavior; preserve native accessibility and state contracts.
 - Add missing reusable consumer capabilities to this package's public components instead of applying consumer-side overrides or styling hacks.
+- Keep shared UI patterns in this package. Drag/drop sources, targets, coordination, and badge previews use the public `DragDropProvider`, `DragSource`, `DropTarget`, and hooks. Native browser drag tests participate in the main coverage project; consumers supply domain validation and keyboard-accessible equivalent actions.
 - Keep the package root API explicit in `src/index.ts`. Components live in `src/components/`, runtime hooks in `src/hooks/`, and stories in `src/components/stories/`.
 - Define standalone Tailwind v4 tokens in `src/theme.css`. Keep consumers independent of absolute devhost imports, symlinks, and workspace dependencies.
 - Keep React and React DOM external peers. Bun builds browser ESM with production JSX (`jsx.development: false`); TypeScript emits declarations separately. Consumers generate utilities by scanning `dist`, so package class strings must remain discoverable by Tailwind.
@@ -73,6 +74,7 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - Start persistent previews only when requested. Temporary validation previews are allowed; keep their ports, caches, and browser sessions separate from other running projects, and never stop unowned processes or the shared Caddy instance.
 - Never suppress lint rules or replace native primitives with surface approximations.
 - Never modify the devhost source repository as part of this package's work.
+- Pull and push external dependency repositories modified for this app; verify the remote and preserve concurrent changes.
 - Never publish packages, releases, tags, or production deployments without explicit authorization.
 - Persist standing project instructions here; keep task history, progress, handoffs, and dated amendments out of this file.
 

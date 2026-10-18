@@ -228,6 +228,46 @@ Bun 1.4.0's CSS bundler lowers logical positioning to language-based selectors. 
 
 Compose `QuestionnaireItem`, `QuestionnaireTitle`, and answer controls inside `Questionnaire`, which renders a native form. `QuestionnaireChoice` supplies native radios or, with `multiple`, checkboxes; label every `QuestionnaireInput`. Read answers with `FormData.get()` or `getAll()`. `QuestionnaireProgress` and the Previous, Skip, Next, and Submit parts follow the active item. Optional steps need an answer or an explicit skip; observe `onStatusChange` to distinguish skipped answers. Letter and number shortcuts select answers without advancing. Use `item`/`onItemChange` for controlled navigation and `invalid` for external validation. Draft defaults and native reset restore initial answers and navigation. These parts accept density overrides and native render/ref props where supported. See the [upstream composition guide](https://ui.shadcn.com/docs/components/base/questionnaire).
 
+# Drag and drop
+
+Wrap draggable sources and drop targets in `DragDropProvider`. `DragSource` and `DropTarget` accept Base UI's `render` composition, so a button, table row, or sidebar item keeps its native element. For compositions that already manage rendering, use `useDragSource` and `useDropTarget` and spread their `props` onto the existing element.
+
+```tsx
+import { useState, type ReactElement } from "react";
+import { Button, DragDropProvider, DragSource, DropTarget } from "@alexgorbatchev/shadcn";
+
+export function MoveExample(): ReactElement {
+  const [result, setResult] = useState("Waiting");
+  return (
+    <DragDropProvider>
+      <DragSource
+        type="application/x-music"
+        data={{ title: "First light" }}
+        labels={["First light"]}
+        render={<Button />}
+      >
+        Drag track
+      </DragSource>
+      <DropTarget
+        accept={["application/x-music"]}
+        onDrop={(item) => setResult(JSON.stringify(item.data))}
+        render={<Button variant="outline" />}
+      >
+        Drop here
+      </DropTarget>
+      <Button onClick={() => setResult("Moved First light")}>Move without dragging</Button>
+      <output>{result}</output>
+    </DragDropProvider>
+  );
+}
+```
+
+Supply JSON-serializable `data` and display-only `labels`. Native drags preserve the custom MIME payload, plain-text labels, and keyboard modifiers. `canDrop` rejects unavailable destinations; `getDropEffect` chooses `move`, `copy`, or `link`. Drop callbacks receive the item and native drag event. Validate external payloads before applying application changes.
+
+The preview shows compact individual badges, up to five labels followed by `+N more…`. Set `maxPreviewItems` on the provider to change the limit, or use `DragDropPreview` directly. `useDropTarget` exposes the hovered MIME `type`, `isOver`, `isAlt`, and `effect` for hints and highlighting. The provider clears drag state after drops and cancellation. Native drag gestures need an equivalent keyboard-accessible action, such as the move button above or a context-menu command.
+
+`EmptyState` composes a title, description, and optional child actions. `JsonViewer` displays a read-only formatted JSON value with configurable `label` and `rows`.
+
 # Devhost Preview
 
 The manifest uses `shadcn.example.com` as a documentation placeholder. Before using the routed preview, replace both `services.storybook.host` and `services.storybook.env.__VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS` in `devhost.toml` with your locally configured hostname. Keep private hostnames out of commits.

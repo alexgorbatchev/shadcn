@@ -55,25 +55,27 @@ export default defineConfig({
       "@base-ui/react/use-render",
     ],
   },
-  plugins: [storybookTest({ configDir: `${process.cwd()}/.storybook` })],
   test: {
-    exclude: ["src/**/__tests__/**", "node_modules/**"],
+    exclude: ["node_modules/**"],
     maxWorkers: 4,
     projects: [
+      { extends: ".storybook/vitest.drag-drop.config.ts", root: ".", test: { name: "drag-drop-native" } },
       {
         extends: true,
+        plugins: [storybookTest({ configDir: `${process.cwd()}/.storybook` })],
         test: {
           name: "storybook",
-          exclude: ["src/components/stories/{InputGroup,Table}.stories.tsx"],
+          exclude: ["src/**/__tests__/**", "src/components/stories/{InputGroup,Table}.stories.tsx"],
           sequence: { groupOrder: 0 },
         },
       },
       {
         extends: true,
+        plugins: [storybookTest({ configDir: `${process.cwd()}/.storybook` })],
         test: {
           name: "storybook-clipboard",
           // Native clipboard contents are shared across Chromium test contexts.
-          exclude: ["src/components/stories/!(InputGroup|Table).stories.tsx"],
+          exclude: ["src/**/__tests__/**", "src/components/stories/!(InputGroup|Table).stories.tsx"],
           fileParallelism: false,
           sequence: { groupOrder: 1 },
         },
