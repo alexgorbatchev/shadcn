@@ -1,11 +1,13 @@
-import { useId } from "react";
+import { useId, useState } from "react";
 import { useDragDrop } from "./useDragDrop.js";
 import type { IDragDropItem, IDropTarget, IDropTargetOptions } from "../drag-drop/types.js";
 
 export function useDropTarget({ accept, canDrop, getDropEffect, onDrop }: IDropTargetOptions): IDropTarget {
   const { active, over, enter, leave, end } = useDragDrop();
   const id = useId();
+  const [feedback, setFeedback] = useState<IDropTarget["feedback"]>(null);
   return {
+    feedback,
     type: over?.id === id ? over.type : null,
     isOver: over?.id === id,
     isAlt: over?.id === id && over.isAlt,
@@ -23,6 +25,11 @@ export function useDropTarget({ accept, canDrop, getDropEffect, onDrop }: IDropT
           return;
         }
         event.preventDefault();
+        setFeedback((current) =>
+          current?.type === type && current.isAlt === event.altKey && current.effect === effect
+            ? current
+            : { type, isAlt: event.altKey, effect },
+        );
         enter({ id, type, isAlt: event.altKey, effect });
       },
       onDragLeave: (event) => {

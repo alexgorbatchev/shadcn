@@ -17,8 +17,15 @@ export default defineProject({
     ],
   },
   test: {
+    attachmentsDir: ".tmp/drag-drop-attachments",
     name: "drag-drop-native",
     include: ["src/components/__tests__/DragDrop.test.tsx"],
-    browser: { enabled: true, headless: true, provider: playwright(), instances: [{ browser: "chromium" }] },
+    browser: {
+      enabled: true,
+      headless: true,
+      screenshotDirectory: ".tmp/drag-drop-screenshots",
+      provider: playwright(),
+      instances: [{ browser: "chromium" }],
+    },
   },
 });

@@ -9,6 +9,7 @@ import { Button } from "../Button";
 import type { IDragDropItem } from "../../drag-drop/types";
 import { renderToString } from "react-dom/server";
 import { useDragDrop } from "../../hooks/useDragDrop";
+import { useDropTarget } from "../../hooks/useDropTarget";
 import "../../../.storybook/preview.css";
 
 test("requires a provider for drag and drop hooks", () => {
@@ -75,6 +76,49 @@ test("Alt is preserved for native copy operations", async () => {
   await expect
     .element(screen.getByRole("status", { name: "Result" }))
     .toHaveTextContent('{"data":{"title":"First light"},"alt":true,"text":"First light"}');
+});
+
+test("retains accepted feedback after leaving a target so exit hints keep their meaning", async () => {
+  function FeedbackTarget(): ReactElement {
+    const target = useDropTarget({
+      accept: ["application/x-test"],
+      getDropEffect: (_item, event) => (event.altKey ? "copy" : "move"),
+      onDrop: () => {},
+    });
+    return (
+      <>
+        <Button {...target.props}>Target</Button>
+        <output aria-label="Feedback">{JSON.stringify(target.feedback)}</output>
+        <output aria-label="Hovering">{String(target.isOver)}</output>
+      </>
+    );
+  }
+  const screen = await render(
+    <DragDropProvider>
+      <div className="flex gap-12 p-8">
+        <DragSource
+          type="application/x-test"
+          data={{ title: "First light" }}
+          labels={["First light"]}
+          render={<Button />}
+        >
+          Source
+        </DragSource>
+        <FeedbackTarget />
+      </div>
+    </DragDropProvider>,
+  );
+  await userEvent.keyboard("{Alt>}");
+  await page.getByRole("button", { name: "Source" }).dropTo(page.getByRole("button", { name: "Target" }));
+  await userEvent.keyboard("{/Alt}");
+  await expect.element(screen.getByRole("status", { name: "Hovering" })).toHaveTextContent("false");
+  await expect
+    .element(screen.getByRole("status", { name: "Feedback" }))
+    .toHaveTextContent('{"type":"application/x-test","isAlt":true,"effect":"copy"}');
+  await page.getByRole("button", { name: "Source" }).dropTo(page.getByRole("button", { name: "Target" }));
+  await expect
+    .element(screen.getByRole("status", { name: "Feedback" }))
+    .toHaveTextContent('{"type":"application/x-test","isAlt":false,"effect":"move"}');
 });
 
 test.each([{ type: "application/x-unrelated" }, { canDrop: () => false }, { disabled: true }, { labels: [] }])(

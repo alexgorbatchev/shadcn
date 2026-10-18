@@ -266,6 +266,8 @@ Supply JSON-serializable `data` and display-only `labels`. Native drags preserve
 
 The preview shows compact individual badges, up to five labels followed by `+N more…`. Set `maxPreviewItems` on the provider to change the limit, or use `DragDropPreview` directly. `useDropTarget` exposes the hovered MIME `type`, `isOver`, `isAlt`, and `effect` for hints and highlighting. The provider clears drag state after drops and cancellation. Native drag gestures need an equivalent keyboard-accessible action, such as the move button above or a context-menu command.
 
+`useDropTarget().feedback` retains the last accepted MIME type, Alt modifier, and drop effect after leaving or dropping. Use this snapshot for hint content that remains visible during an exit animation; use `isOver` to control visibility and active highlighting. New accepted drag events update feedback immediately, including modifier changes. The live `type`, `isAlt`, and `effect` fields still describe the current hover.
+
 `EmptyState` composes a title, description, and optional child actions. `JsonViewer` displays a read-only formatted JSON value with configurable `label` and `rows`.
 
 # Devhost Preview

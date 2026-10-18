@@ -37,6 +37,7 @@ export interface IDropTargetOptions {
   onDrop: (item: IDragDropItem, event: DragEvent<HTMLElement>) => void;
 }
 export interface IDropTarget {
+  feedback: Pick<IDragOver, "type" | "isAlt" | "effect"> | null;
   type: string | null;
   props: Pick<HTMLAttributes<HTMLElement>, "onDragOver" | "onDragLeave" | "onDrop">;
   isOver: boolean;
