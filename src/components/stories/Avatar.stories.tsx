@@ -55,6 +55,14 @@ export const Image: Story = {
 };
 export const Small: Story = { ...Image, args: { size: "sm" } };
 export const Large: Story = { ...Image, args: { size: "lg" } };
+export const Square: Story = {
+  args: { shape: "square" },
+  play: async ({ canvasElement }) => {
+    const image = await within(canvasElement).findByRole("img", { name: "Alex" });
+    await expect(getComputedStyle(image).borderTopLeftRadius).toBe("0px");
+    await expect(getComputedStyle(image.parentElement as HTMLElement).borderTopLeftRadius).toBe("0px");
+  },
+};
 export const Fallback: Story = {
   render: (args) => (
     <Avatar {...args}>

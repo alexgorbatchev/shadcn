@@ -435,6 +435,8 @@ export {
   SidebarTrigger,
 } from "./components/Sidebar.js";
 export { useSidebar } from "./hooks/useSidebar.js";
+export { InlineEdit } from "./components/InlineEdit.js";
+export { StarRating } from "./components/StarRating.js";
 export type {
   SidebarStyle,
   SidebarPartState,

@@ -228,6 +228,12 @@ Bun 1.4.0's CSS bundler lowers logical positioning to language-based selectors. 
 
 Compose `QuestionnaireItem`, `QuestionnaireTitle`, and answer controls inside `Questionnaire`, which renders a native form. `QuestionnaireChoice` supplies native radios or, with `multiple`, checkboxes; label every `QuestionnaireInput`. Read answers with `FormData.get()` or `getAll()`. `QuestionnaireProgress` and the Previous, Skip, Next, and Submit parts follow the active item. Optional steps need an answer or an explicit skip; observe `onStatusChange` to distinguish skipped answers. Letter and number shortcuts select answers without advancing. Use `item`/`onItemChange` for controlled navigation and `invalid` for external validation. Draft defaults and native reset restore initial answers and navigation. These parts accept density overrides and native render/ref props where supported. See the [upstream composition guide](https://ui.shadcn.com/docs/components/base/questionnaire).
 
+# Inline editing and ratings
+
+`InlineEdit` mounts an edit session with a controlled `value`, `onValueChange`, `onCommit`, and `onCancel`. Mount it in place of the displayed label. Its input focuses and selects its text by default; `shouldSelectOnMount={false}` preserves the initial caret. Enter or blur commits once, Escape cancels without committing, and asynchronous saves disable the input until completion. Rejected saves display an error and allow retry.
+
+`StarRating` takes a controlled numeric `value` from 0 to 5, `onValueChange`, and an accessible `label`. Its native radio buttons support keyboard selection and an Unrated option to clear the rating. Set `disabled` while saving. `Avatar shape="square"` displays square artwork with matching image, fallback, and border corners.
+
 # Drag and drop
 
 Wrap draggable sources and drop targets in `DragDropProvider`. `DragSource` and `DropTarget` accept Base UI's `render` composition, so a button, table row, or sidebar item keeps its native element. For compositions that already manage rendering, use `useDragSource` and `useDropTarget` and spread their `props` onto the existing element.

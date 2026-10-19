@@ -6,17 +6,20 @@ import { cn } from "../utils/cn.js";
 
 type AvatarProps = AvatarPrimitive.Root.Props & {
   size?: "default" | "sm" | "lg";
+  shape?: "circle" | "square";
 } & IDensityProps;
 
-function Avatar({ density, className, size = "default", ...props }: AvatarProps): ReactElement {
+function Avatar({ density, className, size = "default", shape = "circle", ...props }: AvatarProps): ReactElement {
   return (
     <AvatarPrimitive.Root
       data-density={density}
       data-slot="avatar"
       data-size={size}
+      data-shape={shape}
       className={(state) =>
         cn(
           "group/avatar relative flex size-8 shrink-0 rounded-full select-none after:absolute after:inset-0 after:rounded-full after:border after:border-border  data-[size=lg]:size-10 data-[size=sm]:size-6 ",
+          "data-[shape=square]:rounded-none data-[shape=square]:after:rounded-none",
           typeof className === "function" ? className(state) : className,
         )
       }
@@ -34,7 +37,7 @@ function AvatarImage({ density, className, ...props }: AvatarImageProps): ReactE
       data-slot="avatar-image"
       className={(state) =>
         cn(
-          "aspect-square size-full rounded-full object-cover",
+          "aspect-square size-full rounded-full object-cover group-data-[shape=square]/avatar:rounded-none",
           typeof className === "function" ? className(state) : className,
         )
       }
@@ -52,7 +55,7 @@ function AvatarFallback({ density, className, ...props }: AvatarFallbackProps): 
       data-slot="avatar-fallback"
       className={(state) =>
         cn(
-          "flex size-full items-center justify-center rounded-full bg-muted text-sm text-muted-foreground group-data-[size=sm]/avatar:text-xs",
+          "flex size-full items-center justify-center rounded-full bg-muted text-sm text-muted-foreground group-data-[size=sm]/avatar:text-xs group-data-[shape=square]/avatar:rounded-none",
           typeof className === "function" ? className(state) : className,
         )
       }
