@@ -61,14 +61,12 @@ function ButtonGroupText({ density, className, render, ...props }: ButtonGroupTe
   });
 }
 
-type ButtonGroupSeparatorProps = ComponentProps<typeof Separator> & IDensityProps;
-
 function ButtonGroupSeparator({
   density,
   className,
   orientation = "vertical",
   ...props
-}: ButtonGroupSeparatorProps): ReactElement {
+}: ComponentProps<typeof Separator>): ReactElement {
   return (
     <Separator
       data-density={density}

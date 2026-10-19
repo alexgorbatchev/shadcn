@@ -302,6 +302,7 @@ export {
 } from "./components/NavigationMenu.js";
 export { InputOTP, InputOTPGroup, InputOTPSlot, InputOTPSeparator } from "./components/InputOTP.js";
 export { Resizable, ResizablePanelGroup, ResizablePanel, ResizableHandle } from "./components/Resizable.js";
+export { SplitView } from "./components/SplitView.js";
 export {
   Command,
   CommandDialog,

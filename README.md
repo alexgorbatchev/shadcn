@@ -240,6 +240,14 @@ Compose `QuestionnaireItem`, `QuestionnaireTitle`, and answer controls inside `Q
 
 `ConfirmationDialog` uses an alert dialog with Cancel and a destructive confirmation button. Supply `open`, `onOpenChange`, `title`, `description`, `confirmLabel`, and `onConfirm`. It waits for asynchronous work, keeps the dialog open on failure, and prevents cancellation while that work is pending.
 
+# Split views
+
+`SplitView` pairs a `sidebar` with its `children` in equally padded, borderless panels. Provide `sidebarLabel`, `contentLabel`, and `resizeLabel` for accessibility and a unique `storageKey` to remember the resized layout in localStorage. The desktop sidebar defaults to 325px (`defaultSidebarSize`), with a 200px minimum and a 50% maximum. Its 2px divider supports mouse, touch, and keyboard resizing. Below 1024px, the panels stack vertically while preserving the desktop preference. Storage failures leave the layout usable.
+
+`ResizableHandle thickness="strong"` and `Separator thickness="strong"` use 2px dividers; their default thickness is 1px.
+
+`TableHead` and `TableCell` accept `textAlign="start"`, `"center"`, or `"end"` to align labels and numeric columns consistently in either text direction.
+
 # Drag and drop
 
 Wrap draggable sources and drop targets in `DragDropProvider`. `DragSource` and `DropTarget` accept Base UI's `render` composition, so a button, table row, or sidebar item keeps its native element. For compositions that already manage rendering, use `useDragSource` and `useDropTarget` and spread their `props` onto the existing element.

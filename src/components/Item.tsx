@@ -24,9 +24,7 @@ function ItemGroup({ density, className, ...props }: ItemGroupProps): ReactEleme
   );
 }
 
-type ItemSeparatorProps = ComponentProps<typeof Separator> & IDensityProps;
-
-function ItemSeparator({ density, className, ...props }: ItemSeparatorProps): ReactElement {
+function ItemSeparator({ density, className, ...props }: ComponentProps<typeof Separator>): ReactElement {
   return (
     <Separator
       data-density={density}

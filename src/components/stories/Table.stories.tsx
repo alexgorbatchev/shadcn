@@ -65,6 +65,33 @@ const meta: Meta<typeof Table> = {
   ),
 };
 export default meta;
+export const AlignedColumns: StoryObj<typeof Table> = {
+  render: () => (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead textAlign="start">Track</TableHead>
+          <TableHead textAlign="center">Length</TableHead>
+          <TableHead textAlign="end">BPM</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        <TableRow>
+          <TableCell textAlign="start">First light</TableCell>
+          <TableCell textAlign="center">5:00</TableCell>
+          <TableCell textAlign="end">123</TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(getComputedStyle(canvas.getByRole("columnheader", { name: "BPM" })).textAlign).toBe("end");
+    await expect(getComputedStyle(canvas.getByRole("cell", { name: "123" })).textAlign).toBe("end");
+    await expect(getComputedStyle(canvas.getByRole("cell", { name: "5:00" })).textAlign).toBe("center");
+    await expect(getComputedStyle(canvas.getByRole("cell", { name: "First light" })).textAlign).toBe("start");
+  },
+};
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   play: async ({ canvasElement }) => {

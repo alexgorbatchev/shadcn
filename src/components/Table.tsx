@@ -73,15 +73,28 @@ function TableRow({ density, className, ...props }: TableRowProps): ReactElement
   );
 }
 
-type TableHeadProps = ComponentProps<"th"> & IDensityProps & { truncate?: boolean };
+type TableTextAlign = "start" | "center" | "end";
+const alignmentClasses: Record<TableTextAlign, string> = {
+  start: "text-start",
+  center: "text-center",
+  end: "text-end",
+};
+type TableHeadProps = ComponentProps<"th"> & IDensityProps & { truncate?: boolean; textAlign?: TableTextAlign };
 
-function TableHead({ density, className, truncate = false, ...props }: TableHeadProps): ReactElement {
+function TableHead({
+  density,
+  className,
+  truncate = false,
+  textAlign = "start",
+  ...props
+}: TableHeadProps): ReactElement {
   return (
     <th
       data-density={density}
       data-slot="table-head"
       className={cn(
-        "h-control-lg px-control-x text-start align-middle font-medium whitespace-nowrap text-foreground [&:has([role=checkbox])]:pe-0",
+        "h-control-lg px-control-x align-middle font-medium whitespace-nowrap text-foreground [&:has([role=checkbox])]:pe-0",
+        alignmentClasses[textAlign],
         truncate && "truncate",
         className,
       )}
@@ -90,15 +103,16 @@ function TableHead({ density, className, truncate = false, ...props }: TableHead
   );
 }
 
-type TableCellProps = ComponentProps<"td"> & IDensityProps & { truncate?: boolean };
+type TableCellProps = ComponentProps<"td"> & IDensityProps & { truncate?: boolean; textAlign?: TableTextAlign };
 
-function TableCell({ density, className, truncate = false, ...props }: TableCellProps): ReactElement {
+function TableCell({ density, className, truncate = false, textAlign, ...props }: TableCellProps): ReactElement {
   return (
     <td
       data-density={density}
       data-slot="table-cell"
       className={cn(
         "px-control-x py-control-gap align-middle whitespace-nowrap [&:has([role=checkbox])]:pe-0",
+        textAlign && alignmentClasses[textAlign],
         truncate && "truncate",
         className,
       )}
