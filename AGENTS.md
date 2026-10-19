@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-08 06:13
-last_modified: 2026-10-18 16:23
+last_modified: 2026-10-19 16:49
 status: current
 ---
 
@@ -68,6 +68,8 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 
 ## Boundaries
 
+- Make all changes directly on `main`; do not create feature branches or linked worktrees for this repository.
+- Publish subsequent npm versions through `.github/workflows/npm-release.yml` after the user handles the initial local publish. Consumers use published npm versions rather than vendored archives.
 - Always consult applicable skills and verified upstream APIs before implementation.
 - Always run `just fix` and `just check` before claiming completion; report remaining failures and warnings.
 - Always use repository `.tmp/` for transient validation artifacts and stop owned validation servers and browser sessions.
