@@ -11,7 +11,10 @@ function Table({ density, className, dir, layout = "auto", ...props }: TableProp
       data-density={density}
       data-slot="table-container"
       dir={dir}
-      className={cn("relative min-w-0 w-full", layout === "fixed" ? "overflow-x-hidden" : "overflow-x-auto")}
+      className={cn(
+        "@container/table relative min-w-0 w-full",
+        layout === "fixed" ? "overflow-x-hidden" : "overflow-x-auto",
+      )}
     >
       <table
         data-slot="table"
@@ -79,13 +82,27 @@ const alignmentClasses: Record<TableTextAlign, string> = {
   center: "text-center",
   end: "text-end",
 };
-type TableHeadProps = ComponentProps<"th"> & IDensityProps & { truncate?: boolean; textAlign?: TableTextAlign };
+type TableVisibility = "sm" | "lg" | "container-sm" | "container-md";
+const visibilityClasses: Record<TableVisibility, string> = {
+  sm: "hidden sm:table-cell",
+  lg: "hidden lg:table-cell",
+  "container-sm": "hidden @min-[400px]/table:table-cell",
+  "container-md": "hidden @min-[480px]/table:table-cell",
+};
+interface ITableCellOptions {
+  truncate?: boolean;
+  textAlign?: TableTextAlign;
+  visibleFrom?: TableVisibility;
+}
+
+type TableHeadProps = ComponentProps<"th"> & IDensityProps & ITableCellOptions;
 
 function TableHead({
   density,
   className,
   truncate = false,
   textAlign = "start",
+  visibleFrom,
   ...props
 }: TableHeadProps): ReactElement {
   return (
@@ -96,6 +113,7 @@ function TableHead({
         "h-control-lg px-control-x align-middle font-medium whitespace-nowrap text-foreground [&:has([role=checkbox])]:pe-0",
         alignmentClasses[textAlign],
         truncate && "truncate",
+        visibleFrom && visibilityClasses[visibleFrom],
         className,
       )}
       {...props}
@@ -103,9 +121,16 @@ function TableHead({
   );
 }
 
-type TableCellProps = ComponentProps<"td"> & IDensityProps & { truncate?: boolean; textAlign?: TableTextAlign };
+type TableCellProps = ComponentProps<"td"> & IDensityProps & ITableCellOptions;
 
-function TableCell({ density, className, truncate = false, textAlign, ...props }: TableCellProps): ReactElement {
+function TableCell({
+  density,
+  className,
+  truncate = false,
+  textAlign,
+  visibleFrom,
+  ...props
+}: TableCellProps): ReactElement {
   return (
     <td
       data-density={density}
@@ -114,6 +139,7 @@ function TableCell({ density, className, truncate = false, textAlign, ...props }
         "px-control-x py-control-gap align-middle whitespace-nowrap [&:has([role=checkbox])]:pe-0",
         textAlign && alignmentClasses[textAlign],
         truncate && "truncate",
+        visibleFrom && visibilityClasses[visibleFrom],
         className,
       )}
       {...props}

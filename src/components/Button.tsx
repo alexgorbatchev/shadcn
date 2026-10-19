@@ -8,6 +8,7 @@ const buttonVariants = cva(
   "group/button inline-flex shrink-0 items-center rounded-sm border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-colors outline-none select-none focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:border-dashed disabled:border-border disabled:bg-transparent disabled:text-faint-foreground disabled:font-normal aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
+      truncate: { true: "max-w-full min-w-0" },
       align: { start: "justify-start", center: "justify-center", end: "justify-end" },
       variant: {
         default: "bg-primary text-primary-foreground hover:bg-primary/80",
@@ -52,6 +53,8 @@ function Button({
   variant = "default",
   size = "default",
   align = "center",
+  truncate = false,
+  children,
   ...props
 }: ButtonProps): ReactElement {
   return (
@@ -59,10 +62,15 @@ function Button({
       data-density={density}
       data-slot="button"
       className={(state) =>
-        cn(buttonVariants({ variant, size, align }), typeof className === "function" ? className(state) : className)
+        cn(
+          buttonVariants({ variant, size, align, truncate }),
+          typeof className === "function" ? className(state) : className,
+        )
       }
       {...props}
-    />
+    >
+      {truncate ? <span className="min-w-0 truncate">{children}</span> : children}
+    </ButtonPrimitive>
   );
 }
 

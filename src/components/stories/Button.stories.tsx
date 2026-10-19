@@ -251,3 +251,21 @@ export const EndAligned: Story = {
     );
   },
 };
+
+export const TruncatedLabel: Story = {
+  args: { truncate: true, children: "A very long track title that must fit its container" },
+  decorators: [
+    (Story) => (
+      <div className="w-36">
+        <Story />
+      </div>
+    ),
+  ],
+  async play({ canvasElement, args }) {
+    const button = within(canvasElement).getByRole("button");
+    await expect(button.getBoundingClientRect().width).toBeLessThanOrEqual(144);
+    await expect(button.scrollWidth).toBeLessThanOrEqual(button.clientWidth);
+    await userEvent.click(button);
+    await expect(args.onClick).toHaveBeenCalledTimes(1);
+  },
+};

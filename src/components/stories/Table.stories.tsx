@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ComponentProps, ReactElement } from "react";
-import { expect, waitFor, within } from "storybook/test";
+import { expect, userEvent, waitFor, within } from "storybook/test";
 import { useId, useRef, useState } from "react";
 import { MoreHorizontalIcon } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "../Dialog";
@@ -541,5 +541,46 @@ export const FixedLayout: Story = {
     await expect(cell.scrollWidth).toBeGreaterThan(cell.clientWidth);
     await expect(getComputedStyle(cell).textOverflow).toBe("ellipsis");
     await expect(table.getBoundingClientRect().width).toBe(280);
+  },
+};
+
+export const ResponsiveColumns: Story = {
+  render: function ResponsiveColumns() {
+    const [isWide, setWide] = useState(false);
+    return (
+      <>
+        <Button onClick={() => setWide(!isWide)}>Resize table</Button>
+        <div className={isWide ? "w-[600px]" : "w-[350px]"}>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Title</TableHead>
+                <TableHead visibleFrom="container-sm">BPM</TableHead>
+                <TableHead visibleFrom="container-md">Format</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow>
+                <TableCell>First light</TableCell>
+                <TableCell visibleFrom="container-sm">123</TableCell>
+                <TableCell visibleFrom="container-md">FLAC</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </div>
+      </>
+    );
+  },
+  async play({ canvasElement }) {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByText("BPM", { exact: true })).not.toBeVisible();
+    await expect(canvas.getByText("123", { exact: true })).not.toBeVisible();
+    await expect(canvas.getByText("Format", { exact: true })).not.toBeVisible();
+    await expect(canvas.getByText("FLAC", { exact: true })).not.toBeVisible();
+    await userEvent.click(canvas.getByRole("button", { name: "Resize table" }));
+    await expect(canvas.getByRole("columnheader", { name: "BPM" })).toBeVisible();
+    await expect(canvas.getByRole("cell", { name: "123" })).toBeVisible();
+    await expect(canvas.getByRole("columnheader", { name: "Format" })).toBeVisible();
+    await expect(canvas.getByRole("cell", { name: "FLAC" })).toBeVisible();
   },
 };
