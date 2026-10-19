@@ -23,7 +23,7 @@ const meta: Meta<AvatarStoryProps> = {
   title: "shadcn-alexgorbatchev/components/Avatar",
   component: Avatar,
   tags: ["autodocs", "test"],
-  argTypes: { size: { control: "select", options: ["default", "sm", "lg"] } },
+  argTypes: { size: { control: "select", options: ["default", "sm", "lg", "preview"] } },
   render: ({ imageClassName, imageRef, fallbackClassName, fallbackRef, ...args }) => (
     <Avatar {...args}>
       <AvatarImage src={fixture_avatarImage} alt="Alex" className={imageClassName} ref={imageRef} />

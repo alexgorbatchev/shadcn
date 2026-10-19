@@ -39,15 +39,16 @@ function FieldLegend({ density, className, variant = "legend", ...props }: Field
   );
 }
 
-type FieldGroupProps = ComponentProps<"div"> & IDensityProps;
+type FieldGroupProps = ComponentProps<"div"> & IDensityProps & { columns?: 1 | 2 };
 
-function FieldGroup({ density, className, ...props }: FieldGroupProps): ReactElement {
+function FieldGroup({ density, className, columns = 1, ...props }: FieldGroupProps): ReactElement {
   return (
     <div
       data-density={density}
       data-slot="field-group"
       className={cn(
-        "group/field-group @container/field-group flex w-full flex-col gap-field-gap data-[slot=checkbox-group]:gap-3 *:data-[slot=field-group]:gap-4",
+        "group/field-group @container/field-group w-full gap-field-gap data-[slot=checkbox-group]:gap-3 *:data-[slot=field-group]:gap-4",
+        columns === 2 ? "grid grid-cols-1 sm:grid-cols-2" : "flex flex-col",
         className,
       )}
       {...props}

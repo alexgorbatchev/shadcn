@@ -234,6 +234,12 @@ Compose `QuestionnaireItem`, `QuestionnaireTitle`, and answer controls inside `Q
 
 `StarRating` takes a controlled numeric `value` from 0 to 5, `onValueChange`, and an accessible `label`. Its native radio buttons support keyboard selection and an Unrated option to clear the rating. Set `disabled` while saving. `Avatar shape="square"` displays square artwork with matching image, fallback, and border corners.
 
+`DialogContent size="wide"` uses a desktop maximum width of 576px; `size="narrow"` uses 192px, and the default uses 384px. Dialogs remain bounded by the viewport. `FieldGroup columns={2}` arranges fields in two columns on desktop and one on mobile.
+
+`ImagePicker` displays a 256px square preview with upload and unset buttons. Supply the existing `src`, a staged `file` (`undefined` for the existing image, `null` for removal), and `onFileChange`/`onClear` callbacks. It accepts PNG, JPEG, and GIF files and releases local preview URLs when they change or unmount. The consumer owns saving and removal confirmation.
+
+`ConfirmationDialog` uses an alert dialog with Cancel and a destructive confirmation button. Supply `open`, `onOpenChange`, `title`, `description`, `confirmLabel`, and `onConfirm`. It waits for asynchronous work, keeps the dialog open on failure, and prevents cancellation while that work is pending.
+
 # Drag and drop
 
 Wrap draggable sources and drop targets in `DragDropProvider`. `DragSource` and `DropTarget` accept Base UI's `render` composition, so a button, table row, or sidebar item keeps its native element. For compositions that already manage rendering, use `useDragSource` and `useDropTarget` and spread their `props` onto the existing element.

@@ -17,7 +17,7 @@ import {
   DialogOverlay,
 } from "../Dialog";
 import { Button } from "../Button";
-import { Field, FieldLabel } from "../Field";
+import { Field, FieldLabel, FieldGroup } from "../Field";
 import { Input } from "../Input";
 import { DensityProvider } from "../DensityProvider";
 import { DirectionProvider } from "../DirectionProvider";
@@ -75,6 +75,39 @@ export const Default: Story = {
     await waitFor(() => expect(trigger).toHaveFocus());
     await expect(args.onOpenChange).toHaveBeenLastCalledWith(false, expect.objectContaining({ reason: "close-press" }));
     await expect(args.onOpenChangeComplete).toHaveBeenLastCalledWith(false);
+  },
+};
+export const WideForm: Story = {
+  render: (args) => (
+    <Dialog {...args}>
+      <DialogTrigger render={<Button />}>Edit metadata</DialogTrigger>
+      <DialogContent size="wide">
+        <DialogHeader>
+          <DialogTitle>Metadata</DialogTitle>
+          <DialogDescription>Two fields share a row.</DialogDescription>
+        </DialogHeader>
+        <FieldGroup columns={2}>
+          <Field>
+            <FieldLabel htmlFor="wide-title">Title</FieldLabel>
+            <Input id="wide-title" />
+          </Field>
+          <Field>
+            <FieldLabel htmlFor="wide-artist">Artist</FieldLabel>
+            <Input id="wide-artist" />
+          </Field>
+        </FieldGroup>
+      </DialogContent>
+    </Dialog>
+  ),
+  play: async ({ canvasElement, userEvent }) => {
+    await userEvent.click(within(canvasElement).getByRole("button", { name: "Edit metadata" }));
+    const dialog = await within(canvasElement.ownerDocument.body).findByRole("dialog", { name: "Metadata" });
+    const title = within(dialog).getByLabelText("Title").getBoundingClientRect();
+    const artist = within(dialog).getByLabelText("Artist").getBoundingClientRect();
+    await expect(artist.left).toBeGreaterThan(title.right);
+    await expect(artist.top).toBe(title.top);
+    await expect(dialog.getBoundingClientRect().width).toBeGreaterThan(500);
+    await userEvent.keyboard("{Escape}");
   },
 };
 export const Open: Story = {

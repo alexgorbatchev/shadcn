@@ -46,6 +46,7 @@ function DialogOverlay({ density, className, ...props }: DialogOverlayProps): Re
 
 type DialogContentProps = DialogPrimitive.Popup.Props & {
   showCloseButton?: boolean;
+  size?: "default" | "wide" | "narrow";
 } & IDensityProps;
 
 function DialogContent({
@@ -53,6 +54,7 @@ function DialogContent({
   className,
   children,
   showCloseButton = true,
+  size = "default",
   ...props
 }: DialogContentProps): ReactElement {
   const resolvedDensity = useDensity(density);
@@ -67,7 +69,8 @@ function DialogContent({
         data-slot="dialog-content"
         className={(state) =>
           cn(
-            "fixed top-1/2 left-1/2 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-panel rounded-md bg-popover p-panel text-sm text-popover-foreground border border-frame-edge shadow-frame duration-120 outline-none sm:max-w-sm data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:data-open:animate-none motion-reduce:data-closed:animate-none",
+            "fixed top-1/2 left-1/2 grid w-full max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 gap-panel rounded-md bg-popover p-panel text-sm text-popover-foreground border border-frame-edge shadow-frame duration-120 outline-none data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:data-open:animate-none motion-reduce:data-closed:animate-none",
+            size === "wide" ? "sm:max-w-xl" : size === "narrow" ? "sm:max-w-48" : "sm:max-w-sm",
             typeof className === "function" ? className(state) : className,
           )
         }
