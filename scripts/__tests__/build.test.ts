@@ -20,14 +20,26 @@ const consumerRoot = `${process.cwd()}/.tmp/optional-consumers/${Date.now()}`;
 const dependencyVersions: Record<string, string> = manifest.devDependencies;
 
 beforeAll(async () => {
-  await runConsumerCommand([process.execPath, "scripts/pack.ts"], process.cwd());
   await mkdir(consumerRoot, { recursive: true });
-  await Bun.write(`${consumerRoot}/package.tgz`, Bun.file(`.tmp/packs/alexgorbatchev-shadcn-${manifest.version}.tgz`));
+  await runConsumerCommand(["npm", "pack", "--ignore-scripts", "--pack-destination", consumerRoot], process.cwd());
+  await Bun.write(
+    `${consumerRoot}/package.tgz`,
+    Bun.file(`${consumerRoot}/alexgorbatchev-shadcn-${manifest.version}.tgz`),
+  );
 }, 30_000);
 
 afterAll(async () => {
   await rm(consumerRoot, { recursive: true, force: true });
 }, 30_000);
+
+test("release tarball includes the current README", async () => {
+  const archive = new Bun.Archive(await Bun.file(`${consumerRoot}/package.tgz`).bytes());
+  const files = await archive.files();
+  const readme = files.get("package/README.md");
+  expect(readme).toBeDefined();
+  assert(readme);
+  expect(await readme.text()).toBe(await Bun.file("README.md").text());
+});
 
 test.each(fixture_featureConsumers)(
   "packed %s consumer builds and renders with only its required peers",

@@ -5,8 +5,8 @@ build:
     bun run build
 
 pack:
-    bun run build
-    bun scripts/pack.ts
+    mkdir -p .tmp/packs
+    npm pack --pack-destination .tmp/packs
 
 check:
     bun run typecheck
