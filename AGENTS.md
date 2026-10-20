@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-08 06:13
-last_modified: 2026-10-19 17:03
+last_modified: 2026-10-20 10:05
 status: current
 ---
 
@@ -12,11 +12,9 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 
 - Install: `bun install`
 - Preview: `bun run storybook` (loopback port 6006, no automatic browser launch)
-- Routed preview: `devhost start` (replace the `shadcn.example.com` placeholder in both `devhost.toml` hostname fields with a locally configured hostname before starting the shared Caddy route; keep private hostnames out of commits)
-- Stop this project's routed preview: `devhost stop --manifest ./devhost.toml`
 - Format: `just fix`
 - Validate: `just check` (typecheck, lint/format check, declarations/package build, development/production package rendering, static Storybook build)
-- Package rendering: `bun run test:package` (builds the public package and checks Button, Chart, InputOTP, MessageScroller and Questionnaire rendering with development and production React)
+- Package verification: `bun run test:package` (builds and installs the archive in isolated consumers; checks declarations and development/production rendering)
 - Browser interactions: `bun run test` (Storybook stories tagged `test` in headless Chromium, then native browser checks and package-render tests)
 - Text contrast: `bun run test:contrast` (all tested stories in Chromium across light/dark themes and comfortable/compact density; violations fail)
 - Visual regression: `bun run test:visual` (selected stories across themes, densities, desktop and mobile widths); review intentional baseline updates with `bun run test:visual:update` on Ubuntu 24.04
@@ -24,13 +22,13 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - Reduced-motion interactions: `bun run test:reduced-motion` (full Storybook catalog with native reduced-motion preference)
 - Coverage gate: `bun run test:coverage` (90% statements, branches, functions, and lines across runtime source)
 - Build package: `just build`
-- Prepare local archive: `just pack` (runs the package build and writes `.tmp/packs/alexgorbatchev-shadcn-<version>.tgz` using the manifest version)
+- Inspect a local archive: `just pack` (npm writes to `.tmp/packs/`; release publication uses `npm publish` directly)
 
 ## Development Setup
 
 - Run commands from this standalone repository, not from the sibling devhost checkout. Use Bun 1.4.2 as declared in `package.json`; `just` is required for the validation and packaging recipes.
-- Install dependencies with `bun install` before running the commands above. Keep the single repository `bun.lock` in sync with manifest changes.
-- The direct Storybook preview needs no devhost service. The routed preview needs the devhost CLI, a running managed Caddy instance, and the configured hostname resolving to that machine; see [README.md](./README.md#devhost-preview).
+- Keep the single repository `bun.lock` in sync with manifest changes. Local package verification also requires npm.
+- For routed preview prerequisites and hostname configuration, see [README.md](./README.md#devhost-preview). The direct Storybook preview needs no devhost service.
 - `dist/`, `storybook-static/`, `.cache/`, and `.tmp/` are generated or transient outputs. Edit their source files and regenerate them; keep those directories untracked.
 - `just check` is the local validation entrypoint. `.github/workflows/storybook-pages.yml` validates and deploys static Storybook only when a GitHub Release is published; see [Pages setup](./docs/internal/storybook-pages.md). It does not run on branch pushes or pull requests.
 
@@ -42,8 +40,10 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - Keep the core API explicit in `src/index.ts` and optional feature APIs in their `src/components/<feature>/index.ts` entry points. Never re-export optional features, hooks, or dependency-bearing types from the root. Components live in `src/components/`, shared runtime hooks in `src/hooks/` and feature hooks in their feature folder’s `hooks/`, and stories in `src/components/stories/`.
 - Define standalone Tailwind v4 tokens in `src/theme.css`. Keep consumers independent of absolute devhost imports, symlinks, and workspace dependencies.
 - Keep React and React DOM external peers. Bun builds browser ESM with production JSX (`jsx.development: false`); TypeScript emits declarations separately. Consumers generate utilities by scanning `dist`, so package class strings must remain discoverable by Tailwind.
+- Keep one root `tsconfig.json` for development and typechecking. The package build derives declaration compiler options from it and emits declarations from the public entry points; do not add a separate build tsconfig.
 - Build all public JavaScript entry points together with code splitting so shared React contexts retain their identity across imports. Optional feature peers stay external; keep their development copies installed for Storybook and tests.
-- During the next dependency upgrade round, check whether upstream resolves the issues covered by the `sonner`, `input-otp`, and `@shadcn/react` patches. For each resolved package, remove its obsolete patch and bundled-build exception and move it from regular dependencies to optional `peerDependencies` with `peerDependenciesMeta`, retaining a development dependency. Verify the feature's declarations, shared contexts/stores, and regression tests before removing its bundled implementation.
+- Prefer `peerDependencies` whenever possible and reasonable to minimize consumers' `node_modules` disk usage. Make feature-only peers optional with `peerDependenciesMeta` and isolate them behind feature entry points so consumers install only what they use. Consider the transitive install size when adding or upgrading dependencies; tree shaking does not reduce `node_modules`. Use regular dependencies only when runtime ownership or correctness requires them, and document the reason for each exception.
+- When upgrading `sonner`, `input-otp`, or `@shadcn/react`, check whether upstream resolves the patched issues. For each resolved package, remove its obsolete patch and bundled-build exception and move it to optional `peerDependencies` with `peerDependenciesMeta`, retaining a development dependency. Verify declarations, shared contexts/stores, and regression tests before removing its bundled implementation.
 - Keep optional font imports in `src/fonts.css`. Preserve shadcn source attribution in `THIRD_PARTY_NOTICES.md` when adding components.
 - Follow `src/components/Button.tsx` for primitive props, semantic utility classes, variants, and density overrides; follow `src/components/stories/Button.stories.tsx` for typed metadata and interactive controls. Add public exports to the appropriate core or feature entry point and include each component family in the Storybook catalog.
 - ThemeProvider owns the document palette. DensityProvider supplies both React context and CSS variables; portal content must resolve density through context.
@@ -71,7 +71,7 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 ## Boundaries
 
 - Make all changes directly on `main`; do not create feature branches or linked worktrees for this repository.
-- Publish subsequent npm versions through `.github/workflows/npm-release.yml` after the user handles the initial local publish. Consumers use published npm versions rather than vendored archives.
+- Use `.github/workflows/npm-release.yml` for authorized npm releases; follow [the release procedure](./docs/internal/npm-releases.md). Consumers use published npm versions rather than vendored archives.
 - Always consult applicable skills and verified upstream APIs before implementation.
 - Always run `just fix` and `just check` before claiming completion; report remaining failures and warnings.
 - Always use repository `.tmp/` for transient validation artifacts and stop owned validation servers and browser sessions.
@@ -80,7 +80,7 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - Never modify the devhost source repository as part of this package's work.
 - Pull and push external dependency repositories modified for this app; verify the remote and preserve concurrent changes.
 - Never publish packages, releases, tags, or production deployments without explicit authorization.
-- Persist standing project instructions here; keep task history, progress, handoffs, and dated amendments out of this file.
+- Always record new standing user instructions here; check with the user before changing conflicting instructions. Keep activity logs, task history, progress, handoffs, and dated amendments out of this file.
 
 ## References
 
@@ -88,4 +88,4 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - [Source and license attribution](./THIRD_PARTY_NOTICES.md)
 - [Storybook contrast testing and manual-review limits](./docs/internal/accessibility.md)
 - [Visual regression baselines and CI](./docs/internal/visual-regression.md)
-- [Session handoff and validation evidence](./docs/internal/handoff.md)
+- [npm release procedure](./docs/internal/npm-releases.md)
