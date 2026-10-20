@@ -16,3 +16,11 @@ check:
 
 fix:
     bun x --bun oxfmt --write .
+
+# Install the locked development dependencies
+setup:
+    bun install --frozen-lockfile
+
+# Start the development preview
+run *args:
+    bun run storybook {{ args }}
