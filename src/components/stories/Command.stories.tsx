@@ -16,7 +16,7 @@ import {
   CommandList,
   CommandSeparator,
   CommandShortcut,
-} from "../Command";
+} from "../command/Command";
 
 const meta: Meta<typeof Command> = {
   title: "shadcn-alexgorbatchev/components/Command",

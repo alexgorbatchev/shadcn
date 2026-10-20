@@ -9,7 +9,7 @@ import {
   MessageScrollerContent,
   MessageScrollerProvider,
   MessageScrollerViewport,
-} from "../../MessageScroller";
+} from "../../message-scroller/MessageScroller";
 
 export function VirtualizedTranscript(): ReactElement {
   const viewportRef = useRef<HTMLDivElement>(null);

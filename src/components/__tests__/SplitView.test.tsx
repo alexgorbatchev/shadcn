@@ -1,7 +1,7 @@
 import { expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { page } from "vitest/browser";
-import { SplitView } from "../SplitView";
+import { SplitView } from "../resizable/SplitView";
 import { ThemeProvider } from "../ThemeProvider";
 import { DensityProvider } from "../DensityProvider";
 import "../../../.storybook/preview.css";

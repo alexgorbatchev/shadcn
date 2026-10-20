@@ -4,7 +4,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { enUS } from "@daypicker/persian";
 import { useState } from "react";
 import { expect, userEvent, waitFor, within } from "storybook/test";
-import { PersianCalendar } from "../PersianCalendar";
+import { PersianCalendar } from "../persian-calendar/PersianCalendar";
 
 type PersianCalendarStoryProps = Omit<
   ComponentProps<typeof PersianCalendar>,

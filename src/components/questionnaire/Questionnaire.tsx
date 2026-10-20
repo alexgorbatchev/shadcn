@@ -1,9 +1,9 @@
 import type { ComponentProps, ReactElement } from "react";
-import type { IDensityProps } from "../density/types.js";
+import type { IDensityProps } from "../../density/types.js";
 import { Questionnaire as QuestionnairePrimitive } from "@shadcn/react/questionnaire";
-import { cn } from "../utils/cn.js";
+import { cn } from "../../utils/cn.js";
 
-import { buttonVariants, type Button } from "./Button.js";
+import { buttonVariants, type Button } from "../Button.js";
 import { CheckIcon } from "lucide-react";
 
 function Questionnaire({

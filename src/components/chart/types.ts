@@ -5,8 +5,8 @@ import type {
   ResponsiveContainer,
   TooltipValueType,
 } from "recharts";
-import type { Density, IDensityProps } from "../density/types.js";
-import type { ResolvedTheme } from "../theme/types.js";
+import type { Density, IDensityProps } from "../../density/types.js";
+import type { ResolvedTheme } from "../../theme/types.js";
 
 export type ChartConfig = Record<
   string,

@@ -4,8 +4,12 @@ import manifest from "../package.json";
 await rm("dist", { recursive: true, force: true });
 await mkdir("dist", { recursive: true });
 const result = await Bun.build({
-  entrypoints: ["src/index.ts"],
+  entrypoints: Object.values(manifest.exports)
+    .filter((entry) => typeof entry !== "string")
+    .map((entry) => entry.import.replace("./dist/", "src/").replace(/\.js$/, ".ts")),
+  root: "src",
   outdir: "dist",
+  splitting: true,
   target: "browser",
   format: "esm",
   jsx: { development: false },

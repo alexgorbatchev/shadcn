@@ -9,7 +9,7 @@ import {
   MessageScrollerItem,
   MessageScrollerProvider,
   MessageScrollerViewport,
-} from "../../MessageScroller";
+} from "../../message-scroller/MessageScroller";
 
 export function StreamingTranscript({
   onPointerDown,

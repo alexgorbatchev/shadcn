@@ -1,9 +1,9 @@
 import type { ComponentProps, ReactElement } from "react";
-import type { IDensityProps } from "../density/types.js";
+import type { IDensityProps } from "../../density/types.js";
 import { useContext } from "react";
 import { OTPInput, OTPInputContext } from "input-otp";
 import { MinusIcon } from "lucide-react";
-import { cn } from "../utils/cn.js";
+import { cn } from "../../utils/cn.js";
 
 type InputOTPProps = ComponentProps<typeof OTPInput> & IDensityProps;
 

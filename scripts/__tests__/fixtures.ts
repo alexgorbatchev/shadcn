@@ -38,7 +38,7 @@ console.log(JSON.stringify(buttons));
 export const fixture_otpServerRenderSource: string = `
 import { renderToString } from "react-dom/server";
 import { jsx } from "react/jsx-runtime";
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "@alexgorbatchev/shadcn";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@alexgorbatchev/shadcn/input-otp";
 
 const inputs = [];
 const markup = renderToString(jsx("main", {
@@ -66,7 +66,7 @@ export const fixture_chartServerRenderSource: string = `
 import { renderToString } from "react-dom/server";
 import { jsx } from "react/jsx-runtime";
 import { Bar, BarChart } from "recharts";
-import { ChartContainer, ChartStyle } from "@alexgorbatchev/shadcn";
+import { ChartContainer, ChartStyle } from "@alexgorbatchev/shadcn/chart";
 
 const config = { desktop: { label: "Desktop", theme: { light: "var(--primary)", dark: "var(--success)" } } };
 const markup = renderToString(jsx("main", {
@@ -95,7 +95,7 @@ export const fixture_questionnaireServerRenderSource: string = `
 import { renderToString } from "react-dom/server";
 import { jsx, jsxs } from "react/jsx-runtime";
 import { Questionnaire, QuestionnaireProgress, QuestionnaireItem, QuestionnaireTitle, QuestionnaireChoice,
-  QuestionnaireActions, QuestionnairePrevious, QuestionnaireNext, QuestionnaireSubmit } from "@alexgorbatchev/shadcn";
+  QuestionnaireActions, QuestionnairePrevious, QuestionnaireNext, QuestionnaireSubmit } from "@alexgorbatchev/shadcn/questionnaire";
 const markup = renderToString(jsxs(Questionnaire, {
   defaultItem: "review", shortcuts: "numbers",
   items: [
@@ -125,7 +125,7 @@ export const fixture_scrollerServerRenderSource: string = `
 import { renderToString } from "react-dom/server";
 import { jsx, jsxs } from "react/jsx-runtime";
 import { MessageScrollerProvider, MessageScroller, MessageScrollerViewport, MessageScrollerContent,
-  MessageScrollerItem, MessageScrollerButton } from "@alexgorbatchev/shadcn";
+  MessageScrollerItem, MessageScrollerButton } from "@alexgorbatchev/shadcn/message-scroller";
 const transcripts = [];
 for (const position of ["start", "end", "last-anchor"]) {
   const markup = renderToString(jsx(MessageScrollerProvider, {
@@ -154,3 +154,206 @@ for (const position of ["start", "end", "last-anchor"]) {
 }
 console.log(JSON.stringify({ hasWindow: typeof window !== "undefined", transcripts }));
 `;
+
+export const fixture_optionalPeerNames: readonly string[] = [
+  "@daypicker/react",
+  "@daypicker/persian",
+  "@fontsource-variable/jetbrains-mono",
+  "cmdk",
+  "cssesc",
+  "embla-carousel-react",
+  "es-toolkit",
+  "react-resizable-panels",
+  "recharts",
+];
+
+export const fixture_featureTypeExports: Record<string, string> = {
+  core: "Button",
+  chart: "ChartContainer, ChartStyle, useChart, type ChartConfig",
+  calendar: "Calendar, CalendarDayButton",
+  "persian-calendar": "PersianCalendar",
+  carousel: "Carousel, useCarousel, type CarouselApi",
+  command: "Command, CommandDialog",
+  resizable: "Resizable, SplitView",
+  sonner: "Sonner, toast, useSonner",
+  "input-otp": "InputOTP, InputOTPSlot",
+  "message-scroller": "MessageScroller, useMessageScroller, type MessageScrollerScrollOptions",
+  questionnaire: "Questionnaire, type QuestionnaireItemDefinition",
+  fonts: "Button",
+};
+
+export const fixture_featureTypePaths: Record<string, string> = {
+  core: "@alexgorbatchev/shadcn",
+  fonts: "@alexgorbatchev/shadcn",
+};
+
+export const fixture_featureConsumers: ReadonlyArray<readonly [string, readonly string[], string, string]> = [
+  [
+    "core",
+    [],
+    fixture_packageRenderSource,
+    JSON.stringify([
+      { type: "button", disabled: false, text: "Save" },
+      { type: "button", disabled: true, text: "Archive" },
+    ]),
+  ],
+  [
+    "chart",
+    ["recharts", "cssesc", "es-toolkit"],
+    fixture_chartServerRenderSource,
+    JSON.stringify({
+      hasBrowserCSS: false,
+      charts: [{ id: "chart-visitors: daily[α]", label: "Monthly visitors" }],
+      styleCount: 2,
+    }),
+  ],
+  [
+    "calendar",
+    ["@daypicker/react"],
+    `
+    import { renderToString } from "react-dom/server";
+    import { jsx } from "react/jsx-runtime";
+    import { Calendar } from "@alexgorbatchev/shadcn/calendar";
+    const markup = renderToString(jsx(Calendar, { mode: "single", defaultMonth: new Date(2026, 0, 1) }));
+    console.log(JSON.stringify(markup.includes('data-slot="calendar"') && markup.includes("January 2026")));
+  `,
+    "true",
+  ],
+  [
+    "persian-calendar",
+    ["@daypicker/persian", "@daypicker/react"],
+    `
+    import { renderToString } from "react-dom/server";
+    import { jsx } from "react/jsx-runtime";
+    import { PersianCalendar } from "@alexgorbatchev/shadcn/persian-calendar";
+    const markup = renderToString(jsx(PersianCalendar, { mode: "single", defaultMonth: new Date(2026, 0, 1) }));
+    console.log(JSON.stringify(markup.includes('data-slot="calendar"') && markup.includes("۱۴۰۴")));
+  `,
+    "true",
+  ],
+  [
+    "carousel",
+    ["embla-carousel-react"],
+    `
+    import { renderToString } from "react-dom/server";
+    import { jsx, jsxs } from "react/jsx-runtime";
+    import { DirectionProvider } from "@alexgorbatchev/shadcn";
+    import { Carousel, CarouselContent, CarouselItem, useCarousel } from "@alexgorbatchev/shadcn/carousel";
+    function Direction() { return jsx("span", { children: useCarousel().direction }); }
+    const markup = renderToString(jsx(DirectionProvider, { direction: "rtl", children: jsx(Carousel, {
+      children: jsx(CarouselContent, { children: jsx(CarouselItem, { children: jsx(Direction, {}) }) }),
+    }) }));
+    console.log(JSON.stringify(markup.includes('dir="rtl"') && markup.includes(">rtl</span>")));
+  `,
+    "true",
+  ],
+  [
+    "command",
+    ["cmdk"],
+    `
+    import { renderToString } from "react-dom/server";
+    import { jsx, jsxs } from "react/jsx-runtime";
+    import { Command, CommandInput, CommandList, CommandGroup, CommandItem } from "@alexgorbatchev/shadcn/command";
+    const markup = renderToString(jsxs(Command, { label: "Actions", children: [
+      jsx(CommandInput, {}), jsx(CommandList, { children: jsx(CommandGroup, { children: jsx(CommandItem, { children: "Save" }) }) }),
+    ] }));
+    console.log(JSON.stringify(markup.includes('role="combobox"') && markup.includes("Save")));
+  `,
+    "true",
+  ],
+  [
+    "resizable",
+    ["react-resizable-panels"],
+    `
+    import { renderToString } from "react-dom/server";
+    import { jsx, jsxs } from "react/jsx-runtime";
+    import { Resizable, ResizablePanel, ResizableHandle, SplitView } from "@alexgorbatchev/shadcn/resizable";
+    const markup = renderToString(jsxs(Resizable, { children: [jsx(ResizablePanel, { children: "Left" }),
+      jsx(ResizableHandle, {}), jsx(ResizablePanel, { children: "Right" })] }));
+    console.log(JSON.stringify(markup.includes("Left") && markup.includes("Right") && typeof SplitView === "function"));
+  `,
+    "true",
+  ],
+  [
+    "sonner",
+    [],
+    `
+    import { renderToString } from "react-dom/server";
+    import { jsx } from "react/jsx-runtime";
+    import { ThemeProvider, DensityProvider } from "@alexgorbatchev/shadcn";
+    import { Sonner, toast, useSonner } from "@alexgorbatchev/shadcn/sonner";
+    const markup = renderToString(jsx(ThemeProvider, { forcedTheme: "dark", children: jsx(DensityProvider, {
+      density: "compact", children: jsx(Sonner, {}),
+    }) }));
+    const densities = [];
+    await new HTMLRewriter().on('[data-slot="sonner"]', { element(element) {
+      densities.push(element.getAttribute("data-density"));
+    } }).transform(new Response(markup)).text();
+    console.log(JSON.stringify(densities));
+  `,
+    '["compact"]',
+  ],
+  [
+    "input-otp",
+    [],
+    fixture_otpServerRenderSource,
+    JSON.stringify([
+      { label: "Saved code", value: "123456", name: "code", maxLength: "6" },
+      { label: "Empty code", value: "", name: "code", maxLength: "6" },
+      { label: "Controlled code", value: "654321", name: "code", maxLength: "6" },
+    ]),
+  ],
+  [
+    "message-scroller",
+    [],
+    fixture_scrollerServerRenderSource,
+    JSON.stringify({
+      hasWindow: false,
+      transcripts: ["start", "end", "last-anchor"].map((position) => ({
+        position,
+        rootPending: position !== "start",
+        viewport: { label: "Messages", tabIndex: "0", pending: position !== "start" },
+        content: { relevant: "additions", busy: "true" },
+        items: [
+          { id: "question", anchor: "true" },
+          { id: "answer", anchor: "false" },
+        ],
+        controls: [{ type: "button", inert: true, tabIndex: "-1", active: "false" }],
+      })),
+    }),
+  ],
+  [
+    "questionnaire",
+    [],
+    fixture_questionnaireServerRenderSource,
+    JSON.stringify({
+      hasWindow: false,
+      items: [
+        { active: false, hidden: true, inert: true, disabled: false },
+        { active: false, hidden: true, inert: true, disabled: true },
+        { active: true, hidden: false, inert: false, disabled: false },
+      ],
+      choices: [
+        { value: "build", disabled: false, shortcut: "1" },
+        { value: "private", disabled: true, shortcut: "1" },
+        { value: "unavailable", disabled: true, shortcut: null },
+        { value: "tests", disabled: false, shortcut: "1" },
+      ],
+      actions: [
+        { type: "button", hidden: false, inert: false, text: "Previous" },
+        { type: "button", hidden: true, inert: true, text: "Next" },
+        { type: "submit", hidden: false, inert: false, text: "Submit" },
+      ],
+      progress: { current: "2", total: "2", text: "Question 2 of 2" },
+    }),
+  ],
+  [
+    "fonts",
+    ["@fontsource-variable/jetbrains-mono"],
+    `
+    import "@alexgorbatchev/shadcn/fonts.css";
+    console.log("fonts");
+  `,
+    "fonts",
+  ],
+];

@@ -1,11 +1,11 @@
 import type { ReactElement } from "react";
-import type { CarouselApi } from "../../carousel/types";
+import type { CarouselApi } from "../carousel/types";
 import { useEffect, useState } from "react";
 import { expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { page } from "vitest/browser";
 import { CarouselGalleryExample } from "../stories/helpers";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../Carousel";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../carousel/Carousel";
 import { DirectionProvider } from "../DirectionProvider";
 import { DensityProvider } from "../DensityProvider";
 import { ThemeProvider } from "../ThemeProvider";

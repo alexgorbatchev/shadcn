@@ -4,7 +4,7 @@ import { TZDate } from "@daypicker/react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useId, useState } from "react";
 import { expect, userEvent, waitFor, within } from "storybook/test";
-import { Calendar, CalendarDayButton } from "../Calendar";
+import { Calendar, CalendarDayButton } from "../calendar/Calendar";
 import { DirectionProvider } from "../DirectionProvider";
 import { CalendarIcon, Clock2Icon } from "lucide-react";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../Card";

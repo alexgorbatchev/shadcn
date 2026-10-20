@@ -1,13 +1,13 @@
 import type { ReactElement } from "react";
 import type { ToasterProps } from "sonner";
-import type { IDensityProps } from "../density/types.js";
+import type { IDensityProps } from "../../density/types.js";
 import { Toaster } from "sonner";
 import { CircleCheckIcon, InfoIcon, TriangleAlertIcon, OctagonXIcon, LoaderCircleIcon, XIcon } from "lucide-react";
-import { useTheme } from "../hooks/useTheme.js";
-import { useDensity } from "../hooks/useDensity.js";
+import { useTheme } from "../../hooks/useTheme.js";
+import { useDensity } from "../../hooks/useDensity.js";
 import { useDirection } from "@base-ui/react/direction-provider";
-import { cn } from "../utils/cn.js";
-import { buttonVariants } from "./Button.js";
+import { cn } from "../../utils/cn.js";
+import { buttonVariants } from "../Button.js";
 
 type SonnerProps = ToasterProps & IDensityProps;
 function Sonner({

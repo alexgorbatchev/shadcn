@@ -9,7 +9,7 @@
 
 # How It Works
 
-1. Install the package archive in a Bun React project and import its theme into your Tailwind stylesheet.
+1. Install the package in a Bun React project and import its theme into your Tailwind stylesheet.
 2. Wrap the app in a theme provider and a density provider, then compose the exported components.
 3. Open the local Storybook catalog to explore components, switch palettes and densities, and inspect examples.
 
@@ -29,15 +29,41 @@ The package targets client-rendered Bun React applications.
 
 # Installation
 
-Install the local archive from a consuming project:
+Install the package in a consuming project:
 
 ```sh
-bun add /home/alex/development/projects/shadcn-alexgorbatchev/.tmp/packs/alexgorbatchev-shadcn-0.0.2.tgz
+bun add @alexgorbatchev/shadcn
 ```
 
-The archive must exist before installation. Package preparation and contributor commands are documented in [AGENTS.md](./AGENTS.md#commands). Its filename includes the package version.
+Package preparation and contributor commands are documented in [AGENTS.md](./AGENTS.md#commands).
 
-For repeated local builds with Bun 1.4.0, copy each rebuilt archive to a new directory before reinstalling it. Reusing the same local tarball path can retain old installed contents, even with `bun install --force`.
+## Optional features
+
+Import shared controls and providers from `@alexgorbatchev/shadcn`. Import the following features from their dedicated entry points and install only the peers you use. These features, their hooks, and their types are not exported from the package root.
+
+| Import path suffix  | Components                                              | Install alongside the package                                 |
+| ------------------- | ------------------------------------------------------- | ------------------------------------------------------------- |
+| `/chart`            | Chart components, ChartStyle, useChart, and chart types | `bun add recharts@3.8.0 cssesc@3.0.0 es-toolkit@1.52.0`       |
+| `/calendar`         | Calendar, CalendarDayButton                             | `bun add @daypicker/react@^10.0.2`                            |
+| `/persian-calendar` | PersianCalendar                                         | `bun add @daypicker/persian@^10.0.2 @daypicker/react@^10.0.2` |
+| `/carousel`         | Carousel components, useCarousel, and carousel types    | `bun add embla-carousel-react@^8.6.0`                         |
+| `/command`          | Command components, including CommandDialog             | `bun add cmdk@^1.1.1`                                         |
+| `/resizable`        | Resizable components and SplitView                      | `bun add react-resizable-panels@^4.14.3`                      |
+| `/fonts.css`        | JetBrains Mono font stylesheet                          | `bun add @fontsource-variable/jetbrains-mono@^5.3.0`          |
+| `/sonner`           | Sonner, SonnerToaster, Toaster, toast, useSonner        | No additional install; patched implementation is bundled      |
+| `/input-otp`        | InputOTP components                                     | No additional install; patched implementation is bundled      |
+| `/message-scroller` | MessageScroller components, hooks, and types            | No additional install; patched implementation is bundled      |
+| `/questionnaire`    | Questionnaire components and types                      | No additional install; patched implementation is bundled      |
+
+For example:
+
+```tsx
+import { Button, DensityProvider } from "@alexgorbatchev/shadcn";
+import { ChartContainer, type ChartConfig } from "@alexgorbatchev/shadcn/chart";
+import { Carousel, CarouselContent, CarouselItem } from "@alexgorbatchev/shadcn/carousel";
+```
+
+The patched `sonner`, `input-otp`, and `@shadcn/react` packages remain regular dependencies pending upstream fixes. Other feature dependencies are optional peers, so a core-only installation does not request them. Shared providers work across entry points.
 
 # Quick Start
 
@@ -45,6 +71,12 @@ For Bun's native HTML server, install its Tailwind plugin:
 
 ```sh
 bun add -d tailwindcss bun-plugin-tailwind
+```
+
+The stylesheet example below also uses the optional font:
+
+```sh
+bun add @fontsource-variable/jetbrains-mono@^5.3.0
 ```
 
 Register the plugin in your app's `bunfig.toml`:
@@ -186,13 +218,13 @@ Compose data tables with the exported Table parts and `@tanstack/react-table@9.2
 
 Compose `Sidebar` and `SidebarInset` inside `SidebarProvider`. Use Header, Content, Group, Menu, and Footer parts to organize navigation, and `SidebarTrigger` or `SidebarRail` to toggle it. `useSidebar` exposes desktop and mobile state. Desktop collapse supports `offcanvas`, `icon`, and `none`; the mobile panel uses a titled Sheet with Escape dismissal and focus restoration. Menu buttons accept native custom elements through `render`; use anchors for navigation and keep their accessible text when collapsed. Cmd/Ctrl+B toggles the sidebar. Set `open`/`onOpenChange` for controlled desktop state, or observe changes without supplying `open`. The provider writes the `sidebar_state` cookie for seven days; restore it through your own `defaultOpen`. Set widths through the typed `SidebarStyle` variables `--sidebar-width`, `--sidebar-width-mobile`, and `--sidebar-width-icon`.
 
-`InputOTP` uses one real input for typing, selection, paste, and autofill. Compose its visual slots inside `InputOTPGroup`; supply `maxLength` and an accessible label. Use `defaultValue` to initialize an uncontrolled code, or `value` and `onChange` to control it. Changing `defaultValue` after mounting preserves the current input. Import the OTP parts together from this package; its bundled implementation owns their context. `Calendar` supports single, multiple, and range selection. `ResizablePanelGroup` sizes use explicit percentage strings such as `defaultSize="50%"`; numeric sizes are pixels. `CommandDialog` supplies the modal title and description; set `Command`'s `label` to name its search input.
+`InputOTP` uses one real input for typing, selection, paste, and autofill. Compose its visual slots inside `InputOTPGroup`; supply `maxLength` and an accessible label. Use `defaultValue` to initialize an uncontrolled code, or `value` and `onChange` to control it. Changing `defaultValue` after mounting preserves the current input. Import the OTP parts together from `@alexgorbatchev/shadcn/input-otp`; its bundled implementation owns their context. `Calendar` supports single, multiple, and range selection. `ResizablePanelGroup` sizes use explicit percentage strings such as `defaultSize="50%"`; numeric sizes are pixels. `CommandDialog` supplies the modal title and description; set `Command`'s `label` to name its search input.
 
 Use the Theme toolbar to select light, dark, or system palettes; Docs and example frames follow that selection. Local and routed previews can run on separate ports with independent dependency caches. Reload an open preview after restarting it on a different port.
 
 `Carousel` supports horizontal, vertical, and right-to-left navigation. Focus its named region to use the arrow keys; arrow keys inside slide inputs retain their input behavior. Supply `opts` and `plugins` for carousel configuration, and `setApi` to receive its API. Reduced-motion preference disables programmatic slide animation.
 
-Compose `ChartContainer`, `ChartTooltip`, and `ChartLegend` with Recharts components. Install `recharts@3.8.0` in apps that import those components directly. Give the container a height or aspect ratio; `ChartConfig` supplies series labels, icons, and either one color or light/dark colors. Use semantic values such as `var(--primary)` and keep `accessibilityLayer` enabled for keyboard tooltips. Use `labelKey` and `nameKey` for custom tooltip data, and legend content's `nameKey` for custom legend labels. Keep series selection in application state; the tooltip's `defaultIndex` only sets its initial state.
+Compose `ChartContainer`, `ChartTooltip`, and `ChartLegend` with Recharts components. Import the chart parts from `@alexgorbatchev/shadcn/chart` and install its peers listed above. Give the container a height or aspect ratio; `ChartConfig` supplies series labels, icons, and either one color or light/dark colors. Use semantic values such as `var(--primary)` and keep `accessibilityLayer` enabled for keyboard tooltips. Use `labelKey` and `nameKey` for custom tooltip data, and legend content's `nameKey` for custom legend labels. Keep series selection in application state; the tooltip's `defaultIndex` only sets its initial state.
 
 Supply HTML attributes and refs to tooltip or legend content through `htmlProps`; Recharts injects its own chart props into those content components, so those props do not go to the DOM. An `onClick` legend callback renders keyboard-accessible buttons. Omit the tooltip's `portal` prop for native floating positioning; custom portal targets own their positioning through the native `wrapperStyle` API. Tooltip and legend content preserve chart density, direction and configured colors through portals. A container's `dir` overrides DirectionProvider context, and content's `htmlProps.dir` overrides the chart direction. Reverse Recharts' `XAxis` explicitly for RTL data ordering; native keyboard movement follows that axis. See the [Chart guide](https://ui.shadcn.com/docs/components/base/chart).
 
@@ -204,7 +236,7 @@ For Base UI notifications, retain the ID from `manager.add()` and call `manager.
 
 Set Sonner's `expand={false}` to show a collapsed stack that expands on hover. Older notification content stays hidden while collapsed; cards retain their width. Per-notification `onAutoClose` and `onDismiss` callbacks receive the notification, including its ID. Native timers pause while hovering the host. Use `toast.custom((id) => ...)` for custom content and `toast.dismiss(id)` from its action.
 
-Import `Sonner`, `toast`, and `useSonner` from this package together. The package bundles a patched Sonner 2.0.8 implementation that remeasures open notifications after density changes, preserving their IDs and running timers. A separate direct import from `sonner` uses a different notification store.
+Import `Sonner`, `toast`, and `useSonner` together from `@alexgorbatchev/shadcn/sonner`. The package bundles a patched Sonner 2.0.8 implementation that remeasures open notifications after density changes, preserving their IDs and running timers. A separate direct import from `sonner` uses a different notification store.
 
 `Bubble` provides seven visual variants, start/end alignment, grouped replies, and overlapping reactions. Compose interactive content with `BubbleContent render={<button type="button" />}` or a native anchor. Leave extra space between replies with reactions, such as `BubbleGroup className="gap-8"`; layout overrides replace the package's density spacing utilities. `Marker` presents conversation notes, statuses, bordered rows, and labeled dividers. Use `role="status"` for updates, and `render` for native links or buttons. Labeled dividers retain their text semantics; their lines are decorative. Icons in `MarkerIcon` are hidden from assistive technology. Separator labels wrap inside narrow columns; use `className="flex-col"` on Marker to stack its icon above the content.
 
@@ -222,7 +254,7 @@ To animate a sent row, the `AnimatedNewTurn` example uses `motion.create(Message
 
 Server-rendered transcripts opening at `end` or `last-anchor` remain hidden through `data-pending-scroll` until hydration applies their position; `start` remains visible. Keep the same transcript and opening position on the server and client. The [upstream guide](https://ui.shadcn.com/docs/components/base/message-scroller#avoiding-a-flash-on-reload) also describes an optional application-owned inline script for first-paint `end` positioning; that script is outside this package's verified hydration path.
 
-Import the scroller parts and hooks from this package together. Its bundled native implementation preserves both caller root refs and the frame's scroll-state attributes; hooks imported directly from a separate `@shadcn/react/message-scroller` module use a different provider context. `scrollToMessage(id)` can queue a permalink before transcript rows mount; a true result means accepted or queued, rather than already visible. After rows mount, an unknown ID returns false. Anchors can mark system events as well as replies. The current-anchor hook retains the most recent anchor that has reached its tracking boundary, even after that row scrolls above the viewport.
+Import the scroller parts and hooks together from `@alexgorbatchev/shadcn/message-scroller`. Its bundled native implementation preserves both caller root refs and the frame's scroll-state attributes; hooks imported directly from a separate `@shadcn/react/message-scroller` module use a different provider context. `scrollToMessage(id)` can queue a permalink before transcript rows mount; a true result means accepted or queued, rather than already visible. After rows mount, an unknown ID returns false. Anchors can mark system events as well as replies. The current-anchor hook retains the most recent anchor that has reached its tracking boundary, even after that row scrolls above the viewport.
 
 Bun 1.4.0's CSS bundler lowers logical positioning to language-based selectors. A plain CSS reproduction confirms that `dir="rtl"` with inherited `lang="en"` positions a logical inline-end marker on the wrong side; production CSS contains the same lowering. This affects Bubble reactions and vertical line-tab markers. Direction changes independent of language remain a Bun consumer limitation. The Storybook/Vite build preserves native logical positioning. See [Bun's CSS lowering documentation](https://bun.com/docs/bundler/css#dir-selector).
 
@@ -307,7 +339,9 @@ Storybook binds to IPv4 loopback and allows the configured hostname in both Stor
 # Troubleshooting
 
 - **Components render without styling**: Check that your app imports the stylesheet, processes it with Tailwind v4, and registers the package's `dist` directory with `@source`. Adjust that path if your stylesheet lives somewhere other than `src/styles.css`.
-- **The custom font does not appear**: Import `fonts.css` for the bundled font, or override `--ag-font` with your app's font stack.
+- **A feature dependency cannot be resolved**: Install the peers listed for that feature under [Optional features](#optional-features). Importing a feature does not install its peers.
+- **An export is missing from the package root**: Import feature components, hooks, and types from their dedicated entry point, such as `@alexgorbatchev/shadcn/chart` or `@alexgorbatchev/shadcn/resizable` for `SplitView`.
+- **The custom font does not appear**: Install `@fontsource-variable/jetbrains-mono` and import `@alexgorbatchev/shadcn/fonts.css`, or override `--ag-font` with your app's font stack.
 - **Theme controls throw a provider error**: Render components that call `useTheme()` inside the document's `ThemeProvider`.
 - **Docs use an unexpected palette**: Select the desired Theme toolbar option. System uses the saved preview preference when one exists, otherwise the operating system preference. Reload an open preview after its server restarts on a different port.
 

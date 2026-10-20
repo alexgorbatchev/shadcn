@@ -1,20 +1,15 @@
 import type { ReactElement } from "react";
-import type {
-  ChartProps,
-  ChartTooltipContentProps,
-  ChartLegendContentProps,
-  ChartIndicatorStyle,
-} from "../chart/types.js";
+import type { ChartProps, ChartTooltipContentProps, ChartLegendContentProps, ChartIndicatorStyle } from "./types.js";
 import { useId, useMemo } from "react";
 import { ResponsiveContainer, Tooltip, Legend } from "recharts";
 import sortBy from "es-toolkit/compat/sortBy";
-import { ChartContext } from "../chart/ChartContext.js";
-import { getPayloadConfigFromPayload } from "../chart/getPayloadConfigFromPayload.js";
-import { useChart } from "../hooks/useChart.js";
-import { useDensity } from "../hooks/useDensity.js";
-import { cn } from "../utils/cn.js";
+import { ChartContext } from "./ChartContext.js";
+import { getPayloadConfigFromPayload } from "./getPayloadConfigFromPayload.js";
+import { useChart } from "./hooks/useChart.js";
+import { useDensity } from "../../hooks/useDensity.js";
+import { cn } from "../../utils/cn.js";
 import { ChartStyle } from "./ChartStyle.js";
-import { useDirection } from "./DirectionProvider.js";
+import { useDirection } from "../DirectionProvider.js";
 
 function Chart({
   id,

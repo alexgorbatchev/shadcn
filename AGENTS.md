@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-08 06:13
-last_modified: 2026-10-19 16:49
+last_modified: 2026-10-19 17:03
 status: current
 ---
 
@@ -39,11 +39,13 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - Use Base UI primitives and official shadcn Base UI compositions. Prefer maintained libraries for behavior; preserve native accessibility and state contracts.
 - Add missing reusable consumer capabilities to this package's public components instead of applying consumer-side overrides or styling hacks.
 - Keep shared UI patterns in this package. Drag/drop sources, targets, coordination, and badge previews use the public `DragDropProvider`, `DragSource`, `DropTarget`, and hooks. Native browser drag tests participate in the main coverage project; consumers supply domain validation and keyboard-accessible equivalent actions.
-- Keep the package root API explicit in `src/index.ts`. Components live in `src/components/`, runtime hooks in `src/hooks/`, and stories in `src/components/stories/`.
+- Keep the core API explicit in `src/index.ts` and optional feature APIs in their `src/components/<feature>/index.ts` entry points. Never re-export optional features, hooks, or dependency-bearing types from the root. Components live in `src/components/`, shared runtime hooks in `src/hooks/` and feature hooks in their feature folder’s `hooks/`, and stories in `src/components/stories/`.
 - Define standalone Tailwind v4 tokens in `src/theme.css`. Keep consumers independent of absolute devhost imports, symlinks, and workspace dependencies.
 - Keep React and React DOM external peers. Bun builds browser ESM with production JSX (`jsx.development: false`); TypeScript emits declarations separately. Consumers generate utilities by scanning `dist`, so package class strings must remain discoverable by Tailwind.
+- Build all public JavaScript entry points together with code splitting so shared React contexts retain their identity across imports. Optional feature peers stay external; keep their development copies installed for Storybook and tests.
+- During the next dependency upgrade round, check whether upstream resolves the issues covered by the `sonner`, `input-otp`, and `@shadcn/react` patches. For each resolved package, remove its obsolete patch and bundled-build exception and move it from regular dependencies to optional `peerDependencies` with `peerDependenciesMeta`, retaining a development dependency. Verify the feature's declarations, shared contexts/stores, and regression tests before removing its bundled implementation.
 - Keep optional font imports in `src/fonts.css`. Preserve shadcn source attribution in `THIRD_PARTY_NOTICES.md` when adding components.
-- Follow `src/components/Button.tsx` for primitive props, semantic utility classes, variants, and density overrides; follow `src/components/stories/Button.stories.tsx` for typed metadata and interactive controls. Add public exports to `src/index.ts` and include each component family in the Storybook catalog.
+- Follow `src/components/Button.tsx` for primitive props, semantic utility classes, variants, and density overrides; follow `src/components/stories/Button.stories.tsx` for typed metadata and interactive controls. Add public exports to the appropriate core or feature entry point and include each component family in the Storybook catalog.
 - ThemeProvider owns the document palette. DensityProvider supplies both React context and CSS variables; portal content must resolve density through context.
 - Preserve sharp control corners, framed floating surfaces, semantic palette tokens, and reduced-motion behavior. Avoid hardcoded palette classes and scale/bounce transitions.
 

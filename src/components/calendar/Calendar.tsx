@@ -1,9 +1,9 @@
 import type { ComponentProps, ReactElement } from "react";
-import type { CalendarProps } from "../calendar/types.js";
-import { getCalendarClassNames } from "../calendar/getCalendarClassNames.js";
+import type { CalendarProps } from "./types.js";
+import { getCalendarClassNames } from "./getCalendarClassNames.js";
 import { DayButton, DayPicker } from "@daypicker/react";
-import { cn } from "../utils/cn.js";
-import { buttonVariants } from "./Button.js";
+import { cn } from "../../utils/cn.js";
+import { buttonVariants } from "../Button.js";
 
 function Calendar({
   density,

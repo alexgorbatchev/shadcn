@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { CarouselApi } from "../../carousel/types";
+import type { CarouselApi } from "../carousel/types";
 import type { KeyboardEvent } from "react";
 import Autoplay from "embla-carousel-autoplay";
 import { useEffect, useState } from "react";
 import { expect, fn, userEvent, waitFor, within } from "storybook/test";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../Carousel";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../carousel/Carousel";
 import { DirectionProvider } from "../DirectionProvider";
 import { Input } from "../Input";
 import { Button } from "../Button";

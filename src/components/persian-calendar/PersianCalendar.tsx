@@ -2,8 +2,8 @@ import type { ComponentProps, ReactElement } from "react";
 import type { CalendarProps } from "../calendar/types.js";
 import { DayPicker } from "@daypicker/persian";
 import { getCalendarClassNames } from "../calendar/getCalendarClassNames.js";
-import { cn } from "../utils/cn.js";
-import { CalendarDayButton } from "./Calendar.js";
+import { cn } from "../../utils/cn.js";
+import { CalendarDayButton } from "../calendar/Calendar.js";
 
 type PersianCalendarProps = ComponentProps<typeof DayPicker> & Pick<CalendarProps, "density" | "buttonVariant">;
 

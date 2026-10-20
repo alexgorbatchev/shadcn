@@ -18,7 +18,7 @@ import {
   QuestionnaireSkip,
   QuestionnaireSubmit,
   QuestionnaireTitle,
-} from "../Questionnaire";
+} from "../questionnaire/Questionnaire";
 import { Button } from "../Button";
 import { DensityProvider } from "../DensityProvider";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle, DialogTrigger } from "../Dialog";

@@ -13,7 +13,7 @@ import {
   MessageScrollerItem,
   MessageScrollerProvider,
   MessageScrollerViewport,
-} from "../MessageScroller";
+} from "../message-scroller/MessageScroller";
 import "../../../.storybook/preview.css";
 
 type ServerTranscriptProps = Pick<ComponentProps<typeof MessageScrollerProvider>, "defaultScrollPosition">;

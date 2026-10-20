@@ -1,8 +1,8 @@
 import type { ReactElement, ReactNode } from "react";
 import { useDefaultLayout, type LayoutStorage } from "react-resizable-panels";
 import { Resizable, ResizablePanel, ResizableHandle } from "./Resizable.js";
-import { Separator } from "./Separator.js";
-import { useMediaQuery } from "../hooks/useMediaQuery.js";
+import { Separator } from "../Separator.js";
+import { useMediaQuery } from "../../hooks/useMediaQuery.js";
 
 interface ISplitViewProps {
   sidebar: ReactNode;

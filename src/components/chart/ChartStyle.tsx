@@ -1,6 +1,6 @@
 import type { ReactElement } from "react";
-import type { ChartStyleProps } from "../chart/types.js";
-import type { ResolvedTheme } from "../theme/types.js";
+import type { ChartStyleProps } from "./types.js";
+import type { ResolvedTheme } from "../../theme/types.js";
 import cssesc from "cssesc";
 const themes: ResolvedTheme[] = ["light", "dark"];
 export function ChartStyle({ id, config }: ChartStyleProps): ReactElement | null {

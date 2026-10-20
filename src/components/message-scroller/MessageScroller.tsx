@@ -1,10 +1,10 @@
 import type { ComponentProps, ReactElement } from "react";
-import type { IDensityProps } from "../density/types.js";
+import type { IDensityProps } from "../../density/types.js";
 import { MessageScroller as MessageScrollerPrimitive } from "@shadcn/react/message-scroller";
 import { ArrowDownIcon } from "lucide-react";
 import { useMediaQuery } from "usehooks-ts";
-import { cn } from "../utils/cn.js";
-import { Button } from "./Button.js";
+import { cn } from "../../utils/cn.js";
+import { Button } from "../Button.js";
 
 function MessageScrollerProvider(props: ComponentProps<typeof MessageScrollerPrimitive.Provider>): ReactElement {
   return <MessageScrollerPrimitive.Provider {...props} />;

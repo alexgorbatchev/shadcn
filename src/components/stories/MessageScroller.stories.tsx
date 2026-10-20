@@ -10,10 +10,10 @@ import {
   MessageScrollerContent,
   MessageScrollerItem,
   MessageScrollerButton,
-} from "../MessageScroller";
-import { useMessageScroller } from "../../hooks/useMessageScroller";
-import { useMessageScrollerScrollable } from "../../hooks/useMessageScrollerScrollable";
-import { useMessageScrollerVisibility } from "../../hooks/useMessageScrollerVisibility";
+} from "../message-scroller/MessageScroller";
+import { useMessageScroller } from "../message-scroller/hooks/useMessageScroller";
+import { useMessageScrollerScrollable } from "../message-scroller/hooks/useMessageScrollerScrollable";
+import { useMessageScrollerVisibility } from "../message-scroller/hooks/useMessageScrollerVisibility";
 import { Button } from "../Button";
 import { Bubble, BubbleContent } from "../Bubble";
 import { Marker, MarkerContent } from "../Marker";

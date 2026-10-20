@@ -1,7 +1,7 @@
 import { useId, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, waitFor, within } from "storybook/test";
-import { SplitView } from "../SplitView";
+import { SplitView } from "../resizable/SplitView";
 import { Button } from "../Button";
 
 const meta: Meta<typeof SplitView> = {

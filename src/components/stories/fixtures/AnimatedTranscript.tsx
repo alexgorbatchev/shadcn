@@ -2,7 +2,7 @@ import type { ComponentProps, ReactElement } from "react";
 import { Fragment, useState } from "react";
 import { motion } from "motion/react";
 import { useMediaQuery } from "usehooks-ts";
-import { useMessageScroller } from "../../../hooks/useMessageScroller";
+import { useMessageScroller } from "../../message-scroller/hooks/useMessageScroller";
 import { Button } from "../../Button";
 import { Bubble, BubbleContent } from "../../Bubble";
 import {
@@ -12,7 +12,7 @@ import {
   MessageScrollerItem,
   MessageScrollerProvider,
   MessageScrollerViewport,
-} from "../../MessageScroller";
+} from "../../message-scroller/MessageScroller";
 
 const MotionMessageScrollerItem = motion.create(MessageScrollerItem);
 type AnimatedTranscriptProps = Pick<ComponentProps<typeof MotionMessageScrollerItem>, "onUpdate" | "ref">;

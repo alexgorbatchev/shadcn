@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Button } from "../Button";
 import { expect, fn, userEvent, waitFor, within } from "storybook/test";
 import { REGEXP_ONLY_DIGITS, REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
-import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "../InputOTP";
+import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from "../input-otp/InputOTP";
 
 type InputOTPStoryProps = Omit<ComponentProps<typeof InputOTP>, "render"> & { render?: undefined };
 const meta: Meta<InputOTPStoryProps> = {

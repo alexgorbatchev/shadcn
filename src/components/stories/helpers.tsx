@@ -1,11 +1,11 @@
-import type { CarouselApi, CarouselProps } from "../../carousel/types";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../Carousel";
+import type { CarouselApi, CarouselProps } from "../carousel/types";
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../carousel/Carousel";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../Card";
 import { useEffect } from "react";
 import { useId, useRef } from "react";
 import { casual, strict } from "chrono-node/en";
 import { CalendarIcon } from "lucide-react";
-import { Calendar } from "../Calendar";
+import { Calendar } from "../calendar/Calendar";
 import { Field, FieldError, FieldGroup, FieldLabel } from "../Field";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "../InputGroup";
 import { Popover, PopoverContent, PopoverTitle, PopoverTrigger } from "../Popover";

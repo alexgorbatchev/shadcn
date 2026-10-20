@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, waitFor, within } from "storybook/test";
 import { useState } from "react";
 import { Button } from "../Button";
-import { Sonner, toast } from "../Sonner";
+import { Sonner, toast } from "../sonner/Sonner";
 import { DirectionProvider } from "../DirectionProvider";
 import { Item, ItemContent, ItemTitle, ItemDescription, ItemActions } from "../Item";
 

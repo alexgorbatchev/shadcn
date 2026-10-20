@@ -1,10 +1,10 @@
 import type { ComponentProps, ReactElement } from "react";
-import type { IDensityProps } from "../density/types.js";
+import type { IDensityProps } from "../../density/types.js";
 import { Command as CommandPrimitive } from "cmdk";
 import { CheckIcon, SearchIcon } from "lucide-react";
-import { cn } from "../utils/cn.js";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "./Dialog.js";
-import { InputGroup, InputGroupAddon, InputGroupInput } from "./InputGroup.js";
+import { cn } from "../../utils/cn.js";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "../Dialog.js";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "../InputGroup.js";
 
 type CommandProps = ComponentProps<typeof CommandPrimitive> & IDensityProps;
 

@@ -4,7 +4,7 @@ import { usePanelRef } from "react-resizable-panels";
 import { Button } from "../Button";
 import { DirectionProvider } from "../DirectionProvider";
 import { expect, fn, userEvent, waitFor, within } from "storybook/test";
-import { Resizable, ResizableHandle, ResizablePanel } from "../Resizable";
+import { Resizable, ResizableHandle, ResizablePanel } from "../resizable/Resizable";
 
 const meta: Meta<typeof Resizable> = {
   title: "shadcn-alexgorbatchev/components/Resizable",

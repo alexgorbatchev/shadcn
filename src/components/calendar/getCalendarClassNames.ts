@@ -1,7 +1,7 @@
 import { getDefaultClassNames } from "@daypicker/react";
 import type { CalendarProps } from "./types.js";
-import { cn } from "../utils/cn.js";
-import { buttonVariants } from "../components/Button.js";
+import { cn } from "../../utils/cn.js";
+import { buttonVariants } from "../Button.js";
 
 function getCalendarClassNames({
   buttonVariant = "ghost",

@@ -1,9 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import type { ChartConfig } from "../../chart/types";
+import type { ChartConfig } from "../chart/types";
 import { useState } from "react";
 import { Bar, BarChart, CartesianGrid, LabelList, Pie, PieChart, XAxis } from "recharts";
 import { expect, userEvent, waitFor, within } from "storybook/test";
-import { ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent } from "../Chart";
+import { ChartContainer, ChartLegend, ChartLegendContent, ChartTooltip, ChartTooltipContent } from "../chart/Chart";
 import { Button } from "../Button";
 import { useTheme } from "../../hooks/useTheme";
 import { LaptopIcon } from "lucide-react";
