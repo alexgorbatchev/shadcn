@@ -1,12 +1,16 @@
 import { mkdir, rm } from "node:fs/promises";
+import ts from "typescript";
 import manifest from "../package.json";
+import config from "../tsconfig.json";
+
+const entrypoints = Object.values(manifest.exports)
+  .filter((entry) => typeof entry !== "string")
+  .map((entry) => entry.import.replace("./dist/", "src/").replace(/\.js$/, ".ts"));
 
 await rm("dist", { recursive: true, force: true });
 await mkdir("dist", { recursive: true });
 const result = await Bun.build({
-  entrypoints: Object.values(manifest.exports)
-    .filter((entry) => typeof entry !== "string")
-    .map((entry) => entry.import.replace("./dist/", "src/").replace(/\.js$/, ".ts")),
+  entrypoints,
   root: "src",
   outdir: "dist",
   splitting: true,
@@ -22,6 +26,28 @@ const result = await Bun.build({
 });
 if (!result.success) {
   throw new AggregateError(result.logs, "Library build failed");
+}
+const parsed = ts.parseJsonConfigFileContent(config, ts.sys, process.cwd(), {
+  module: ts.ModuleKind.NodeNext,
+  moduleResolution: ts.ModuleResolutionKind.NodeNext,
+  noEmit: false,
+  noEmitOnError: true,
+  declaration: true,
+  emitDeclarationOnly: true,
+  allowImportingTsExtensions: false,
+  outDir: "dist",
+  rootDir: "src",
+});
+const program = ts.createProgram(entrypoints, parsed.options);
+const diagnostics = [...parsed.errors, ...ts.getPreEmitDiagnostics(program), ...program.emit().diagnostics];
+if (diagnostics.length > 0) {
+  throw new Error(
+    ts.formatDiagnosticsWithColorAndContext(diagnostics, {
+      getCurrentDirectory: ts.sys.getCurrentDirectory,
+      getCanonicalFileName: (name) => name,
+      getNewLine: () => ts.sys.newLine,
+    }),
+  );
 }
 await Promise.all([
   Bun.write("dist/theme.css", Bun.file("src/theme.css")),

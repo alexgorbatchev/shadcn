@@ -76,7 +76,7 @@
     "test:native": "vitest run --config .storybook/vitest.native.config.ts",
     "test:coverage": "vitest run --config .storybook/vitest.config.ts --coverage",
     "test:contrast": "vitest run --config .storybook/vitest.contrast.config.ts",
-    "build": "bun scripts/build.ts && tsc -p tsconfig.build.json",
+    "build": "bun scripts/build.ts",
     "typecheck": "tsc --noEmit",
     "lint": "oxlint --deny-warnings src .storybook scripts && oxfmt --check . && bun run lint:unused",
     "lint:unused": "bun --bun ts-unused check tsconfig.json",
