@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-14 06:43
-last_modified: 2026-10-14 06:43
+last_modified: 2026-10-21 09:57
 status: current
 ---
 
@@ -17,7 +17,7 @@ bun x --bun playwright install --with-deps chromium
 bun run test:visual
 ```
 
-Baselines live under `src/components/stories/__screenshots__/`. Names include the theme, density, story, viewport width, browser, and operating system. Failure images live under `.tmp/visual-attachments/` and include actual/reference/diff images where supported by Vitest.
+Baselines live in `__screenshots__/` beside each story subgroup, for example `src/components/stories/actions/__screenshots__/`. Names include the theme, density, story, viewport width, browser, and operating system. Failure images live under `.tmp/visual-attachments/` and include actual/reference/diff images where supported by Vitest.
 
 Use Ubuntu 24.04, the frozen lockfile, and headless Chromium when reviewing or updating the Linux baselines. Browser and font rendering can vary across operating systems; baselines generated on macOS do not replace Linux baselines. CI pins Ubuntu 24.04 and installs the browser corresponding to the locked Playwright version. See [Vitest's environment guidance](https://vitest.dev/guide/browser/visual-regression-testing.html#environmental-stability).
 

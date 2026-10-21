@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-09 11:00
-last_modified: 2026-10-09 11:18
+last_modified: 2026-10-21 09:57
 status: current
 ---
 
@@ -19,8 +19,8 @@ The command uses headless Chromium through the existing Storybook Vitest addon, 
 For a focused run:
 
 ```sh
-bun run test:contrast src/components/stories/Button.stories.tsx
-bun run test:contrast --project contrast-light-compact src/components/stories/Drawer.stories.tsx
+bun run test:contrast src/components/stories/actions/Button.stories.tsx
+bun run test:contrast --project contrast-light-compact src/components/stories/overlays/Drawer.stories.tsx
 ```
 
 The regular `bun run test` also checks contrast using the preview's default globals. `just check` checks types, formatting, package rendering, and the static Storybook build; run `test:contrast` separately for the complete contrast matrix.

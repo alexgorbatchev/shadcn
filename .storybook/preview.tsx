@@ -34,6 +34,7 @@ const preview: Preview = {
     },
   },
   parameters: {
+    options: { storySort: { method: "alphabetical" } },
     docs: { container: ThemedDocsContainer },
     layout: "fullscreen",
     controls: { expanded: true },

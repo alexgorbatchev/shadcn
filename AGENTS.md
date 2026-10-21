@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-08 06:13
-last_modified: 2026-10-21 07:02
+last_modified: 2026-10-21 09:57
 status: current
 ---
 
@@ -45,7 +45,8 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - Prefer `peerDependencies` whenever possible and reasonable to minimize consumers' `node_modules` disk usage. Make feature-only peers optional with `peerDependenciesMeta` and isolate them behind feature entry points so consumers install only what they use. Consider the transitive install size when adding or upgrading dependencies; tree shaking does not reduce `node_modules`. Use regular dependencies only when runtime ownership or correctness requires them, and document the reason for each exception.
 - When upgrading `sonner`, `input-otp`, or `@shadcn/react`, check whether upstream resolves the patched issues. For each resolved package, remove its obsolete patch and bundled-build exception and move it to optional `peerDependencies` with `peerDependenciesMeta`, retaining a development dependency. Verify declarations, shared contexts/stores, and regression tests before removing its bundled implementation.
 - Keep optional font imports in `src/fonts.css`. Preserve shadcn source attribution in `THIRD_PARTY_NOTICES.md` when adding components.
-- Follow `src/components/Button.tsx` for primitive props, semantic utility classes, variants, and density overrides; follow `src/components/stories/Button.stories.tsx` for typed metadata and interactive controls. Add public exports to the appropriate core or feature entry point and include each component family in the Storybook catalog.
+- Follow `src/components/Button.tsx` for primitive props, semantic utility classes, variants, and density overrides; follow `src/components/stories/actions/Button.stories.tsx` for typed metadata and interactive controls. Add public exports to the appropriate core or feature entry point and include each component family in the Storybook catalog.
+- Group Storybook by relocating story files under functional subdirectories of `src/components/stories/`; derive titles from the package name and story path, omitting `src/` and `stories/`. Keep runtime module locations, flat public exports, optional feature boundaries, and tree shaking independent of sidebar organization.
 - ThemeProvider owns the document palette. DensityProvider supplies both React context and CSS variables; portal content must resolve density through context.
 - Preserve sharp control corners, framed floating surfaces, semantic palette tokens, and reduced-motion behavior. Avoid hardcoded palette classes and scale/bounce transitions.
 

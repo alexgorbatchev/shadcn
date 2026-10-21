@@ -87,7 +87,7 @@ export default defineConfig({
         plugins: [storybookTest({ configDir: `${process.cwd()}/.storybook` })],
         test: {
           name: "storybook",
-          exclude: ["src/**/__tests__/**", "src/components/stories/{InputGroup,Table}.stories.tsx"],
+          exclude: ["src/**/__tests__/**", "src/components/stories/**/{InputGroup,Table}.stories.tsx"],
           sequence: { groupOrder: 0 },
         },
       },
@@ -99,7 +99,7 @@ export default defineConfig({
           // Native clipboard contents are shared across Chromium test contexts.
           exclude: [
             "src/**/__tests__/**",
-            "src/components/stories/!(InputGroup|Table).stories.tsx",
+            "src/components/stories/**/!(InputGroup|Table).stories.tsx",
             "src/components/stories/assistant-ui/**",
           ],
           fileParallelism: false,
