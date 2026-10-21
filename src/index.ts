@@ -109,6 +109,7 @@ export type {
   IDropTarget,
 } from "./drag-drop/types.js";
 export { EmptyState } from "./components/EmptyState.js";
+export { PageMessage } from "./components/PageMessage.js";
 export { JsonViewer } from "./components/JsonViewer.js";
 export {
   AlertDialog,
