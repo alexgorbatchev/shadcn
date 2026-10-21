@@ -77,6 +77,8 @@ jobs:
           node-version: "24"
           registry-url: https://registry.npmjs.org
           package-manager-cache: false
+      - name: Install the maintained npm client
+        run: npm install --global npm@12.2.0
       - name: Check types
         run: bun run typecheck
       - name: Check lint and formatting
