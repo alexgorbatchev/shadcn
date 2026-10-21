@@ -1,12 +1,12 @@
 ---
 created_on: 2026-10-14 06:35
-last_modified: 2026-10-19 17:25
+last_modified: 2026-10-20 22:28
 status: current
 ---
 
 # npm releases
 
-For maintainers, `.github/workflows/npm-release.yml` publishes `@alexgorbatchev/shadcn` when a tagged GitHub Release is published. Branch pushes, tag pushes alone, draft releases, and manual dispatch do not publish.
+For maintainers, `.github/workflows/npm-release.yml` publishes `@alexgorbatchev/shadcn` when a tagged GitHub Release is published. Manual dispatch can retry an existing published release. Branch pushes, tag pushes alone, and draft releases do not publish.
 
 ## npm setup
 
@@ -34,6 +34,14 @@ Review the dry-run file listing before publishing. This first publication is a s
 3. Create a tag exactly matching `v` plus the package version, such as `v0.0.2`. Publish a GitHub Release for that tag. The tagged commit must contain the workflow and version change.
 4. Mark versions containing a prerelease suffix, such as `0.0.3-beta.1`, as GitHub prereleases. Prereleases publish to npm's `next` tag; stable releases publish to `latest`.
 5. Verify the workflow and the published npm version. Storybook deployment runs independently from npm publication.
+
+For a failed publication, first check whether the version reached npm. If it is absent, retry the existing release without moving its tag:
+
+```sh
+gh workflow run npm-release.yml --ref main -f release_tag=v0.0.14 -F prerelease=false
+```
+
+Use the intended release tag and its actual prerelease flag. Both visual validation and publication check out that tag. The workflow verifies the published GitHub Release and emits npm verbose diagnostics, including token-exchange failures, to distinguish authentication errors from missing packages.
 
 Publication requires the reusable [visual regression workflow](./visual-regression.md) to pass. The publishing job rejects mismatched tags and prerelease versions marked as stable, installs the frozen Bun lockfile, checks types and lint/formatting, and runs package rendering tests in development and production. It runs `npm publish` directly from the repository, letting npm create the package internally. The existing `prepack` hook builds the package; npm selects its contents using `package.json`'s `files` field and automatically includes the README and license. The package manifest is published without custom rewriting, including its Bun patch metadata; the build bundles the patched implementations.
 

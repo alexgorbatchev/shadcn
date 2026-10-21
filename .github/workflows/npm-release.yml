@@ -3,6 +3,16 @@ name: Publish npm package
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Existing published GitHub Release tag to retry
+        required: true
+        type: string
+      prerelease:
+        description: Publish a prerelease to the next npm tag
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -14,6 +24,8 @@ concurrency:
 jobs:
   visual:
     uses: ./.github/workflows/visual-regression.yml
+    with:
+      ref: ${{ inputs.release_tag || github.event.release.tag_name }}
 
   publish:
     needs: visual
@@ -25,16 +37,28 @@ jobs:
       - name: Check out the release commit
         uses: actions/checkout@v6
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ inputs.release_tag || github.event.release.tag_name }}
           persist-credentials: false
       - name: Set up Bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version-file: package.json
+      - name: Verify the published GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.release_tag || github.event.release.tag_name }}
+          RELEASE_PRERELEASE: ${{ inputs.prerelease || github.event.release.prerelease || false }}
+        run: |
+          gh release view "$RELEASE_TAG" --json isDraft,isPrerelease | bun -e '
+            const release = await Bun.stdin.json();
+            if (release.isDraft || String(release.isPrerelease) !== Bun.env.RELEASE_PRERELEASE) {
+              throw new Error("A published release with matching prerelease status is required");
+            }
+          '
       - name: Validate release version
         env:
-          RELEASE_TAG: ${{ github.event.release.tag_name }}
-          RELEASE_PRERELEASE: ${{ github.event.release.prerelease }}
+          RELEASE_TAG: ${{ inputs.release_tag || github.event.release.tag_name }}
+          RELEASE_PRERELEASE: ${{ inputs.prerelease || github.event.release.prerelease || false }}
         run: |
           bun -e '
             const { version } = await Bun.file("package.json").json();
@@ -61,5 +85,5 @@ jobs:
         run: bun run test:package
       - name: Publish package with trusted publishing
         env:
-          NPM_DIST_TAG: ${{ github.event.release.prerelease && 'next' || 'latest' }}
-        run: npm publish --access public --tag "$NPM_DIST_TAG" --provenance
+          NPM_DIST_TAG: ${{ (inputs.prerelease || github.event.release.prerelease) && 'next' || 'latest' }}
+        run: npm publish --access public --tag "$NPM_DIST_TAG" --provenance --loglevel verbose
