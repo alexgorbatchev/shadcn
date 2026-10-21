@@ -60,3 +60,48 @@ export const Persistent: Story = {
     );
   },
 };
+
+export const ExternalStorage: Story = {
+  render: function Example(args) {
+    const [values] = useState(() => new Map<string, string>());
+    const [isSaved, setSaved] = useState(false);
+    const [storage] = useState(() => ({
+      getItem: (key: string) => values.get(key) ?? null,
+      setItem: (key: string, value: string) => {
+        values.set(key, value);
+        setSaved(true);
+      },
+    }));
+    const [isVisible, setVisible] = useState(true);
+    return (
+      <div className="flex w-[900px] flex-col gap-4">
+        <Button onClick={() => setVisible(!isVisible)}>{isVisible ? "Hide panels" : "Show panels"}</Button>
+        {isVisible && (
+          <SplitView {...args} storageKey="external-layout" storage={storage} sidebar={<h2>Navigation</h2>}>
+            <h2>Content</h2>
+          </SplitView>
+        )}
+        <Button onClick={() => setVisible(values.has("react-resizable-panels:external-layout"))}>
+          Restore saved panels
+        </Button>
+        <p role="status">{isSaved ? "Layout saved" : "No saved layout"}</p>
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const handle = canvas.getByRole("separator", { name: "Resize navigation" });
+    const before = handle.getAttribute("aria-valuenow");
+    handle.focus();
+    await userEvent.keyboard("{ArrowRight}");
+    await waitFor(() => expect(handle.getAttribute("aria-valuenow")).not.toBe(before));
+    const changed = handle.getAttribute("aria-valuenow");
+    await waitFor(() => expect(canvas.getByRole("status")).toHaveTextContent("Layout saved"));
+    await userEvent.click(canvas.getByRole("button", { name: "Hide panels" }));
+    await userEvent.click(canvas.getByRole("button", { name: "Restore saved panels" }));
+    await waitFor(() =>
+      expect(canvas.getByRole("separator", { name: "Resize navigation" })).toHaveAttribute("aria-valuenow", changed),
+    );
+    await expect(localStorage.getItem("react-resizable-panels:external-layout")).toBeNull();
+  },
+};

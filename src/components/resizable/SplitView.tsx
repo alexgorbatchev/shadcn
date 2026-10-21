@@ -8,6 +8,7 @@ interface ISplitViewProps {
   sidebar: ReactNode;
   children: ReactNode;
   storageKey: string;
+  storage?: LayoutStorage;
   sidebarLabel: string;
   contentLabel: string;
   resizeLabel: string;
@@ -43,13 +44,14 @@ export function SplitView({
   sidebar,
   children,
   storageKey,
+  storage = layoutStorage,
   sidebarLabel,
   contentLabel,
   resizeLabel,
   defaultSidebarSize = 325,
 }: ISplitViewProps): ReactElement {
   const isWide = useMediaQuery("(min-width: 1024px)");
-  const layout = useDefaultLayout({ id: storageKey, storage: layoutStorage, onlySaveAfterUserInteractions: true });
+  const layout = useDefaultLayout({ id: storageKey, storage, onlySaveAfterUserInteractions: true });
   if (!isWide)
     return (
       <div className="flex min-w-0 flex-col bg-card">

@@ -2,6 +2,8 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, waitFor, within } from "storybook/test";
 import { ThemeProvider } from "../ThemeProvider";
 import { ThemeControlsExample } from "./helpers";
+import { useState } from "react";
+import type { ThemeMode } from "../../theme/types";
 
 const meta: Meta<typeof ThemeProvider> = {
   title: "shadcn-alexgorbatchev/components/ThemeProvider",
@@ -72,5 +74,28 @@ export const ForcedLight: Story = {
     await expect(root.style.colorScheme).toBe("light");
     await expect(localStorage.getItem("shadcn-alexgorbatchev-preview")).toBe(JSON.stringify("dark"));
     await userEvent.click(canvas.getByRole("button", { name: "System" }));
+  },
+};
+
+export const Controlled: Story = {
+  render: function Example() {
+    const [theme, setTheme] = useState<ThemeMode>("dark");
+    return (
+      <ThemeProvider controlledTheme={{ theme, setTheme }} storageKey="controlled-theme">
+        <ThemeControlsExample />
+      </ThemeProvider>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("status")).toHaveTextContent("Preference: dark. Resolved palette: dark.");
+    await userEvent.click(canvas.getByRole("button", { name: "Light" }));
+    await expect(canvas.getByRole("status")).toHaveTextContent("Preference: light. Resolved palette: light.");
+    await expect(canvasElement.ownerDocument.documentElement).toHaveAttribute("data-theme", "light");
+    await expect(localStorage.getItem("controlled-theme")).toBeNull();
+    await userEvent.click(canvas.getByRole("button", { name: "System" }));
+    await expect(canvas.getByRole("status")).toHaveTextContent(
+      "Preference: system. Resolved palette: " + canvasElement.ownerDocument.documentElement.dataset.theme + ".",
+    );
   },
 };
