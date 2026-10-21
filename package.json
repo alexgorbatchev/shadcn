@@ -1,6 +1,6 @@
 {
   "name": "@alexgorbatchev/shadcn",
-  "version": "0.0.16",
+  "version": "0.0.17",
   "description": "Sharp, monospace React components with compact and comfortable densities.",
   "license": "MIT",
   "repository": {
@@ -988,6 +988,10 @@
     "./assistant-ui/native/task-tray": {
       "types": "./dist/components/assistant-ui/native/TaskTray.d.ts",
       "import": "./dist/components/assistant-ui/native/TaskTray.js"
+    },
+    "./virtual-table": {
+      "types": "./dist/components/virtual-table/index.d.ts",
+      "import": "./dist/components/virtual-table/index.js"
     }
   },
   "publishConfig": {
@@ -1105,6 +1109,7 @@
     "@daypicker/persian": "^10.0.2",
     "@daypicker/react": "^10.0.2",
     "@fontsource-variable/jetbrains-mono": "^5.3.0",
+    "@tanstack/react-virtual": "^3.14.13",
     "anser": "2.3.5",
     "beautiful-mermaid": "^1.1.3",
     "cmdk": "^1.1.1",
@@ -1217,6 +1222,9 @@
       "optional": true
     },
     "colorjs.io": {
+      "optional": true
+    },
+    "@tanstack/react-virtual": {
       "optional": true
     }
   },

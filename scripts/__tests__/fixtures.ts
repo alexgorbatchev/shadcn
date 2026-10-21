@@ -199,6 +199,7 @@ export const fixture_featureTypeExports: Record<string, string> = {
   sonner: "Sonner, toast, useSonner",
   "input-otp": "InputOTP, InputOTPSlot",
   "message-scroller": "MessageScroller, useMessageScroller, type MessageScrollerScrollOptions",
+  "virtual-table": "VirtualTable, type IVirtualTableRowProps",
   questionnaire: "Questionnaire, type QuestionnaireItemDefinition",
   fonts: "Button",
 };
@@ -210,6 +211,20 @@ export const fixture_featureTypePaths: Record<string, string> = {
 };
 
 export const fixture_featureConsumers: ReadonlyArray<readonly [string, readonly string[], string, string]> = [
+  [
+    "virtual-table",
+    ["@tanstack/react-virtual"],
+    `
+    import { renderToString } from "react-dom/server";
+    import { VirtualTable } from "@alexgorbatchev/shadcn/virtual-table";
+    import { TableHead, TableRow, TableCell } from "@alexgorbatchev/shadcn";
+    const markup = renderToString(<VirtualTable items={["One"]} getItemKey={String} label="Items" columnCount={1}
+      header={<TableRow><TableHead>Name</TableHead></TableRow>}
+      renderRow={(item, props) => <TableRow {...props}><TableCell>{item}</TableCell></TableRow>} />);
+    console.log(markup.includes('aria-rowcount="2"') && markup.includes('role="region"'));
+    `,
+    "true",
+  ],
   [
     "assistant-ui",
     [],

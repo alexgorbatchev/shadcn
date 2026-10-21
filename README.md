@@ -52,6 +52,7 @@ Import shared controls and providers from `@alexgorbatchev/shadcn`. Import the f
 | `/fonts.css`        | JetBrains Mono font stylesheet                          | `bun add @fontsource-variable/jetbrains-mono@^5.3.0`          |
 | `/sonner`           | Sonner, SonnerToaster, Toaster, toast, useSonner        | No additional install; patched implementation is bundled      |
 | `/input-otp`        | InputOTP components                                     | No additional install; patched implementation is bundled      |
+| `/virtual-table`    | VirtualTable and row measurement props                  | `@tanstack/react-virtual@3.14.13`                             |
 | `/message-scroller` | MessageScroller components, hooks, and types            | No additional install; patched implementation is bundled      |
 | `/questionnaire`    | Questionnaire components and types                      | No additional install; patched implementation is bundled      |
 
@@ -267,6 +268,8 @@ Compose `QuestionnaireItem`, `QuestionnaireTitle`, and answer controls inside `Q
 # Inline editing and ratings
 
 `InlineEdit` mounts an edit session with a controlled `value`, `onValueChange`, `onCommit`, and `onCancel`. Mount it in place of the displayed label. Its input focuses and selects its text by default; `shouldSelectOnMount={false}` preserves the initial caret. Enter or blur commits once, Escape cancels without committing, and asynchronous saves disable the input until completion. Rejected saves display an error and allow retry.
+
+`VirtualTable` renders a bounded, dynamically measured set of native table rows using TanStack Virtual. Supply `items`, stable `getItemKey`, `header`, `columnCount`, `label`, and `renderRow`; spread the supplied measurement props onto each native row. Optional `columns` accepts a colgroup. `maxHeight` defaults to `65vh`, `estimateRowHeight` to 80 pixels, and `overscan` to five rows. `retainedKeys` keeps editing rows mounted; the focused row is retained automatically. Filtering and selection belong to the consumer.
 
 `StarRating` takes a controlled numeric `value` from 0 to 5, `onValueChange`, and an accessible `label`. Its native radio buttons support keyboard selection and an Unrated option to clear the rating. Set `disabled` while saving. `Avatar shape="square"` displays square artwork with matching image, fallback, and border corners.
 
