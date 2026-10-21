@@ -1,6 +1,6 @@
 {
   "name": "@alexgorbatchev/shadcn",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "Sharp, monospace React components with compact and comfortable densities.",
   "license": "MIT",
   "repository": {
@@ -11,7 +11,8 @@
     "dist",
     "patches",
     "LICENSE",
-    "THIRD_PARTY_NOTICES.md"
+    "THIRD_PARTY_NOTICES.md",
+    "assistant-ui-catalog.json"
   ],
   "type": "module",
   "sideEffects": [
@@ -64,6 +65,929 @@
     "./questionnaire": {
       "types": "./dist/components/questionnaire/index.d.ts",
       "import": "./dist/components/questionnaire/index.js"
+    },
+    "./assistant-ui": {
+      "types": "./dist/components/assistant-ui/index.d.ts",
+      "import": "./dist/components/assistant-ui/index.js"
+    },
+    "./assistant-ui/native": {
+      "types": "./dist/components/assistant-ui/native/index.d.ts",
+      "import": "./dist/components/assistant-ui/native/index.js"
+    },
+    "./assistant-ui.css": "./dist/assistant-ui.css",
+    "./assistant-ui/inline-citation": {
+      "types": "./dist/components/assistant-ui/elements/InlineCitation.d.ts",
+      "import": "./dist/components/assistant-ui/elements/InlineCitation.js"
+    },
+    "./assistant-ui/composer-voice": {
+      "types": "./dist/components/assistant-ui/elements/ComposerVoice.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ComposerVoice.js"
+    },
+    "./assistant-ui/approval-card": {
+      "types": "./dist/components/assistant-ui/elements/ApprovalCard.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ApprovalCard.js"
+    },
+    "./assistant-ui/voice-conversation": {
+      "types": "./dist/components/assistant-ui/elements/VoiceConversation.d.ts",
+      "import": "./dist/components/assistant-ui/elements/VoiceConversation.js"
+    },
+    "./assistant-ui/run-activity": {
+      "types": "./dist/components/assistant-ui/elements/RunActivity.d.ts",
+      "import": "./dist/components/assistant-ui/elements/RunActivity.js"
+    },
+    "./assistant-ui/eve-ask-question": {
+      "types": "./dist/components/assistant-ui/elements/EveAskQuestion.d.ts",
+      "import": "./dist/components/assistant-ui/elements/EveAskQuestion.js"
+    },
+    "./assistant-ui/file-tree": {
+      "types": "./dist/components/assistant-ui/elements/FileTree.d.ts",
+      "import": "./dist/components/assistant-ui/elements/FileTree.js"
+    },
+    "./assistant-ui/confidence-marker": {
+      "types": "./dist/components/assistant-ui/elements/ConfidenceMarker.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ConfidenceMarker.js"
+    },
+    "./assistant-ui/artifact-card": {
+      "types": "./dist/components/assistant-ui/elements/ArtifactCard.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ArtifactCard.js"
+    },
+    "./assistant-ui/frac": {
+      "types": "./dist/components/assistant-ui/elements/Frac.d.ts",
+      "import": "./dist/components/assistant-ui/elements/Frac.js"
+    },
+    "./assistant-ui/permission-grant": {
+      "types": "./dist/components/assistant-ui/elements/PermissionGrant.d.ts",
+      "import": "./dist/components/assistant-ui/elements/PermissionGrant.js"
+    },
+    "./assistant-ui/option-text": {
+      "types": "./dist/components/assistant-ui/elements/OptionText.d.ts",
+      "import": "./dist/components/assistant-ui/elements/OptionText.js"
+    },
+    "./assistant-ui/model-selector-item": {
+      "types": "./dist/components/assistant-ui/elements/ModelSelectorItem.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ModelSelectorItem.js"
+    },
+    "./assistant-ui/math-block": {
+      "types": "./dist/components/assistant-ui/elements/MathBlock.d.ts",
+      "import": "./dist/components/assistant-ui/elements/MathBlock.js"
+    },
+    "./assistant-ui/schedule-card": {
+      "types": "./dist/components/assistant-ui/elements/ScheduleCard.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ScheduleCard.js"
+    },
+    "./assistant-ui/model-selector-value": {
+      "types": "./dist/components/assistant-ui/elements/ModelSelectorValue.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ModelSelectorValue.js"
+    },
+    "./assistant-ui/subagent-list": {
+      "types": "./dist/components/assistant-ui/elements/SubagentList.d.ts",
+      "import": "./dist/components/assistant-ui/elements/SubagentList.js"
+    },
+    "./assistant-ui/mcp-server-panel": {
+      "types": "./dist/components/assistant-ui/elements/McpServerPanel.d.ts",
+      "import": "./dist/components/assistant-ui/elements/McpServerPanel.js"
+    },
+    "./assistant-ui/reviewable-diff": {
+      "types": "./dist/components/assistant-ui/elements/ReviewableDiff.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ReviewableDiff.js"
+    },
+    "./assistant-ui/retrieval-chunks": {
+      "types": "./dist/components/assistant-ui/elements/RetrievalChunks.d.ts",
+      "import": "./dist/components/assistant-ui/elements/RetrievalChunks.js"
+    },
+    "./assistant-ui/image-generation": {
+      "types": "./dist/components/assistant-ui/elements/ImageGeneration.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ImageGeneration.js"
+    },
+    "./assistant-ui/claude-logo": {
+      "types": "./dist/components/assistant-ui/elements/ClaudeLogo.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ClaudeLogo.js"
+    },
+    "./assistant-ui/context-display": {
+      "types": "./dist/components/assistant-ui/elements/ContextDisplay.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ContextDisplay.js"
+    },
+    "./assistant-ui/composer-model-trigger": {
+      "types": "./dist/components/assistant-ui/elements/ComposerModelTrigger.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ComposerModelTrigger.js"
+    },
+    "./assistant-ui/video-player": {
+      "types": "./dist/components/assistant-ui/elements/VideoPlayer.d.ts",
+      "import": "./dist/components/assistant-ui/elements/VideoPlayer.js"
+    },
+    "./assistant-ui/agent-status": {
+      "types": "./dist/components/assistant-ui/elements/AgentStatus.d.ts",
+      "import": "./dist/components/assistant-ui/elements/AgentStatus.js"
+    },
+    "./assistant-ui/model-selector-search": {
+      "types": "./dist/components/assistant-ui/elements/ModelSelectorSearch.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ModelSelectorSearch.js"
+    },
+    "./assistant-ui/typing-indicator": {
+      "types": "./dist/components/assistant-ui/elements/TypingIndicator.d.ts",
+      "import": "./dist/components/assistant-ui/elements/TypingIndicator.js"
+    },
+    "./assistant-ui/question-flow": {
+      "types": "./dist/components/assistant-ui/elements/QuestionFlow.d.ts",
+      "import": "./dist/components/assistant-ui/elements/QuestionFlow.js"
+    },
+    "./assistant-ui/composer-command-item": {
+      "types": "./dist/components/assistant-ui/elements/ComposerCommandItem.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ComposerCommandItem.js"
+    },
+    "./assistant-ui/composer-person-item": {
+      "types": "./dist/components/assistant-ui/elements/ComposerPersonItem.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ComposerPersonItem.js"
+    },
+    "./assistant-ui/composer-attachment-chip": {
+      "types": "./dist/components/assistant-ui/elements/ComposerAttachmentChip.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ComposerAttachmentChip.js"
+    },
+    "./assistant-ui/composer-toolbar": {
+      "types": "./dist/components/assistant-ui/elements/ComposerToolbar.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ComposerToolbar.js"
+    },
+    "./assistant-ui/context-breakdown": {
+      "types": "./dist/components/assistant-ui/elements/ContextBreakdown.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ContextBreakdown.js"
+    },
+    "./assistant-ui/composer-actions": {
+      "types": "./dist/components/assistant-ui/elements/ComposerActions.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ComposerActions.js"
+    },
+    "./assistant-ui/agent-plan": {
+      "types": "./dist/components/assistant-ui/elements/AgentPlan.d.ts",
+      "import": "./dist/components/assistant-ui/elements/AgentPlan.js"
+    },
+    "./assistant-ui/prompt-library": {
+      "types": "./dist/components/assistant-ui/elements/PromptLibrary.d.ts",
+      "import": "./dist/components/assistant-ui/elements/PromptLibrary.js"
+    },
+    "./assistant-ui/thread-search": {
+      "types": "./dist/components/assistant-ui/elements/ThreadSearch.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ThreadSearch.js"
+    },
+    "./assistant-ui/composer": {
+      "types": "./dist/components/assistant-ui/elements/Composer.d.ts",
+      "import": "./dist/components/assistant-ui/elements/Composer.js"
+    },
+    "./assistant-ui/model-selector-content": {
+      "types": "./dist/components/assistant-ui/elements/ModelSelectorContent.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ModelSelectorContent.js"
+    },
+    "./assistant-ui/composer-attach-button": {
+      "types": "./dist/components/assistant-ui/elements/ComposerAttachButton.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ComposerAttachButton.js"
+    },
+    "./assistant-ui/syntax-highlighter": {
+      "types": "./dist/components/assistant-ui/elements/SyntaxHighlighter.d.ts",
+      "import": "./dist/components/assistant-ui/elements/SyntaxHighlighter.js"
+    },
+    "./assistant-ui/todo-list": {
+      "types": "./dist/components/assistant-ui/elements/TodoList.d.ts",
+      "import": "./dist/components/assistant-ui/elements/TodoList.js"
+    },
+    "./assistant-ui/memory-chips": {
+      "types": "./dist/components/assistant-ui/elements/MemoryChips.d.ts",
+      "import": "./dist/components/assistant-ui/elements/MemoryChips.js"
+    },
+    "./assistant-ui/composer-context": {
+      "types": "./dist/components/assistant-ui/elements/ComposerContext.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ComposerContext.js"
+    },
+    "./assistant-ui/message-branches": {
+      "types": "./dist/components/assistant-ui/elements/MessageBranches.d.ts",
+      "import": "./dist/components/assistant-ui/elements/MessageBranches.js"
+    },
+    "./assistant-ui/model-selector-separator": {
+      "types": "./dist/components/assistant-ui/elements/ModelSelectorSeparator.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ModelSelectorSeparator.js"
+    },
+    "./assistant-ui/sources": {
+      "types": "./dist/components/assistant-ui/elements/Sources.d.ts",
+      "import": "./dist/components/assistant-ui/elements/Sources.js"
+    },
+    "./assistant-ui/error-state": {
+      "types": "./dist/components/assistant-ui/elements/ErrorState.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ErrorState.js"
+    },
+    "./assistant-ui/audio-player": {
+      "types": "./dist/components/assistant-ui/elements/AudioPlayer.d.ts",
+      "import": "./dist/components/assistant-ui/elements/AudioPlayer.js"
+    },
+    "./assistant-ui/background-inbox": {
+      "types": "./dist/components/assistant-ui/elements/BackgroundInbox.d.ts",
+      "import": "./dist/components/assistant-ui/elements/BackgroundInbox.js"
+    },
+    "./assistant-ui/tool-call": {
+      "types": "./dist/components/assistant-ui/elements/ToolCall.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ToolCall.js"
+    },
+    "./assistant-ui/document-reference": {
+      "types": "./dist/components/assistant-ui/elements/DocumentReference.d.ts",
+      "import": "./dist/components/assistant-ui/elements/DocumentReference.js"
+    },
+    "./assistant-ui/command-palette": {
+      "types": "./dist/components/assistant-ui/elements/CommandPalette.d.ts",
+      "import": "./dist/components/assistant-ui/elements/CommandPalette.js"
+    },
+    "./assistant-ui/open-ai-logo": {
+      "types": "./dist/components/assistant-ui/elements/OpenAILogo.d.ts",
+      "import": "./dist/components/assistant-ui/elements/OpenAILogo.js"
+    },
+    "./assistant-ui/web-search": {
+      "types": "./dist/components/assistant-ui/elements/WebSearch.d.ts",
+      "import": "./dist/components/assistant-ui/elements/WebSearch.js"
+    },
+    "./assistant-ui/message-timing": {
+      "types": "./dist/components/assistant-ui/elements/MessageTiming.d.ts",
+      "import": "./dist/components/assistant-ui/elements/MessageTiming.js"
+    },
+    "./assistant-ui/reasoning-root": {
+      "types": "./dist/components/assistant-ui/elements/ReasoningRoot.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ReasoningRoot.js"
+    },
+    "./assistant-ui/cost-meter": {
+      "types": "./dist/components/assistant-ui/elements/CostMeter.d.ts",
+      "import": "./dist/components/assistant-ui/elements/CostMeter.js"
+    },
+    "./assistant-ui/model-selector-group": {
+      "types": "./dist/components/assistant-ui/elements/ModelSelectorGroup.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ModelSelectorGroup.js"
+    },
+    "./assistant-ui/chart": {
+      "types": "./dist/components/assistant-ui/elements/Chart.d.ts",
+      "import": "./dist/components/assistant-ui/elements/Chart.js"
+    },
+    "./assistant-ui/context-display-content": {
+      "types": "./dist/components/assistant-ui/elements/ContextDisplayContent.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ContextDisplayContent.js"
+    },
+    "./assistant-ui/tool-error": {
+      "types": "./dist/components/assistant-ui/elements/ToolError.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ToolError.js"
+    },
+    "./assistant-ui/message-queue": {
+      "types": "./dist/components/assistant-ui/elements/MessageQueue.d.ts",
+      "import": "./dist/components/assistant-ui/elements/MessageQueue.js"
+    },
+    "./assistant-ui/model-selector-focus-anchor": {
+      "types": "./dist/components/assistant-ui/elements/ModelSelectorFocusAnchor.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ModelSelectorFocusAnchor.js"
+    },
+    "./assistant-ui/reasoning-effort": {
+      "types": "./dist/components/assistant-ui/elements/ReasoningEffort.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ReasoningEffort.js"
+    },
+    "./assistant-ui/dot-matrix": {
+      "types": "./dist/components/assistant-ui/elements/DotMatrix.d.ts",
+      "import": "./dist/components/assistant-ui/elements/DotMatrix.js"
+    },
+    "./assistant-ui/generation-loader": {
+      "types": "./dist/components/assistant-ui/elements/GenerationLoader.d.ts",
+      "import": "./dist/components/assistant-ui/elements/GenerationLoader.js"
+    },
+    "./assistant-ui/model-selector-effort": {
+      "types": "./dist/components/assistant-ui/elements/ModelSelectorEffort.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ModelSelectorEffort.js"
+    },
+    "./assistant-ui/generative-ui": {
+      "types": "./dist/components/assistant-ui/elements/GenerativeUi.d.ts",
+      "import": "./dist/components/assistant-ui/elements/GenerativeUi.js"
+    },
+    "./assistant-ui/model-selector-empty": {
+      "types": "./dist/components/assistant-ui/elements/ModelSelectorEmpty.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ModelSelectorEmpty.js"
+    },
+    "./assistant-ui/number-roll": {
+      "types": "./dist/components/assistant-ui/elements/NumberRoll.d.ts",
+      "import": "./dist/components/assistant-ui/elements/NumberRoll.js"
+    },
+    "./assistant-ui/elicitation-form": {
+      "types": "./dist/components/assistant-ui/elements/ElicitationForm.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ElicitationForm.js"
+    },
+    "./assistant-ui/thinking-indicator": {
+      "types": "./dist/components/assistant-ui/elements/ThinkingIndicator.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ThinkingIndicator.js"
+    },
+    "./assistant-ui/scroll-anchor": {
+      "types": "./dist/components/assistant-ui/elements/ScrollAnchor.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ScrollAnchor.js"
+    },
+    "./assistant-ui/directive-text": {
+      "types": "./dist/components/assistant-ui/elements/DirectiveText.d.ts",
+      "import": "./dist/components/assistant-ui/elements/DirectiveText.js"
+    },
+    "./assistant-ui/activity-graph": {
+      "types": "./dist/components/assistant-ui/elements/ActivityGraph.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ActivityGraph.js"
+    },
+    "./assistant-ui/code-diff": {
+      "types": "./dist/components/assistant-ui/elements/CodeDiff.d.ts",
+      "import": "./dist/components/assistant-ui/elements/CodeDiff.js"
+    },
+    "./assistant-ui/conversation-search": {
+      "types": "./dist/components/assistant-ui/elements/ConversationSearch.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ConversationSearch.js"
+    },
+    "./assistant-ui/context-display-text": {
+      "types": "./dist/components/assistant-ui/elements/ContextDisplayText.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ContextDisplayText.js"
+    },
+    "./assistant-ui/context-display-ring": {
+      "types": "./dist/components/assistant-ui/elements/ContextDisplayRing.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ContextDisplayRing.js"
+    },
+    "./assistant-ui/thread-list": {
+      "types": "./dist/components/assistant-ui/elements/ThreadList.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ThreadList.js"
+    },
+    "./assistant-ui/map-answer": {
+      "types": "./dist/components/assistant-ui/elements/MapAnswer.d.ts",
+      "import": "./dist/components/assistant-ui/elements/MapAnswer.js"
+    },
+    "./assistant-ui/code-runner": {
+      "types": "./dist/components/assistant-ui/elements/CodeRunner.d.ts",
+      "import": "./dist/components/assistant-ui/elements/CodeRunner.js"
+    },
+    "./assistant-ui/file": {
+      "types": "./dist/components/assistant-ui/elements/File.d.ts",
+      "import": "./dist/components/assistant-ui/elements/File.js"
+    },
+    "./assistant-ui/model-selector": {
+      "types": "./dist/components/assistant-ui/elements/ModelSelector.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ModelSelector.js"
+    },
+    "./assistant-ui/message-attachments": {
+      "types": "./dist/components/assistant-ui/elements/MessageAttachments.d.ts",
+      "import": "./dist/components/assistant-ui/elements/MessageAttachments.js"
+    },
+    "./assistant-ui/citation": {
+      "types": "./dist/components/assistant-ui/elements/Citation.d.ts",
+      "import": "./dist/components/assistant-ui/elements/Citation.js"
+    },
+    "./assistant-ui/message-actions": {
+      "types": "./dist/components/assistant-ui/elements/MessageActions.d.ts",
+      "import": "./dist/components/assistant-ui/elements/MessageActions.js"
+    },
+    "./assistant-ui/quote-reply": {
+      "types": "./dist/components/assistant-ui/elements/QuoteReply.d.ts",
+      "import": "./dist/components/assistant-ui/elements/QuoteReply.js"
+    },
+    "./assistant-ui/read-aloud": {
+      "types": "./dist/components/assistant-ui/elements/ReadAloud.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ReadAloud.js"
+    },
+    "./assistant-ui/computer-use": {
+      "types": "./dist/components/assistant-ui/elements/ComputerUse.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ComputerUse.js"
+    },
+    "./assistant-ui/day-separator": {
+      "types": "./dist/components/assistant-ui/elements/DaySeparator.d.ts",
+      "import": "./dist/components/assistant-ui/elements/DaySeparator.js"
+    },
+    "./assistant-ui/reasoning-text": {
+      "types": "./dist/components/assistant-ui/elements/ReasoningText.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ReasoningText.js"
+    },
+    "./assistant-ui/heat-graph": {
+      "types": "./dist/components/assistant-ui/elements/HeatGraph.d.ts",
+      "import": "./dist/components/assistant-ui/elements/HeatGraph.js"
+    },
+    "./assistant-ui/mobile-composer": {
+      "types": "./dist/components/assistant-ui/elements/MobileComposer.d.ts",
+      "import": "./dist/components/assistant-ui/elements/MobileComposer.js"
+    },
+    "./assistant-ui/streaming-text": {
+      "types": "./dist/components/assistant-ui/elements/StreamingText.d.ts",
+      "import": "./dist/components/assistant-ui/elements/StreamingText.js"
+    },
+    "./assistant-ui/sup": {
+      "types": "./dist/components/assistant-ui/elements/Sup.d.ts",
+      "import": "./dist/components/assistant-ui/elements/Sup.js"
+    },
+    "./assistant-ui/guardrail-notice": {
+      "types": "./dist/components/assistant-ui/elements/GuardrailNotice.d.ts",
+      "import": "./dist/components/assistant-ui/elements/GuardrailNotice.js"
+    },
+    "./assistant-ui/reasoning-content": {
+      "types": "./dist/components/assistant-ui/elements/ReasoningContent.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ReasoningContent.js"
+    },
+    "./assistant-ui/context-display-root": {
+      "types": "./dist/components/assistant-ui/elements/ContextDisplayRoot.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ContextDisplayRoot.js"
+    },
+    "./assistant-ui/source-glyph": {
+      "types": "./dist/components/assistant-ui/elements/SourceGlyph.d.ts",
+      "import": "./dist/components/assistant-ui/elements/SourceGlyph.js"
+    },
+    "./assistant-ui/empty-state-composer": {
+      "types": "./dist/components/assistant-ui/elements/EmptyStateComposer.d.ts",
+      "import": "./dist/components/assistant-ui/elements/EmptyStateComposer.js"
+    },
+    "./assistant-ui/image": {
+      "types": "./dist/components/assistant-ui/elements/Image.d.ts",
+      "import": "./dist/components/assistant-ui/elements/Image.js"
+    },
+    "./assistant-ui/feedback-dialog": {
+      "types": "./dist/components/assistant-ui/elements/FeedbackDialog.d.ts",
+      "import": "./dist/components/assistant-ui/elements/FeedbackDialog.js"
+    },
+    "./assistant-ui/context-display-value": {
+      "types": "./dist/components/assistant-ui/elements/ContextDisplayValue.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ContextDisplayValue.js"
+    },
+    "./assistant-ui/shared-conversation": {
+      "types": "./dist/components/assistant-ui/elements/SharedConversation.d.ts",
+      "import": "./dist/components/assistant-ui/elements/SharedConversation.js"
+    },
+    "./assistant-ui/number-ticker": {
+      "types": "./dist/components/assistant-ui/elements/NumberTicker.d.ts",
+      "import": "./dist/components/assistant-ui/elements/NumberTicker.js"
+    },
+    "./assistant-ui/gemini-logo": {
+      "types": "./dist/components/assistant-ui/elements/GeminiLogo.d.ts",
+      "import": "./dist/components/assistant-ui/elements/GeminiLogo.js"
+    },
+    "./assistant-ui/reasoning-fade": {
+      "types": "./dist/components/assistant-ui/elements/ReasoningFade.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ReasoningFade.js"
+    },
+    "./assistant-ui/job-progress": {
+      "types": "./dist/components/assistant-ui/elements/JobProgress.d.ts",
+      "import": "./dist/components/assistant-ui/elements/JobProgress.js"
+    },
+    "./assistant-ui/stopped-run": {
+      "types": "./dist/components/assistant-ui/elements/StoppedRun.d.ts",
+      "import": "./dist/components/assistant-ui/elements/StoppedRun.js"
+    },
+    "./assistant-ui/conversation-map": {
+      "types": "./dist/components/assistant-ui/elements/ConversationMap.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ConversationMap.js"
+    },
+    "./assistant-ui/geo-map": {
+      "types": "./dist/components/assistant-ui/elements/GeoMap.d.ts",
+      "import": "./dist/components/assistant-ui/elements/GeoMap.js"
+    },
+    "./assistant-ui/empty-state-suggestion": {
+      "types": "./dist/components/assistant-ui/elements/EmptyStateSuggestion.d.ts",
+      "import": "./dist/components/assistant-ui/elements/EmptyStateSuggestion.js"
+    },
+    "./assistant-ui/link-preview": {
+      "types": "./dist/components/assistant-ui/elements/LinkPreview.d.ts",
+      "import": "./dist/components/assistant-ui/elements/LinkPreview.js"
+    },
+    "./assistant-ui/option-list": {
+      "types": "./dist/components/assistant-ui/elements/OptionList.d.ts",
+      "import": "./dist/components/assistant-ui/elements/OptionList.js"
+    },
+    "./assistant-ui/agent-handoff": {
+      "types": "./dist/components/assistant-ui/elements/AgentHandoff.d.ts",
+      "import": "./dist/components/assistant-ui/elements/AgentHandoff.js"
+    },
+    "./assistant-ui/markdown-text": {
+      "types": "./dist/components/assistant-ui/elements/MarkdownText.d.ts",
+      "import": "./dist/components/assistant-ui/elements/MarkdownText.js"
+    },
+    "./assistant-ui/suggestions": {
+      "types": "./dist/components/assistant-ui/elements/Suggestions.d.ts",
+      "import": "./dist/components/assistant-ui/elements/Suggestions.js"
+    },
+    "./assistant-ui/tooltip-icon-button": {
+      "types": "./dist/components/assistant-ui/elements/TooltipIconButton.d.ts",
+      "import": "./dist/components/assistant-ui/elements/TooltipIconButton.js"
+    },
+    "./assistant-ui/speaker-identity": {
+      "types": "./dist/components/assistant-ui/elements/SpeakerIdentity.d.ts",
+      "import": "./dist/components/assistant-ui/elements/SpeakerIdentity.js"
+    },
+    "./assistant-ui/trace-waterfall": {
+      "types": "./dist/components/assistant-ui/elements/TraceWaterfall.d.ts",
+      "import": "./dist/components/assistant-ui/elements/TraceWaterfall.js"
+    },
+    "./assistant-ui/comparison-card": {
+      "types": "./dist/components/assistant-ui/elements/ComparisonCard.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ComparisonCard.js"
+    },
+    "./assistant-ui/composer-menu-item": {
+      "types": "./dist/components/assistant-ui/elements/ComposerMenuItem.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ComposerMenuItem.js"
+    },
+    "./assistant-ui/composer-bar": {
+      "types": "./dist/components/assistant-ui/elements/ComposerBar.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ComposerBar.js"
+    },
+    "./assistant-ui/tool-timeline": {
+      "types": "./dist/components/assistant-ui/elements/ToolTimeline.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ToolTimeline.js"
+    },
+    "./assistant-ui/diagram": {
+      "types": "./dist/components/assistant-ui/elements/Diagram.d.ts",
+      "import": "./dist/components/assistant-ui/elements/Diagram.js"
+    },
+    "./assistant-ui/edit-message": {
+      "types": "./dist/components/assistant-ui/elements/EditMessage.d.ts",
+      "import": "./dist/components/assistant-ui/elements/EditMessage.js"
+    },
+    "./assistant-ui/voice-orb": {
+      "types": "./dist/components/assistant-ui/elements/VoiceOrb.d.ts",
+      "import": "./dist/components/assistant-ui/elements/VoiceOrb.js"
+    },
+    "./assistant-ui/score-breakdown": {
+      "types": "./dist/components/assistant-ui/elements/ScoreBreakdown.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ScoreBreakdown.js"
+    },
+    "./assistant-ui/flow-graph": {
+      "types": "./dist/components/assistant-ui/elements/FlowGraph.d.ts",
+      "import": "./dist/components/assistant-ui/elements/FlowGraph.js"
+    },
+    "./assistant-ui/empty-state-suggestions": {
+      "types": "./dist/components/assistant-ui/elements/EmptyStateSuggestions.d.ts",
+      "import": "./dist/components/assistant-ui/elements/EmptyStateSuggestions.js"
+    },
+    "./assistant-ui/agent-card": {
+      "types": "./dist/components/assistant-ui/elements/AgentCard.d.ts",
+      "import": "./dist/components/assistant-ui/elements/AgentCard.js"
+    },
+    "./assistant-ui/data-table": {
+      "types": "./dist/components/assistant-ui/elements/DataTable.d.ts",
+      "import": "./dist/components/assistant-ui/elements/DataTable.js"
+    },
+    "./assistant-ui/research-report": {
+      "types": "./dist/components/assistant-ui/elements/ResearchReport.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ResearchReport.js"
+    },
+    "./assistant-ui/model-selector-list": {
+      "types": "./dist/components/assistant-ui/elements/ModelSelectorList.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ModelSelectorList.js"
+    },
+    "./assistant-ui/swap-label": {
+      "types": "./dist/components/assistant-ui/elements/SwapLabel.d.ts",
+      "import": "./dist/components/assistant-ui/elements/SwapLabel.js"
+    },
+    "./assistant-ui/image-gallery": {
+      "types": "./dist/components/assistant-ui/elements/ImageGallery.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ImageGallery.js"
+    },
+    "./assistant-ui/tool-group": {
+      "types": "./dist/components/assistant-ui/elements/ToolGroup.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ToolGroup.js"
+    },
+    "./assistant-ui/spec-sheet": {
+      "types": "./dist/components/assistant-ui/elements/SpecSheet.d.ts",
+      "import": "./dist/components/assistant-ui/elements/SpecSheet.js"
+    },
+    "./assistant-ui/quota-banner": {
+      "types": "./dist/components/assistant-ui/elements/QuotaBanner.d.ts",
+      "import": "./dist/components/assistant-ui/elements/QuotaBanner.js"
+    },
+    "./assistant-ui/chat-panel": {
+      "types": "./dist/components/assistant-ui/elements/ChatPanel.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ChatPanel.js"
+    },
+    "./assistant-ui/reasoning-panel": {
+      "types": "./dist/components/assistant-ui/elements/ReasoningPanel.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ReasoningPanel.js"
+    },
+    "./assistant-ui/regenerate-menu": {
+      "types": "./dist/components/assistant-ui/elements/RegenerateMenu.d.ts",
+      "import": "./dist/components/assistant-ui/elements/RegenerateMenu.js"
+    },
+    "./assistant-ui/empty-state": {
+      "types": "./dist/components/assistant-ui/elements/EmptyState.d.ts",
+      "import": "./dist/components/assistant-ui/elements/EmptyState.js"
+    },
+    "./assistant-ui/timeline": {
+      "types": "./dist/components/assistant-ui/elements/Timeline.d.ts",
+      "import": "./dist/components/assistant-ui/elements/Timeline.js"
+    },
+    "./assistant-ui/shiki-highlighter": {
+      "types": "./dist/components/assistant-ui/elements/ShikiHighlighter.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ShikiHighlighter.js"
+    },
+    "./assistant-ui/task-state-icon": {
+      "types": "./dist/components/assistant-ui/elements/TaskStateIcon.d.ts",
+      "import": "./dist/components/assistant-ui/elements/TaskStateIcon.js"
+    },
+    "./assistant-ui/composer-send": {
+      "types": "./dist/components/assistant-ui/elements/ComposerSend.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ComposerSend.js"
+    },
+    "./assistant-ui/task-card": {
+      "types": "./dist/components/assistant-ui/elements/TaskCard.d.ts",
+      "import": "./dist/components/assistant-ui/elements/TaskCard.js"
+    },
+    "./assistant-ui/sub": {
+      "types": "./dist/components/assistant-ui/elements/Sub.d.ts",
+      "import": "./dist/components/assistant-ui/elements/Sub.js"
+    },
+    "./assistant-ui/canvas-split": {
+      "types": "./dist/components/assistant-ui/elements/CanvasSplit.d.ts",
+      "import": "./dist/components/assistant-ui/elements/CanvasSplit.js"
+    },
+    "./assistant-ui/draft-restore": {
+      "types": "./dist/components/assistant-ui/elements/DraftRestore.d.ts",
+      "import": "./dist/components/assistant-ui/elements/DraftRestore.js"
+    },
+    "./assistant-ui/git-hub-icon": {
+      "types": "./dist/components/assistant-ui/elements/GitHubIcon.d.ts",
+      "import": "./dist/components/assistant-ui/elements/GitHubIcon.js"
+    },
+    "./assistant-ui/composer-attachments": {
+      "types": "./dist/components/assistant-ui/elements/ComposerAttachments.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ComposerAttachments.js"
+    },
+    "./assistant-ui/model-selector-trigger": {
+      "types": "./dist/components/assistant-ui/elements/ModelSelectorTrigger.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ModelSelectorTrigger.js"
+    },
+    "./assistant-ui/settings-panel": {
+      "types": "./dist/components/assistant-ui/elements/SettingsPanel.d.ts",
+      "import": "./dist/components/assistant-ui/elements/SettingsPanel.js"
+    },
+    "./assistant-ui/context-display-bar": {
+      "types": "./dist/components/assistant-ui/elements/ContextDisplayBar.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ContextDisplayBar.js"
+    },
+    "./assistant-ui/connection-state": {
+      "types": "./dist/components/assistant-ui/elements/ConnectionState.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ConnectionState.js"
+    },
+    "./assistant-ui/composer-model-item": {
+      "types": "./dist/components/assistant-ui/elements/ComposerModelItem.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ComposerModelItem.js"
+    },
+    "./assistant-ui/shimmer-label": {
+      "types": "./dist/components/assistant-ui/elements/ShimmerLabel.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ShimmerLabel.js"
+    },
+    "./assistant-ui/checkpoint-history": {
+      "types": "./dist/components/assistant-ui/elements/CheckpointHistory.d.ts",
+      "import": "./dist/components/assistant-ui/elements/CheckpointHistory.js"
+    },
+    "./assistant-ui/model-picker": {
+      "types": "./dist/components/assistant-ui/elements/ModelPicker.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ModelPicker.js"
+    },
+    "./assistant-ui/web-preview": {
+      "types": "./dist/components/assistant-ui/elements/WebPreview.d.ts",
+      "import": "./dist/components/assistant-ui/elements/WebPreview.js"
+    },
+    "./assistant-ui/context-display-trigger": {
+      "types": "./dist/components/assistant-ui/elements/ContextDisplayTrigger.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ContextDisplayTrigger.js"
+    },
+    "./assistant-ui/share-meter": {
+      "types": "./dist/components/assistant-ui/elements/ShareMeter.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ShareMeter.js"
+    },
+    "./assistant-ui/empty-state-greeting": {
+      "types": "./dist/components/assistant-ui/elements/EmptyStateGreeting.d.ts",
+      "import": "./dist/components/assistant-ui/elements/EmptyStateGreeting.js"
+    },
+    "./assistant-ui/launcher-bubble": {
+      "types": "./dist/components/assistant-ui/elements/LauncherBubble.d.ts",
+      "import": "./dist/components/assistant-ui/elements/LauncherBubble.js"
+    },
+    "./assistant-ui/mermaid-diagram": {
+      "types": "./dist/components/assistant-ui/elements/MermaidDiagram.d.ts",
+      "import": "./dist/components/assistant-ui/elements/MermaidDiagram.js"
+    },
+    "./assistant-ui/composer-menu": {
+      "types": "./dist/components/assistant-ui/elements/ComposerMenu.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ComposerMenu.js"
+    },
+    "./assistant-ui/reasoning-trigger": {
+      "types": "./dist/components/assistant-ui/elements/ReasoningTrigger.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ReasoningTrigger.js"
+    },
+    "./assistant-ui/terminal-block": {
+      "types": "./dist/components/assistant-ui/elements/TerminalBlock.d.ts",
+      "import": "./dist/components/assistant-ui/elements/TerminalBlock.js"
+    },
+    "./assistant-ui/onboarding": {
+      "types": "./dist/components/assistant-ui/elements/Onboarding.d.ts",
+      "import": "./dist/components/assistant-ui/elements/Onboarding.js"
+    },
+    "./assistant-ui/model-selector-root": {
+      "types": "./dist/components/assistant-ui/elements/ModelSelectorRoot.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ModelSelectorRoot.js"
+    },
+    "./assistant-ui/composer-voice-button": {
+      "types": "./dist/components/assistant-ui/elements/ComposerVoiceButton.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ComposerVoiceButton.js"
+    },
+    "./assistant-ui/composer-input": {
+      "types": "./dist/components/assistant-ui/elements/ComposerInput.d.ts",
+      "import": "./dist/components/assistant-ui/elements/ComposerInput.js"
+    },
+    "./assistant-ui/message-pair": {
+      "types": "./dist/components/assistant-ui/elements/MessagePair.d.ts",
+      "import": "./dist/components/assistant-ui/elements/MessagePair.js"
+    },
+    "./assistant-ui/recommendation-card": {
+      "types": "./dist/components/assistant-ui/elements/RecommendationCard.d.ts",
+      "import": "./dist/components/assistant-ui/elements/RecommendationCard.js"
+    },
+    "./assistant-ui/native/voice-conversation": {
+      "types": "./dist/components/assistant-ui/native/VoiceConversation.d.ts",
+      "import": "./dist/components/assistant-ui/native/VoiceConversation.js"
+    },
+    "./assistant-ui/native/quote-block": {
+      "types": "./dist/components/assistant-ui/native/QuoteBlock.d.ts",
+      "import": "./dist/components/assistant-ui/native/QuoteBlock.js"
+    },
+    "./assistant-ui/native/context-display": {
+      "types": "./dist/components/assistant-ui/native/ContextDisplay.d.ts",
+      "import": "./dist/components/assistant-ui/native/ContextDisplay.js"
+    },
+    "./assistant-ui/native/agent-status": {
+      "types": "./dist/components/assistant-ui/native/AgentStatus.d.ts",
+      "import": "./dist/components/assistant-ui/native/AgentStatus.js"
+    },
+    "./assistant-ui/native/attachment-preview": {
+      "types": "./dist/components/assistant-ui/native/AttachmentPreview.d.ts",
+      "import": "./dist/components/assistant-ui/native/AttachmentPreview.js"
+    },
+    "./assistant-ui/native/syntax-highlighter": {
+      "types": "./dist/components/assistant-ui/native/SyntaxHighlighter.d.ts",
+      "import": "./dist/components/assistant-ui/native/SyntaxHighlighter.js"
+    },
+    "./assistant-ui/native/assistant-modal": {
+      "types": "./dist/components/assistant-ui/native/AssistantModal.d.ts",
+      "import": "./dist/components/assistant-ui/native/AssistantModal.js"
+    },
+    "./assistant-ui/native/sources": {
+      "types": "./dist/components/assistant-ui/native/Sources.d.ts",
+      "import": "./dist/components/assistant-ui/native/Sources.js"
+    },
+    "./assistant-ui/native/voice-connect-button": {
+      "types": "./dist/components/assistant-ui/native/VoiceConnectButton.d.ts",
+      "import": "./dist/components/assistant-ui/native/VoiceConnectButton.js"
+    },
+    "./assistant-ui/native/message-timing": {
+      "types": "./dist/components/assistant-ui/native/MessageTiming.d.ts",
+      "import": "./dist/components/assistant-ui/native/MessageTiming.js"
+    },
+    "./assistant-ui/native/voice-disconnect-button": {
+      "types": "./dist/components/assistant-ui/native/VoiceDisconnectButton.d.ts",
+      "import": "./dist/components/assistant-ui/native/VoiceDisconnectButton.js"
+    },
+    "./assistant-ui/native/context-display-runtime-root": {
+      "types": "./dist/components/assistant-ui/native/ContextDisplayRuntimeRoot.d.ts",
+      "import": "./dist/components/assistant-ui/native/ContextDisplayRuntimeRoot.js"
+    },
+    "./assistant-ui/native/selection-toolbar": {
+      "types": "./dist/components/assistant-ui/native/SelectionToolbar.d.ts",
+      "import": "./dist/components/assistant-ui/native/SelectionToolbar.js"
+    },
+    "./assistant-ui/native/directive-text": {
+      "types": "./dist/components/assistant-ui/native/DirectiveText.d.ts",
+      "import": "./dist/components/assistant-ui/native/DirectiveText.js"
+    },
+    "./assistant-ui/native/context-display-text": {
+      "types": "./dist/components/assistant-ui/native/ContextDisplayText.d.ts",
+      "import": "./dist/components/assistant-ui/native/ContextDisplayText.js"
+    },
+    "./assistant-ui/native/context-display-ring": {
+      "types": "./dist/components/assistant-ui/native/ContextDisplayRing.d.ts",
+      "import": "./dist/components/assistant-ui/native/ContextDisplayRing.js"
+    },
+    "./assistant-ui/native/thread-list": {
+      "types": "./dist/components/assistant-ui/native/ThreadList.d.ts",
+      "import": "./dist/components/assistant-ui/native/ThreadList.js"
+    },
+    "./assistant-ui/native/model-selector": {
+      "types": "./dist/components/assistant-ui/native/ModelSelector.d.ts",
+      "import": "./dist/components/assistant-ui/native/ModelSelector.js"
+    },
+    "./assistant-ui/native/voice-status-dot": {
+      "types": "./dist/components/assistant-ui/native/VoiceStatusDot.d.ts",
+      "import": "./dist/components/assistant-ui/native/VoiceStatusDot.js"
+    },
+    "./assistant-ui/native/assistant-sidebar": {
+      "types": "./dist/components/assistant-ui/native/AssistantSidebar.d.ts",
+      "import": "./dist/components/assistant-ui/native/AssistantSidebar.js"
+    },
+    "./assistant-ui/native/composer-trigger-popover": {
+      "types": "./dist/components/assistant-ui/native/ComposerTriggerPopover.d.ts",
+      "import": "./dist/components/assistant-ui/native/ComposerTriggerPopover.js"
+    },
+    "./assistant-ui/native/context-display-root": {
+      "types": "./dist/components/assistant-ui/native/ContextDisplayRoot.d.ts",
+      "import": "./dist/components/assistant-ui/native/ContextDisplayRoot.js"
+    },
+    "./assistant-ui/native/conversation-map-aui": {
+      "types": "./dist/components/assistant-ui/native/ConversationMapAui.d.ts",
+      "import": "./dist/components/assistant-ui/native/ConversationMapAui.js"
+    },
+    "./assistant-ui/native/tool-fallback-root": {
+      "types": "./dist/components/assistant-ui/native/ToolFallbackRoot.d.ts",
+      "import": "./dist/components/assistant-ui/native/ToolFallbackRoot.js"
+    },
+    "./assistant-ui/native/voice-control": {
+      "types": "./dist/components/assistant-ui/native/VoiceControl.d.ts",
+      "import": "./dist/components/assistant-ui/native/VoiceControl.js"
+    },
+    "./assistant-ui/native/mcp-config-dialog": {
+      "types": "./dist/components/assistant-ui/native/McpConfigDialog.d.ts",
+      "import": "./dist/components/assistant-ui/native/McpConfigDialog.js"
+    },
+    "./assistant-ui/native/composer-quote-preview": {
+      "types": "./dist/components/assistant-ui/native/ComposerQuotePreview.d.ts",
+      "import": "./dist/components/assistant-ui/native/ComposerQuotePreview.js"
+    },
+    "./assistant-ui/native/thread-list-sidebar": {
+      "types": "./dist/components/assistant-ui/native/ThreadListSidebar.d.ts",
+      "import": "./dist/components/assistant-ui/native/ThreadListSidebar.js"
+    },
+    "./assistant-ui/native/thread": {
+      "types": "./dist/components/assistant-ui/native/Thread.d.ts",
+      "import": "./dist/components/assistant-ui/native/Thread.js"
+    },
+    "./assistant-ui/native/voice-orb": {
+      "types": "./dist/components/assistant-ui/native/VoiceOrb.d.ts",
+      "import": "./dist/components/assistant-ui/native/VoiceOrb.js"
+    },
+    "./assistant-ui/native/tool-group": {
+      "types": "./dist/components/assistant-ui/native/ToolGroup.d.ts",
+      "import": "./dist/components/assistant-ui/native/ToolGroup.js"
+    },
+    "./assistant-ui/native/task-card": {
+      "types": "./dist/components/assistant-ui/native/TaskCard.d.ts",
+      "import": "./dist/components/assistant-ui/native/TaskCard.js"
+    },
+    "./assistant-ui/native/voice-mute-button": {
+      "types": "./dist/components/assistant-ui/native/VoiceMuteButton.d.ts",
+      "import": "./dist/components/assistant-ui/native/VoiceMuteButton.js"
+    },
+    "./assistant-ui/native/context-display-bar": {
+      "types": "./dist/components/assistant-ui/native/ContextDisplayBar.d.ts",
+      "import": "./dist/components/assistant-ui/native/ContextDisplayBar.js"
+    },
+    "./assistant-ui/native/mermaid-diagram": {
+      "types": "./dist/components/assistant-ui/native/MermaidDiagram.d.ts",
+      "import": "./dist/components/assistant-ui/native/MermaidDiagram.js"
+    },
+    "./assistant-ui/native/reasoning": {
+      "types": "./dist/components/assistant-ui/native/Reasoning.d.ts",
+      "import": "./dist/components/assistant-ui/native/Reasoning.js"
+    },
+    "./assistant-ui/native/followup-suggestions-row": {
+      "types": "./dist/components/assistant-ui/native/FollowupSuggestionsRow.d.ts",
+      "import": "./dist/components/assistant-ui/native/FollowupSuggestionsRow.js"
+    },
+    "./assistant-ui/mermaid-zoom": {
+      "types": "./dist/components/assistant-ui/elements/MermaidZoom.d.ts",
+      "import": "./dist/components/assistant-ui/elements/MermaidZoom.js"
+    },
+    "./assistant-ui/diff-viewer": {
+      "types": "./dist/components/assistant-ui/elements/DiffViewer.d.ts",
+      "import": "./dist/components/assistant-ui/elements/DiffViewer.js"
+    },
+    "./assistant-ui/diff-viewer-file-badge": {
+      "types": "./dist/components/assistant-ui/elements/DiffViewerFileBadge.d.ts",
+      "import": "./dist/components/assistant-ui/elements/DiffViewerFileBadge.js"
+    },
+    "./assistant-ui/diff-viewer-stats": {
+      "types": "./dist/components/assistant-ui/elements/DiffViewerStats.d.ts",
+      "import": "./dist/components/assistant-ui/elements/DiffViewerStats.js"
+    },
+    "./assistant-ui/diff-viewer-file": {
+      "types": "./dist/components/assistant-ui/elements/DiffViewerFile.d.ts",
+      "import": "./dist/components/assistant-ui/elements/DiffViewerFile.js"
+    },
+    "./assistant-ui/diff-viewer-content": {
+      "types": "./dist/components/assistant-ui/elements/DiffViewerContent.d.ts",
+      "import": "./dist/components/assistant-ui/elements/DiffViewerContent.js"
+    },
+    "./assistant-ui/diff-viewer-header": {
+      "types": "./dist/components/assistant-ui/elements/DiffViewerHeader.d.ts",
+      "import": "./dist/components/assistant-ui/elements/DiffViewerHeader.js"
+    },
+    "./assistant-ui/diff-viewer-line": {
+      "types": "./dist/components/assistant-ui/elements/DiffViewerLine.d.ts",
+      "import": "./dist/components/assistant-ui/elements/DiffViewerLine.js"
+    },
+    "./assistant-ui/diff-viewer-split-line": {
+      "types": "./dist/components/assistant-ui/elements/DiffViewerSplitLine.d.ts",
+      "import": "./dist/components/assistant-ui/elements/DiffViewerSplitLine.js"
+    },
+    "./assistant-ui/eve-ask-question-toolkit": {
+      "types": "./dist/components/assistant-ui/eveAskQuestionToolkit.d.ts",
+      "import": "./dist/components/assistant-ui/eveAskQuestionToolkit.js"
+    },
+    "./assistant-ui/markdown.css": "./dist/assistant-ui/markdown.css",
+    "./assistant-ui/geo-map.css": "./dist/assistant-ui/geo-map.css",
+    "./assistant-ui/native/task-group": {
+      "types": "./dist/components/assistant-ui/native/TaskGroup.d.ts",
+      "import": "./dist/components/assistant-ui/native/TaskGroup.js"
+    },
+    "./assistant-ui/native/task-tray": {
+      "types": "./dist/components/assistant-ui/native/TaskTray.d.ts",
+      "import": "./dist/components/assistant-ui/native/TaskTray.js"
     }
   },
   "publishConfig": {
@@ -72,9 +996,10 @@
   },
   "scripts": {
     "test": "vitest run --config .storybook/vitest.config.ts && bun run test:native && bun run test:package",
-    "test:package": "bun run build && bun test scripts/__tests__/build.test.ts",
+    "test:package": "bun run build && bun test scripts/__tests__",
+    "test:preview": "bun test scripts/storybookPreview.test.ts",
     "test:native": "vitest run --config .storybook/vitest.native.config.ts",
-    "test:coverage": "vitest run --config .storybook/vitest.config.ts --coverage",
+    "test:coverage": "vitest run --config .storybook/vitest.coverage.config.ts --coverage",
     "test:contrast": "vitest run --config .storybook/vitest.contrast.config.ts",
     "build": "bun scripts/build.ts",
     "typecheck": "tsc --noEmit",
@@ -100,6 +1025,13 @@
     "usehooks-ts": "^3.1.1"
   },
   "devDependencies": {
+    "@assistant-ui/ai-sdk": "0.0.14",
+    "@assistant-ui/generative-ui": "0.0.6",
+    "@assistant-ui/react": "0.15.30",
+    "@assistant-ui/react-markdown": "0.14.23",
+    "@assistant-ui/react-mcp": "0.1.24",
+    "@assistant-ui/react-syntax-highlighter": "0.14.7",
+    "@assistant-ui/store": "0.3.22",
     "@daypicker/persian": "^10.0.2",
     "@daypicker/react": "^10.0.2",
     "@fontsource-variable/jetbrains-mono": "^5.3.0",
@@ -111,51 +1043,90 @@
     "@tailwindcss/vite": "^4.3.3",
     "@tanstack/react-table": "9.2.8",
     "@tanstack/react-virtual": "3.14.13",
+    "@testing-library/react": "^16.3.3",
     "@types/bun": "^1.4.2",
     "@types/cssesc": "3.0.2",
+    "@types/leaflet": "^1.9.22",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "@types/react-syntax-highlighter": "^15.5.13",
     "@typescript/native": "npm:typescript@^7.0.2",
     "@vitejs/plugin-react": "^6.1.2",
     "@vitest/browser": "4.1.11",
     "@vitest/browser-playwright": "^4.1.6",
+    "@vitest/coverage-istanbul": "4.1.11",
     "@vitest/coverage-v8": "^4.1.6",
+    "anser": "2.3.5",
+    "beautiful-mermaid": "^1.1.3",
     "bun": "1.4.2",
     "bun-plugin-tailwind": "^0.1.2",
     "chrono-node": "^2.10.2",
     "cmdk": "^1.1.1",
+    "colorjs.io": "0.7.1",
     "cssesc": "3.0.0",
+    "diff": "9.0.0",
     "embla-carousel-autoplay": "8.6.0",
     "embla-carousel-react": "^8.6.0",
     "es-toolkit": "1.52.0",
+    "heat-graph": "0.0.25",
+    "leaflet": "^1.9.4",
     "motion": "14.0.0",
     "oxfmt": "^0.72.0",
     "oxlint": "^1.87.0",
+    "parse-diff": "0.12.0",
     "playwright": "^1.64.0",
     "react-hook-form": "7.89.0",
+    "react-markdown": "^10.1.0",
     "react-resizable-panels": "^4.14.3",
+    "react-shiki": "^0.11.2",
+    "react-syntax-highlighter": "^16.1.2",
     "recharts": "3.8.0",
+    "remark-gfm": "^4.0.1",
+    "shiki": "^4.5.0",
     "storybook": "^10.6.1",
+    "strip-ansi": "7.2.0",
     "tailwindcss": "^4.3.3",
     "ts-unused": "3.3.1",
     "typescript": "^6.0.3",
     "vite": "^8.3.4",
     "vitest": "^4.1.6",
     "vitest-browser-react": "^2.3.0",
-    "zod": "4.6.5"
+    "zod": "4.6.5",
+    "zustand": "5.0.15"
   },
   "peerDependencies": {
+    "@assistant-ui/ai-sdk": "0.0.14",
+    "@assistant-ui/generative-ui": "0.0.6",
+    "@assistant-ui/react": "0.15.30",
+    "@assistant-ui/react-markdown": "0.14.23",
+    "@assistant-ui/react-mcp": "0.1.24",
+    "@assistant-ui/react-syntax-highlighter": "0.14.7",
+    "@assistant-ui/store": "0.3.22",
     "@daypicker/persian": "^10.0.2",
     "@daypicker/react": "^10.0.2",
     "@fontsource-variable/jetbrains-mono": "^5.3.0",
+    "anser": "2.3.5",
+    "beautiful-mermaid": "^1.1.3",
     "cmdk": "^1.1.1",
+    "colorjs.io": "0.7.1",
     "cssesc": "3.0.0",
+    "diff": "9.0.0",
     "embla-carousel-react": "^8.6.0",
     "es-toolkit": "1.52.0",
+    "heat-graph": "0.0.25",
+    "leaflet": "^1.9.4",
+    "parse-diff": "0.12.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
+    "react-markdown": "^10.1.0",
     "react-resizable-panels": "^4.14.3",
-    "recharts": "3.8.0"
+    "react-shiki": "^0.11.2",
+    "react-syntax-highlighter": "^16.1.2",
+    "recharts": "3.8.0",
+    "remark-gfm": "^4.0.1",
+    "shiki": "^4.5.0",
+    "strip-ansi": "7.2.0",
+    "zustand": "5.0.15"
   },
   "peerDependenciesMeta": {
     "recharts": {
@@ -184,12 +1155,76 @@
     },
     "@fontsource-variable/jetbrains-mono": {
       "optional": true
+    },
+    "@assistant-ui/ai-sdk": {
+      "optional": true
+    },
+    "@assistant-ui/generative-ui": {
+      "optional": true
+    },
+    "@assistant-ui/react": {
+      "optional": true
+    },
+    "@assistant-ui/react-markdown": {
+      "optional": true
+    },
+    "@assistant-ui/react-mcp": {
+      "optional": true
+    },
+    "@assistant-ui/react-syntax-highlighter": {
+      "optional": true
+    },
+    "@assistant-ui/store": {
+      "optional": true
+    },
+    "beautiful-mermaid": {
+      "optional": true
+    },
+    "heat-graph": {
+      "optional": true
+    },
+    "leaflet": {
+      "optional": true
+    },
+    "react-markdown": {
+      "optional": true
+    },
+    "react-shiki": {
+      "optional": true
+    },
+    "react-syntax-highlighter": {
+      "optional": true
+    },
+    "remark-gfm": {
+      "optional": true
+    },
+    "shiki": {
+      "optional": true
+    },
+    "strip-ansi": {
+      "optional": true
+    },
+    "zustand": {
+      "optional": true
+    },
+    "anser": {
+      "optional": true
+    },
+    "diff": {
+      "optional": true
+    },
+    "parse-diff": {
+      "optional": true
+    },
+    "colorjs.io": {
+      "optional": true
     }
   },
   "packageManager": "bun@1.4.2",
   "patchedDependencies": {
     "@shadcn/react@0.3.1": "patches/@shadcn%2Freact@0.3.1.patch",
     "sonner@2.0.8": "patches/sonner@2.0.8.patch",
-    "input-otp@1.5.0": "patches/input-otp@1.5.0.patch"
+    "input-otp@1.5.0": "patches/input-otp@1.5.0.patch",
+    "@vitest/coverage-istanbul@4.1.11": "patches/@vitest%2Fcoverage-istanbul@4.1.11.patch"
   }
 }

@@ -1,0 +1,146 @@
+@import "./generative-ui.css";
+
+.shimmer {
+  --shimmer-color: var(--foreground);
+}
+/* Native activity graph, map controls and scalar meter surfaces. */
+[data-slot="assistant-heat-root"] {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+[data-slot="assistant-share-meter"] {
+  --assistant-meter-fill: var(--primary);
+  display: block;
+  width: 100%;
+  height: calc(var(--ag-control-h) / 3);
+}
+[data-slot="assistant-share-meter"][data-size="compact"] {
+  display: inline-block;
+  width: 64px;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+[data-slot="assistant-share-meter"][data-tone="success"] {
+  --assistant-meter-fill: var(--success);
+}
+[data-slot="assistant-share-meter"][data-tone="warning"] {
+  --assistant-meter-fill: var(--warning);
+}
+[data-slot="assistant-share-meter"][data-tone="destructive"] {
+  --assistant-meter-fill: var(--destructive);
+}
+[data-slot="assistant-share-meter"][data-tone="muted"] {
+  --assistant-meter-fill: var(--muted-foreground);
+}
+[data-slot="assistant-share-meter"]::-webkit-meter-bar {
+  height: 6px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--secondary);
+}
+[data-slot="assistant-share-meter"]::-webkit-meter-optimum-value {
+  border-radius: var(--radius-sm);
+  background: var(--assistant-meter-fill);
+}
+[data-slot="assistant-share-meter"]::-moz-meter-bar {
+  border-radius: var(--radius-sm);
+  background: var(--assistant-meter-fill);
+}
+
+[data-slot="assistant-heat-scroll"] {
+  display: flex;
+  flex-direction: row-reverse;
+  overflow-x: auto;
+}
+[data-slot="assistant-heat-body"] {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  min-width: fit-content;
+  gap: 8px;
+}
+[data-slot="assistant-heat-months"] {
+  position: relative;
+  margin-inline-start: 40px;
+  height: 20px;
+}
+[data-slot="assistant-heat-month"] {
+  position: absolute;
+  width: 0;
+  color: var(--muted-foreground);
+  font-size: var(--ag-text-xs);
+  white-space: nowrap;
+}
+[data-slot="assistant-heat-row"] {
+  display: flex;
+  gap: 8px;
+}
+[data-slot="assistant-heat-days"] {
+  display: flex;
+  width: 32px;
+  flex-shrink: 0;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-block: 2px;
+}
+[data-slot="assistant-heat-day"] {
+  display: flex;
+  align-items: center;
+  height: 13px;
+  color: var(--muted-foreground);
+  font-size: var(--ag-text-xs);
+}
+[data-slot="assistant-heat-grid"] {
+  flex: 1;
+  gap: 3px;
+}
+[data-slot="assistant-heat-cell"] {
+  aspect-ratio: 1;
+  min-width: 9px;
+  width: 100%;
+  border-radius: var(--radius-sm);
+  forced-color-adjust: none;
+}
+[data-slot="assistant-heat-legend"] {
+  display: flex;
+  margin-inline-start: auto;
+  align-items: center;
+  gap: 4px;
+  color: var(--muted-foreground);
+  font-size: var(--ag-text-xs);
+}
+[data-slot="assistant-heat-legend-level"] {
+  width: 13px;
+  height: 13px;
+  border-radius: var(--radius-sm);
+  forced-color-adjust: none;
+}
+[data-slot="assistant-heat-tooltip"] {
+  pointer-events: none;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--popover);
+  color: var(--popover-foreground);
+  padding: 2px 6px;
+  font-size: var(--ag-text-xs);
+  white-space: nowrap;
+}
+[data-slot="assistant-heat-root"][data-density="compact"] [data-slot="assistant-heat-grid"] {
+  flex: none;
+}
+[data-slot="assistant-heat-root"][data-density="compact"] [data-slot="assistant-heat-cell"],
+[data-slot="assistant-heat-root"][data-density="compact"] [data-slot="assistant-heat-legend-level"] {
+  width: 9px;
+  height: 9px;
+}
+[data-slot="assistant-heat-root"][data-density="compact"] [data-slot="assistant-heat-day"] {
+  height: 9px;
+}
+
+@media (forced-colors: active) {
+  [data-slot="assistant-heat-cell"],
+  [data-slot="assistant-heat-legend-level"] {
+    border: 1px solid CanvasText;
+  }
+}

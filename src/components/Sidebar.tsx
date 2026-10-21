@@ -1,4 +1,4 @@
-import type { ComponentProps, ReactElement, ReactNode, SetStateAction } from "react";
+import type { ComponentProps, KeyboardEvent, ReactElement, ReactNode, SetStateAction } from "react";
 import type { IDensityProps } from "../density/types.js";
 import type {
   SidebarContextProps,
@@ -8,7 +8,7 @@ import type {
   SidebarMenuButtonState,
   SidebarMenuSubButtonState,
 } from "../sidebar/types.js";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { useMediaQuery } from "usehooks-ts";
 import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
@@ -43,6 +43,7 @@ function SidebarProvider({
   className,
   style,
   children,
+  onKeyDown,
   ...props
 }: SidebarProviderProps): ReactElement {
   const isMobile = useMediaQuery("(max-width: 767px)", { initializeWithValue: false });
@@ -54,7 +55,6 @@ function SidebarProvider({
       const next = typeof value === "function" ? value(open) : value;
       if (openProp === undefined) setIsOpen(next);
       onOpenChange?.(next);
-      document.cookie = "sidebar_state=" + next + "; path=/; max-age=604800";
     },
     [open, openProp, onOpenChange],
   );
@@ -62,16 +62,16 @@ function SidebarProvider({
     if (isMobile) setOpenMobile((current) => !current);
     else setOpen((current) => !current);
   }, [isMobile, setOpen]);
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent): void => {
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLDivElement>): void => {
+      onKeyDown?.(event);
       if (!event.defaultPrevented && !event.repeat && event.key === "b" && (event.metaKey || event.ctrlKey)) {
         event.preventDefault();
         toggleSidebar();
       }
-    };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [toggleSidebar]);
+    },
+    [onKeyDown, toggleSidebar],
+  );
   const state = open ? "expanded" : "collapsed";
   const mobileWidth = style?.["--sidebar-width-mobile"] ?? "18rem";
   const contextValue = useMemo<SidebarContextProps>(
@@ -89,6 +89,7 @@ function SidebarProvider({
     <SidebarContext.Provider value={contextValue}>
       <DensityContext.Provider value={resolvedDensity}>
         <div
+          onKeyDown={handleKeyDown}
           data-density={resolvedDensity}
           data-slot="sidebar-wrapper"
           style={sidebarStyle}

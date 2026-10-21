@@ -1,4 +1,5 @@
 import { useDensity } from "../hooks/useDensity.js";
+import { usePortalContainer } from "../hooks/usePortalContainer.js";
 import type { IDensityProps } from "../density/types.js";
 import type { ComponentPropsWithRef, ReactElement } from "react";
 import { useDirection } from "@base-ui/react/direction-provider";
@@ -108,9 +109,10 @@ function ComboboxContent({
 }: ComboboxContentProps): ReactElement {
   const resolvedDensity = useDensity(density);
   const direction = useDirection();
+  const container = usePortalContainer();
 
   return (
-    <ComboboxPrimitive.Portal>
+    <ComboboxPrimitive.Portal container={container}>
       <ComboboxPrimitive.Positioner
         side={side}
         sideOffset={sideOffset}

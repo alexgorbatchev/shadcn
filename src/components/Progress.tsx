@@ -4,15 +4,30 @@ import type { ReactElement } from "react";
 import { Progress as ProgressPrimitive } from "@base-ui/react/progress";
 import { cn } from "../utils/cn.js";
 
-type ProgressProps = ProgressPrimitive.Root.Props & IDensityProps;
+type ProgressTone = "primary" | "success" | "warning" | "destructive" | "muted";
+type ProgressProps = ProgressPrimitive.Root.Props & IDensityProps & { tone?: ProgressTone };
 
-function Progress({ density, className, children, value, ...props }: ProgressProps): ReactElement {
+const progressToneClasses: Record<ProgressTone, string> = {
+  primary: "[--progress-color:var(--primary)]",
+  success: "[--progress-color:var(--success)]",
+  warning: "[--progress-color:var(--warning)]",
+  destructive: "[--progress-color:var(--destructive)]",
+  muted: "[--progress-color:var(--muted-foreground)]",
+};
+
+function Progress({ density, className, children, value, tone = "primary", ...props }: ProgressProps): ReactElement {
   return (
     <ProgressPrimitive.Root
       value={value}
       data-density={density}
       data-slot="progress"
-      className={(state) => cn("flex flex-wrap gap-3", typeof className === "function" ? className(state) : className)}
+      className={(state) =>
+        cn(
+          "flex flex-wrap gap-3",
+          progressToneClasses[tone],
+          typeof className === "function" ? className(state) : className,
+        )
+      }
       {...props}
     >
       {children}
@@ -49,7 +64,10 @@ function ProgressIndicator({ density, className, ...props }: ProgressIndicatorPr
       data-density={density}
       data-slot="progress-indicator"
       className={(state) =>
-        cn("h-full bg-primary transition-[width]", typeof className === "function" ? className(state) : className)
+        cn(
+          "h-full bg-[var(--progress-color,var(--primary))] transition-[width] motion-reduce:transition-none",
+          typeof className === "function" ? className(state) : className,
+        )
       }
       {...props}
     />

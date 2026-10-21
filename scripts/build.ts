@@ -3,9 +3,14 @@ import ts from "typescript";
 import manifest from "../package.json";
 import config from "../tsconfig.json";
 
-const entrypoints = Object.values(manifest.exports)
-  .filter((entry) => typeof entry !== "string")
-  .map((entry) => entry.import.replace("./dist/", "src/").replace(/\.js$/, ".ts"));
+const entrypoints = await Promise.all(
+  Object.values(manifest.exports)
+    .filter((entry) => typeof entry !== "string")
+    .map(async (entry) => {
+      const sourcePath = entry.import.replace("./dist/", "src/").replace(/\.js$/, ".ts");
+      return (await Bun.file(sourcePath).exists()) ? sourcePath : sourcePath.replace(/\.ts$/, ".tsx");
+    }),
+);
 
 await rm("dist", { recursive: true, force: true });
 await mkdir("dist", { recursive: true });
@@ -38,7 +43,10 @@ const parsed = ts.parseJsonConfigFileContent(config, ts.sys, process.cwd(), {
   outDir: "dist",
   rootDir: "src",
 });
-const program = ts.createProgram(entrypoints, parsed.options);
+const program = ts.createProgram(
+  [...entrypoints, ...parsed.fileNames.filter((fileName) => fileName.endsWith(".d.ts"))],
+  parsed.options,
+);
 const diagnostics = [...parsed.errors, ...ts.getPreEmitDiagnostics(program), ...program.emit().diagnostics];
 if (diagnostics.length > 0) {
   throw new Error(
@@ -53,5 +61,9 @@ await Promise.all([
   Bun.write("dist/theme.css", Bun.file("src/theme.css")),
   Bun.write("dist/typeset.css", Bun.file("src/typeset.css")),
   Bun.write("dist/fonts.css", Bun.file("src/fonts.css")),
+  Bun.write("dist/assistant-ui.css", Bun.file("src/components/assistant-ui/assistant-ui.css")),
+  Bun.write("dist/generative-ui.css", Bun.file("src/components/assistant-ui/generative-ui.css")),
+  Bun.write("dist/assistant-ui/markdown.css", Bun.file("src/components/assistant-ui/markdown.css")),
+  Bun.write("dist/assistant-ui/geo-map.css", Bun.file("src/components/assistant-ui/geo-map.css")),
 ]);
 console.log(`Built ${result.outputs.length} JavaScript asset(s) and exported theme/font stylesheets.`);

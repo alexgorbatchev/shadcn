@@ -3,6 +3,7 @@ import type { IDensityProps } from "../density/types.js";
 import { Toast as ToastPrimitive } from "@base-ui/react/toast";
 import { CircleCheckIcon, InfoIcon, TriangleAlertIcon, OctagonXIcon, LoaderCircleIcon, XIcon } from "lucide-react";
 import { useDensity } from "../hooks/useDensity.js";
+import { usePortalContainer } from "../hooks/usePortalContainer.js";
 import { useDirection } from "./DirectionProvider.js";
 import { cn } from "../utils/cn.js";
 import { Button } from "./Button.js";
@@ -11,8 +12,9 @@ function ToastProvider(props: ToastPrimitive.Provider.Props): ReactElement {
   return <ToastPrimitive.Provider {...props} />;
 }
 
-function ToastPortal(props: ToastPrimitive.Portal.Props): ReactElement {
-  return <ToastPrimitive.Portal data-slot="toast-portal" {...props} />;
+function ToastPortal({ container, ...props }: ToastPrimitive.Portal.Props): ReactElement {
+  const resolvedContainer = usePortalContainer(container);
+  return <ToastPrimitive.Portal data-slot="toast-portal" container={resolvedContainer} {...props} />;
 }
 
 type ToastViewportProps = ToastPrimitive.Viewport.Props & IDensityProps;

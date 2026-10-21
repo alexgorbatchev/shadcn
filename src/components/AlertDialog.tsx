@@ -1,6 +1,7 @@
 "use client";
 
 import { useDensity } from "../hooks/useDensity.js";
+import { usePortalContainer } from "../hooks/usePortalContainer.js";
 import type { IDensityProps } from "../density/types.js";
 import type { ComponentProps, ReactElement } from "react";
 import { AlertDialog as AlertDialogPrimitive } from "@base-ui/react/alert-dialog";
@@ -17,8 +18,9 @@ function AlertDialogTrigger<Payload>({ ...props }: AlertDialogPrimitive.Trigger.
   return <AlertDialogPrimitive.Trigger data-slot="alert-dialog-trigger" {...props} />;
 }
 
-function AlertDialogPortal({ ...props }: AlertDialogPrimitive.Portal.Props): ReactElement {
-  return <AlertDialogPrimitive.Portal data-slot="alert-dialog-portal" {...props} />;
+function AlertDialogPortal({ container, ...props }: AlertDialogPrimitive.Portal.Props): ReactElement {
+  const resolvedContainer = usePortalContainer(container);
+  return <AlertDialogPrimitive.Portal data-slot="alert-dialog-portal" container={resolvedContainer} {...props} />;
 }
 
 type AlertDialogOverlayProps = AlertDialogPrimitive.Backdrop.Props & IDensityProps;

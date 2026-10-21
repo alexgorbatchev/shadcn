@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect, fn, userEvent, waitFor, within } from "storybook/test";
+import { expect, fn, waitFor, within } from "storybook/test";
 import { useState } from "react";
+
 import { DirectionProvider } from "../DirectionProvider";
 import { FileIcon, SettingsIcon } from "lucide-react";
 import {
@@ -50,7 +51,7 @@ export const Default: Story = {
       </NavigationMenuList>
     </NavigationMenu>
   ),
-  play: async ({ canvasElement, args }) => {
+  play: async ({ canvasElement, args, userEvent }) => {
     const canvas = within(canvasElement);
     const body = within(canvasElement.ownerDocument.body);
     const trigger = canvas.getByRole("button", { name: "Products" });
@@ -84,7 +85,7 @@ export const RightToLeft: Story = {
       </DirectionProvider>
     ),
   ],
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);
     const body = within(canvasElement.ownerDocument.body);
     const trigger = canvas.getByRole("button", { name: "Products" });
@@ -133,11 +134,10 @@ export const ControlledValue: Story = {
       </>
     );
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);
     const body = within(canvasElement.ownerDocument.body);
-    const trigger = canvas.getByRole("button", { name: "Products" });
-    await userEvent.click(trigger);
+    await userEvent.click(await within(canvasElement.ownerDocument.body).findByRole("button", { name: "Products" }));
     const link = await body.findByRole("link", { name: "Components" });
     await waitFor(() => expect(link).toBeVisible());
     await expect(canvas.getByRole("status", { name: "Open navigation item" })).toHaveTextContent("1");
@@ -166,7 +166,7 @@ export const LinkComponent: Story = {
       </NavigationMenuList>
     </NavigationMenu>
   ),
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);
     const link = canvas.getByRole("link", { name: "Documentation" });
     await expect(link).toHaveAttribute("href", "#navigation-documentation");
@@ -221,7 +221,7 @@ export const WithIcons: Story = {
       </>
     );
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);
     const body = within(canvasElement.ownerDocument.body);
     const trigger = canvas.getByRole("button", { name: "Workspace" });
@@ -242,7 +242,7 @@ export const RightToLeftWithIcons: Story = { ...WithIcons, decorators: RightToLe
 export const CancelOpening: Story = {
   ...Default,
   args: { onValueChange: (_value, details) => details.cancel() },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole("button", { name: "Products" }));
     await expect(canvas.getByRole("button", { name: "Products" })).toHaveAttribute("aria-expanded", "false");
@@ -259,7 +259,7 @@ export const CancelClosing: Story = {
       if (value === null) details.cancel();
     },
   },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);
     const body = within(canvasElement.ownerDocument.body);
     const trigger = canvas.getByRole("button", { name: "Products" });
@@ -276,13 +276,13 @@ export const DefaultOpen: Story = {
   ...Default,
   args: { defaultValue: "products" },
   parameters: { docs: { story: { inline: false, height: "300px" } } },
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);
     const body = within(canvasElement.ownerDocument.body);
     const link = await body.findByRole("link", { name: "Components" });
     await waitFor(() => expect(link).toBeVisible());
     await expect(canvas.getByRole("button", { name: "Products" })).toHaveAttribute("aria-expanded", "true");
-    await userEvent.click(canvas.getByRole("button", { name: "Products" }));
+    await userEvent.click(await within(canvasElement.ownerDocument.body).findByRole("button", { name: "Products" }));
     await waitFor(() => expect(body.queryByRole("link", { name: "Components" })).not.toBeInTheDocument());
   },
 };

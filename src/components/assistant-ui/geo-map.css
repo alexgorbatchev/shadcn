@@ -1,0 +1,75 @@
+@import "leaflet/dist/leaflet.css";
+
+[data-slot="assistant-map"] .leaflet-tooltip {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--popover);
+  color: var(--popover-foreground);
+  font: inherit;
+  box-shadow: var(--shadow-frame);
+}
+[data-slot="assistant-map"] .leaflet-tooltip-top::before {
+  border-top-color: var(--popover);
+}
+[data-slot="assistant-map"] .leaflet-tooltip-bottom::before {
+  border-bottom-color: var(--popover);
+}
+[data-slot="assistant-map"] .leaflet-tooltip-left::before {
+  border-left-color: var(--popover);
+}
+[data-slot="assistant-map"] .leaflet-tooltip-right::before {
+  border-right-color: var(--popover);
+}
+[data-slot="assistant-map"] .leaflet-bar a.leaflet-disabled {
+  color: var(--faint-foreground);
+  background: var(--muted);
+  cursor: not-allowed;
+}
+/* Leaflet owns these generated native controls; rules stay within its map container in each UI root. */
+[data-slot="assistant-map"] {
+  background: var(--secondary);
+  font-family: inherit;
+  font-size: var(--ag-text-xs);
+}
+[data-slot="assistant-map"] .leaflet-bar {
+  border: 1px solid var(--border);
+  box-shadow: none;
+}
+[data-slot="assistant-map"] .leaflet-bar a {
+  border-color: var(--border);
+  background: var(--background);
+  color: var(--foreground);
+}
+[data-slot="assistant-map"] .leaflet-bar a:hover {
+  background: var(--accent);
+}
+[data-slot="assistant-map"] .leaflet-control-attribution {
+  background: var(--background);
+  color: var(--muted-foreground);
+}
+[data-slot="assistant-map"] .leaflet-control-attribution a {
+  color: var(--foreground);
+}
+[data-slot="assistant-map"][data-native-tiles] .leaflet-tile-pane {
+  filter: contrast(0.9) grayscale(1);
+}
+[data-slot="assistant-map"][data-native-tiles][data-theme="dark"] .leaflet-tile-pane {
+  filter: brightness(0.9) contrast(0.9) grayscale(1) hue-rotate(180deg) invert(1);
+}
+[data-theme="dark"] [data-slot="assistant-map"][data-native-tiles][data-theme="auto"] .leaflet-tile-pane,
+:host([data-theme="dark"]) [data-slot="assistant-map"][data-native-tiles][data-theme="auto"] .leaflet-tile-pane {
+  filter: brightness(0.9) contrast(0.9) grayscale(1) hue-rotate(180deg) invert(1);
+}
+[data-slot="assistant-map-marker"] {
+  display: block;
+  width: 10px;
+  height: 10px;
+  border: 2px solid var(--background);
+  border-radius: 50%;
+  background: var(--muted-foreground);
+}
+[data-slot="assistant-map-marker"][data-selected="true"] {
+  width: 16px;
+  height: 16px;
+  background: var(--primary);
+}

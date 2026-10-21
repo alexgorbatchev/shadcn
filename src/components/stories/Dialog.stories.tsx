@@ -52,6 +52,31 @@ const meta: Meta<typeof Dialog> = {
 };
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+export const Fullscreen: Story = {
+  render: (args) => (
+    <Dialog {...args}>
+      <DialogTrigger render={<Button />}>Expand diagram</DialogTrigger>
+      <DialogContent size="fullscreen">
+        <DialogTitle>Diagram canvas</DialogTitle>
+        <DialogDescription>Explore the diagram in the full viewport.</DialogDescription>
+      </DialogContent>
+    </Dialog>
+  ),
+  play: async ({ canvasElement, userEvent }) => {
+    const trigger = within(canvasElement).getByRole("button", { name: "Expand diagram" });
+    await userEvent.click(trigger);
+    const popup = await within(document.body).findByRole("dialog", { name: "Diagram canvas" });
+    await waitFor(() => {
+      const bounds = popup.getBoundingClientRect();
+      expect(bounds.width).toBeCloseTo(window.innerWidth, 0);
+      expect(bounds.height).toBeCloseTo(window.innerHeight, 0);
+    });
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() => expect(popup).not.toBeInTheDocument());
+    await waitFor(() => expect(trigger).toHaveFocus());
+  },
+};
 export const Default: Story = {
   play: async ({ canvasElement, userEvent, args }) => {
     const trigger = within(canvasElement).getByRole("button", { name: "Edit profile" });

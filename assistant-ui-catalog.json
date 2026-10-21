@@ -1,0 +1,2861 @@
+{
+  "upstream": {
+    "homepage": "https://assistant-ui.com",
+    "registry": "https://r.assistant-ui.com/registry.json",
+    "registrySha256": "8cfaf8d9bf07981ba6b3b6e36136d3a5a39235497997ca2706daf7fbccc320e4",
+    "sourceFileHash": "SHA-256 of the fetched UTF-8 file content; registrySha256 on metadata-only entries hashes JSON.stringify(item).",
+    "license": "MIT; see THIRD_PARTY_NOTICES.md"
+  },
+  "items": [
+    {
+      "name": "utils",
+      "type": "registry:lib",
+      "registrySha256": "a859f427566555ba6bbbbe7ef749a8c02db9fc5146c6af04790ee698c47a1ccd",
+      "disposition": "reused-existing-owner",
+      "destinations": ["src/utils/cn.ts"]
+    },
+    {
+      "name": "elements-collapsible-root",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/collapsible-root.tsx"]
+    },
+    {
+      "name": "elements-surfaces",
+      "type": "registry:component",
+      "files": [
+        "components/assistant-ui/elements/surfaces.tsx",
+        "components/assistant-ui/utils/useIsomorphicLayoutEffect.ts"
+      ]
+    },
+    {
+      "name": "elements-range",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/utils/range.ts"]
+    },
+    {
+      "name": "elements-tokens",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/utils/tokens.ts"]
+    },
+    {
+      "name": "elements-href",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/utils/href.ts"]
+    },
+    {
+      "name": "elements-task",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/utils/task.ts", "components/assistant-ui/utils/useIsomorphicLayoutEffect.ts"]
+    },
+    {
+      "name": "elements-loading-state",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/loading-state.tsx"]
+    },
+    {
+      "name": "elements-thinking-indicator",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/thinking-indicator.tsx"]
+    },
+    {
+      "name": "elements-reasoning-panel",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/reasoning-panel.tsx"]
+    },
+    {
+      "name": "elements-streaming-text",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/streaming-text.tsx"]
+    },
+    {
+      "name": "elements-typing-indicator",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/typing-indicator.tsx"]
+    },
+    {
+      "name": "elements-message-pair",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/message-pair.tsx"]
+    },
+    {
+      "name": "elements-message-branches",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/message-branches.tsx"]
+    },
+    {
+      "name": "elements-message-actions",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/message-actions.tsx"]
+    },
+    {
+      "name": "elements-suggestions",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/suggestions.tsx"]
+    },
+    {
+      "name": "elements-error-state",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/error-state.tsx"]
+    },
+    {
+      "name": "elements-tool-call",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/tool-call.tsx"]
+    },
+    {
+      "name": "elements-run-activity",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/run-activity.tsx"]
+    },
+    {
+      "name": "elements-tool-timeline",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/tool-timeline.tsx"]
+    },
+    {
+      "name": "elements-terminal-block",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/terminal-block.tsx"]
+    },
+    {
+      "name": "elements-code-diff",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/code-diff.tsx"]
+    },
+    {
+      "name": "elements-web-search",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/web-search.tsx"]
+    },
+    {
+      "name": "elements-sources",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/sources.tsx"]
+    },
+    {
+      "name": "elements-inline-citation",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/inline-citation.tsx"]
+    },
+    {
+      "name": "elements-link-preview",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/link-preview.tsx"]
+    },
+    {
+      "name": "elements-image-generation",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/image-generation.tsx"]
+    },
+    {
+      "name": "elements-image-gallery",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/image-gallery.tsx"]
+    },
+    {
+      "name": "elements-data-table",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/data-table.tsx"]
+    },
+    {
+      "name": "elements-number-ticker",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/number-ticker.tsx"]
+    },
+    {
+      "name": "elements-agent-plan",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/agent-plan.tsx"]
+    },
+    {
+      "name": "elements-subagent-list",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/subagent-list.tsx"]
+    },
+    {
+      "name": "elements-agent-status",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/agent-status.tsx"]
+    },
+    {
+      "name": "elements-task-card",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/task-card.tsx"]
+    },
+    {
+      "name": "elements-approval-card",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/approval-card.tsx"]
+    },
+    {
+      "name": "elements-receipt-focus",
+      "type": "registry:component",
+      "files": [
+        "components/assistant-ui/elements/receipt-focus.ts",
+        "components/assistant-ui/utils/useIsomorphicLayoutEffect.ts"
+      ]
+    },
+    {
+      "name": "elements-option-list",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/option-list.tsx"]
+    },
+    {
+      "name": "elements-question-flow",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/question-flow.tsx"]
+    },
+    {
+      "name": "elements-recommendation-card",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/recommendation-card.tsx"]
+    },
+    {
+      "name": "elements-artifact-card",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/artifact-card.tsx"]
+    },
+    {
+      "name": "elements-composer",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/composer.tsx"]
+    },
+    {
+      "name": "elements-chat-panel",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/chat-panel.tsx"]
+    },
+    {
+      "name": "elements-empty-state",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/empty-state.tsx"]
+    },
+    {
+      "name": "elements-thread-list",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/thread-list.tsx"]
+    },
+    {
+      "name": "elements-scroll-anchor",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/scroll-anchor.tsx"]
+    },
+    {
+      "name": "elements-conversation-map",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/conversation-map.tsx"]
+    },
+    {
+      "name": "elements-todo-list",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/todo-list.tsx"]
+    },
+    {
+      "name": "elements-message-queue",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/message-queue.tsx"]
+    },
+    {
+      "name": "elements-message-attachment",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/message-attachment.tsx"]
+    },
+    {
+      "name": "elements-reviewable-diff",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/reviewable-diff.tsx"]
+    },
+    {
+      "name": "elements-file-tree",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/file-tree.tsx"]
+    },
+    {
+      "name": "elements-elicitation-form",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/elicitation-form.tsx"]
+    },
+    {
+      "name": "elements-retrieval-chunks",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/retrieval-chunks.tsx"]
+    },
+    {
+      "name": "elements-chart",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/chart.tsx"]
+    },
+    {
+      "name": "elements-media-player",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/media-player.tsx"]
+    },
+    {
+      "name": "elements-trace-waterfall",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/trace-waterfall.tsx"]
+    },
+    {
+      "name": "elements-canvas-split",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/canvas-split.tsx"]
+    },
+    {
+      "name": "elements-voice-conversation",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/voice-conversation.tsx"]
+    },
+    {
+      "name": "elements-read-aloud",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/read-aloud.tsx"]
+    },
+    {
+      "name": "elements-mcp-server-panel",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/mcp-server-panel.tsx"]
+    },
+    {
+      "name": "elements-feedback-dialog",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/feedback-dialog.tsx"]
+    },
+    {
+      "name": "elements-quote-reply",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/quote-reply.tsx"]
+    },
+    {
+      "name": "elements-edit-message",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/edit-message.tsx"]
+    },
+    {
+      "name": "elements-stopped-run",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/stopped-run.tsx"]
+    },
+    {
+      "name": "elements-message-timing",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/message-timing.tsx"]
+    },
+    {
+      "name": "elements-connection-state",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/connection-state.tsx"]
+    },
+    {
+      "name": "elements-agent-card",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/agent-card.tsx"]
+    },
+    {
+      "name": "elements-web-preview",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/web-preview.tsx"]
+    },
+    {
+      "name": "elements-draft-restore",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/draft-restore.tsx"]
+    },
+    {
+      "name": "elements-diagram",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/diagram.tsx"]
+    },
+    {
+      "name": "elements-flow-graph",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/flow-graph.tsx"]
+    },
+    {
+      "name": "elements-activity-graph",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/activity-graph.tsx"]
+    },
+    {
+      "name": "elements-tool-group",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/tool-group.tsx"]
+    },
+    {
+      "name": "elements-context-breakdown",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/context-breakdown.tsx"]
+    },
+    {
+      "name": "elements-model-picker",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/model-picker.tsx"]
+    },
+    {
+      "name": "elements-reasoning-effort",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/reasoning-effort.tsx"]
+    },
+    {
+      "name": "elements-guardrail-notice",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/guardrail-notice.tsx"]
+    },
+    {
+      "name": "elements-day-separator",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/day-separator.tsx"]
+    },
+    {
+      "name": "elements-speaker-identity",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/speaker-identity.tsx"]
+    },
+    {
+      "name": "elements-regenerate-menu",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/regenerate-menu.tsx"]
+    },
+    {
+      "name": "elements-confidence-marker",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/confidence-marker.tsx"]
+    },
+    {
+      "name": "elements-tool-error",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/tool-error.tsx"]
+    },
+    {
+      "name": "elements-permission-grant",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/permission-grant.tsx"]
+    },
+    {
+      "name": "elements-computer-use",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/computer-use.tsx"]
+    },
+    {
+      "name": "elements-code-runner",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/code-runner.tsx"]
+    },
+    {
+      "name": "elements-document-reference",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/document-reference.tsx"]
+    },
+    {
+      "name": "elements-memory-chips",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/memory-chips.tsx"]
+    },
+    {
+      "name": "elements-research-report",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/research-report.tsx"]
+    },
+    {
+      "name": "elements-map-answer",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/map-answer.tsx"]
+    },
+    {
+      "name": "elements-geo-map",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/geo-map.tsx"]
+    },
+    {
+      "name": "elements-math-block",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/math-block.tsx"]
+    },
+    {
+      "name": "elements-spec-sheet",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/spec-sheet.tsx"]
+    },
+    {
+      "name": "elements-comparison-card",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/comparison-card.tsx"]
+    },
+    {
+      "name": "elements-timeline",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/timeline.tsx"]
+    },
+    {
+      "name": "elements-job-progress",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/job-progress.tsx"]
+    },
+    {
+      "name": "elements-score-breakdown",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/score-breakdown.tsx"]
+    },
+    {
+      "name": "elements-cost-meter",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/cost-meter.tsx"]
+    },
+    {
+      "name": "elements-quota-banner",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/quota-banner.tsx"]
+    },
+    {
+      "name": "elements-agent-handoff",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/agent-handoff.tsx"]
+    },
+    {
+      "name": "elements-background-inbox",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/background-inbox.tsx"]
+    },
+    {
+      "name": "elements-checkpoint-history",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/checkpoint-history.tsx"]
+    },
+    {
+      "name": "elements-schedule-card",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/schedule-card.tsx"]
+    },
+    {
+      "name": "elements-prompt-library",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/prompt-library.tsx"]
+    },
+    {
+      "name": "elements-command-palette",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/command-palette.tsx"]
+    },
+    {
+      "name": "elements-shared-conversation",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/shared-conversation.tsx"]
+    },
+    {
+      "name": "elements-conversation-search",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/conversation-search.tsx"]
+    },
+    {
+      "name": "elements-thread-search",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/thread-search.tsx"]
+    },
+    {
+      "name": "elements-launcher-bubble",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/launcher-bubble.tsx"]
+    },
+    {
+      "name": "elements-settings-panel",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/settings-panel.tsx"]
+    },
+    {
+      "name": "elements-onboarding",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/onboarding.tsx"]
+    },
+    {
+      "name": "elements-mobile-composer",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/mobile-composer.tsx"]
+    },
+    {
+      "name": "shimmer-style",
+      "type": "registry:style",
+      "registrySha256": "fc32444b9e547cc3bc4bc4fb1920cb05379d225deff18d3aba0c492568995dd7",
+      "disposition": "reused-existing-owner",
+      "destinations": ["src/theme.css"]
+    },
+    {
+      "name": "chat/b/ai-sdk-quick-start/json",
+      "type": "registry:page",
+      "registrySha256": "7272971f56f702e73d3b5064b5d6b205ae72cd7cb0b1605ccf6988089b355447",
+      "disposition": "excluded-application-template",
+      "destinations": []
+    },
+    {
+      "name": "ai-sdk-backend",
+      "type": "registry:page",
+      "registrySha256": "1c27ca984c96f7f9731da3ef949b2a8ee9b00aec0c10abf083b6645079219a8d",
+      "disposition": "excluded-application-template",
+      "destinations": []
+    },
+    {
+      "name": "ai-sdk-backend-resumable",
+      "type": "registry:page",
+      "registrySha256": "478b877771143f50920d51ff98f7f68ea1e9cce2c8f3c60f9259dd7d7dc96b30",
+      "disposition": "excluded-application-template",
+      "destinations": []
+    },
+    {
+      "name": "eve-chat",
+      "type": "registry:item",
+      "files": [
+        "app/page.tsx",
+        "components/assistant-ui/elements/thread.aui.tsx",
+        "components/assistant-ui/elements/attachment.aui.tsx",
+        "components/assistant-ui/elements/tooltip-icon-button.tsx",
+        "hooks/use-attachment-src.ts",
+        "components/assistant-ui/elements/file.tsx",
+        "components/assistant-ui/elements/media-player.tsx",
+        "components/assistant-ui/elements/surfaces.tsx",
+        "components/assistant-ui/utils/useIsomorphicLayoutEffect.ts",
+        "components/assistant-ui/elements/follow-up-suggestions.aui.tsx",
+        "components/assistant-ui/elements/image.tsx",
+        "components/assistant-ui/utils/href.ts",
+        "components/assistant-ui/elements/markdown-text.tsx",
+        "hooks/use-copy-to-clipboard.ts",
+        "components/assistant-ui/elements/reasoning.aui.tsx",
+        "components/assistant-ui/elements/reasoning.tsx",
+        "components/assistant-ui/utils/useIsomorphicLayoutEffect.ts",
+        "components/assistant-ui/elements/collapsible-root.tsx",
+        "components/assistant-ui/elements/tool-fallback.aui.tsx",
+        "components/assistant-ui/elements/tool-group.aui.tsx",
+        "components/eve-ask-question.tsx",
+        "components/ui/avatar.tsx",
+        "components/ui/button.tsx",
+        "components/ui/dialog.tsx",
+        "components/ui/skeleton.tsx",
+        "components/ui/textarea.tsx",
+        "components/ui/tooltip.tsx"
+      ]
+    },
+    {
+      "name": "eve-ask-question",
+      "type": "registry:component",
+      "files": ["components/eve-ask-question.tsx"]
+    },
+    {
+      "name": "thread",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/thread.aui.tsx"]
+    },
+    {
+      "name": "elements-voice",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/voice.tsx"]
+    },
+    {
+      "name": "elements-context-display",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/context-display.tsx"]
+    },
+    {
+      "name": "elements-context-usage",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/utils/context-usage.ts"]
+    },
+    {
+      "name": "voice",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/voice.aui.tsx"]
+    },
+    {
+      "name": "voice-conversation",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/voice-conversation.aui.tsx"]
+    },
+    {
+      "name": "task-card",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/task-card.aui.tsx"]
+    },
+    {
+      "name": "agent-status",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/agent-status.aui.tsx"]
+    },
+    {
+      "name": "use-copy-to-clipboard",
+      "type": "registry:hook",
+      "files": ["hooks/use-copy-to-clipboard.ts"]
+    },
+    {
+      "name": "markdown-text",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/markdown-text.tsx"]
+    },
+    {
+      "name": "reasoning",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/reasoning.aui.tsx"]
+    },
+    {
+      "name": "conversation-map",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/conversation-map.aui.tsx"]
+    },
+    {
+      "name": "elements-reasoning",
+      "type": "registry:component",
+      "files": [
+        "components/assistant-ui/elements/reasoning.tsx",
+        "components/assistant-ui/utils/useIsomorphicLayoutEffect.ts"
+      ]
+    },
+    {
+      "name": "message-timing",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/message-timing.aui.tsx"]
+    },
+    {
+      "name": "context-display",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/context-display.aui.tsx"]
+    },
+    {
+      "name": "thread-list",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/thread-list.aui.tsx"]
+    },
+    {
+      "name": "mcp-config",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/mcp-config.aui.tsx"]
+    },
+    {
+      "name": "elements-mcp-config-state",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/utils/mcp-config-state.ts"]
+    },
+    {
+      "name": "use-attachment-src",
+      "type": "registry:hook",
+      "files": ["hooks/use-attachment-src.ts"]
+    },
+    {
+      "name": "attachment",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/attachment.aui.tsx"]
+    },
+    {
+      "name": "follow-up-suggestions",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/follow-up-suggestions.aui.tsx"]
+    },
+    {
+      "name": "tooltip-icon-button",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/tooltip-icon-button.tsx"]
+    },
+    {
+      "name": "syntax-highlighter",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/syntax-highlighter.tsx"]
+    },
+    {
+      "name": "elements-modal-size",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/utils/modal-size.ts"]
+    },
+    {
+      "name": "assistant-modal",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/assistant-modal.aui.tsx"]
+    },
+    {
+      "name": "assistant-sidebar",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/assistant-sidebar.aui.tsx"]
+    },
+    {
+      "name": "tool-fallback",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/tool-fallback.aui.tsx"]
+    },
+    {
+      "name": "tool-group",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/tool-group.aui.tsx"]
+    },
+    {
+      "name": "shiki-highlighter",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/shiki-highlighter.aui.tsx"]
+    },
+    {
+      "name": "elements-shiki-highlighter",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/shiki-highlighter.tsx"]
+    },
+    {
+      "name": "mermaid-diagram",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/mermaid-diagram.aui.tsx"]
+    },
+    {
+      "name": "elements-mermaid-diagram",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/mermaid-diagram.tsx"]
+    },
+    {
+      "name": "diff-viewer",
+      "type": "registry:ui",
+      "files": ["components/ui/diff-viewer.tsx"]
+    },
+    {
+      "name": "threadlist-sidebar",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/threadlist-sidebar.aui.tsx", "components/icons/github.tsx"]
+    },
+    {
+      "name": "quote",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/quote.aui.tsx"]
+    },
+    {
+      "name": "sources",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/sources.aui.tsx"]
+    },
+    {
+      "name": "image",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/image.tsx"]
+    },
+    {
+      "name": "file",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/file.tsx"]
+    },
+    {
+      "name": "model-selector",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/model-selector.aui.tsx"]
+    },
+    {
+      "name": "elements-model-selector",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/model-selector.tsx"]
+    },
+    {
+      "name": "elements-model-selection",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/utils/model-selection.ts"]
+    },
+    {
+      "name": "logos",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/logos.tsx"]
+    },
+    {
+      "name": "select",
+      "type": "registry:ui",
+      "files": ["components/ui/select.tsx"]
+    },
+    {
+      "name": "direction",
+      "type": "registry:ui",
+      "files": ["components/ui/direction.tsx"]
+    },
+    {
+      "name": "badge",
+      "type": "registry:ui",
+      "files": ["components/ui/badge.tsx"]
+    },
+    {
+      "name": "tabs",
+      "type": "registry:ui",
+      "files": ["components/ui/tabs.tsx"]
+    },
+    {
+      "name": "accordion",
+      "type": "registry:ui",
+      "files": ["components/ui/accordion.tsx"]
+    },
+    {
+      "name": "dot-matrix",
+      "type": "registry:ui",
+      "files": ["components/ui/dot-matrix.tsx"]
+    },
+    {
+      "name": "number-roll",
+      "type": "registry:ui",
+      "files": ["components/ui/number-roll.tsx"]
+    },
+    {
+      "name": "heat-graph",
+      "type": "registry:component",
+      "files": [
+        "components/assistant-ui/elements/heat-graph.tsx",
+        "components/assistant-ui/utils/useIsomorphicLayoutEffect.ts"
+      ]
+    },
+    {
+      "name": "composer-trigger-popover",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/composer-trigger-popover.aui.tsx"]
+    },
+    {
+      "name": "directive-text",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/directive-text.aui.tsx"]
+    },
+    {
+      "name": "elements-directive-text",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/directive-text.tsx"]
+    },
+    {
+      "name": "generative-ui-style",
+      "type": "registry:style",
+      "registrySha256": "002c01bc55d47f91513cc82d21d6f9cd06ff6c309547f478ff25223b27964d98",
+      "disposition": "adapted-native-stylesheet",
+      "destinations": ["src/components/assistant-ui/generative-ui.css"]
+    },
+    {
+      "name": "generative-ui",
+      "type": "registry:component",
+      "files": ["components/assistant-ui/elements/generative-ui.tsx"]
+    }
+  ],
+  "files": [
+    {
+      "upstreamPath": "components/assistant-ui/elements/collapsible-root.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/collapsible-root.radix.tsx",
+      "sha256": "ebea1fff3af62e619a63680227b3c4b89cec449fac059f5fcd6695cc128f38b8",
+      "upstreamExports": ["CollapsibleRoot", "CollapsibleTrigger", "CollapsibleContent"],
+      "disposition": "reused-existing-base-ui-owner",
+      "destinations": ["src/components/Collapsible.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/surfaces.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/surfaces.tsx",
+      "sha256": "5d81fbb669e67ae20026cd30ed57efc51a5e3ee0f4f5d265e1723de75359b8fa",
+      "upstreamExports": [
+        "paper",
+        "floating",
+        "field",
+        "fieldInteractive",
+        "pressable",
+        "ghostButton",
+        "inkButton",
+        "iconSwap",
+        "iconSwapIn",
+        "iconSwapOut",
+        "labelSwap",
+        "labelSwapIn",
+        "labelSwapOut",
+        "collapsePanel",
+        "live",
+        "mono",
+        "ShimmerLabel",
+        "codeScroll",
+        "codeSurface",
+        "SwapLabel"
+      ],
+      "disposition": "adapted-source",
+      "destinations": [
+        "src/components/assistant-ui/elements/ShimmerLabel.tsx",
+        "src/components/assistant-ui/elements/SwapLabel.tsx",
+        "src/components/assistant-ui/elements/constants.ts"
+      ]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/utils/useIsomorphicLayoutEffect.ts",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/utils/useIsomorphicLayoutEffect.ts",
+      "sha256": "8db117d730e640655e5099e086af4e00d545c283839d9ef5885ca93419d51893",
+      "upstreamExports": ["useIsomorphicLayoutEffect"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/hooks/useIsomorphicLayoutEffect.ts"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/utils/range.ts",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/utils/range.ts",
+      "sha256": "3506d5f07865c042a4ef9b96904f687d19372a14e7dfccf946749860a3606182",
+      "upstreamExports": ["clamp", "take", "indexIn", "at", "pct", "announced", "progressOf"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/utils/range.ts"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/utils/tokens.ts",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/utils/tokens.ts",
+      "sha256": "009b617a40b7bdc6df50b249274d777d09385eb8581a0e72b90fdd96610a14cb",
+      "upstreamExports": ["formatTokenCount"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/utils/tokens.ts"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/utils/href.ts",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/utils/href.ts",
+      "sha256": "3a8038d038b1918ae3f58a61dcd30933633131dda341eb5bea5b6a650b31a912",
+      "upstreamExports": ["safeHref", "hostOf"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/utils/href.ts"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/utils/task.ts",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/utils/task.ts",
+      "sha256": "bcf85d5bc933f8a5f61269196674f70a49edf0566b6ab1078fad8e5eed44eb7a",
+      "upstreamExports": [
+        "TaskViewState",
+        "TaskTiming",
+        "TASK_PAGE_SIZE",
+        "taskStateOf",
+        "taskLabel",
+        "taskMeta",
+        "formatElapsed",
+        "useTaskElapsed"
+      ],
+      "disposition": "adapted-source",
+      "destinations": [
+        "src/components/assistant-ui/hooks/useTaskElapsed.ts",
+        "src/components/assistant-ui/utils/taskUtils.ts"
+      ]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/loading-state.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/loading-state.tsx",
+      "sha256": "1a40f01f59fa6857508e4ac9a723868b49f96084c68958f3adb41c5a6ca2ba56",
+      "upstreamExports": ["GenerationLoaderVariant", "GenerationLoaderProps", "GenerationLoader"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/GenerationLoader.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/thinking-indicator.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/thinking-indicator.tsx",
+      "sha256": "dc85ba3e84c99deb63ec7285dbd12d05f4c28e168ed4ae034a22a662f53eb71b",
+      "upstreamExports": ["ThinkingIndicator"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/ThinkingIndicator.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/reasoning-panel.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/reasoning-panel.tsx",
+      "sha256": "c37579e233c98ef30af32f712a02d38106c41799d72205bbb9b8da659059eb39",
+      "upstreamExports": ["ReasoningStep", "ReasoningPanelProps", "ReasoningPanel"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/ReasoningPanel.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/streaming-text.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/streaming-text.tsx",
+      "sha256": "d7aec7e7ba1977105095ff2554d266e040a707eb60709535ae194a72db30592d",
+      "upstreamExports": ["Segment", "StreamingText"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/StreamingText.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/typing-indicator.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/typing-indicator.tsx",
+      "sha256": "3fbafcfae07583a14e38cf4bfce4d0187b0a04a1a3fb51291f6fb8aea98aa516",
+      "upstreamExports": ["TypingIndicator"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/TypingIndicator.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/message-pair.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/message-pair.tsx",
+      "sha256": "ba621481e64628fe6f1cd163b85e1aa5f5fb592c146b7bc56d0c20853bc325d6",
+      "upstreamExports": ["MessagePairProps", "MessagePair"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/MessagePair.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/message-branches.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/message-branches.tsx",
+      "sha256": "5cf6e258b2e1a73147b702b940a3294e673d253d0e6c384c5a3f3397bf07e689",
+      "upstreamExports": ["MessageBranchesProps", "MessageBranches"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/MessageBranches.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/message-actions.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/message-actions.tsx",
+      "sha256": "000c9da991dd888234576521192579169a0b6c4913ad2b025ee387b29c6d5277",
+      "upstreamExports": ["Reaction", "MessageActionsProps", "MessageActions"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/MessageActions.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/suggestions.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/suggestions.tsx",
+      "sha256": "7f42ec4e0d6372ec595b4d4a99c035b66568da93a2ca61477cb37070863cf825",
+      "upstreamExports": ["SuggestionsProps", "Suggestions"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/Suggestions.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/error-state.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/error-state.tsx",
+      "sha256": "92f5158080a3fcabaa6c4959f175785f0532a8534f03ad39393ee6b0ebe08428",
+      "upstreamExports": ["ErrorStateProps", "ErrorState"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/ErrorState.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/tool-call.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/tool-call.tsx",
+      "sha256": "71c673d273b02d5757ae06c8b3be006b29f6a522ebea344243e66977c2b7259b",
+      "upstreamExports": ["ToolCallProps", "ToolCall"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/ToolCall.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/run-activity.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/run-activity.tsx",
+      "sha256": "1b838ae6054c2c45535701af231291436e77da1d6215a2c2a80a313de5aaeace",
+      "upstreamExports": ["RunActivityStatus", "RunActivityEntry", "RunActivityProps", "RunActivity"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/RunActivity.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/tool-timeline.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/tool-timeline.tsx",
+      "sha256": "bb9e3cf5d498c0339ab33590db5f86c3412a06e80db0094287e48380d997adfe",
+      "upstreamExports": ["TimelineStep", "TimelineStat", "ToolTimelineProps", "ToolTimeline"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/ToolTimeline.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/terminal-block.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/terminal-block.tsx",
+      "sha256": "35e1ccbb9bf8fe36967441485363b3a5a4f2c4b7183eb88bcf098f5c761048c1",
+      "upstreamExports": ["AnsiColor", "AnsiSegment", "parseAnsi", "TerminalBlock"],
+      "disposition": "adapted-source",
+      "destinations": [
+        "src/components/assistant-ui/elements/TerminalBlock.tsx",
+        "src/components/assistant-ui/elements/TerminalAnsiFragment.tsx",
+        "src/components/assistant-ui/utils/parseTerminalLine.ts",
+        "src/components/assistant-ui/utils/readTerminalBackground.ts",
+        "src/components/assistant-ui/utils/readableTerminalForeground.ts",
+        "src/components/assistant-ui/utils/stripTerminalControls.ts"
+      ]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/code-diff.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/code-diff.tsx",
+      "sha256": "76417061021b41036c23b862f054b8c2ba52e135358ff4c0432a8e54c654b4c2",
+      "upstreamExports": ["DiffKind", "DiffLine", "CodeDiff"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/CodeDiff.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/web-search.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/web-search.tsx",
+      "sha256": "579137a4c9ce3bbe8299712033cab89ee0a76ac327e9b41e0e83a5a93218644a",
+      "upstreamExports": ["WebSearchResult", "WebSearch"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/WebSearch.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/sources.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/sources.tsx",
+      "sha256": "c280153e36f1a110f1c3edded3b2f27ad42def391413aa055ede9ac886e354b8",
+      "upstreamExports": ["Source", "SourcesProps", "SourceGlyph", "Sources"],
+      "disposition": "adapted-source",
+      "destinations": [
+        "src/components/assistant-ui/elements/Sources.tsx",
+        "src/components/assistant-ui/elements/SourceGlyph.tsx"
+      ]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/inline-citation.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/inline-citation.tsx",
+      "sha256": "e70551e72d0bb8cb16e9552b22ca31f8b1ed30c062217e98ecef6d86843ac64a",
+      "upstreamExports": ["Source", "CitationProps", "Citation", "InlineCitationProps", "InlineCitation"],
+      "disposition": "adapted-source",
+      "destinations": [
+        "src/components/assistant-ui/elements/InlineCitation.tsx",
+        "src/components/assistant-ui/elements/Citation.tsx"
+      ]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/link-preview.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/link-preview.tsx",
+      "sha256": "a51a2da9fc5af60a42336f468b195706c5759361bfb01c6ba8d3848661076f26",
+      "upstreamExports": ["LinkPreviewProps", "LinkPreview"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/LinkPreview.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/image-generation.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/image-generation.tsx",
+      "sha256": "a14cbfc24b80b0e7f365bcf37400486a18ebe49350c7c6439ea1446d52a42d2a",
+      "upstreamExports": ["ImageGeneration"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/ImageGeneration.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/image-gallery.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/image-gallery.tsx",
+      "sha256": "059480306d8ec9461efb1c34929c16db6a980dcb3c9ba7c03baff7fa7dd7c20d",
+      "upstreamExports": ["GalleryImage", "ImageGalleryProps", "ImageGallery"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/ImageGallery.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/data-table.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/data-table.tsx",
+      "sha256": "8b2b3ba77ea50b1daf79355526fdb4669522cee5e38538c4a1e9a10f69fa19fe",
+      "upstreamExports": [
+        "DataTableValue",
+        "DataTableRow",
+        "DataTableFormat",
+        "DataTableColumn",
+        "DataTableSort",
+        "DataTableProps",
+        "DataTable"
+      ],
+      "disposition": "adapted-source",
+      "destinations": [
+        "src/components/assistant-ui/elements/DataTable.tsx",
+        "src/components/assistant-ui/utils/dataTable/types.ts",
+        "src/components/assistant-ui/elements/DataTableValueCell.tsx",
+        "src/components/assistant-ui/utils/dataTableUtils.ts",
+        "src/components/assistant-ui/utils/dataTable/constants.ts"
+      ]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/number-ticker.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/number-ticker.tsx",
+      "sha256": "ace2630b7884fbc4e1ae24a2fdfd87bc809bfb999e41cb0a7076c7038c976987",
+      "upstreamExports": ["NumberTicker"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/NumberTicker.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/agent-plan.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/agent-plan.tsx",
+      "sha256": "4cfc56bbe121fdd8269f4e894bdb60b2acb8d5e23bd7cc8359d47949f57336b2",
+      "upstreamExports": ["AgentPlanStep", "AgentPlan"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/AgentPlan.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/subagent-list.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/subagent-list.tsx",
+      "sha256": "45b41b2621c1ed3e0b1268aaa21987b80bb8f3404e0685014f60091d084d83f8",
+      "upstreamExports": ["SubagentItem", "SubagentList"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/SubagentList.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/agent-status.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/agent-status.tsx",
+      "sha256": "64f2708a1fa34f922c744ed2ac5e5237e496b8b16a0279dbc5ce4d8d8be86719",
+      "upstreamExports": ["AgentState", "StatusStep", "AgentStatus"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/AgentStatus.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/task-card.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/task-card.tsx",
+      "sha256": "36397b2b4a16a090e2ea3ebd61b8d4712c33435a57fa9d926897e2e796c7401f",
+      "upstreamExports": ["TaskCardState", "TaskStateIcon", "TaskCard"],
+      "disposition": "adapted-source",
+      "destinations": [
+        "src/components/assistant-ui/elements/TaskCard.tsx",
+        "src/components/assistant-ui/elements/TaskStateIcon.tsx"
+      ]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/approval-card.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/approval-card.tsx",
+      "sha256": "a6b9797c48a965d629af628b8e8a9a4102ce9c6d7b2ca2f9ead75676223dcdef",
+      "upstreamExports": ["ApprovalState", "ApprovalCard"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/ApprovalCard.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/receipt-focus.ts",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/receipt-focus.ts",
+      "sha256": "0be780a30c042bbb41b6c0621d76ef8506ebe92011ebf36cd5d9e77fb7fd6ec0",
+      "upstreamExports": ["useReceiptFocus"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/hooks/useReceiptFocus.ts"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/option-list.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/option-list.tsx",
+      "sha256": "5f1c156aac4ad56aedac93665bef44f84a1253f357127dd92c55bf6926d230dc",
+      "upstreamExports": ["OptionListOption", "OptionListProps", "OptionList"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/OptionList.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/question-flow.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/question-flow.tsx",
+      "sha256": "57b4b8af15e4a444586e684910b89db819cc5021c60a39ea93918dc721a94489",
+      "upstreamExports": ["QuestionFlowStep", "QuestionFlowProps", "QuestionFlow"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/QuestionFlow.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/recommendation-card.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/recommendation-card.tsx",
+      "sha256": "d312f829145a8edf439a0b3f5cba073dc5258ede0302c244b3f32acf42d37c5a",
+      "upstreamExports": ["RecommendationState", "RecommendationCard"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/RecommendationCard.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/artifact-card.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/artifact-card.tsx",
+      "sha256": "bcd3504b3b13a79d03b9032bc13adb06f951d2151f7b283eb0a3e55458c447f8",
+      "upstreamExports": ["ArtifactCard"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/ArtifactCard.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/composer.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/composer.tsx",
+      "sha256": "397fb48354d73ae3eb2e51fc4872601eb8cc863e981520a4a7de65865db65308",
+      "upstreamExports": [
+        "ComposerAttachment",
+        "ComposerCommand",
+        "ComposerPerson",
+        "ComposerModel",
+        "ComposerUsage",
+        "useSlashMatches",
+        "useMentionMatches",
+        "applyMention",
+        "Composer",
+        "ComposerBar",
+        "ComposerMenu",
+        "ComposerMenuItem",
+        "ComposerCommandItem",
+        "ComposerPersonItem",
+        "ComposerAttachments",
+        "ComposerAttachmentChip",
+        "ComposerInput",
+        "ComposerVoice",
+        "ComposerToolbar",
+        "ComposerActions",
+        "ComposerAttachButton",
+        "ComposerModelTrigger",
+        "ComposerModelItem",
+        "ComposerContext",
+        "ComposerVoiceButton",
+        "ComposerSend"
+      ],
+      "disposition": "adapted-source",
+      "destinations": [
+        "src/components/assistant-ui/elements/Composer.tsx",
+        "src/components/assistant-ui/utils/applyMention.ts",
+        "src/components/assistant-ui/elements/ComposerBar.tsx",
+        "src/components/assistant-ui/elements/ComposerMenu.tsx",
+        "src/components/assistant-ui/elements/ComposerMenuItem.tsx",
+        "src/components/assistant-ui/elements/ComposerCommandItem.tsx",
+        "src/components/assistant-ui/elements/ComposerPersonItem.tsx",
+        "src/components/assistant-ui/elements/ComposerAttachments.tsx",
+        "src/components/assistant-ui/elements/ComposerAttachmentChip.tsx",
+        "src/components/assistant-ui/elements/ComposerInput.tsx",
+        "src/components/assistant-ui/elements/ComposerVoice.tsx",
+        "src/components/assistant-ui/elements/ComposerToolbar.tsx",
+        "src/components/assistant-ui/elements/ComposerActions.tsx",
+        "src/components/assistant-ui/elements/ComposerAttachButton.tsx",
+        "src/components/assistant-ui/elements/ComposerModelTrigger.tsx",
+        "src/components/assistant-ui/elements/ComposerModelItem.tsx",
+        "src/components/assistant-ui/elements/ComposerContext.tsx",
+        "src/components/assistant-ui/elements/ComposerVoiceButton.tsx",
+        "src/components/assistant-ui/elements/ComposerSend.tsx"
+      ]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/chat-panel.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/chat-panel.tsx",
+      "sha256": "c8f545919a28a5e162b41029cdad28f3091f9a8abdc3c0a3dfdabd4cdd0b4be9",
+      "upstreamExports": [
+        "ChatPanel",
+        "ChatPanelMessages",
+        "ChatPanelUserMessage",
+        "ChatPanelAssistantMessage",
+        "ChatPanelTyping",
+        "ChatPanelComposer"
+      ],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/ChatPanel.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/empty-state.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/empty-state.tsx",
+      "sha256": "42d5a9eef41c6582285dac703c59ae73fb50967b87015f966d3d87cf0ff60ecf",
+      "upstreamExports": [
+        "EmptyState",
+        "EmptyStateGreeting",
+        "EmptyStateSuggestions",
+        "EmptyStateSuggestion",
+        "EmptyStateComposer"
+      ],
+      "disposition": "adapted-source",
+      "destinations": [
+        "src/components/assistant-ui/elements/EmptyState.tsx",
+        "src/components/assistant-ui/elements/EmptyStateGreeting.tsx",
+        "src/components/assistant-ui/elements/EmptyStateSuggestions.tsx",
+        "src/components/assistant-ui/elements/EmptyStateSuggestion.tsx",
+        "src/components/assistant-ui/elements/EmptyStateComposer.tsx"
+      ]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/thread-list.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/thread-list.tsx",
+      "sha256": "b759d3b43d46e45528609139a61471976a7158d105f111433c1ab26aea3ead7e",
+      "upstreamExports": ["ThreadItem", "ThreadList"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/ThreadList.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/scroll-anchor.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/scroll-anchor.tsx",
+      "sha256": "3db5eadc432815d8a0c460202e2460ad84c7286424fb5a8adc84e9f2078d0239",
+      "upstreamExports": ["ScrollAnchorMessage", "ScrollAnchor"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/ScrollAnchor.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/conversation-map.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/conversation-map.tsx",
+      "sha256": "805ea554059827847e6a6de4b09087037f11777235fc543208139e5e126b58cd",
+      "upstreamExports": ["ConversationMapEntry", "ConversationMap"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/ConversationMap.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/todo-list.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/todo-list.tsx",
+      "sha256": "0090df0bec2350d1e9992a5446d89267abcf4e1145a7603269c07236f295c518",
+      "upstreamExports": ["TodoStatus", "TodoItem", "TodoList"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/TodoList.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/message-queue.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/message-queue.tsx",
+      "sha256": "5eb1cd94c8e5a2a927a1f7a41e7af69947e5b7821a77e47daefb1498a97e0e3b",
+      "upstreamExports": ["QueuedMessage", "MessageQueue"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/MessageQueue.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/message-attachment.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/message-attachment.tsx",
+      "sha256": "d577a91802b3caa44e4f1e9d2e2948893b5761c53b4654ef5d94ea66f9f1f30c",
+      "upstreamExports": ["MessageAttachmentItem", "MessageAttachments"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/MessageAttachments.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/reviewable-diff.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/reviewable-diff.tsx",
+      "sha256": "0d1150655310df9feba5fac8017248076762f8d860ab8e70fa181773da6da4f1",
+      "upstreamExports": ["HunkDecision", "DiffHunk", "ReviewableDiff"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/ReviewableDiff.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/file-tree.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/file-tree.tsx",
+      "sha256": "13c6d45c28a68b3400dbdc7de8d3d4b1cff577377741d17183b2f395cf262399",
+      "upstreamExports": ["FileTreeNode", "FileTree"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/FileTree.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/elicitation-form.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/elicitation-form.tsx",
+      "sha256": "9d98ed74254ada76f5325f6d8cb333cf56bd3521763c3f6217c64e3ad8c2e621",
+      "upstreamExports": ["ElicitationState", "ElicitationField", "ElicitationForm"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/ElicitationForm.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/retrieval-chunks.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/retrieval-chunks.tsx",
+      "sha256": "b468ecfd99ef8b2babca932eb34199aecc054c4a1c4b140b81813877354f95e7",
+      "upstreamExports": ["RetrievalChunk", "RetrievalChunks"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/RetrievalChunks.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/chart.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/chart.tsx",
+      "sha256": "6e5d7ec1f1ef5bb077f3d28a5639375c877e6ced1c355951724dc354c2a7ba12",
+      "upstreamExports": ["ChartVariant", "Chart"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/Chart.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/media-player.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/media-player.tsx",
+      "sha256": "c1d92c3b7eeb21adac5052ff12ae1ac53b9e036340d58a4a80f84db1414ca538",
+      "upstreamExports": ["AudioPlayerProps", "VideoPlayerProps", "AudioPlayer", "VideoPlayer"],
+      "disposition": "adapted-source",
+      "destinations": [
+        "src/components/assistant-ui/elements/AudioPlayer.tsx",
+        "src/components/assistant-ui/elements/VideoPlayer.tsx"
+      ]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/trace-waterfall.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/trace-waterfall.tsx",
+      "sha256": "30ed74834cc12b91b0a09b045caa7ec11f314c85b0b43afd0d96f23ac0850066",
+      "upstreamExports": ["SpanStatus", "TraceSpan", "TraceWaterfall"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/TraceWaterfall.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/canvas-split.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/canvas-split.tsx",
+      "sha256": "219b3cd94b2c54d0f89f984156fa0e76081808295f883a8e487cf6f5ba90ad6c",
+      "upstreamExports": [
+        "CanvasSplit",
+        "CanvasSplitThread",
+        "CanvasSplitMessage",
+        "CanvasSplitDocument",
+        "CanvasSplitHeader",
+        "CanvasSplitBody",
+        "CanvasSplitLine"
+      ],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/CanvasSplit.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/voice-conversation.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/voice-conversation.tsx",
+      "sha256": "d5c0161d0f9a27d5b7b4df0e7f5f92500536ce1a94cc2d3aca00b3a932365c8f",
+      "upstreamExports": ["VoiceMode", "VoiceTurn", "VoiceConversation"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/VoiceConversation.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/read-aloud.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/read-aloud.tsx",
+      "sha256": "813b1302ce59b1e2e165c7822ed77fde7e496ddc3427fbcffd8e47b56bfb6fbb",
+      "upstreamExports": ["ReadAloud"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/ReadAloud.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/mcp-server-panel.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/mcp-server-panel.tsx",
+      "sha256": "d468cb92dd84f78d0e104a1b97172305c76db7b4cda82f3629293f68fa3a35f1",
+      "upstreamExports": ["McpServerStatus", "McpServer", "McpServerPanel"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/McpServerPanel.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/feedback-dialog.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/feedback-dialog.tsx",
+      "sha256": "e0c198a7fec36200f4c1008c6e0bd81e1686117ba88ff25292559bb20560784c",
+      "upstreamExports": ["FeedbackDialog"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/FeedbackDialog.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/quote-reply.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/quote-reply.tsx",
+      "sha256": "59e8103cd887ec5bff681a70470612881036e9d16edbc5749fa39c5331c3c243",
+      "upstreamExports": ["QuoteAction", "QuoteReply"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/QuoteReply.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/edit-message.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/edit-message.tsx",
+      "sha256": "cad0bbf2f3ae589e4ca532844da6f6bd471aef334a3c339f39de054db0fe59d0",
+      "upstreamExports": ["EditMessage"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/EditMessage.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/stopped-run.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/stopped-run.tsx",
+      "sha256": "0b2d8265dac672a15f7c53fe134b5d72c4db06d6321bf8a22029fbb464d2f902",
+      "upstreamExports": ["StoppedRun"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/StoppedRun.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/message-timing.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/message-timing.tsx",
+      "sha256": "0a622726a9f059c1ad2d7a44c66f55ec3344bda441066bcaa716f4e4da6a297b",
+      "upstreamExports": ["TimingStat", "MessageTiming"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/MessageTiming.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/connection-state.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/connection-state.tsx",
+      "sha256": "5afe58eaec85737c4019299451cb7fbb982e0b6fabf6f20dfb937a2464b268c0",
+      "upstreamExports": ["ConnectionPhase", "ConnectionState"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/ConnectionState.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/agent-card.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/agent-card.tsx",
+      "sha256": "7a50801840633b2645730cd25cc2d40cbadc8b43d8caf029d9ed5da1991ac147",
+      "upstreamExports": ["AgentSkill", "AgentCard"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/AgentCard.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/web-preview.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/web-preview.tsx",
+      "sha256": "aa8e24257fe85d232b578799ef175adc563ebd12a2d2851fc3acd6fe5cc9cad9",
+      "upstreamExports": ["WebPreview"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/WebPreview.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/draft-restore.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/draft-restore.tsx",
+      "sha256": "74244381d8bc82c44fb9b3d530a9ff5bda5926f13de37bbcdd7d6e8c4d1b26b6",
+      "upstreamExports": ["DraftRestore"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/DraftRestore.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/diagram.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/diagram.tsx",
+      "sha256": "54ad55954b266d525df4cbf987978457e5a72ee5d867bb952f43b4368e35c60a",
+      "upstreamExports": ["Diagram"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/Diagram.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/flow-graph.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/flow-graph.tsx",
+      "sha256": "5cf6918da703dcc7c87a49e7744d24152d626d8e7794c02363ed5f7a186741e4",
+      "upstreamExports": ["FlowNodeState", "FlowNode", "FlowEdge", "FlowGraph"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/FlowGraph.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/activity-graph.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/activity-graph.tsx",
+      "sha256": "f2c19a3b64b092ae6c7c30e0e3503ba9a470f44d755b820716536e5bb10add02",
+      "upstreamExports": ["ActivityGraph"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/ActivityGraph.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/tool-group.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/tool-group.tsx",
+      "sha256": "9537b7ab78495c83967ab0527d5c2cfe9f69a821e2e2f4495a880dd599439ed1",
+      "upstreamExports": ["GroupedToolState", "GroupedTool", "ToolGroup"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/ToolGroup.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/context-breakdown.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/context-breakdown.tsx",
+      "sha256": "f52f206457afc4be9071f7d0604136c054c84fc56a48251d445ecc92b8af5cd3",
+      "upstreamExports": ["ContextSegment", "ContextBreakdown"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/ContextBreakdown.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/model-picker.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/model-picker.tsx",
+      "sha256": "e8dab5c734068567421d43608fbece5d50e566c13e71ed417f03789a993396c8",
+      "upstreamExports": ["PickableModel", "ModelPicker"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/ModelPicker.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/reasoning-effort.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/reasoning-effort.tsx",
+      "sha256": "9caaf575a97e6001c3d3e007c5ac35b3ad429a47622ef10cd7773743ec944aff",
+      "upstreamExports": ["EffortLevel", "ReasoningEffort"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/ReasoningEffort.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/guardrail-notice.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/guardrail-notice.tsx",
+      "sha256": "7893a12f91c8325b9532e766e7d1008e8b118fd868d15f2d83b077552378507d",
+      "upstreamExports": ["GuardrailNotice"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/GuardrailNotice.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/day-separator.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/day-separator.tsx",
+      "sha256": "0edb6e048a2e7d8abcfe6a035b92a7451d558581fa647f7ebd7c420387300c1d",
+      "upstreamExports": ["DatedMessage", "DaySeparator"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/DaySeparator.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/speaker-identity.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/speaker-identity.tsx",
+      "sha256": "7d2ce0fd3a5c02ca8f49b970e598dbebeb9a096a478c9285f387c5356f3be91f",
+      "upstreamExports": ["SpeakerKind", "SpeakerTurn", "SpeakerIdentity"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/SpeakerIdentity.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/regenerate-menu.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/regenerate-menu.tsx",
+      "sha256": "edbb3d02f187251bd45ee8e200d57d3defe823a4a5664e85c319540fe40b5b69",
+      "upstreamExports": ["RegenerateOption", "RegenerateMenu"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/RegenerateMenu.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/confidence-marker.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/confidence-marker.tsx",
+      "sha256": "e08ed76f47061d4117fd9052a0fbf303923b53e29cc0d9db9f8dcbb0bc8eab93",
+      "upstreamExports": ["Confidence", "ConfidenceClaim", "ConfidenceMarker"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/ConfidenceMarker.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/tool-error.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/tool-error.tsx",
+      "sha256": "eed4b22c5283ceacb5fa954c1afd2bc5a0a4ae5a5fec722bac4b497b40396b92",
+      "upstreamExports": ["ToolError"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/ToolError.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/permission-grant.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/permission-grant.tsx",
+      "sha256": "330a19fc31a89ccca99912e8ee19bc79e9880b16029a53217810e5df68486d2c",
+      "upstreamExports": ["GrantScope", "PermissionGrant"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/PermissionGrant.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/computer-use.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/computer-use.tsx",
+      "sha256": "15efc4751170b3d783a030e5455d8a024b897bbded3b6d9ba848f11914167462",
+      "upstreamExports": ["ComputerStep", "ComputerUse"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/ComputerUse.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/code-runner.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/code-runner.tsx",
+      "sha256": "30030e0bf838401be2f96f1be36f8ba62756d0bbd60cc3ff56cca68a466516b5",
+      "upstreamExports": ["RunState", "CodeRunner"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/CodeRunner.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/document-reference.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/document-reference.tsx",
+      "sha256": "d045bc4a135297b2f1b4a512e842c51a87d62a90e4e78dfa2fad0f5266f00bfb",
+      "upstreamExports": ["DocumentAnchor", "DocumentReference"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/DocumentReference.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/memory-chips.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/memory-chips.tsx",
+      "sha256": "43b9d2ff8c27c00df9c67fec6433bc47767ebec3563fc92273cf1ebad5b9ef1a",
+      "upstreamExports": ["MemoryChange", "MemoryChip", "MemoryChips"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/MemoryChips.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/research-report.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/research-report.tsx",
+      "sha256": "a5006421898c5032e7807f2bb68f134414781478a25b3459391be047aa269e91",
+      "upstreamExports": ["SectionState", "ReportSection", "ResearchReport"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/ResearchReport.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/map-answer.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/map-answer.tsx",
+      "sha256": "20e0506e53e619799f9c5a0258c85751eca0249e48f377cb33c5d76788ad961f",
+      "upstreamExports": ["MapPin", "MapAnswer"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/MapAnswer.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/geo-map.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/geo-map.tsx",
+      "sha256": "755d1167b25f0951d3be677b7ccc4e20ffe32ce8a004467dd5f5758db7d684a7",
+      "upstreamExports": ["GeoMapPlace", "GeoMapRoute", "GeoMapProps", "GeoMap"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/GeoMap.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/math-block.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/math-block.tsx",
+      "sha256": "6b4784e13df658fef0a0ede10c867aa7e995aa42736d314af6fa9163c06f96e8",
+      "upstreamExports": ["MathStep", "MathBlock", "Frac", "Sup", "Sub"],
+      "disposition": "adapted-source",
+      "destinations": [
+        "src/components/assistant-ui/elements/MathBlock.tsx",
+        "src/components/assistant-ui/elements/Frac.tsx",
+        "src/components/assistant-ui/elements/Sup.tsx",
+        "src/components/assistant-ui/elements/Sub.tsx"
+      ]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/spec-sheet.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/spec-sheet.tsx",
+      "sha256": "0ab461c178f93d65f2fe858867381a7fe0cc7b167f7c4b8e7fe2fa2e917d9c31",
+      "upstreamExports": ["SpecRow", "SpecSheet"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/SpecSheet.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/comparison-card.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/comparison-card.tsx",
+      "sha256": "0803c0f4e746bf0d8dd046341512319d5a42711450ecd769be57a8f6f5f5fb52",
+      "upstreamExports": ["ComparisonOption", "ComparisonCard"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/ComparisonCard.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/timeline.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/timeline.tsx",
+      "sha256": "bcb9a1848520e718b253b6fb6d6a84cfefe66e217e13b3214417b16faa7911fb",
+      "upstreamExports": ["TimelineWhen", "TimelineEvent", "Timeline"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/Timeline.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/job-progress.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/job-progress.tsx",
+      "sha256": "8caec6c96d5b688adf42f5c3274747b91320a8627e77d8eaffad2d382e4a61dc",
+      "upstreamExports": ["JobStage", "JobProgress"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/JobProgress.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/score-breakdown.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/score-breakdown.tsx",
+      "sha256": "7be23bad4894ee99416357e45c1d7ea1fabf5cfa21f23ac5b85cdedd34f0c477",
+      "upstreamExports": ["ScoreCriterion", "ScoreBreakdown"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/ScoreBreakdown.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/cost-meter.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/cost-meter.tsx",
+      "sha256": "8acf75f340e8230490baa1ec3b31ce789c76968d70967d80461355ae1c36fcd2",
+      "upstreamExports": ["CostLine", "CostMeter"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/CostMeter.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/quota-banner.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/quota-banner.tsx",
+      "sha256": "722fe4436cfef49baa6e248be83bfbd36ad20ffd7fa1eea7c083b4dcd24f2c7d",
+      "upstreamExports": ["QuotaBanner"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/QuotaBanner.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/agent-handoff.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/agent-handoff.tsx",
+      "sha256": "5e6060d960f7f2c36c248fdc0707f5ff039c450e45fc61d404419b290a66f011",
+      "upstreamExports": ["AgentHandoff"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/AgentHandoff.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/background-inbox.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/background-inbox.tsx",
+      "sha256": "2b55b3ff232531d452a5179a9fdc320c8afa2bb029e5b3e7ab015d6b0c8810d3",
+      "upstreamExports": ["BackgroundState", "BackgroundRun", "BackgroundInbox"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/BackgroundInbox.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/checkpoint-history.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/checkpoint-history.tsx",
+      "sha256": "e451c6358c8e7e116fe246c8f41aa0e4e32a86ed36adbae8dd17a778ab723f0e",
+      "upstreamExports": ["Checkpoint", "CheckpointHistory"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/CheckpointHistory.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/schedule-card.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/schedule-card.tsx",
+      "sha256": "c2f61a13868feb4da8dde772a6c312ef9399b796d61644ef62fa502c6b0e6aff",
+      "upstreamExports": ["ScheduleRun", "ScheduleCard"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/ScheduleCard.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/prompt-library.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/prompt-library.tsx",
+      "sha256": "01e6e31962aefcf101aa1e3c1a6cd27107e25a8b53d3f382019c1ab0829b9354",
+      "upstreamExports": ["SavedPrompt", "PromptLibrary"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/PromptLibrary.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/command-palette.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/command-palette.tsx",
+      "sha256": "a9b78f41585cd5f15c8f1597831b2c77b0d6495cca570b2427997f2ba1f78323",
+      "upstreamExports": ["PaletteCommand", "CommandPalette"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/CommandPalette.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/shared-conversation.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/shared-conversation.tsx",
+      "sha256": "6c07dc0db0a37ad6fc89c1b1fcbe0a1f86f3ed86638fa1d6c4807f3118cba25c",
+      "upstreamExports": ["SharedTurn", "SharedConversation"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/SharedConversation.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/conversation-search.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/conversation-search.tsx",
+      "sha256": "f5b7ace378ea043b99642bfa650f8d0b1670f45a363dfbc3300754f5ea7e724c",
+      "upstreamExports": ["SearchHit", "ConversationSearch"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/ConversationSearch.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/thread-search.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/thread-search.tsx",
+      "sha256": "e6be6405365f90f94eee573d12ccd8e0651acf82d984f05444e5e3fc07544adb",
+      "upstreamExports": ["SearchableThread", "ThreadSearch"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/ThreadSearch.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/launcher-bubble.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/launcher-bubble.tsx",
+      "sha256": "6dd16e7ac134e74fb67b21e16746183209733fc01435333476c4a3b0050d8b0c",
+      "upstreamExports": ["LauncherBubble"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/LauncherBubble.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/settings-panel.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/settings-panel.tsx",
+      "sha256": "d654fd1f9843e7aa00bd0aa0fc2223f94d1285acd041aba03155d18d5cfba211",
+      "upstreamExports": ["SettingToggle", "SettingsPanel"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/SettingsPanel.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/onboarding.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/onboarding.tsx",
+      "sha256": "7fbee6cc981a15252c1878ab73ba87a3292957c5268c7ca008b4b3f7bd355634",
+      "upstreamExports": ["OnboardingStep", "Onboarding"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/Onboarding.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/mobile-composer.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/mobile-composer.tsx",
+      "sha256": "f623d217ba62f71d1ae29d4de3abc319538f37061663d1ea5f1aad12bc59adb3",
+      "upstreamExports": ["MobileComposer"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/MobileComposer.tsx"]
+    },
+    {
+      "upstreamPath": "app/page.tsx",
+      "sourcePath": "apps/registry/templates/eve/app/page.tsx",
+      "sha256": "adbcba34cd0b5b1e82d084a32f592586bc11c1c7bf9ad86dcf65f83ef1d05107",
+      "disposition": "excluded-application-template",
+      "destinations": []
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/thread.aui.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/thread.aui.tsx",
+      "sha256": "a5fd819bc9c80c7841936d752267791cdfc7aefab7e39cd7518672406bfcbbe9",
+      "upstreamExports": ["ThreadGroupPart", "ThreadComponents", "ThreadProps", "Thread"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/native/Thread.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/attachment.aui.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/attachment.aui.radix.tsx",
+      "sha256": "b8e3dd0f08a6f464a4e33db791a99e566e848104da83ff67117b7e97a7050d16",
+      "upstreamExports": ["UserMessageAttachments", "ComposerAttachments", "ComposerAddAttachment"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/native/AttachmentPreview.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/tooltip-icon-button.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/tooltip-icon-button.radix.tsx",
+      "sha256": "1ec2af97d22c34c955588c866aba5ddbfc579b1fd9218f68f75010b10e5a7868",
+      "upstreamExports": ["TooltipIconButtonProps", "TooltipIconButton"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/TooltipIconButton.tsx"]
+    },
+    {
+      "upstreamPath": "hooks/use-attachment-src.ts",
+      "sourcePath": "packages/ui/src/hooks/use-attachment-src.ts",
+      "sha256": "dfb621f1a18f4013994aa29815beddb436020105164526ab7c86b0b0a32040a1",
+      "upstreamExports": ["useAttachmentSrc"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/hooks/useAttachmentSrc.ts"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/file.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/file.tsx",
+      "sha256": "af6c5c38b0409f168e1bcebacffa9efaf7ff17ecc3cc0b5fab8d4770df0454a0",
+      "upstreamExports": [
+        "FileDataKind",
+        "FileRootProps",
+        "FilePlayerProps",
+        "File",
+        "FileRoot",
+        "FileIconDisplay",
+        "FileName",
+        "FileSize",
+        "FileDownload",
+        "FilePlayer",
+        "fileVariants",
+        "getMimeTypeIcon",
+        "getFileDataKind",
+        "getFileHref",
+        "getBase64Size",
+        "formatFileSize"
+      ],
+      "disposition": "adapted-source",
+      "destinations": [
+        "src/components/assistant-ui/elements/File.tsx",
+        "src/components/assistant-ui/utils/fileUtils.ts"
+      ]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/follow-up-suggestions.aui.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/follow-up-suggestions.aui.tsx",
+      "sha256": "f0db1e9cfc5f648adeb57c8ac61fbeca4ebbb4d55267a9c107709af01b73abb4",
+      "upstreamExports": ["ThreadFollowupSuggestions"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/native/FollowupSuggestionsRow.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/image.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/image.tsx",
+      "sha256": "93eaf85070e3a0199ae345b63b80d1ddc13ab37e11a0cda4795e54847a82ebea",
+      "upstreamExports": [
+        "ImageRootProps",
+        "ImageSourceProps",
+        "ImageActionsProps",
+        "Image",
+        "ImageRoot",
+        "ImagePreview",
+        "ImageSource",
+        "ImageFilename",
+        "ImageZoom",
+        "ImageActions",
+        "ImageGenerating",
+        "ImageContentFilterError",
+        "imageVariants"
+      ],
+      "disposition": "adapted-source",
+      "destinations": [
+        "src/components/assistant-ui/elements/Image.tsx",
+        "src/components/assistant-ui/utils/imageUtils.ts"
+      ]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/markdown-text.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/markdown-text.tsx",
+      "sha256": "7d20bd8fe709a1a6aeee24ba82531309e374740ba6181e092592275ffd6ff8ac",
+      "upstreamExports": ["MarkdownText"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/MarkdownText.tsx"]
+    },
+    {
+      "upstreamPath": "hooks/use-copy-to-clipboard.ts",
+      "sourcePath": "packages/ui/src/hooks/use-copy-to-clipboard.ts",
+      "sha256": "1f3b8a1bab79cef961f62eb25d6b58a0d16c957d63ba1faf086ad09c99712c0a",
+      "upstreamExports": ["UseCopyToClipboardOptions", "useCopyToClipboard"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/hooks/useCopyToClipboard.ts"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/reasoning.aui.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/reasoning.aui.tsx",
+      "sha256": "3ae8bcf0d84fcb9ac37a40c2046abbf46d7b8f3967b482eec84f0a743aefce65",
+      "upstreamExports": [
+        "ReasoningRootProps",
+        "Reasoning",
+        "ReasoningGroup",
+        "ReasoningRoot",
+        "ReasoningTrigger",
+        "ReasoningContent",
+        "ReasoningText",
+        "ReasoningFade",
+        "reasoningVariants"
+      ],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/native/Reasoning.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/reasoning.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/reasoning.tsx",
+      "sha256": "02c42a1cad5fd56f4479fe65c779e9f9934c03a6e935ac92ebf98cbb46ef3cc7",
+      "upstreamExports": [
+        "ANIMATION_DURATION",
+        "ReasoningRootProps",
+        "ReasoningRoot",
+        "ReasoningTrigger",
+        "ReasoningContent",
+        "ReasoningText",
+        "ReasoningFade",
+        "reasoningVariants"
+      ],
+      "disposition": "adapted-source",
+      "destinations": [
+        "src/components/assistant-ui/elements/ReasoningRoot.tsx",
+        "src/components/assistant-ui/elements/ReasoningTrigger.tsx",
+        "src/components/assistant-ui/elements/ReasoningContent.tsx",
+        "src/components/assistant-ui/elements/ReasoningText.tsx",
+        "src/components/assistant-ui/elements/ReasoningFade.tsx"
+      ]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/tool-fallback.aui.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/tool-fallback.aui.tsx",
+      "sha256": "31720ad79fe332a5999cc1873108da740e63c05f4b8f322bde75f8d495cbf853",
+      "upstreamExports": [
+        "ToolFallbackRootProps",
+        "formatUnknownValue",
+        "offersInterruptAction",
+        "ToolFallback",
+        "ToolFallbackRoot",
+        "ToolFallbackTrigger",
+        "ToolFallbackContent",
+        "ToolFallbackArgs",
+        "ToolFallbackResult",
+        "ToolFallbackError",
+        "ToolFallbackApproval"
+      ],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/native/ToolFallbackRoot.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/tool-group.aui.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/tool-group.aui.tsx",
+      "sha256": "757caf28ee232d4f500c8af7d6837fe7d6d2b144774a6a0bcdaff8c0c517bd9e",
+      "upstreamExports": [
+        "ToolGroupRootProps",
+        "ToolGroup",
+        "ToolGroupRoot",
+        "ToolGroupTrigger",
+        "ToolGroupContent",
+        "toolGroupVariants"
+      ],
+      "disposition": "adapted-source",
+      "destinations": [
+        "src/components/assistant-ui/native/ToolGroup.tsx",
+        "src/components/assistant-ui/native/constants.ts"
+      ]
+    },
+    {
+      "upstreamPath": "components/eve-ask-question.tsx",
+      "sourcePath": "apps/registry/templates/eve/components/eve-ask-question.tsx",
+      "sha256": "ca86de53eb7c03e2d87b3e7133112cedca94a3cefd49eadcfe58054e0e81102d",
+      "upstreamExports": ["eveAskQuestionToolkit"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/EveAskQuestion.tsx"]
+    },
+    {
+      "upstreamPath": "components/ui/avatar.tsx",
+      "sourcePath": "packages/ui/src/components/react/ui/radix/avatar.tsx",
+      "sha256": "4ab7319b649a8eaac3ee04f8830957a980e7c5716aca984b54411c6d830a5a34",
+      "upstreamExports": ["Avatar", "AvatarImage", "AvatarFallback", "AvatarBadge", "AvatarGroup", "AvatarGroupCount"],
+      "disposition": "reused-existing-base-ui-owner",
+      "destinations": ["src/components/Avatar.tsx"]
+    },
+    {
+      "upstreamPath": "components/ui/button.tsx",
+      "sourcePath": "packages/ui/src/components/react/ui/radix/button.tsx",
+      "sha256": "d94dd0f32b4287bcb2ebe8e35a7be35aaaad1e71c7bd391a267936f2a66a3393",
+      "upstreamExports": ["Button", "buttonVariants"],
+      "disposition": "reused-existing-base-ui-owner",
+      "destinations": ["src/components/Button.tsx"]
+    },
+    {
+      "upstreamPath": "components/ui/dialog.tsx",
+      "sourcePath": "packages/ui/src/components/react/ui/radix/dialog.tsx",
+      "sha256": "7fbb91c4329ac5711760b79d1aa9f990a3aa4b4e51c9be4849ed034eb01ebcd3",
+      "upstreamExports": [
+        "Dialog",
+        "DialogClose",
+        "DialogContent",
+        "DialogDescription",
+        "DialogFooter",
+        "DialogHeader",
+        "DialogOverlay",
+        "DialogPortal",
+        "DialogTitle",
+        "DialogTrigger"
+      ],
+      "disposition": "reused-existing-base-ui-owner",
+      "destinations": ["src/components/Dialog.tsx"]
+    },
+    {
+      "upstreamPath": "components/ui/skeleton.tsx",
+      "sourcePath": "packages/ui/src/components/react/ui/radix/skeleton.tsx",
+      "sha256": "a61009cda0a56be88eb94bfecad0fdeb7a895611e87049ee1f2617fc25cd6620",
+      "upstreamExports": ["Skeleton"],
+      "disposition": "reused-existing-base-ui-owner",
+      "destinations": ["src/components/Skeleton.tsx"]
+    },
+    {
+      "upstreamPath": "components/ui/textarea.tsx",
+      "sourcePath": "packages/ui/src/components/react/ui/radix/textarea.tsx",
+      "sha256": "abab274474743d7b6d30e67848e4341c2fbd491a8a300010e5da1176c7f9624f",
+      "upstreamExports": ["Textarea"],
+      "disposition": "reused-existing-base-ui-owner",
+      "destinations": ["src/components/Textarea.tsx"]
+    },
+    {
+      "upstreamPath": "components/ui/tooltip.tsx",
+      "sourcePath": "packages/ui/src/components/react/ui/radix/tooltip.tsx",
+      "sha256": "33fd22eaa9a258200ce0ca20ad3bce8e29cf13e2a5a39b1ef6eb7572d8c51be2",
+      "upstreamExports": ["Tooltip", "TooltipTrigger", "TooltipContent", "TooltipProvider"],
+      "disposition": "reused-existing-base-ui-owner",
+      "destinations": ["src/components/Tooltip.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/voice.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/voice.tsx",
+      "sha256": "b6f8ec3a137d2dd2ecb5ec514f5fc9245de84f030e65ea1333c42ddb27da0a38",
+      "upstreamExports": ["VoiceOrbState", "VoiceOrbVariant", "VoiceOrbProps", "VoiceOrb"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/VoiceOrb.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/context-display.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/context-display.radix.tsx",
+      "sha256": "243061ea938dae98ed740de4452f0eaee2c57a6f40ee86a2e925447fb8fbdc0e",
+      "upstreamExports": [
+        "TokenUsage",
+        "PresetProps",
+        "ContextDisplayRootProps",
+        "ContextDisplay",
+        "ContextDisplayRoot",
+        "ContextDisplayTrigger",
+        "ContextDisplayContent",
+        "ContextDisplayRing",
+        "ContextDisplayBar",
+        "ContextDisplayText"
+      ],
+      "disposition": "adapted-source",
+      "destinations": [
+        "src/components/assistant-ui/elements/ContextDisplayRoot.tsx",
+        "src/components/assistant-ui/utils/contextUsage.ts",
+        "src/components/assistant-ui/elements/ContextDisplay.tsx",
+        "src/components/assistant-ui/elements/ContextDisplayTrigger.tsx",
+        "src/components/assistant-ui/elements/ContextDisplayContent.tsx",
+        "src/components/assistant-ui/elements/ContextDisplayRing.tsx",
+        "src/components/assistant-ui/elements/ContextDisplayBar.tsx",
+        "src/components/assistant-ui/elements/ContextDisplayText.tsx",
+        "src/components/assistant-ui/elements/ContextDisplayValue.tsx",
+        "src/components/assistant-ui/utils/contextDisplayContext.ts"
+      ]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/utils/context-usage.ts",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/utils/context-usage.ts",
+      "sha256": "efda3c0fd48be1a65a24ab30b9c0c22f5276651348f3c77bb0334d1401369aa8",
+      "upstreamExports": [
+        "TokenUsage",
+        "getUsagePercent",
+        "getStrokeColor",
+        "getBarColor",
+        "getPercentColor",
+        "getContextSegments"
+      ],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/utils/contextUsage.ts"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/voice.aui.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/voice.aui.tsx",
+      "sha256": "0af409487370405d42aa19507089d867fcafa35bcee24d832ea6db989140f5b2",
+      "upstreamExports": [
+        "VoiceOrbState",
+        "VoiceOrbVariant",
+        "VoiceOrbProps",
+        "deriveVoiceOrbState",
+        "VoiceOrb",
+        "VoiceControl",
+        "VoiceStatusDot",
+        "VoiceConnectButton",
+        "VoiceMuteButton",
+        "VoiceDisconnectButton"
+      ],
+      "disposition": "adapted-source",
+      "destinations": [
+        "src/components/assistant-ui/native/VoiceOrb.tsx",
+        "src/components/assistant-ui/utils/deriveVoiceOrbState.ts",
+        "src/components/assistant-ui/native/VoiceControl.tsx",
+        "src/components/assistant-ui/native/VoiceStatusDot.tsx",
+        "src/components/assistant-ui/native/VoiceConnectButton.tsx",
+        "src/components/assistant-ui/native/VoiceMuteButton.tsx",
+        "src/components/assistant-ui/native/VoiceDisconnectButton.tsx"
+      ]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/voice-conversation.aui.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/voice-conversation.aui.tsx",
+      "sha256": "c166c681c414c539d1d11de3fd926f8a568c6b57d3fd30c5d3ef6467e556c8f6",
+      "upstreamExports": ["VoiceMode", "VoiceTurn", "useVoiceTranscript", "VoiceConversation"],
+      "disposition": "adapted-source",
+      "destinations": [
+        "src/components/assistant-ui/native/VoiceConversation.tsx",
+        "src/components/assistant-ui/hooks/useVoiceTranscript.ts"
+      ]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/task-card.aui.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/task-card.aui.tsx",
+      "sha256": "624a5dcd1c25eca11188598a7dbc871018b4f8edda21629f24fc9508cd0f063a",
+      "upstreamExports": ["TaskCardState", "TASK_PAGE_SIZE", "TaskPart", "isTaskPart", "TaskCard", "TaskGroup"],
+      "disposition": "adapted-source",
+      "destinations": [
+        "src/components/assistant-ui/native/TaskCard.tsx",
+        "src/components/assistant-ui/utils/taskUtils.ts",
+        "src/components/assistant-ui/utils/isTaskPart.ts",
+        "src/components/assistant-ui/native/TaskGroup.tsx"
+      ]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/agent-status.aui.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/agent-status.aui.tsx",
+      "sha256": "c70af8899f376679ac0dea72b79e3e1131d3ba906b4c864728abd166445964bc",
+      "upstreamExports": ["TaskSummary", "useTaskSummary", "summaryState", "summaryLabel", "AgentStatus", "TaskTray"],
+      "disposition": "adapted-source",
+      "destinations": [
+        "src/components/assistant-ui/native/AgentStatus.tsx",
+        "src/components/assistant-ui/utils/taskSummary/types.ts",
+        "src/components/assistant-ui/hooks/useTaskSummary.ts",
+        "src/components/assistant-ui/utils/taskSummaryUtils.ts",
+        "src/components/assistant-ui/native/TaskTray.tsx"
+      ]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/conversation-map.aui.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/conversation-map.aui.tsx",
+      "sha256": "dadf9649e34772142842adcb189842f00dfb71688a52f5a9111cfc471a466f6f",
+      "upstreamExports": ["ConversationMapAui"],
+      "disposition": "adapted-source",
+      "destinations": [
+        "src/components/assistant-ui/native/ConversationMapAui.tsx",
+        "src/components/assistant-ui/hooks/useConversationProjection.ts",
+        "src/components/assistant-ui/hooks/useConversationMapViewport.ts",
+        "src/components/assistant-ui/utils/projectConversation.ts"
+      ]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/message-timing.aui.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/message-timing.aui.radix.tsx",
+      "sha256": "4afb986e2a675aeeaed6f6966123f864665647b3d706befe7c80ebd05e52aa51",
+      "upstreamExports": ["MessageTiming"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/native/MessageTiming.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/context-display.aui.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/context-display.aui.tsx",
+      "sha256": "3f24f35b9efedf0bd265b8eb3e8a108d31af712a2fb58493b69cd6d1d6f3522b",
+      "upstreamExports": [
+        "TokenUsage",
+        "ContextDisplay",
+        "ContextDisplayRoot",
+        "ContextDisplayTrigger",
+        "ContextDisplayContent",
+        "ContextDisplayRing",
+        "ContextDisplayBar",
+        "ContextDisplayText"
+      ],
+      "disposition": "adapted-source",
+      "destinations": [
+        "src/components/assistant-ui/native/ContextDisplayRoot.tsx",
+        "src/components/assistant-ui/utils/contextUsage.ts",
+        "src/components/assistant-ui/native/ContextDisplay.tsx",
+        "src/components/assistant-ui/native/ContextDisplayRing.tsx",
+        "src/components/assistant-ui/native/ContextDisplayBar.tsx",
+        "src/components/assistant-ui/native/ContextDisplayText.tsx",
+        "src/components/assistant-ui/native/ContextDisplayRuntimeRoot.tsx",
+        "src/components/assistant-ui/hooks/useContextDisplay.ts"
+      ]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/thread-list.aui.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/thread-list.aui.tsx",
+      "sha256": "3902d93ad5f3b4d8228a88cdcd18844ed8e96d00b77166e3d30d88af3b1a7103",
+      "upstreamExports": [
+        "ThreadList",
+        "ThreadListSearch",
+        "ThreadListRoot",
+        "ThreadListItems",
+        "ThreadListGroup",
+        "useThreadListGroups",
+        "ThreadListNew",
+        "ThreadListItem"
+      ],
+      "disposition": "adapted-source",
+      "destinations": [
+        "src/components/assistant-ui/native/ThreadList.tsx",
+        "src/components/assistant-ui/hooks/useThreadListGroups.ts",
+        "src/components/assistant-ui/hooks/useStartOfToday.ts",
+        "src/components/assistant-ui/utils/groupThreads.ts",
+        "src/components/assistant-ui/threadList/types.ts"
+      ]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/mcp-config.aui.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/mcp-config.aui.radix.tsx",
+      "sha256": "7f6d9836174a4e73712ff5e9d5c211aeba14c6b78595689c0915d842e3fd44dd",
+      "upstreamExports": ["McpConfigDialog", "McpConfigDialog"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/native/McpConfigDialog.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/utils/mcp-config-state.ts",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/utils/mcp-config-state.ts",
+      "sha256": "ba67cd0f930786266da36b68c5863e21ae46629e5e6278d8451794eeb04f9856",
+      "upstreamExports": ["useCustomServersSection", "STATUS_LABEL", "useServerAnnouncement", "useServerActionFocus"],
+      "disposition": "adapted-source",
+      "destinations": [
+        "src/components/assistant-ui/hooks/useCustomServersSection.ts",
+        "src/components/assistant-ui/utils/mcpConfigState.ts",
+        "src/components/assistant-ui/hooks/useServerAnnouncement.ts",
+        "src/components/assistant-ui/hooks/useServerActionFocus.ts"
+      ]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/syntax-highlighter.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/syntax-highlighter.tsx",
+      "sha256": "1252faca7cf041675e264f3239fcc30c7ffc9f8e6c2b3a761630ca1b2be7d99f",
+      "upstreamExports": ["SyntaxHighlighter"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/SyntaxHighlighter.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/utils/modal-size.ts",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/utils/modal-size.ts",
+      "sha256": "8513a15d5f752aa670a7c6b04a551b2c9a7b79a0366ca04131ab88a1f326ba07",
+      "upstreamExports": ["ModalView", "useModalSize"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/hooks/useModalSize.ts"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/assistant-modal.aui.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/assistant-modal.aui.radix.tsx",
+      "sha256": "21f174adb8fe47d27d26b8dc6f31097773e942d4d5ea0d1c2d2219ad936a6a9c",
+      "upstreamExports": ["AssistantModal"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/native/AssistantModal.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/assistant-sidebar.aui.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/assistant-sidebar.aui.tsx",
+      "sha256": "e9ee60e29e33b905277d6327315867031c2669085fb43705b24b9c42b7345aa5",
+      "upstreamExports": ["AssistantSidebar"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/native/AssistantSidebar.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/shiki-highlighter.aui.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/shiki-highlighter.aui.tsx",
+      "sha256": "f3b0c83d58234376a60fe3296c42da4fc7cad64260789a91a13f4997cc7dbceb",
+      "upstreamExports": ["HighlighterProps", "SyntaxHighlighter"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/native/SyntaxHighlighter.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/shiki-highlighter.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/shiki-highlighter.tsx",
+      "sha256": "81e7f56a5486967eef1763ea15ba22ad923388f5575f8dac71e588405c547f37",
+      "upstreamExports": ["SyntaxHighlighterProps", "SyntaxHighlighter"],
+      "disposition": "adapted-source",
+      "destinations": [
+        "src/components/assistant-ui/elements/ShikiHighlighter.tsx",
+        "src/components/assistant-ui/elements/SyntaxHighlighter.tsx"
+      ]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/mermaid-diagram.aui.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/mermaid-diagram.aui.tsx",
+      "sha256": "5a67938ae2045c68d04feb5c8e327c06f2ab80b5bdadd0410fdc28bc62b03724",
+      "upstreamExports": ["MermaidDiagramProps", "MermaidDiagram", "MermaidZoom"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/native/MermaidDiagram.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/mermaid-diagram.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/mermaid-diagram.tsx",
+      "sha256": "03d6dbb6bb5f2849564ca92f53db8d565088760d06cb3aa8da48ca09a8950d47",
+      "upstreamExports": ["MermaidDiagramProps", "MermaidDiagram", "MermaidZoom"],
+      "disposition": "adapted-source",
+      "destinations": [
+        "src/components/assistant-ui/elements/MermaidDiagram.tsx",
+        "src/components/assistant-ui/elements/MermaidZoom.tsx",
+        "src/components/assistant-ui/elements/MermaidSvg.tsx",
+        "src/components/assistant-ui/utils/prepareMermaidSvg.ts"
+      ]
+    },
+    {
+      "upstreamPath": "components/ui/diff-viewer.tsx",
+      "sourcePath": "packages/ui/src/components/react/ui/radix/diff-viewer.tsx",
+      "sha256": "002e631d27f1832cc54d3f3bf86b1ea92ec542b927c55c20a6e062a5cf51f652",
+      "upstreamExports": [
+        "DiffViewerProps",
+        "ParsedLine",
+        "ParsedFile",
+        "SplitLinePair",
+        "DiffViewer",
+        "DiffViewerFile",
+        "DiffViewerHeader",
+        "DiffViewerContent",
+        "DiffViewerLine",
+        "DiffViewerSplitLine",
+        "DiffViewerFileBadge",
+        "DiffViewerStats",
+        "diffViewerVariants",
+        "diffLineVariants",
+        "diffLineTextVariants",
+        "parsePatch",
+        "computeDiff"
+      ],
+      "disposition": "adapted-source",
+      "destinations": [
+        "src/components/assistant-ui/elements/DiffViewer.tsx",
+        "src/components/assistant-ui/elements/DiffViewerFile.tsx",
+        "src/components/assistant-ui/elements/DiffViewerHeader.tsx",
+        "src/components/assistant-ui/elements/DiffViewerContent.tsx",
+        "src/components/assistant-ui/elements/DiffViewerLine.tsx",
+        "src/components/assistant-ui/elements/DiffViewerSplitLine.tsx",
+        "src/components/assistant-ui/elements/DiffViewerFileBadge.tsx",
+        "src/components/assistant-ui/elements/DiffViewerStats.tsx",
+        "src/components/assistant-ui/utils/diffViewer/constants.ts",
+        "src/components/assistant-ui/utils/diffViewer/parsePatch.ts",
+        "src/components/assistant-ui/utils/diffViewer/computeDiff.ts",
+        "src/components/assistant-ui/elements/DiffViewerFileContent.tsx",
+        "src/components/assistant-ui/elements/DiffViewerText.tsx",
+        "src/components/assistant-ui/utils/diffViewer/pairLinesForSplit.ts",
+        "src/components/assistant-ui/utils/diffViewer/formatUnifiedDiff.ts",
+        "src/components/assistant-ui/utils/diffViewer/types.ts"
+      ]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/threadlist-sidebar.aui.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/threadlist-sidebar.aui.radix.tsx",
+      "sha256": "2077042381015411a5e383caf8a13837929a0c8619c63ed3d8cb67903d590a0a",
+      "upstreamExports": ["ThreadListSidebar"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/native/ThreadListSidebar.tsx"]
+    },
+    {
+      "upstreamPath": "components/icons/github.tsx",
+      "sourcePath": "packages/ui/src/components/react/icons/github.tsx",
+      "sha256": "bdeb11f3ab33e218ced1a89e14acc50a4ea52d552baec3d37e4697a40e6d62e3",
+      "upstreamExports": ["GitHubIcon"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/GitHubIcon.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/quote.aui.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/quote.aui.tsx",
+      "sha256": "4fa31736910936811a5fa1244cf2e7c49ea2e0524da2a4156ade5dc8d3cf8ec8",
+      "upstreamExports": [
+        "QuoteBlock",
+        "QuoteBlockRoot",
+        "QuoteBlockIcon",
+        "QuoteBlockText",
+        "SelectionToolbar",
+        "SelectionToolbarRoot",
+        "SelectionToolbarQuote",
+        "ComposerQuotePreview",
+        "ComposerQuotePreviewRoot",
+        "ComposerQuotePreviewIcon",
+        "ComposerQuotePreviewText",
+        "ComposerQuotePreviewDismiss"
+      ],
+      "disposition": "adapted-source",
+      "destinations": [
+        "src/components/assistant-ui/native/QuoteBlock.tsx",
+        "src/components/assistant-ui/native/SelectionToolbar.tsx",
+        "src/components/assistant-ui/native/ComposerQuotePreview.tsx"
+      ]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/sources.aui.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/sources.aui.tsx",
+      "sha256": "6155d9bb62fa864db689f859b248394afb3bd37c076a1772bc76d37f8be43cbc",
+      "upstreamExports": ["SourceProps", "Sources", "Source", "SourceIcon", "SourceTitle", "sourceVariants"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/native/Sources.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/model-selector.aui.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/model-selector.aui.tsx",
+      "sha256": "fa58d6cb2392e7d57d58d7d560008953f95025b1bd0a58b7539a61f7283557c1",
+      "upstreamExports": [
+        "DEFAULT_EFFORT_OPTIONS",
+        "modelSelectorTriggerVariants",
+        "resolveModelEffort",
+        "useModelSelectorEfforts",
+        "ModelSelectorRoot",
+        "ModelSelectorTrigger",
+        "ModelSelectorValue",
+        "ModelSelectorContent",
+        "ModelSelectorSearch",
+        "ModelSelectorFocusAnchor",
+        "ModelSelectorList",
+        "ModelSelectorEmpty",
+        "ModelSelectorGroup",
+        "ModelSelectorSeparator",
+        "ModelSelectorItem",
+        "ModelSelectorEffort",
+        "ModelOption",
+        "ModelSelectorEffortOption",
+        "ModelSelectorProps",
+        "ModelSelectorRootProps",
+        "ModelSelectorTriggerProps",
+        "ModelSelectorValueProps",
+        "ModelSelectorContentProps",
+        "ModelSelectorSearchProps",
+        "ModelSelectorListProps",
+        "ModelSelectorEmptyProps",
+        "ModelSelectorGroupProps",
+        "ModelSelectorSeparatorProps",
+        "ModelSelectorItemProps",
+        "ModelSelectorEffortProps",
+        "ModelSelector"
+      ],
+      "disposition": "adapted-source",
+      "destinations": [
+        "src/components/assistant-ui/native/ModelSelector.tsx",
+        "src/components/assistant-ui/utils/modelSelection.ts",
+        "src/components/assistant-ui/hooks/useModelSelectorEfforts.ts"
+      ]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/model-selector.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/model-selector.radix.tsx",
+      "sha256": "2055bab526c41da8484ebb7210a716053a1a96b9337d09a911b7d2ff75c9f0df",
+      "upstreamExports": [
+        "DEFAULT_EFFORT_OPTIONS",
+        "resolveModelEffort",
+        "useModelSelectorContext",
+        "useModelSelectorEfforts",
+        "ModelOption",
+        "ModelSelectorEffortOption",
+        "ModelSelectorRootProps",
+        "modelSelectorTriggerVariants",
+        "ModelSelectorTriggerProps",
+        "ModelSelectorValueProps",
+        "ModelSelectorContentProps",
+        "ModelSelectorSearchProps",
+        "ModelSelectorListProps",
+        "ModelSelectorEmptyProps",
+        "ModelSelectorGroupProps",
+        "ModelSelectorSeparatorProps",
+        "ModelSelectorItemProps",
+        "ModelSelectorEffortProps",
+        "ModelSelectorProps",
+        "ModelSelectorRoot",
+        "ModelSelectorTrigger",
+        "ModelSelectorValue",
+        "ModelSelectorContent",
+        "ModelSelectorSearch",
+        "ModelSelectorFocusAnchor",
+        "ModelSelectorList",
+        "ModelSelectorEmpty",
+        "ModelSelectorGroup",
+        "ModelSelectorSeparator",
+        "ModelSelectorItem",
+        "ModelSelectorEffort"
+      ],
+      "disposition": "adapted-source",
+      "destinations": [
+        "src/components/assistant-ui/elements/ModelSelectorRoot.tsx",
+        "src/components/assistant-ui/utils/modelSelection.ts",
+        "src/components/assistant-ui/hooks/useModelSelectorContext.ts",
+        "src/components/assistant-ui/hooks/useModelSelectorEfforts.ts",
+        "src/components/assistant-ui/elements/ModelSelectorTrigger.tsx",
+        "src/components/assistant-ui/elements/ModelSelectorValue.tsx",
+        "src/components/assistant-ui/elements/ModelSelectorContent.tsx",
+        "src/components/assistant-ui/elements/ModelSelectorSearch.tsx",
+        "src/components/assistant-ui/elements/ModelSelectorFocusAnchor.tsx",
+        "src/components/assistant-ui/elements/ModelSelectorList.tsx",
+        "src/components/assistant-ui/elements/ModelSelectorEmpty.tsx",
+        "src/components/assistant-ui/elements/ModelSelectorGroup.tsx",
+        "src/components/assistant-ui/elements/ModelSelectorSeparator.tsx",
+        "src/components/assistant-ui/elements/ModelSelectorItem.tsx",
+        "src/components/assistant-ui/elements/ModelSelectorEffort.tsx"
+      ]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/utils/model-selection.ts",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/utils/model-selection.ts",
+      "sha256": "f3d5e2fa7c08a7a463b01415563ce2ca13559a7b6d017a093ddc132766582f0b",
+      "upstreamExports": [
+        "ModelSelectorEffortOption",
+        "DEFAULT_EFFORT_OPTIONS",
+        "ModelOption",
+        "getModelEfforts",
+        "resolveEffort",
+        "resolveModelEffort",
+        "useControllableState",
+        "ModelSelectorContext",
+        "useModelSelectorContext",
+        "useModelSelectorEfforts",
+        "useLazyFlipSide"
+      ],
+      "disposition": "adapted-source",
+      "destinations": [
+        "src/components/assistant-ui/hooks/useControllableState.ts",
+        "src/components/assistant-ui/utils/modelSelection.ts",
+        "src/components/assistant-ui/hooks/useModelSelectorContext.ts",
+        "src/components/assistant-ui/hooks/useModelSelectorEfforts.ts"
+      ]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/logos.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/logos.tsx",
+      "sha256": "63ecebfd780689f9af364ea107398dbaf0fc116df06989a8ce4a81d9cd6bea51",
+      "upstreamExports": ["LogoProps", "ClaudeLogo", "OpenAILogo", "GeminiLogo"],
+      "disposition": "adapted-source",
+      "destinations": [
+        "src/components/assistant-ui/elements/ClaudeLogo.tsx",
+        "src/components/assistant-ui/elements/OpenAILogo.tsx",
+        "src/components/assistant-ui/elements/GeminiLogo.tsx"
+      ]
+    },
+    {
+      "upstreamPath": "components/ui/select.tsx",
+      "sourcePath": "packages/ui/src/components/react/ui/radix/select.tsx",
+      "sha256": "0233f634447f34c4f61a581a6166449d1985de1b0685340e964da95676cb8f1a",
+      "upstreamExports": [
+        "Select",
+        "SelectContent",
+        "SelectGroup",
+        "SelectItem",
+        "SelectLabel",
+        "SelectScrollDownButton",
+        "SelectScrollUpButton",
+        "SelectSeparator",
+        "SelectTrigger",
+        "SelectValue"
+      ],
+      "disposition": "reused-existing-base-ui-owner",
+      "destinations": ["src/components/Select.tsx"]
+    },
+    {
+      "upstreamPath": "components/ui/direction.tsx",
+      "sourcePath": "packages/ui/src/components/react/ui/radix/direction.radix.tsx",
+      "sha256": "e204e18f1c9b459bdb043aa319c746dc3df427f4f4db315589b1f9fba1a84fba",
+      "upstreamExports": ["DirectionProvider", "useDirection"],
+      "disposition": "reused-existing-base-ui-owner",
+      "destinations": ["src/components/DirectionProvider.tsx"]
+    },
+    {
+      "upstreamPath": "components/ui/badge.tsx",
+      "sourcePath": "packages/ui/src/components/react/ui/radix/badge.tsx",
+      "sha256": "d8386d947b8a8c6d965de680503e6af5ed66068cd61b4d9ecc722a4cee1d6ffc",
+      "upstreamExports": ["Badge", "badgeVariants"],
+      "disposition": "reused-existing-base-ui-owner",
+      "destinations": ["src/components/Badge.tsx"]
+    },
+    {
+      "upstreamPath": "components/ui/tabs.tsx",
+      "sourcePath": "packages/ui/src/components/react/ui/radix/tabs.tsx",
+      "sha256": "664ee378214eadf712f489c77aa9a6084b72f9669d4ee31ac6a030e15872f9e2",
+      "upstreamExports": ["Tabs", "TabsList", "TabsTrigger", "TabsContent", "tabsListVariants"],
+      "disposition": "reused-existing-base-ui-owner",
+      "destinations": ["src/components/Tabs.tsx"]
+    },
+    {
+      "upstreamPath": "components/ui/accordion.tsx",
+      "sourcePath": "packages/ui/src/components/react/ui/radix/accordion.tsx",
+      "sha256": "dec7dbe299c80e09c607f9f324126029edf4b957d2e0a011b001e7f8d5cf4abf",
+      "upstreamExports": ["Accordion", "AccordionItem", "AccordionTrigger", "AccordionContent"],
+      "disposition": "reused-existing-base-ui-owner",
+      "destinations": ["src/components/Accordion.tsx"]
+    },
+    {
+      "upstreamPath": "components/ui/dot-matrix.tsx",
+      "sourcePath": "packages/ui/src/components/react/ui/radix/dot-matrix.tsx",
+      "sha256": "efd93e1450255144f3c55c08e81d8becdb2514f2fa8bf3c61e2df421b1b47ee9",
+      "upstreamExports": ["DotMatrixState", "DotMatrixProps", "DotMatrix", "dotMatrixStates"],
+      "disposition": "adapted-source",
+      "destinations": [
+        "src/components/assistant-ui/elements/DotMatrix.tsx",
+        "src/components/assistant-ui/utils/getDotMatrixPattern.ts"
+      ]
+    },
+    {
+      "upstreamPath": "components/ui/number-roll.tsx",
+      "sourcePath": "packages/ui/src/components/react/ui/radix/number-roll.tsx",
+      "sha256": "91d604259131d5919bd357c7a8c475f747762dc152b5ccd4052e1c593b18c094",
+      "upstreamExports": ["NumberRollProps", "NumberRoll"],
+      "disposition": "adapted-source",
+      "destinations": [
+        "src/components/assistant-ui/elements/NumberRoll.tsx",
+        "src/components/assistant-ui/elements/NumberRollDigit.tsx",
+        "src/components/assistant-ui/elements/NumberRollPart.tsx",
+        "src/components/assistant-ui/utils/getNumberRollParts.ts",
+        "src/components/assistant-ui/utils/numberRollTypes.ts"
+      ]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/heat-graph.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/heat-graph.tsx",
+      "sha256": "2432a7026e6654c0957610f03b2094c760d892611e8b4bfe25b9244d48baea3b",
+      "upstreamExports": ["HeatGraph"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/HeatGraph.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/composer-trigger-popover.aui.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/composer-trigger-popover.aui.tsx",
+      "sha256": "09bf740b6984f22f5118a2b454a201f08bad4389fb4d1aefd5ff81f4355cf129",
+      "upstreamExports": ["ComposerTriggerPopover"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/native/ComposerTriggerPopover.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/directive-text.aui.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/directive-text.aui.tsx",
+      "sha256": "3a8a0b8f0de9fd546c6e214c5ff8d833324fda0c3a730a2dcdb506e8d66cfffe",
+      "upstreamExports": [
+        "CreateDirectiveTextOptions",
+        "DirectiveTextFormatter",
+        "DirectiveTextSegment",
+        "createDirectiveText",
+        "DirectiveText"
+      ],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/native/DirectiveText.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/directive-text.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/directive-text.tsx",
+      "sha256": "7865b18353476c4963a1f59cd6c0d72a994899ee2acf27eeb849e7942bf0b3d4",
+      "upstreamExports": [
+        "DirectiveTextSegment",
+        "DirectiveTextFormatter",
+        "CreateDirectiveTextOptions",
+        "createDirectiveText"
+      ],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/DirectiveText.tsx"]
+    },
+    {
+      "upstreamPath": "components/assistant-ui/elements/generative-ui.tsx",
+      "sourcePath": "packages/ui/src/components/react/assistant-ui/elements/generative-ui.tsx",
+      "sha256": "7071393c901853ef1e742977fbadef3f85abacad6e96cafdda81d0f8cbdf1b68",
+      "upstreamExports": ["styledGenerativeUILibrary"],
+      "disposition": "adapted-source",
+      "destinations": ["src/components/assistant-ui/elements/GenerativeUi.tsx"]
+    }
+  ]
+}

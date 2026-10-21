@@ -1,11 +1,33 @@
 import { defineConfig } from "vitest/config";
 import { playwright } from "@vitest/browser-playwright";
 import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
+import { nativeWheel } from "./nativeWheel.js";
 
 export default defineConfig({
   cacheDir: ".cache/storybook/tests",
   optimizeDeps: {
     include: [
+      "colorjs.io",
+      "diff",
+      "parse-diff",
+      "@assistant-ui/react",
+      "@assistant-ui/store",
+      "@assistant-ui/react-markdown",
+      "@assistant-ui/react-mcp",
+      "@assistant-ui/react-syntax-highlighter",
+      "@assistant-ui/generative-ui",
+      "@assistant-ui/ai-sdk",
+      "heat-graph",
+      "leaflet",
+      "beautiful-mermaid",
+      "react-shiki",
+      "shiki",
+      "react-markdown",
+      "remark-gfm",
+      "react-syntax-highlighter",
+      "anser",
+      "strip-ansi",
+      "zustand",
       "@tanstack/react-table",
       "motion/react",
       "react-hook-form",
@@ -75,7 +97,11 @@ export default defineConfig({
         test: {
           name: "storybook-clipboard",
           // Native clipboard contents are shared across Chromium test contexts.
-          exclude: ["src/**/__tests__/**", "src/components/stories/!(InputGroup|Table).stories.tsx"],
+          exclude: [
+            "src/**/__tests__/**",
+            "src/components/stories/!(InputGroup|Table).stories.tsx",
+            "src/components/stories/assistant-ui/**",
+          ],
           fileParallelism: false,
           sequence: { groupOrder: 1 },
         },
@@ -84,6 +110,7 @@ export default defineConfig({
     browser: {
       enabled: true,
       headless: true,
+      commands: { nativeWheel },
       provider: playwright({ contextOptions: { permissions: ["clipboard-read", "clipboard-write"] } }),
       instances: [{ browser: "chromium" }],
     },

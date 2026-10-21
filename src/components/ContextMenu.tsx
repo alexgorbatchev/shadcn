@@ -7,6 +7,7 @@ import type {
 } from "../menu/types.js";
 import type { IDensityProps } from "../density/types.js";
 import { useDensity } from "../hooks/useDensity.js";
+import { usePortalContainer } from "../hooks/usePortalContainer.js";
 import type { ComponentProps, ReactElement } from "react";
 import { ChevronRightIcon, CheckIcon } from "lucide-react";
 
@@ -18,8 +19,9 @@ function ContextMenu({ ...props }: ContextMenuPrimitive.Root.Props): ReactElemen
   return <ContextMenuPrimitive.Root data-slot="context-menu" {...props} />;
 }
 
-function ContextMenuPortal({ ...props }: ContextMenuPrimitive.Portal.Props): ReactElement {
-  return <ContextMenuPrimitive.Portal data-slot="context-menu-portal" {...props} />;
+function ContextMenuPortal({ container, ...props }: ContextMenuPrimitive.Portal.Props): ReactElement {
+  const resolvedContainer = usePortalContainer(container);
+  return <ContextMenuPrimitive.Portal data-slot="context-menu-portal" container={resolvedContainer} {...props} />;
 }
 
 type ContextMenuTriggerProps = ContextMenuPrimitive.Trigger.Props & IDensityProps;
@@ -51,7 +53,7 @@ function ContextMenuContent({
   const resolvedDensity = useDensity(density);
   const direction = useDirection();
   return (
-    <ContextMenuPrimitive.Portal>
+    <ContextMenuPortal>
       <ContextMenuPrimitive.Positioner
         dir={direction}
         className="isolate  outline-none"
@@ -73,7 +75,7 @@ function ContextMenuContent({
           {...props}
         />
       </ContextMenuPrimitive.Positioner>
-    </ContextMenuPrimitive.Portal>
+    </ContextMenuPortal>
   );
 }
 

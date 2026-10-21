@@ -383,14 +383,9 @@ export const KeyboardShortcut: Story = {
     await userEvent.click(canvas.getByRole("textbox", { name: "Search projects" }));
     await userEvent.keyboard("{Control>}b{/Control}");
     await expect(canvas.getByRole("button", { name: "Toggle Sidebar" })).toHaveAttribute("aria-expanded", "false");
-    await expect(canvasElement.ownerDocument.cookie.split("; ")).toEqual(
-      expect.arrayContaining(["sidebar_state=false"]),
-    );
+    canvas.getByRole("button", { name: "Toggle Sidebar" }).focus();
     await userEvent.keyboard("{Meta>}b{/Meta}");
     await expect(canvas.getByRole("button", { name: "Toggle Sidebar" })).toHaveAttribute("aria-expanded", "true");
-    await expect(canvasElement.ownerDocument.cookie.split("; ")).toEqual(
-      expect.arrayContaining(["sidebar_state=true"]),
-    );
   },
 };
 
@@ -699,5 +694,50 @@ export const TrailingContent: Story = {
     await expect(button.scrollWidth).toBe(button.clientWidth);
     await userEvent.click(button);
     await expect(button).toHaveFocus();
+  },
+};
+
+export const InstanceIsolation: Story = {
+  render: () => (
+    <div className="flex flex-col gap-4">
+      <button type="button">Host control</button>
+      <SidebarProvider data-testid="First sidebar" className="min-h-0">
+        <SidebarInput aria-label="First search" />
+        <SidebarTrigger aria-label="First toggle" />
+      </SidebarProvider>
+      <SidebarProvider data-testid="Second sidebar" className="min-h-0">
+        <SidebarInput aria-label="Second search" />
+        <SidebarTrigger aria-label="Second toggle" />
+      </SidebarProvider>
+    </div>
+  ),
+  play: async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole("textbox", { name: "First search" }));
+    await userEvent.keyboard("{Control>}b{/Control}");
+    await expect(canvas.getByRole("button", { name: "First toggle" })).toHaveAttribute("aria-expanded", "false");
+    await expect(canvas.getByRole("button", { name: "Second toggle" })).toHaveAttribute("aria-expanded", "true");
+    await userEvent.click(canvas.getByRole("textbox", { name: "Second search" }));
+    await userEvent.keyboard("{Control>}b{/Control}");
+    await expect(canvas.getByRole("button", { name: "First toggle" })).toHaveAttribute("aria-expanded", "false");
+    await expect(canvas.getByRole("button", { name: "Second toggle" })).toHaveAttribute("aria-expanded", "false");
+    await userEvent.click(canvas.getByRole("button", { name: "Host control" }));
+    await userEvent.keyboard("{Control>}b{/Control}");
+    await expect(canvas.getByRole("button", { name: "First toggle" })).toHaveAttribute("aria-expanded", "false");
+    await expect(canvas.getByRole("button", { name: "Second toggle" })).toHaveAttribute("aria-expanded", "false");
+  },
+};
+export const OwnerPersistence: Story = {
+  play: async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+    const document = canvasElement.ownerDocument;
+    document.cookie = "sidebar_state=host-owned; path=/";
+    try {
+      await userEvent.click(canvas.getByRole("button", { name: "Toggle Sidebar" }));
+      await expect(canvas.getByRole("button", { name: "Toggle Sidebar" })).toHaveAttribute("aria-expanded", "false");
+      await expect(document.cookie.split("; ")).toContain("sidebar_state=host-owned");
+    } finally {
+      document.cookie = "sidebar_state=; max-age=0; path=/";
+    }
   },
 };

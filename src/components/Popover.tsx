@@ -1,6 +1,7 @@
 "use client";
 
 import { useDensity } from "../hooks/useDensity.js";
+import { usePortalContainer } from "../hooks/usePortalContainer.js";
 import type { IDensityProps } from "../density/types.js";
 import type { ComponentProps, ReactElement } from "react";
 import { useDirection } from "@base-ui/react/direction-provider";
@@ -30,9 +31,10 @@ function PopoverContent({
 }: PopoverContentProps): ReactElement {
   const resolvedDensity = useDensity(density);
   const direction = useDirection();
+  const container = usePortalContainer();
 
   return (
-    <PopoverPrimitive.Portal>
+    <PopoverPrimitive.Portal container={container}>
       <PopoverPrimitive.Positioner
         dir={direction}
         align={align}

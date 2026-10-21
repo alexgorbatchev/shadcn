@@ -4,11 +4,22 @@ import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
 import { nativeSwipe } from "./nativeSwipe.ts";
 import { nativeWheel } from "./nativeWheel.ts";
+import { beginResourceRequests, endResourceRequests } from "./nativeResourceRequests.js";
 
 export default defineConfig({
   cacheDir: ".cache/storybook/native-tests",
   optimizeDeps: {
     include: [
+      "@assistant-ui/react-markdown",
+      "remark-gfm",
+      "colorjs.io",
+      "diff",
+      "parse-diff",
+      "anser",
+      "strip-ansi",
+      "@assistant-ui/react",
+      "@assistant-ui/store",
+      "@testing-library/react",
       "@base-ui/react/dialog",
       "@base-ui/react/drawer",
       "@base-ui/react/toast",
@@ -25,12 +36,19 @@ export default defineConfig({
   test: {
     name: "native-browser",
     attachmentsDir: ".tmp/native-browser-attachments",
-    include: ["src/components/__tests__/*.test.tsx", ".storybook/__tests__/*.test.tsx"],
+    include: [
+      "src/components/__tests__/*.test.tsx",
+      "src/components/assistant-ui/hooks/__tests__/*.test.ts",
+      "src/components/assistant-ui/hooks/__tests__/*.test.tsx",
+      "src/components/assistant-ui/utils/__tests__/*.test.ts",
+      "src/components/assistant-ui/native/__tests__/*.test.ts",
+      ".storybook/__tests__/*.test.tsx",
+    ],
     browser: {
       enabled: true,
       headless: true,
       screenshotDirectory: ".tmp/native-browser-screenshots",
-      commands: { nativeSwipe, nativeWheel },
+      commands: { nativeSwipe, nativeWheel, beginResourceRequests, endResourceRequests },
       provider: playwright(),
       instances: [
         { browser: "chromium", exclude: ["src/components/__tests__/Carousel.test.tsx"] },

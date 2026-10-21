@@ -1,6 +1,7 @@
 "use client";
 
 import { useDensity } from "../hooks/useDensity.js";
+import { usePortalContainer } from "../hooks/usePortalContainer.js";
 import type { IDensityProps } from "../density/types.js";
 import type { ComponentProps, ReactElement } from "react";
 import { Select as SelectPrimitive } from "@base-ui/react/select";
@@ -79,9 +80,10 @@ function SelectContent({
 }: SelectContentProps): ReactElement {
   const resolvedDensity = useDensity(density);
   const direction = useDirection();
+  const container = usePortalContainer();
 
   return (
-    <SelectPrimitive.Portal>
+    <SelectPrimitive.Portal container={container}>
       <SelectPrimitive.Positioner
         side={side}
         sideOffset={sideOffset}

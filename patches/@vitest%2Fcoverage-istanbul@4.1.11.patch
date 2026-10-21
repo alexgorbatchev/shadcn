@@ -1,0 +1,70 @@
+diff --git a/dist/provider.js b/dist/provider.js
+index 354c131859a3cc4d6ab4ee771892c39ef45d9d16..299f77ca4f80318f3b17a78b2a9884f526391bcb 100644
+--- a/dist/provider.js
++++ b/dist/provider.js
+@@ -3551,6 +3551,7 @@ class IstanbulCoverageProvider extends BaseCoverageProvider {
+ 	version = version;
+ 	instrumenter;
+ 	transformedModuleIds = new Set();
++	uncoveredFileCoverages = new Map();
+ 	initialize(ctx) {
+ 		this._initialize(ctx);
+ 		if (this.options.instrumenter) {
+@@ -3588,6 +3589,10 @@ class IstanbulCoverageProvider extends BaseCoverageProvider {
+ 		}
+ 		return true;
+ 	}
++	async clean(clean = true) {
++		await super.clean(clean);
++		this.uncoveredFileCoverages.clear();
++	}
+ 	onFileTransform(sourceCode, id, pluginCtx) {
+ 		if (!this.requiresTransform(id)) {
+ 			return;
+@@ -3596,7 +3601,10 @@ class IstanbulCoverageProvider extends BaseCoverageProvider {
+ 		sourceMap.sources = sourceMap.sources.map(removeQueryParameters);
+ 		sourceCode = sourceCode.replaceAll("_ts_decorate", "/* istanbul ignore next */_ts_decorate").replaceAll(/(if +\(import\.meta\.vitest\))/g, "/* istanbul ignore next */ $1");
+ 		const code = this.instrumenter.instrumentSync(sourceCode, id, sourceMap);
+-		if (!id.includes("vitest-uncovered-coverage=true")) {
++		const uncoveredKey = getUncoveredKey(id);
++		if (uncoveredKey) {
++			this.uncoveredFileCoverages.set(uncoveredKey, this.instrumenter.lastFileCoverage());
++		} else {
+ 			const transformMap = new GenMapping(sourceMap);
+ 			eachMapping(new TraceMap(sourceMap), (mapping) => {
+ 				addMapping(transformMap, {
+@@ -3695,8 +3703,6 @@ class IstanbulCoverageProvider extends BaseCoverageProvider {
+ 		const cacheKey = new Date().getTime();
+ 		const coverageMap = this.createCoverageMap();
+ 		const transform = this.createUncoveredFileTransformer(this.ctx);
+-		// Note that these cannot be run parallel as synchronous instrumenter.lastFileCoverage
+-		// returns the coverage of the last transformed file
+ 		for (const [index, filename] of uncoveredFiles.entries()) {
+ 			let timeout;
+ 			let start;
+@@ -3705,10 +3711,11 @@ class IstanbulCoverageProvider extends BaseCoverageProvider {
+ 				timeout = setTimeout(() => debug(c.bgRed(`File "${filename}" is taking longer than 3s`)), 3e3);
+ 				debug("Uncovered file %d/%d", index, uncoveredFiles.length);
+ 			}
+-			// Make sure file is not served from cache so that instrumenter loads up requested file coverage
+-			await transform(`${filename}?cache=${cacheKey}&vitest-uncovered-coverage=true`);
+-			const lastCoverage = this.instrumenter.lastFileCoverage();
+-			coverageMap.addFileCoverage(lastCoverage);
++			const uncoveredKey = `${cacheKey}-${index}`;
++			await transform(`${filename}?cache=${uncoveredKey}&vitest-uncovered-coverage=true`);
++			const fileCoverage = this.uncoveredFileCoverages.get(uncoveredKey) ?? this.instrumenter.lastFileCoverage();
++			this.uncoveredFileCoverages.delete(uncoveredKey);
++			coverageMap.addFileCoverage(fileCoverage);
+ 			if (debug.enabled) {
+ 				clearTimeout(timeout);
+ 				const diff = performance.now() - start;
+@@ -3755,5 +3762,9 @@ async function transformCoverage(coverageMap) {
+ function removeQueryParameters(filename) {
+ 	return filename.split("?")[0];
+ }
++function getUncoveredKey(id) {
++	if (!id.includes("vitest-uncovered-coverage=true")) return;
++	return new URLSearchParams(id.split("?")[1]).get("cache") ?? undefined;
++}
+ 
+ export { IstanbulCoverageProvider };

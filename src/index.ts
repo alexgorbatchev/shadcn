@@ -375,3 +375,8 @@ export type {
   SidebarMenuButtonState,
   SidebarMenuSubButtonState,
 } from "./sidebar/types.js";
+
+export { PortalProvider } from "./components/PortalProvider.js";
+export type { IPortalProviderProps } from "./components/PortalProvider.js";
+export { usePortalContainer } from "./hooks/usePortalContainer.js";
+export type { PortalContainer } from "./portal/types.js";

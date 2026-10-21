@@ -93,3 +93,46 @@ export const RightToLeft: Story = {
     await expect(indicator.getBoundingClientRect().width / track.getBoundingClientRect().width).toBeCloseTo(0.56, 2);
   },
 };
+
+export const StatusTone: Story = {
+  render: function Render() {
+    const [isFailed, setIsFailed] = useState(false);
+    return (
+      <div className="w-80">
+        <Progress value={40} tone={isFailed ? "destructive" : "success"}>
+          <ProgressLabel>{isFailed ? "Upload failed" : "Upload active"}</ProgressLabel>
+        </Progress>
+        <button type="button" onClick={() => setIsFailed(true)}>
+          Fail upload
+        </button>
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const progress = canvas.getByRole("progressbar", { name: "Upload active" });
+    const indicator = progress.querySelector<HTMLElement>("[data-slot=progress-indicator]");
+    if (!indicator) throw new Error("Native progress indicator missing");
+    const activeColor = getComputedStyle(indicator).backgroundColor;
+    await userEvent.click(canvas.getByRole("button", { name: "Fail upload" }));
+    await expect(canvas.getByRole("progressbar", { name: "Upload failed" })).toHaveAttribute("aria-valuenow", "40");
+    await waitFor(() => expect(getComputedStyle(indicator).backgroundColor).not.toBe(activeColor));
+  },
+};
+
+export const Partial: Story = { ...InProgress, args: { value: 25, tone: "warning" } };
+export const OutOfRange: Story = {
+  args: { value: 150 },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const progress = canvas.getByRole("progressbar", { name: "Upload progress" });
+    await expect(progress).toHaveAttribute("aria-valuenow", "100");
+    await expect(canvas.getByText("100%")).toBeVisible();
+    const indicator = progress.querySelector<HTMLElement>("[data-slot=progress-indicator]");
+    const track = progress.querySelector<HTMLElement>("[data-slot=progress-track]");
+    if (!indicator || !track) throw new Error("Native progress geometry missing");
+    await waitFor(() =>
+      expect(indicator.getBoundingClientRect().width).toBeCloseTo(track.getBoundingClientRect().width, 0),
+    );
+  },
+};

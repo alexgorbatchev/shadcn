@@ -1,6 +1,7 @@
 "use client";
 
 import { useDensity } from "../hooks/useDensity.js";
+import { usePortalContainer } from "../hooks/usePortalContainer.js";
 import { useDirection } from "./DirectionProvider.js";
 import type {
   MenuLabelProps,
@@ -19,8 +20,9 @@ function DropdownMenu<Payload>({ ...props }: MenuPrimitive.Root.Props<Payload>):
   return <MenuPrimitive.Root data-slot="dropdown-menu" {...props} />;
 }
 
-function DropdownMenuPortal({ ...props }: MenuPrimitive.Portal.Props): ReactElement {
-  return <MenuPrimitive.Portal data-slot="dropdown-menu-portal" {...props} />;
+function DropdownMenuPortal({ container, ...props }: MenuPrimitive.Portal.Props): ReactElement {
+  const resolvedContainer = usePortalContainer(container);
+  return <MenuPrimitive.Portal data-slot="dropdown-menu-portal" container={resolvedContainer} {...props} />;
 }
 
 function DropdownMenuTrigger<Payload>({ ...props }: MenuPrimitive.Trigger.Props<Payload>): ReactElement {
@@ -45,7 +47,7 @@ function DropdownMenuContent({
   const direction = useDirection();
 
   return (
-    <MenuPrimitive.Portal>
+    <DropdownMenuPortal>
       <MenuPrimitive.Positioner
         dir={direction}
         className="isolate outline-none"
@@ -67,7 +69,7 @@ function DropdownMenuContent({
           {...props}
         />
       </MenuPrimitive.Positioner>
-    </MenuPrimitive.Portal>
+    </DropdownMenuPortal>
   );
 }
 

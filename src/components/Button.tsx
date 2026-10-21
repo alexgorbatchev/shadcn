@@ -9,9 +9,10 @@ const buttonVariants = cva(
   {
     variants: {
       truncate: { true: "max-w-full min-w-0" },
+      fullWidth: { true: "w-full" },
       align: { start: "justify-start", center: "justify-center", end: "justify-end" },
       variant: {
-        default: "bg-primary text-primary-foreground hover:bg-primary/80",
+        default: "bg-primary text-primary-foreground hover:bg-primary/90",
         outline:
           "border-input bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground",
         secondary:
@@ -24,6 +25,7 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
+        content: "min-h-control h-auto gap-control-gap px-control-x py-2 whitespace-normal",
         inline: "h-auto gap-1 border-0 p-0",
         default:
           "h-control gap-control-gap px-control-x has-data-[icon=inline-end]:pe-2 has-data-[icon=inline-start]:ps-2",
@@ -54,6 +56,7 @@ function Button({
   size = "default",
   align = "center",
   truncate = false,
+  fullWidth = false,
   children,
   ...props
 }: ButtonProps): ReactElement {
@@ -63,7 +66,7 @@ function Button({
       data-slot="button"
       className={(state) =>
         cn(
-          buttonVariants({ variant, size, align, truncate }),
+          buttonVariants({ variant, size, align, truncate, fullWidth }),
           typeof className === "function" ? className(state) : className,
         )
       }

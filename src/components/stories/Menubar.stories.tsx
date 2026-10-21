@@ -29,6 +29,7 @@ const meta: Meta<typeof Menubar> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 const itemClassName = fn(() => "font-normal");
+const stateClassName = fn(() => "font-normal");
 export const Default: Story = {
   render: function Render(args) {
     const [action, setAction] = useState("No action");
@@ -36,21 +37,21 @@ export const Default: Story = {
     const [zoom, setZoom] = useState("100");
     return (
       <div>
-        <Menubar {...args} aria-label="Editor commands">
+        <Menubar {...args} className={stateClassName} aria-label="Editor commands">
           <MenubarMenu>
-            <MenubarTrigger>File</MenubarTrigger>
-            <MenubarContent>
+            <MenubarTrigger className={stateClassName}>File</MenubarTrigger>
+            <MenubarContent className={stateClassName}>
               <MenubarGroup>
-                <MenubarLabel>Document</MenubarLabel>
+                <MenubarLabel className={stateClassName}>Document</MenubarLabel>
                 <MenubarItem className={itemClassName} onClick={() => setAction("Created")}>
                   New document<MenubarShortcut>Ctrl+N</MenubarShortcut>
                 </MenubarItem>
                 <MenubarItem disabled>Export</MenubarItem>
               </MenubarGroup>
-              <MenubarSeparator />
+              <MenubarSeparator className={stateClassName} />
               <MenubarSub>
-                <MenubarSubTrigger>Share</MenubarSubTrigger>
-                <MenubarSubContent>
+                <MenubarSubTrigger className={stateClassName}>Share</MenubarSubTrigger>
+                <MenubarSubContent className={stateClassName}>
                   <MenubarGroup aria-label="Sharing">
                     <MenubarItem onClick={() => setAction("Link copied")}>Copy link</MenubarItem>
                   </MenubarGroup>
@@ -62,11 +63,17 @@ export const Default: Story = {
             <MenubarTrigger>View</MenubarTrigger>
             <MenubarContent>
               <MenubarGroup aria-label="View settings">
-                <MenubarCheckboxItem checked={checked} onCheckedChange={setChecked}>
+                <MenubarCheckboxItem
+                  checked={checked}
+                  onCheckedChange={setChecked}
+                  className={(state) => (state.checked ? "font-bold" : "font-normal")}
+                >
                   Show details
                 </MenubarCheckboxItem>
                 <MenubarRadioGroup value={zoom} onValueChange={setZoom}>
-                  <MenubarRadioItem value="100">100 percent</MenubarRadioItem>
+                  <MenubarRadioItem value="100" className={stateClassName}>
+                    100 percent
+                  </MenubarRadioItem>
                   <MenubarRadioItem value="200">200 percent</MenubarRadioItem>
                 </MenubarRadioGroup>
               </MenubarGroup>
@@ -92,6 +99,10 @@ export const Default: Story = {
     await userEvent.click(canvas.getByRole("menuitem", { name: "View" }));
     const viewSettings = await body.findByRole("group", { name: "View settings" });
     await userEvent.click(within(viewSettings).getByRole("menuitemcheckbox", { name: "Show details" }));
+    await expect(
+      getComputedStyle(within(viewSettings).getByRole("menuitemcheckbox", { name: "Show details" })).fontWeight,
+    ).toBe("700");
+    await expect(stateClassName).toHaveBeenCalledWith(expect.any(Object));
     await userEvent.keyboard("{Escape}");
     await waitFor(() => expect(body.queryByRole("menu")).not.toBeInTheDocument());
     await expect(canvas.getByRole("status", { name: "Details enabled" })).toHaveTextContent("true");

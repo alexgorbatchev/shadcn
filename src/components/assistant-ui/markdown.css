@@ -1,0 +1,47 @@
+@import "@assistant-ui/react-markdown/styles/dot.css";
+.aui-md {
+  font-family: var(--font-sans);
+}
+:where(.aui-md[data-status="running"]):empty::after,
+:where(.aui-md[data-status="running"]) > :where(:not(ol):not(ul):not(pre)):last-child::after,
+:where(.aui-md[data-status="running"]) > pre:last-child code::after,
+:where(.aui-md[data-status="running"])
+  > :where(:is(ol, ul):last-child)
+  > :where(li:last-child:not(:has(* > li)))::after,
+:where(.aui-md[data-status="running"])
+  > :where(:is(ol, ul):last-child)
+  > :where(li:last-child)
+  > :where(:is(ol, ul):last-child)
+  > :where(li:last-child:not(:has(* > li)))::after,
+:where(.aui-md[data-status="running"])
+  > :where(:is(ol, ul):last-child)
+  > :where(li:last-child)
+  > :where(:is(ol, ul):last-child)
+  > :where(li:last-child)
+  > :where(:is(ol, ul):last-child)
+  > :where(li:last-child)::after {
+  margin-inline: 4px;
+  font-family: var(--font-sans);
+}
+@media (prefers-reduced-motion: reduce) {
+  :where(.aui-md[data-status="running"]):empty::after,
+  :where(.aui-md[data-status="running"]) > :where(:not(ol):not(ul):not(pre)):last-child::after,
+  :where(.aui-md[data-status="running"]) > pre:last-child code::after,
+  :where(.aui-md[data-status="running"])
+    > :where(:is(ol, ul):last-child)
+    > :where(li:last-child:not(:has(* > li)))::after,
+  :where(.aui-md[data-status="running"])
+    > :where(:is(ol, ul):last-child)
+    > :where(li:last-child)
+    > :where(:is(ol, ul):last-child)
+    > :where(li:last-child:not(:has(* > li)))::after,
+  :where(.aui-md[data-status="running"])
+    > :where(:is(ol, ul):last-child)
+    > :where(li:last-child)
+    > :where(:is(ol, ul):last-child)
+    > :where(li:last-child)
+    > :where(:is(ol, ul):last-child)
+    > :where(li:last-child)::after {
+    animation: none;
+  }
+}

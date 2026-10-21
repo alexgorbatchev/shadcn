@@ -1,5 +1,6 @@
 import type { IDensityProps } from "../density/types.js";
 import { useDensity } from "../hooks/useDensity.js";
+import { usePortalContainer } from "../hooks/usePortalContainer.js";
 import type { ReactElement } from "react";
 
 import { PreviewCard as PreviewCardPrimitive } from "@base-ui/react/preview-card";
@@ -29,9 +30,10 @@ function HoverCardContent({
 }: HoverCardContentProps): ReactElement {
   const resolvedDensity = useDensity(density);
   const direction = useDirection();
+  const container = usePortalContainer();
 
   return (
-    <PreviewCardPrimitive.Portal data-slot="hover-card-portal">
+    <PreviewCardPrimitive.Portal container={container} data-slot="hover-card-portal">
       <PreviewCardPrimitive.Positioner
         dir={direction}
         align={align}

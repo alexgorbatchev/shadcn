@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-08 06:13
-last_modified: 2026-10-20 10:05
+last_modified: 2026-10-21 07:02
 status: current
 ---
 
@@ -20,7 +20,7 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - Visual regression: `bun run test:visual` (selected stories across themes, densities, desktop and mobile widths); review intentional baseline updates with `bun run test:visual:update` on Ubuntu 24.04
 - Native browser checks: `bun run test:native` (Chromium checks including Carousel with reduced motion; Drawer also runs in Linux WebKit)
 - Reduced-motion interactions: `bun run test:reduced-motion` (full Storybook catalog with native reduced-motion preference)
-- Coverage gate: `bun run test:coverage` (90% statements, branches, functions, and lines across runtime source)
+- Coverage gate: `bun run test:coverage` (Storybook and native browser, hook, and utility tests; 90% statements, branches, functions, and lines across runtime source)
 - Build package: `just build`
 - Inspect a local archive: `just pack` (npm writes to `.tmp/packs/`; release publication uses `npm publish` directly)
 
@@ -30,7 +30,7 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - Keep the single repository `bun.lock` in sync with manifest changes. Local package verification also requires npm.
 - For routed preview prerequisites and hostname configuration, see [README.md](./README.md#devhost-preview). The direct Storybook preview needs no devhost service.
 - `dist/`, `storybook-static/`, `.cache/`, and `.tmp/` are generated or transient outputs. Edit their source files and regenerate them; keep those directories untracked.
-- `just check` is the local validation entrypoint. `.github/workflows/storybook-pages.yml` validates and deploys static Storybook only when a GitHub Release is published; see [Pages setup](./docs/internal/storybook-pages.md). It does not run on branch pushes or pull requests.
+- `just check` is the local validation entrypoint, including a browser smoke check of the built standalone preview. `.github/workflows/storybook-pages.yml` validates and deploys static Storybook only when a GitHub Release is published; see [Pages setup](./docs/internal/storybook-pages.md). It does not run on branch pushes or pull requests.
 
 ## Contracts
 
@@ -85,6 +85,7 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 ## References
 
 - [Consumer setup and customization](./README.md)
+- [Optional assistant-ui catalog and source inventory](./docs/internal/assistant-ui.md)
 - [Source and license attribution](./THIRD_PARTY_NOTICES.md)
 - [Storybook contrast testing and manual-review limits](./docs/internal/accessibility.md)
 - [Visual regression baselines and CI](./docs/internal/visual-regression.md)

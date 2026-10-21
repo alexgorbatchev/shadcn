@@ -1,3 +1,31 @@
+import manifest from "../../package.json";
+export const fixture_coverageConfigSource: string = `
+import { defineConfig } from "vitest/config";
+export default defineConfig({
+  root: import.meta.dirname,
+  logLevel: "silent",
+  test: {
+    include: ["test/*.test.ts"],
+    coverage: { provider: "istanbul", include: ["src/**/*.ts"], reporter: ["json"], reportsDirectory: "coverage" },
+  },
+  plugins: [{
+    name: "test:concurrent-uncovered-transform",
+    transform: {
+      order: "post",
+      async handler(code, id) {
+        if (id.includes("/src/uncovered.ts") && id.includes("vitest-uncovered-coverage=true")) {
+          await this.environment.transformRequest(import.meta.dirname + "/src/other.ts?concurrent-transform");
+        }
+      },
+    },
+  }],
+});
+`;
+export const fixture_coverageTestSource: string = `
+import { expect, test } from "vitest";
+import { covered } from "../src/covered.js";
+test("executes the covered module", () => expect(covered(2)).toBe(3));
+`;
 export const fixture_packageTypeConsumerSource: string = `
 import { Button, ContextMenuCheckboxItem, DropdownMenuCheckboxItem, MenubarCheckboxItem,
   PaginationPrevious, PaginationNext, FieldSeparator } from "@alexgorbatchev/shadcn";
@@ -155,20 +183,13 @@ for (const position of ["start", "end", "last-anchor"]) {
 console.log(JSON.stringify({ hasWindow: typeof window !== "undefined", transcripts }));
 `;
 
-export const fixture_optionalPeerNames: readonly string[] = [
-  "@daypicker/react",
-  "@daypicker/persian",
-  "@fontsource-variable/jetbrains-mono",
-  "cmdk",
-  "cssesc",
-  "embla-carousel-react",
-  "es-toolkit",
-  "react-resizable-panels",
-  "recharts",
-];
+export const fixture_optionalPeerNames: readonly string[] = Object.entries(manifest.peerDependenciesMeta)
+  .filter(([, metadata]) => metadata.optional)
+  .map(([name]) => name);
 
 export const fixture_featureTypeExports: Record<string, string> = {
   core: "Button",
+  "assistant-ui": "ApprovalCard, type IApprovalCardProps",
   chart: "ChartContainer, ChartStyle, useChart, type ChartConfig",
   calendar: "Calendar, CalendarDayButton",
   "persian-calendar": "PersianCalendar",
@@ -184,10 +205,17 @@ export const fixture_featureTypeExports: Record<string, string> = {
 
 export const fixture_featureTypePaths: Record<string, string> = {
   core: "@alexgorbatchev/shadcn",
+  "assistant-ui": "@alexgorbatchev/shadcn/assistant-ui/approval-card",
   fonts: "@alexgorbatchev/shadcn",
 };
 
 export const fixture_featureConsumers: ReadonlyArray<readonly [string, readonly string[], string, string]> = [
+  [
+    "assistant-ui",
+    [],
+    `import { renderToString } from "react-dom/server"; import { jsx } from "react/jsx-runtime"; import { ApprovalCard } from "@alexgorbatchev/shadcn/assistant-ui/approval-card"; const markup = renderToString(jsx(ApprovalCard, { state: "request", title: "Inspect service", subtitle: "Service inspection", description: "Read service status", onAllowOnce() {}, onDeny() {} })); console.log(JSON.stringify(markup.includes("Inspect service") && markup.includes("Allow once")));`,
+    "true",
+  ],
   [
     "core",
     [],

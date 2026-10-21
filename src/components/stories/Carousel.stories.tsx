@@ -378,3 +378,76 @@ export const AutoplayPlugin: Story = {
   },
 };
 export const AutoplayPluginRtl: Story = { ...AutoplayPlugin, decorators: VerticalRtl.decorators };
+
+export const CustomNavigation: Story = {
+  render: function Render(args) {
+    const [isLocked, setLocked] = useState(false);
+    const [isCancelled, setCancelled] = useState(true);
+    return (
+      <div className="flex flex-col items-start gap-panel p-48">
+        <Carousel {...args} opts={{ duration: 0 }} className="w-64">
+          <CarouselContent>
+            {["First", "Second", "Third"].map((label) => (
+              <CarouselItem key={label} aria-label={label}>
+                <div className="flex h-40 items-center justify-center border border-border">{label}</div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious
+            size="default"
+            className={(state) => (state.disabled ? "w-40" : "w-32")}
+            disabled={isLocked}
+            onClick={(event) => {
+              if (isCancelled) event.preventDefault();
+            }}
+          >
+            Earlier project
+          </CarouselPrevious>
+          <CarouselNext size="default" variant="secondary" className={() => "w-32"} disabled={isLocked}>
+            Later project
+          </CarouselNext>
+        </Carousel>
+        <Button onClick={() => setLocked(!isLocked)}>{isLocked ? "Unlock navigation" : "Lock navigation"}</Button>
+        <Button onClick={() => setCancelled(false)}>Allow earlier project</Button>
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const earlier = canvas.getByRole("button", { name: "Earlier project" });
+    const later = canvas.getByRole("button", { name: "Later project" });
+    await expect(earlier).toBeDisabled();
+    await waitFor(() => expect(later).toBeEnabled());
+    const disabledWidth = earlier.getBoundingClientRect().width;
+    await userEvent.click(later);
+    await waitFor(() => expect(earlier).toBeEnabled());
+    await expect(earlier.getBoundingClientRect().width).toBeLessThan(disabledWidth);
+    const first = canvas.getByRole("group", { name: "First" });
+    const position = first.getBoundingClientRect().x;
+    await userEvent.click(earlier);
+    await expect(first.getBoundingClientRect().x).toBe(position);
+    await userEvent.click(canvas.getByRole("button", { name: "Lock navigation" }));
+    await expect(earlier).toBeDisabled();
+    await expect(later).toBeDisabled();
+    await userEvent.click(canvas.getByRole("button", { name: "Unlock navigation" }));
+    await expect(earlier).toBeEnabled();
+    await expect(later).toBeEnabled();
+    await userEvent.click(canvas.getByRole("button", { name: "Allow earlier project" }));
+    await userEvent.click(earlier);
+    await waitFor(() => expect(earlier).toBeDisabled());
+    await expect(first.getBoundingClientRect().x).toBeGreaterThan(position);
+  },
+};
+
+export const UnhandledKeyboard: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const carousel = canvas.getByRole("region", { name: "Featured projects" });
+    await waitFor(() => expect(canvas.getByRole("button", { name: "Next slide" })).toBeEnabled());
+    carousel.focus();
+    await userEvent.keyboard("{Home}{End}{ArrowUp}{ArrowDown}");
+    await expect(canvas.getByLabelText("Current slide")).toHaveTextContent("1 of 3");
+    await userEvent.keyboard("{ArrowRight}");
+    await expect(canvas.getByLabelText("Current slide")).toHaveTextContent("2 of 3");
+  },
+};

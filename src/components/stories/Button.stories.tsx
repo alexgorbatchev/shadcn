@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Button, buttonVariants } from "../Button";
-import { expect, fn, userEvent, within } from "storybook/test";
+import { expect, fn, waitFor, within } from "storybook/test";
+
 import { ArrowRightIcon, BookmarkIcon } from "lucide-react";
 import { Spinner } from "../Spinner";
 
@@ -16,7 +17,7 @@ const meta: Meta<typeof Button> = {
     },
     size: {
       control: "select",
-      options: ["default", "xs", "sm", "lg", "icon", "icon-xs", "icon-sm", "icon-lg"],
+      options: ["default", "content", "xs", "sm", "lg", "icon", "icon-xs", "icon-sm", "icon-lg"],
     },
     density: { control: "select", options: ["compact", "comfortable"] },
   },
@@ -26,12 +27,26 @@ type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {
   tags: ["visual"],
-  play: async ({ canvasElement, args }) => {
+  play: async ({ canvasElement, args, userEvent }) => {
     const button = within(canvasElement).getByRole("button");
     await userEvent.click(button);
     await expect(args.onClick).toHaveBeenCalledTimes(1);
     await userEvent.keyboard(" {Enter}");
     await expect(args.onClick).toHaveBeenCalledTimes(3);
+  },
+};
+export const HoverPrimaryLight: Story = {
+  globals: { theme: "light", density: "comfortable" },
+  play: async ({ canvasElement, args, userEvent }) => {
+    const button = within(canvasElement).getByRole("button", { name: "Save changes" });
+    await userEvent.hover(
+      await within(canvasElement.ownerDocument.body).findByRole("button", { name: "Save changes" }),
+    );
+    await waitFor(() => expect(button.getAnimations()).toHaveLength(0));
+    await userEvent.click(
+      await within(canvasElement.ownerDocument.body).findByRole("button", { name: "Save changes" }),
+    );
+    await expect(args.onClick).toHaveBeenCalledTimes(1);
   },
 };
 export const Outline: Story = { tags: ["visual"], ...Default, args: { variant: "outline" } };
@@ -44,7 +59,7 @@ export const Link: Story = { ...Default, args: { variant: "link" } };
 export const Disabled: Story = {
   tags: ["visual"],
   args: { disabled: true },
-  play: async ({ canvasElement, args }) => {
+  play: async ({ canvasElement, args, userEvent }) => {
     const button = within(canvasElement).getByRole("button");
     await expect(button).toBeDisabled();
     await userEvent.tab();
@@ -110,7 +125,7 @@ export const StateCallback: Story = {
 };
 export const FocusableDisabled: Story = {
   args: { disabled: true, focusableWhenDisabled: true, className: fn(() => "font-normal") },
-  play: async ({ canvasElement, args }) => {
+  play: async ({ canvasElement, args, userEvent }) => {
     const button = within(canvasElement).getByRole("button");
     await userEvent.tab();
     await expect(button).toHaveFocus();
@@ -142,7 +157,7 @@ export const RightToLeftIcons: Story = {
       </Button>
     </div>
   ),
-  play: async ({ canvasElement, args }) => {
+  play: async ({ canvasElement, args, userEvent }) => {
     const canvas = within(canvasElement);
     const leadingLtr = canvas.getByRole("button", { name: "Leading LTR" });
     const leadingRtl = canvas.getByRole("button", { name: "Leading RTL" });
@@ -200,7 +215,7 @@ export const AsLink: Story = {
       Login
     </a>
   ),
-  play: async ({ canvasElement }) => {
+  play: async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);
     const link = canvas.getByRole("link", { name: "Login" });
     await expect(link).toHaveAttribute("href", "#login");
@@ -261,11 +276,44 @@ export const TruncatedLabel: Story = {
       </div>
     ),
   ],
-  async play({ canvasElement, args }) {
+  async play({ canvasElement, args, userEvent }) {
     const button = within(canvasElement).getByRole("button");
     await expect(button.getBoundingClientRect().width).toBeLessThanOrEqual(144);
     await expect(button.scrollWidth).toBeLessThanOrEqual(button.clientWidth);
     await userEvent.click(button);
     await expect(args.onClick).toHaveBeenCalledTimes(1);
+  },
+};
+
+export const ContentHeight: Story = {
+  args: { size: "content", variant: "outline", align: "start", fullWidth: true },
+  decorators: [
+    (Story) => (
+      <section aria-label="Choice area" className="w-96">
+        <Story />
+      </section>
+    ),
+  ],
+  render: (args) => (
+    <Button {...args}>
+      <span className="flex flex-col items-start">
+        <span>Use selected context</span>
+        <span>Include the current page and annotations</span>
+      </span>
+    </Button>
+  ),
+  play: async ({ canvasElement, args, userEvent }) => {
+    const canvas = within(canvasElement);
+    const button = canvas.getByRole("button");
+    const title = canvas.getByText("Use selected context");
+    const description = canvas.getByText("Include the current page and annotations");
+    await expect(button.getBoundingClientRect().height).toBeGreaterThan(
+      title.getBoundingClientRect().height + description.getBoundingClientRect().height,
+    );
+    await expect(button.getBoundingClientRect().width).toBe(
+      canvas.getByRole("region", { name: "Choice area" }).getBoundingClientRect().width,
+    );
+    await userEvent.click(button);
+    await expect(args.onClick).toHaveBeenCalledOnce();
   },
 };

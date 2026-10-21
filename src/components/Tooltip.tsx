@@ -1,4 +1,5 @@
 import { useDensity } from "../hooks/useDensity.js";
+import { usePortalContainer } from "../hooks/usePortalContainer.js";
 import type { IDensityProps } from "../density/types.js";
 import type { ReactElement } from "react";
 import { Tooltip as TooltipPrimitive } from "@base-ui/react/tooltip";
@@ -33,9 +34,10 @@ function TooltipContent({
 }: TooltipContentProps): ReactElement {
   const resolvedDensity = useDensity(density);
   const direction = useDirection();
+  const container = usePortalContainer();
 
   return (
-    <TooltipPrimitive.Portal>
+    <TooltipPrimitive.Portal container={container}>
       <TooltipPrimitive.Positioner
         dir={direction}
         align={align}

@@ -1,5 +1,6 @@
 import type { IDensityProps } from "../density/types.js";
 import { useDensity } from "../hooks/useDensity.js";
+import { usePortalContainer } from "../hooks/usePortalContainer.js";
 import { useDirection } from "./DirectionProvider.js";
 import type { ComponentPropsWithRef, ReactElement } from "react";
 import { ChevronDownIcon } from "lucide-react";
@@ -120,8 +121,9 @@ function NavigationMenuPositioner({
 }: NavigationMenuPositionerProps): ReactElement {
   const resolvedDensity = useDensity(density);
   const direction = useDirection();
+  const container = usePortalContainer();
   return (
-    <NavigationMenuPrimitive.Portal>
+    <NavigationMenuPrimitive.Portal container={container}>
       <NavigationMenuPrimitive.Positioner
         dir={direction}
         side={side}

@@ -2,7 +2,7 @@ import { afterAll, beforeAll, expect, test } from "bun:test";
 import assert from "node:assert/strict";
 import { mkdir, rm } from "node:fs/promises";
 import manifest from "../../package.json";
-import { runConsumerCommand } from "./helpers";
+import { getPackageExportTargets, runConsumerCommand } from "./helpers";
 import {
   fixture_chartServerRenderSource,
   fixture_otpServerRenderSource,
@@ -39,6 +39,47 @@ test("release tarball includes the current README", async () => {
   expect(readme).toBeDefined();
   assert(readme);
   expect(await readme.text()).toBe(await Bun.file("README.md").text());
+});
+
+test("every packed public entry resolves to an included artifact", async () => {
+  const archive = new Bun.Archive(await Bun.file(`${consumerRoot}/package.tgz`).bytes());
+  const files = await archive.files();
+  const packedManifestFile = files.get("package/package.json");
+  assert(packedManifestFile);
+  const packedManifest: typeof manifest = JSON.parse(await packedManifestFile.text());
+  for (const target of getPackageExportTargets(packedManifest.exports)) {
+    expect(files.has(`package/${target.replace(/^\.\//, "")}`), `Missing packed public artifact: ${target}`).toBe(true);
+  }
+});
+
+test("packed assistant stylesheet resolves its companion without optional peers", async () => {
+  const archive = new Bun.Archive(await Bun.file(`${consumerRoot}/package.tgz`).bytes());
+  const files = await archive.files();
+  const cwd = `${consumerRoot}/assistant-styles`;
+  await Promise.all(
+    [...files]
+      .filter(([path]) => path.startsWith("package/dist/") && path.endsWith(".css"))
+      .map(([path, file]) => Bun.write(`${cwd}/${path}`, file)),
+  );
+  const build = await Bun.build({
+    entrypoints: [`${cwd}/package/dist/assistant-ui.css`],
+    outdir: `${cwd}/out`,
+    target: "browser",
+    plugins: [
+      {
+        name: "enforce-stylesheet-isolation",
+        setup(builder) {
+          builder.onLoad({ filter: /./ }, (args) => {
+            assert(args.path.startsWith(`${cwd}/`), `Resolved outside packed stylesheet: ${args.path}`);
+            return undefined;
+          });
+        },
+      },
+    ],
+  });
+  expect(build.logs).toEqual([]);
+  expect(build.success).toBe(true);
+  expect(build.outputs.some((output) => output.path.endsWith(".css") && output.size > 0)).toBe(true);
 });
 
 test.each(fixture_featureConsumers)(

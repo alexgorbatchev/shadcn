@@ -13,6 +13,7 @@ check:
     bun run lint
     bun run test:package
     bun run build-storybook
+    bun run test:preview
 
 fix:
     bun x --bun oxfmt --write .
