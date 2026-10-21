@@ -159,6 +159,7 @@
   "patchedDependencies": {
     "sonner@2.0.8": "patches/sonner@2.0.8.patch",
     "@shadcn/react@0.3.1": "patches/@shadcn%2Freact@0.3.1.patch",
+    "storybook@10.6.1": "patches/storybook@10.6.1.patch",
     "input-otp@1.5.0": "patches/input-otp@1.5.0.patch",
     "@vitest/coverage-istanbul@4.1.11": "patches/@vitest%2Fcoverage-istanbul@4.1.11.patch",
   },

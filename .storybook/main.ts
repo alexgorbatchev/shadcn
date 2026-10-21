@@ -1,7 +1,5 @@
 import type { StorybookConfig } from "@storybook/react-vite";
-import tailwindcss from "@tailwindcss/vite";
-import { mergeConfig } from "vite";
-import { createPreviewAssetBasePlugin } from "./plugins/createPreviewAssetBasePlugin.ts";
+import { createStorybookViteConfig } from "./createStorybookViteConfig.ts";
 
 const storybookAllowedHosts = (process.env.__VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS ?? "")
   .split(",")
@@ -18,17 +16,15 @@ const config: StorybookConfig = {
     reactDocgenTypescriptOptions: {
       include: ["src/components/**/*.tsx"],
       exclude: ["**/stories/**"],
+      fileSystemCache: { directory: ".cache/storybook/docgen" },
     },
   },
   async viteFinal(viteConfig, options) {
-    const isDevelopmentPreview = options.configType === "DEVELOPMENT" && typeof options.port === "number";
-    const developmentAssetBase = `/__storybook/${options.port}/`;
-    return mergeConfig(viteConfig, {
-      cacheDir: `${import.meta.dir}/../.cache/storybook/${isDevelopmentPreview ? `dev-${options.port}` : options.configType === "PRODUCTION" ? "build" : "tests"}`,
-      base: isDevelopmentPreview ? developmentAssetBase : viteConfig.base,
-      plugins: [tailwindcss(), ...(isDevelopmentPreview ? [createPreviewAssetBasePlugin(developmentAssetBase)] : [])],
-      server: { allowedHosts: storybookAllowedHosts, headers: { "Cache-Control": "no-store" }, hmr: false },
-      resolve: { alias: { "@": `${import.meta.dir}/../src` } },
+    return createStorybookViteConfig(viteConfig, {
+      configType: options.configType,
+      port: options.port,
+      rootDirectory: `${import.meta.dirname}/..`,
+      allowedHosts: storybookAllowedHosts,
     });
   },
 };

@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import "tailwindcss" source(none);
 @import "../src/theme.css";
 @import "../src/typeset.css";
 @import "../src/fonts.css";
@@ -6,3 +6,4 @@
 @import "../src/components/assistant-ui/markdown.css";
 @import "../src/components/assistant-ui/geo-map.css";
 @source "../src";
+@source "./";

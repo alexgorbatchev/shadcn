@@ -86,6 +86,21 @@ test("native scrollbars preserve keyboard scrolling in both directions", async (
   });
 }, 30_000);
 
+test("standalone Docs renders generated component props", async () => {
+  if (!browser) throw new Error("Preview browser was not started");
+  const page = await browser.newPage({ reducedMotion: "reduce" });
+  page.setDefaultTimeout(10_000);
+  try {
+    await page.goto(`${origin}/?path=/docs/alexgorbatchev-shadcn-components-actions-button--docs`);
+    await page
+      .frameLocator("#storybook-preview-iframe")
+      .getByRole("cell", { name: "fullWidth", exact: true })
+      .waitFor();
+  } finally {
+    await page.close();
+  }
+}, 30_000);
+
 test("standalone native thread renders and accepts its composer draft", async () => {
   await checkStory(
     "alexgorbatchev-shadcn-components-assistant-ui-native-conversations-thread--bottom-composer",
