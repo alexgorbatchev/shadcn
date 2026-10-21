@@ -28,7 +28,7 @@ export const NewConversation: Story = {
       await userEvent.clear(input);
       await userEvent.type(input, "Inspect this page.");
     }
-    await userEvent.click(canvas.getByRole("button", { name: "Send message" }));
+    await userEvent.click(canvas.getByRole("button", { name: "Send Message" }));
     await waitFor(() => expect(canvas.getByText("Ready to help.")).toBeVisible());
     await userEvent.click(canvas.getByRole("button", { name: "New Thread" }));
     await waitFor(() => expect(canvas.getByRole("textbox", { name: "Message input" })).toHaveValue(""));
@@ -46,7 +46,7 @@ export const RenameAndSearch: Story = {
       await userEvent.clear(input);
       await userEvent.type(input, "Inspect this page.");
     }
-    await userEvent.click(canvas.getByRole("button", { name: "Send message" }));
+    await userEvent.click(canvas.getByRole("button", { name: "Send Message" }));
     await waitFor(() => expect(canvas.getByText("Ready to help.")).toBeVisible());
     await userEvent.click(canvas.getByRole("button", { name: "More options" }));
     await userEvent.click(await canvas.findByRole("menuitem", { name: "Rename" }));
@@ -83,7 +83,7 @@ export const Archive: Story = {
       await userEvent.clear(input);
       await userEvent.type(input, "Archive this conversation.");
     }
-    await userEvent.click(canvas.getByRole("button", { name: "Send message" }));
+    await userEvent.click(canvas.getByRole("button", { name: "Send Message" }));
     await waitFor(() => expect(canvas.getByText("Ready to help.")).toBeVisible());
     await userEvent.click(canvas.getByRole("button", { name: "More options" }));
     await userEvent.click(await canvas.findByRole("menuitem", { name: "Archive" }));
@@ -100,7 +100,7 @@ export const CancelRename: Story = {
       await userEvent.clear(input);
       await userEvent.type(input, "Keep the original title.");
     }
-    await userEvent.click(canvas.getByRole("button", { name: "Send message" }));
+    await userEvent.click(canvas.getByRole("button", { name: "Send Message" }));
     await waitFor(() => expect(canvas.getByText("Ready to help.")).toBeVisible());
     await userEvent.click(canvas.getByRole("button", { name: "More options" }));
     await userEvent.click(await canvas.findByRole("menuitem", { name: "Rename" }));
@@ -123,7 +123,7 @@ export const RenameOnBlurAndIgnoreEmptyTitle: Story = {
       await userEvent.clear(input);
       await userEvent.type(input, "Rename using blur.");
     }
-    await userEvent.click(canvas.getByRole("button", { name: "Send message" }));
+    await userEvent.click(canvas.getByRole("button", { name: "Send Message" }));
     await waitFor(() => expect(canvas.getByText("Ready to help.")).toBeVisible());
     await userEvent.click(canvas.getByRole("button", { name: "More options" }));
     await userEvent.click(await canvas.findByRole("menuitem", { name: "Rename" }));
@@ -154,7 +154,7 @@ export const DeleteConversation: Story = {
       await userEvent.clear(input);
       await userEvent.type(input, "Delete this conversation.");
     }
-    await userEvent.click(canvas.getByRole("button", { name: "Send message" }));
+    await userEvent.click(canvas.getByRole("button", { name: "Send Message" }));
     await waitFor(() => expect(canvas.getByText("Ready to help.")).toBeVisible());
     await userEvent.click(canvas.getByRole("button", { name: "More options" }));
     await userEvent.click(await canvas.findByRole("menuitem", { name: "Delete" }));

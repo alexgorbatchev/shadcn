@@ -1,4 +1,7 @@
-import type { PropsWithChildren, ReactElement } from "react";
+import { useRef, useState, type PropsWithChildren, type ReactElement } from "react";
+import type { TextMessagePartProps } from "@assistant-ui/react";
+import { Thread } from "../../../../assistant-ui/native/Thread.js";
+import { Button } from "../../../../Button.js";
 import type { ThreadMessageLike } from "@assistant-ui/react";
 import type { ThreadGroupPart } from "../../../../assistant-ui/native/Thread.js";
 
@@ -36,6 +39,48 @@ export const fixture_inlineMedia: readonly ThreadMessageLike[] = [
 
 interface IThreadGroupFixtureProps {
   group: ThreadGroupPart;
+}
+
+function ThreadComposerActionFixture(): ReactElement {
+  const [hasContext, setHasContext] = useState(false);
+  return (
+    <Button type="button" onClick={() => setHasContext(true)}>
+      {hasContext ? "Context added" : "Add context"}
+    </Button>
+  );
+}
+
+function ThreadUserTextFixture({ text }: TextMessagePartProps): ReactElement {
+  return (
+    <details>
+      <summary>Expand user text</summary>
+      {text}
+    </details>
+  );
+}
+
+export function ThreadConsumerControlsFixture(): ReactElement {
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
+  return (
+    <>
+      <Button onClick={() => inputRef.current?.focus()}>Focus composer</Button>
+      <Button onClick={() => viewportRef.current?.focus()}>Focus transcript</Button>
+      <Thread
+        autoFocus={false}
+        emptyComposerPosition="bottom"
+        composerInputRef={inputRef}
+        viewportProps={{
+          ref: viewportRef,
+          tabIndex: 0,
+          role: "region",
+          "aria-label": "Conversation",
+          autoScroll: false,
+        }}
+        components={{ ComposerActions: ThreadComposerActionFixture, UserText: ThreadUserTextFixture }}
+      />
+    </>
+  );
 }
 
 export const fixture_groupedMessage: readonly ThreadMessageLike[] = [

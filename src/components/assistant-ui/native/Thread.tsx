@@ -1,4 +1,4 @@
-import type { ReactElement } from "react";
+import type { ComponentPropsWithRef, ReactElement, Ref } from "react";
 import { useResolvedPortalContainer } from "../hooks/useResolvedPortalContainer.js";
 import { useDensity } from "../../../hooks/useDensity.js";
 import { ComposerAddAttachment, ComposerAttachments, UserMessageAttachments } from "./AttachmentPreview.js";
@@ -68,6 +68,8 @@ type ThreadRootContract = {
   isEmpty: boolean;
   autoFocus: boolean;
   emptyComposerPosition: "center" | "bottom";
+  viewportProps?: ThreadProps["viewportProps"];
+  composerInputRef?: Ref<HTMLTextAreaElement> | undefined;
 };
 
 export type ThreadGroupPart = MessagePrimitive.GroupedParts.GroupPart;
@@ -85,6 +87,8 @@ const reasoningDuration = (timing: ThreadGroupPart["timing"]) =>
  * tool group; without it they render like any other tool call.
  */
 export type ThreadComponents = {
+  UserText?: TextMessagePartComponent | undefined;
+  ComposerActions?: ComponentType | undefined;
   AssistantMessage?: ComponentType | undefined;
   Welcome?: ComponentType | undefined;
   ToolFallback?: ToolCallMessagePartComponent | undefined;
@@ -128,6 +132,10 @@ const taskAwareGroupBy = (
     : path;
 };
 export type ThreadProps = {
+  /** Native viewport behavior and ref, including scroll restoration. */
+  viewportProps?: Omit<ComponentPropsWithRef<typeof ThreadPrimitive.Viewport>, "children" | "render"> | undefined;
+  /** Ref to the thread composer's native input. */
+  composerInputRef?: Ref<HTMLTextAreaElement> | undefined;
   components?: ThreadComponents | undefined;
   autoFocus?: boolean | undefined;
   /** Place the composer at the bottom even before the first message. */
@@ -166,15 +174,29 @@ export function Thread({
   components = EMPTY_COMPONENTS,
   autoFocus = true,
   emptyComposerPosition = "center",
+  viewportProps,
+  composerInputRef,
 }: ThreadProps): ReactElement {
   const isEmpty = useAuiState(isNewChatView);
   return (
     <ThreadComponentsContext.Provider value={components}>
-      <ThreadRoot isEmpty={isEmpty} autoFocus={autoFocus} emptyComposerPosition={emptyComposerPosition} />
+      <ThreadRoot
+        isEmpty={isEmpty}
+        autoFocus={autoFocus}
+        emptyComposerPosition={emptyComposerPosition}
+        viewportProps={viewportProps}
+        composerInputRef={composerInputRef}
+      />
     </ThreadComponentsContext.Provider>
   );
 }
-const ThreadRoot: FC<ThreadRootContract> = ({ isEmpty, autoFocus, emptyComposerPosition }) => {
+const ThreadRoot: FC<ThreadRootContract> = ({
+  isEmpty,
+  autoFocus,
+  emptyComposerPosition,
+  viewportProps,
+  composerInputRef,
+}) => {
   const { Welcome = ThreadWelcome } = useContext(ThreadComponentsContext);
   const isCentered = isEmpty && emptyComposerPosition === "center";
   return (
@@ -190,6 +212,7 @@ const ThreadRoot: FC<ThreadRootContract> = ({ isEmpty, autoFocus, emptyComposerP
     >
       <ThreadPrimitive.Viewport
         turnAnchor="top"
+        {...viewportProps}
         data-slot="aui_thread-viewport"
         render={<div className="relative flex flex-1 flex-col overflow-x-auto overflow-y-scroll scroll-smooth" />}
       >
@@ -212,19 +235,20 @@ const ThreadRoot: FC<ThreadRootContract> = ({ isEmpty, autoFocus, emptyComposerP
             <ThreadPrimitive.Messages>{() => <ThreadMessage />}</ThreadPrimitive.Messages>
           </div>
 
+          <div aria-hidden="true" className={cn(!isCentered && "flex-1")} />
           <ThreadPrimitive.ViewportFooter
             render={
               <div
                 className={cn(
                   "aui-thread-viewport-footer bg-background sticky bottom-0 flex flex-col gap-4 overflow-visible pb-4 md:pb-6",
-                  !isCentered && "mt-auto rounded-t-(--composer-radius)",
+                  !isCentered && "rounded-t-(--composer-radius)",
                 )}
               />
             }
           >
             <ThreadScrollToBottom />
             <ThreadFollowupSuggestions />
-            <Composer autoFocus={autoFocus} />
+            <Composer autoFocus={autoFocus} inputRef={composerInputRef} />
             <AuiIf condition={(s) => isNewChatView(s) && s.composer.isEmpty}>
               <ThreadSuggestions />
             </AuiIf>
@@ -443,7 +467,8 @@ const ThreadSuggestionItem: FC = () => {
 };
 const Composer: FC<{
   autoFocus: boolean;
-}> = ({ autoFocus }) => {
+  inputRef?: Ref<HTMLTextAreaElement> | undefined;
+}> = ({ autoFocus, inputRef }) => {
   return (
     <ComposerPrimitive.Root render={<form className="aui-composer-root relative flex w-full flex-col" />}>
       <ComposerPrimitive.AttachmentDropzone
@@ -456,6 +481,7 @@ const Composer: FC<{
       >
         <ComposerAttachments />
         <ComposerPrimitive.Input
+          ref={inputRef}
           placeholder="Send a message..."
           rows={1}
           autoFocus={autoFocus}
@@ -471,6 +497,7 @@ const Composer: FC<{
   );
 };
 const ComposerAction: FC = () => {
+  const { ComposerActions } = useContext(ThreadComponentsContext);
   // The stop control only cancels the send while no run it could stop is going.
   const isSending = useAuiState(
     (s) => s.composer.submission !== undefined && !(s.thread.isRunning && s.thread.capabilities.cancel),
@@ -479,15 +506,16 @@ const ComposerAction: FC = () => {
     <div className="aui-composer-action-wrapper relative flex items-center justify-between">
       <ComposerAddAttachment />
       <div className="flex items-center gap-1.5">
+        {ComposerActions && <ComposerActions />}
         <AuiIf condition={(s) => s.thread.capabilities.dictation}>
           <AuiIf condition={(s) => s.composer.dictation == null}>
             <ComposerPrimitive.Dictate asChild>
               <TooltipIconButton
-                tooltip="Voice input"
+                tooltip="Voice Input"
                 side="bottom"
                 type="button"
                 variant="ghost"
-                aria-label="Start voice input"
+                aria-label="Start Voice Input"
               >
                 <MicIcon aria-hidden="true" className="size-4 shrink-0" />
               </TooltipIconButton>
@@ -496,11 +524,11 @@ const ComposerAction: FC = () => {
           <AuiIf condition={(s) => s.composer.dictation != null}>
             <ComposerPrimitive.StopDictation asChild>
               <TooltipIconButton
-                tooltip="Stop dictation"
+                tooltip="Stop Dictation"
                 side="bottom"
                 type="button"
                 variant="ghost"
-                aria-label="Stop voice input"
+                aria-label="Stop Voice Input"
               >
                 <SquareIcon aria-hidden="true" className="size-3.5 shrink-0 animate-pulse motion-reduce:animate-none" />
               </TooltipIconButton>
@@ -515,11 +543,11 @@ const ComposerAction: FC = () => {
         >
           <ComposerPrimitive.Send asChild>
             <TooltipIconButton
-              tooltip="Send message"
+              tooltip="Send Message"
               side="bottom"
               type="button"
               variant="default"
-              aria-label="Send message"
+              aria-label="Send Message"
             >
               <ArrowUpIcon aria-hidden="true" className="size-4 shrink-0" />
             </TooltipIconButton>
@@ -528,11 +556,11 @@ const ComposerAction: FC = () => {
         <AuiIf condition={shouldShowComposerResume}>
           <ComposerPrimitive.Resume asChild>
             <TooltipIconButton
-              tooltip="Resume generating"
+              tooltip="Resume Generating"
               side="bottom"
               type="button"
               variant="default"
-              aria-label="Resume generating"
+              aria-label="Resume Generating"
             >
               <PlayIcon aria-hidden="true" className="size-4 shrink-0" />
             </TooltipIconButton>
@@ -544,7 +572,7 @@ const ComposerAction: FC = () => {
           }
         >
           <ComposerPrimitive.Cancel asChild>
-            <Button type="button" variant="default" aria-label={isSending ? "Cancel sending" : "Stop generating"}>
+            <Button type="button" variant="default" aria-label={isSending ? "Cancel Sending" : "Stop Generating"}>
               <SquareIcon aria-hidden="true" className="size-3.5 shrink-0" />
             </Button>
           </ComposerPrimitive.Cancel>
@@ -758,6 +786,7 @@ const UserImagePart: ImageMessagePartComponent = (part) => (
   </div>
 );
 const UserMessage: FC = () => {
+  const { UserText } = useContext(ThreadComponentsContext);
   return (
     <MessagePrimitive.Root
       data-slot="aui_user-message-root"
@@ -770,7 +799,7 @@ const UserMessage: FC = () => {
 
       <div className="aui-user-message-content-wrapper relative col-start-2 min-w-0">
         <div className="aui-user-message-content peer bg-muted text-foreground rounded-(--composer-radius) px-4 py-2 wrap-break-word empty:hidden">
-          <MessagePrimitive.Parts components={{ File: UserFilePart, Image: UserImagePart }} />
+          <MessagePrimitive.Parts components={{ Text: UserText, File: UserFilePart, Image: UserImagePart }} />
         </div>
         <div className="aui-user-action-bar-wrapper absolute start-0 top-1/2 -translate-x-full -translate-y-1/2 pe-2 peer-empty:hidden rtl:translate-x-full">
           <UserActionBar />

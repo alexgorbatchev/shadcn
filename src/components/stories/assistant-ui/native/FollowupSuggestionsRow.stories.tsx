@@ -28,7 +28,7 @@ export const SendSuggestion: Story = {
       await userEvent.clear(input);
       await userEvent.type(input, "Inspect service status");
     }
-    await userEvent.click(canvas.getByRole("button", { name: "Send message" }));
+    await userEvent.click(canvas.getByRole("button", { name: "Send Message" }));
     await waitFor(() => expect(fixture_generateSuggestions).toHaveBeenCalled());
     await waitFor(() => expect(canvas.getByText("Recovery")).toHaveAccessibleName("Recovery Next steps"));
     await userEvent.click(await canvas.findByRole("button", { name: "Recovery Next steps" }));

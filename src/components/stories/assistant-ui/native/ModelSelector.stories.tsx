@@ -38,7 +38,7 @@ export const ModelContext: Story = {
       await userEvent.clear(input);
       await userEvent.type(input, "Report selected model");
     }
-    await userEvent.click(canvas.getByRole("button", { name: "Send message" }));
+    await userEvent.click(canvas.getByRole("button", { name: "Send Message" }));
     await waitFor(() => expect(canvas.getByText('{"modelName":"reasoning","reasoningEffort":"medium"}')).toBeVisible());
   },
 };

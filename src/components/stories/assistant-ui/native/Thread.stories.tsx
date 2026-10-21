@@ -15,6 +15,7 @@ import {
   fixture_voiceExchange,
   ThreadReasoningFixture,
   ThreadToolsFixture,
+  ThreadConsumerControlsFixture,
 } from "./fixtures/thread.js";
 
 const meta: Meta<typeof Thread> = {
@@ -31,13 +32,34 @@ const meta: Meta<typeof Thread> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
+export const ConsumerControls: Story = {
+  render: () => (
+    <NativeRuntimeFixture>
+      <ThreadConsumerControlsFixture />
+    </NativeRuntimeFixture>
+  ),
+  play: async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole("button", { name: "Focus composer" }));
+    await expect(canvas.getByRole("textbox", { name: "Message input" })).toHaveFocus();
+    await userEvent.click(canvas.getByRole("button", { name: "Focus transcript" }));
+    await expect(canvas.getByRole("region", { name: "Conversation" })).toHaveFocus();
+    await userEvent.click(canvas.getByRole("button", { name: "Add context" }));
+    await expect(canvas.getByRole("button", { name: "Context added" })).toBeVisible();
+    await userEvent.type(canvas.getByRole("textbox", { name: "Message input" }), "Inspect this context");
+    await userEvent.click(canvas.getByRole("button", { name: "Send Message" }));
+    await userEvent.click(await canvas.findByText("Expand user text"));
+    await expect(canvas.getByText("Inspect this context")).toBeVisible();
+  },
+};
+
 export const BottomComposer: Story = {
   args: { emptyComposerPosition: "bottom" },
   play: async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);
     const fixture = canvas.getByTestId("NativeRuntimeFixture");
     const input = await canvas.findByRole("textbox", { name: "Message input" });
-    const send = canvas.getByRole("button", { name: "Send message" });
+    const send = canvas.getByRole("button", { name: "Send Message" });
     expect(fixture.getBoundingClientRect().bottom - send.getBoundingClientRect().bottom).toBeLessThan(60);
     await userEvent.type(input, "Keep the composer docked");
     expect(fixture.getBoundingClientRect().bottom - send.getBoundingClientRect().bottom).toBeLessThan(60);
@@ -108,7 +130,7 @@ export const Empty: Story = {
     const canvas = within(canvasElement);
     await waitFor(() => expect(canvas.getByText("How can I help you today?")).toBeVisible());
     await expect(canvas.getByRole("textbox", { name: "Message input" })).toHaveValue("");
-    await expect(canvas.getByRole("button", { name: "Send message" })).toBeDisabled();
+    await expect(canvas.getByRole("button", { name: "Send Message" })).toBeDisabled();
   },
 };
 
@@ -124,7 +146,7 @@ export const ShortConversationViewport: Story = {
     const canvas = within(canvasElement);
     const viewport = canvas.getByTestId("ShortConversationViewport");
     const input = await canvas.findByRole("textbox", { name: "Message input" });
-    const send = canvas.getByRole("button", { name: "Send message" });
+    const send = canvas.getByRole("button", { name: "Send Message" });
     await waitFor(() => {
       expect(input.getBoundingClientRect().top).toBeGreaterThanOrEqual(viewport.getBoundingClientRect().top);
       expect(send.getBoundingClientRect().bottom).toBeLessThanOrEqual(viewport.getBoundingClientRect().bottom);
@@ -149,8 +171,8 @@ export const SendAndRegenerate: Story = {
       await userEvent.type(input, "Explain the stack.");
     }
     await expect(input).toHaveValue("Explain the stack.");
-    await expect(canvas.getByRole("button", { name: "Send message" })).toBeEnabled();
-    await userEvent.click(canvas.getByRole("button", { name: "Send message" }));
+    await expect(canvas.getByRole("button", { name: "Send Message" })).toBeEnabled();
+    await userEvent.click(canvas.getByRole("button", { name: "Send Message" }));
     await waitFor(() => expect(canvas.getByText("Ready to help.")).toBeVisible());
     await expect(canvas.getByText("Explain the stack.")).toBeVisible();
     await expect(input).toHaveValue("");
@@ -172,7 +194,7 @@ export const EditMessage: Story = {
       await userEvent.type(input, "Original request");
     }
     await userEvent.click(
-      await within(canvasElement.ownerDocument.body).findByRole("button", { name: "Send message" }),
+      await within(canvasElement.ownerDocument.body).findByRole("button", { name: "Send Message" }),
     );
     await waitFor(() => expect(canvas.getByText("Ready to help.")).toBeVisible());
     await userEvent.hover(
@@ -207,11 +229,11 @@ export const CancelGeneration: Story = {
       await userEvent.clear(input);
       await userEvent.type(input, "Inspect the project.");
     }
-    await userEvent.click(canvas.getByRole("button", { name: "Send message" }));
+    await userEvent.click(canvas.getByRole("button", { name: "Send Message" }));
     await waitFor(() => expect(canvas.getByText("Working on the request.")).toBeVisible());
-    await userEvent.click(await canvas.findByRole("button", { name: "Stop generating" }));
-    await waitFor(() => expect(canvas.queryByRole("button", { name: "Stop generating" })).not.toBeInTheDocument());
-    await expect(canvas.getByRole("button", { name: "Send message" })).toBeDisabled();
+    await userEvent.click(await canvas.findByRole("button", { name: "Stop Generating" }));
+    await waitFor(() => expect(canvas.queryByRole("button", { name: "Stop Generating" })).not.toBeInTheDocument());
+    await expect(canvas.getByRole("button", { name: "Send Message" })).toBeDisabled();
     await expect(canvas.getByText("Working on the request.")).toBeVisible();
   },
 };
@@ -230,7 +252,7 @@ export const Error: Story = {
       await userEvent.clear(input);
       await userEvent.type(input, "Inspect the project.");
     }
-    await userEvent.click(canvas.getByRole("button", { name: "Send message" }));
+    await userEvent.click(canvas.getByRole("button", { name: "Send Message" }));
     await expect(await canvas.findByRole("alert")).toHaveTextContent("The harness could not complete this request.");
     await expect(canvas.getByRole("button", { name: "Refresh" })).toBeEnabled();
   },

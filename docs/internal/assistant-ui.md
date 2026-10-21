@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-20 23:00
-last_modified: 2026-10-21 02:32
+last_modified: 2026-10-21 13:44
 status: current
 ---
 
@@ -22,6 +22,8 @@ import { Thread } from "@alexgorbatchev/shadcn/assistant-ui/native/thread";
 Install the optional peers required by the selected family, as declared in `package.json`. Runtime-bound components require an actual `AssistantRuntimeProvider`; the library supplies no backend or substitute runtime. The native ModelSelector registers the selected model and reasoning effort through the runtime's model-context API. MCP configuration uses the maintained MCP manager and form primitives.
 
 Native `Thread` centers its composer while the conversation is empty. Set `emptyComposerPosition="bottom"` to keep it docked at the bottom before the first message as well.
+
+`Thread` accepts `components.ComposerActions` for controls beside Send and `components.UserText` for rendering user text parts. These slots retain the native composer and message runtime contexts. `composerInputRef` exposes the native textarea for focus management. `viewportProps` forwards native viewport behavior, events, and its ref, including scroll restoration options; the package owns the viewport's children and rendered structure.
 
 Native thread renaming starts after the action menu releases its focus scope, including its exit animation. Enter commits and Escape cancels while restoring focus to the conversation; clicking elsewhere commits without stealing focus.
 

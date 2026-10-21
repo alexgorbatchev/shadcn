@@ -42,7 +42,7 @@ export const SendAndNewThread: Story = {
       await userEvent.clear(input);
       await userEvent.type(input, "Review the project.");
     }
-    await userEvent.click(within(dialog).getByRole("button", { name: "Send message" }));
+    await userEvent.click(within(dialog).getByRole("button", { name: "Send Message" }));
     await waitFor(() => expect(within(dialog).getByText("Ready to help.")).toBeVisible());
     await userEvent.click(within(dialog).getByRole("button", { name: "New Thread" }));
     await waitFor(() => expect(within(dialog).getByText("How can I help you today?")).toBeVisible());
@@ -61,7 +61,7 @@ export const BrowseSearchAndReturnToThread: Story = {
       await userEvent.clear(input);
       await userEvent.type(input, "Keep this conversation.");
     }
-    await userEvent.click(within(dialog).getByRole("button", { name: "Send message" }));
+    await userEvent.click(within(dialog).getByRole("button", { name: "Send Message" }));
     await waitFor(() => expect(within(dialog).getByText("Ready to help.")).toBeVisible());
     await userEvent.click(within(dialog).getByRole("button", { name: "Threads" }));
     await expect(within(dialog).getByRole("heading", { name: "Threads" })).toBeVisible();
@@ -94,7 +94,7 @@ export const ReopenReturnsToConversation: Story = {
       await userEvent.clear(input);
       await userEvent.type(input, "Retain my conversation.");
     }
-    await userEvent.click(within(dialog).getByRole("button", { name: "Send message" }));
+    await userEvent.click(within(dialog).getByRole("button", { name: "Send Message" }));
     await waitFor(() => expect(within(dialog).getByText("Ready to help.")).toBeVisible());
     await userEvent.click(within(dialog).getByRole("button", { name: "Threads" }));
     await userEvent.keyboard("{Escape}");
