@@ -94,7 +94,7 @@ test("standalone native thread renders and accepts its composer draft", async ()
       await input.waitFor();
       await page.waitForFunction(() => document.querySelector("textarea")?.value === "Keep the composer docked");
       expect(await input.inputValue()).toBe("Keep the composer docked");
-      await page.getByRole("button", { name: "Send message" }).click();
+      await page.getByRole("button", { name: "Send Message" }).click();
       await page.getByText("Ready to help.", { exact: true }).waitFor();
     },
   );
