@@ -50,7 +50,7 @@ test("sidebar groups open their relocated component stories", async () => {
   const page = await browser.newPage({ reducedMotion: "reduce" });
   page.setDefaultTimeout(10_000);
   try {
-    await page.goto(`${origin}/?path=/story/alexgorbatchev-shadcn-components-layout-scrollarea--default`);
+    await page.goto(`${origin}/?path=/story/alexgorbatchev-shadcn-components-layout-scrollarea--native-scrollbars`);
     const sidebar = page.getByRole("navigation", { name: "Stories" });
     const actions = sidebar.getByRole("button", { name: "actions", exact: true });
     await actions.click();
@@ -64,6 +64,26 @@ test("sidebar groups open their relocated component stories", async () => {
   } finally {
     await page.close();
   }
+}, 30_000);
+
+test("native scrollbars preserve keyboard scrolling in both directions", async () => {
+  await checkStory("alexgorbatchev-shadcn-components-layout-scrollarea--native-scrollbars", async (page) => {
+    const viewport = page.getByRole("region", { name: "Native release history" });
+    await page.waitForFunction(() => {
+      const region = document.querySelector<HTMLElement>('[aria-label="Native release history"]');
+      return region && region.scrollTop > region.clientHeight;
+    });
+    await viewport.evaluate((element) => element.scrollTo({ top: 0, left: 0 }));
+    await viewport.press("PageDown");
+    await page.waitForFunction(
+      () => (document.querySelector('[aria-label="Native release history"]')?.scrollTop ?? 0) > 0,
+    );
+    await viewport.press("ArrowRight");
+    await page.waitForFunction(
+      () => (document.querySelector('[aria-label="Native release history"]')?.scrollLeft ?? 0) > 0,
+    );
+    expect(await viewport.evaluate((element) => element === document.activeElement)).toBe(true);
+  });
 }, 30_000);
 
 test("standalone native thread renders and accepts its composer draft", async () => {

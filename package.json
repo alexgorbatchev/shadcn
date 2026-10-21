@@ -1013,7 +1013,7 @@
     "build-storybook": "storybook build",
     "prepack": "bun run build",
     "test:reduced-motion": "vitest run --config .storybook/vitest.reduced-motion.config.ts",
-    "test:visual": "vitest run --config .storybook/vitest.visual.config.ts Button.stories.tsx Badge.stories.tsx Card.stories.tsx Input.stories.tsx",
+    "test:visual": "vitest run --config .storybook/vitest.visual.config.ts Button.stories.tsx Badge.stories.tsx Card.stories.tsx Input.stories.tsx ScrollArea.stories.tsx",
     "test:visual:update": "bun run test:visual --update"
   },
   "dependencies": {

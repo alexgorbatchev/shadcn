@@ -48,8 +48,11 @@ test.each([
   await expect.poll(() => backdrop!.getBoundingClientRect().top).toBeLessThanOrEqual(0);
   await expect.poll(() => backdrop!.getBoundingClientRect().bottom).toBeGreaterThanOrEqual(window.innerHeight);
   await expect.poll(() => backdrop!.getBoundingClientRect().left).toBeLessThanOrEqual(0);
-  await expect.poll(() => backdrop!.getBoundingClientRect().right).toBeGreaterThanOrEqual(window.innerWidth);
+  await expect
+    .poll(() => backdrop!.getBoundingClientRect().right)
+    .toBeGreaterThanOrEqual(document.documentElement.clientWidth);
   await expect.poll(() => document.elementFromPoint(2, 2)).toBe(backdrop);
+  await expect.poll(() => document.elementFromPoint(document.documentElement.clientWidth - 2, 2)).toBe(backdrop);
   await dialog.getByRole("button", { name: "Close example" }).click();
   await expect.element(dialog).not.toBeInTheDocument();
   await expect.element(trigger).toHaveFocus();

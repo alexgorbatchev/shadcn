@@ -15,6 +15,36 @@ const meta: Meta<ScrollAreaStoryProps> = {
 };
 export default meta;
 type Story = StoryObj<typeof meta>;
+export const NativeScrollbars: Story = {
+  tags: ["visual"],
+  render: () => (
+    <div
+      role="region"
+      aria-label="Native release history"
+      tabIndex={0}
+      className="h-48 w-64 overflow-auto border border-border bg-background focus-visible:outline-1 focus-visible:outline-ring"
+    >
+      <ol className="flex w-192 flex-col gap-4 p-panel">
+        {Array.from({ length: 30 }, (_, index) => (
+          <li key={index}>Release {index + 1} — native browser scrolling in both directions</li>
+        ))}
+      </ol>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    await document.fonts.ready;
+    const viewport = within(canvasElement).getByRole("region", { name: "Native release history" });
+    viewport.focus();
+    viewport.scrollTo({ top: 100, left: 100 });
+    await waitFor(() => expect(viewport.scrollTop).toBeGreaterThan(0));
+    await waitFor(() => expect(viewport.scrollLeft).toBeGreaterThan(0));
+    await expect(viewport).toHaveFocus();
+    viewport.scrollTo({ top: viewport.scrollHeight / 3, left: 100 });
+    await waitFor(() => expect(viewport.scrollTop).toBeGreaterThan(viewport.clientHeight));
+    viewport.blur();
+  },
+};
+
 export const Default: Story = {
   render: ({ barClassName, ...args }) => (
     <ScrollArea

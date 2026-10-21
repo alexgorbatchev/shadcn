@@ -14,7 +14,11 @@ export default defineConfig({
     setupFiles: ["./.storybook/visual.setup.ts"],
     browser: {
       ...config.test?.browser,
-      provider: playwright({ contextOptions: { reducedMotion: "reduce", deviceScaleFactor: 1 } }),
+      provider: playwright({
+        contextOptions: { reducedMotion: "reduce", deviceScaleFactor: 1 },
+        // Playwright otherwise hides the native scrollbars these screenshots verify.
+        launchOptions: { ignoreDefaultArgs: ["--hide-scrollbars"] },
+      }),
       expect: { toMatchScreenshot: { comparatorOptions: { allowedMismatchedPixels: 0 } } },
     },
     projects: ["light", "dark"].flatMap((theme, themeIndex) =>

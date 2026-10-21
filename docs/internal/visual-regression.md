@@ -6,7 +6,7 @@ status: current
 
 # Visual regression testing
 
-For maintainers, `bun run test:visual` runs selected Storybook stories tagged `visual` and compares their rendered output with committed PNG baselines. The selection covers Button default, outline, destructive, disabled and loading states; Badge default, success and warning; Card default and small; and Input default, disabled and invalid. Add an explicit `tags: ["visual"]` to additional deterministic stories to expand coverage. For another component family, also add its story filename to the `test:visual` command in `package.json`; the file filters avoid loading the entire catalog.
+For maintainers, `bun run test:visual` runs selected Storybook stories tagged `visual` and compares their rendered output with committed PNG baselines. The selection covers Button default, outline, destructive, disabled and loading states; Badge default, success and warning; Card default and small; Input default, disabled and invalid; and ScrollArea native scrollbars. Add an explicit `tags: ["visual"]` to additional deterministic stories to expand coverage. For another component family, also add its story filename to the `test:visual` command in `package.json`; the file filters avoid loading the entire catalog.
 
 Each story runs its existing interaction and accessibility checks before screenshots. The suite captures the final rendered state at 1280px and 390px widths, with a 900px viewport height, across light/dark themes and comfortable/compact densities. It captures the document body, including portal content, waits for fonts, uses reduced motion, disables screenshot animations, and hides carets. The comparator permits zero mismatched pixels after its native anti-aliasing/color comparison.
 
