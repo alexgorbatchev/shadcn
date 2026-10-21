@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-20 23:00
-last_modified: 2026-10-21 13:44
+last_modified: 2026-10-21 16:35
 status: current
 ---
 
@@ -25,7 +25,7 @@ Native `Thread` centers its composer while the conversation is empty. Set `empty
 
 `Thread` accepts `components.ComposerActions` for controls beside Send and `components.UserText` for rendering user text parts. These slots retain the native composer and message runtime contexts. `composerInputRef` exposes the native textarea for focus management. `viewportProps` forwards native viewport behavior, events, and its ref, including scroll restoration options; the package owns the viewport's children and rendered structure.
 
-Native thread renaming starts after the action menu releases its focus scope, including its exit animation. Enter commits and Escape cancels while restoring focus to the conversation; clicking elsewhere commits without stealing focus.
+Native thread renaming starts after the action menu releases its focus scope, including its exit animation. Enter commits and Escape cancels while restoring focus to the conversation; clicking elsewhere commits without stealing focus. Keyboard completion blurs the editor before its blur handler finishes the operation, so teardown does not remove the active input during key dispatch. All ThreadList interaction stories assert that no console errors occur.
 
 The existing theme and Tailwind consumer setup remains required. Add the self-contained feature stylesheet for shared catalog surfaces and the native generative-UI vocabulary:
 

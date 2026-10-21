@@ -223,6 +223,7 @@ const ThreadListItemRename: FC<ThreadListItemRenameContract> = ({ onDone }) => {
   const [value, setValue] = useState(title);
   const inputRef = useRef<HTMLInputElement>(null);
   const settledRef = useRef(false);
+  const keyboardActionRef = useRef<"commit" | "cancel" | null>(null);
   useEffect(() => {
     inputRef.current?.select();
   }, []);
@@ -258,15 +259,21 @@ const ThreadListItemRename: FC<ThreadListItemRenameContract> = ({ onDone }) => {
       aria-label="Rename thread"
       value={value}
       onChange={(event) => setValue(event.target.value)}
-      onBlur={() => commit(false)}
+      onBlur={() => {
+        if (keyboardActionRef.current === "cancel") cancel();
+        else commit(keyboardActionRef.current === "commit");
+        keyboardActionRef.current = null;
+      }}
       onKeyDown={(event) => {
         if (event.nativeEvent.isComposing || event.nativeEvent.keyCode === 229) return;
         if (event.key === "Enter") {
           event.preventDefault();
-          commit(true);
+          keyboardActionRef.current = "commit";
+          event.currentTarget.blur();
         } else if (event.key === "Escape") {
           event.preventDefault();
-          cancel();
+          keyboardActionRef.current = "cancel";
+          event.currentTarget.blur();
         }
       }}
     />

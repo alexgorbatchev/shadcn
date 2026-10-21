@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { expect, waitFor, within } from "storybook/test";
+import { expect, spyOn, waitFor, within } from "storybook/test";
 
 import { ThreadList } from "../../../../assistant-ui/native/ThreadList.js";
 import { Thread } from "../../../../assistant-ui/native/Thread.js";
@@ -9,6 +9,13 @@ const meta: Meta<typeof ThreadList> = {
   title: "@alexgorbatchev/shadcn/components/assistant-ui/native/conversations/ThreadList",
   component: ThreadList,
   tags: ["test"],
+  beforeEach: () => {
+    const errors = spyOn(console, "error");
+    return () => errors.mockRestore();
+  },
+  afterEach: async () => {
+    await expect(console.error).not.toHaveBeenCalled();
+  },
   render: () => (
     <NativeRuntimeFixture>
       <ThreadList />
