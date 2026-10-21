@@ -13,8 +13,8 @@ command = [
 ]
 port = "auto"
 bindHost = "127.0.0.1"
-host = "shadcn.example.com"
+host = "shadcn{{ env.SHADCN_DEV_HOST_SUFFIX }}"
 watch = ["src/", ".storybook/"]
 
 [services.storybook.env]
-__VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS = "shadcn.example.com"
+__VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS = "{{ services.storybook.host }}"

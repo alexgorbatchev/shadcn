@@ -1,3 +1,7 @@
+set dotenv-filename := ".env.local"
+
+export SHADCN_DEV_HOST_SUFFIX := env("SHADCN_DEV_HOST_SUFFIX", ".localhost")
+
 storybook:
     bun run storybook
 
@@ -21,7 +25,8 @@ fix:
 # Install the locked development dependencies
 setup:
     bun install --frozen-lockfile
+    devhost --version
 
-# Start the development preview
-run *args:
-    bun run storybook {{ args }}
+# Start the devhost Storybook preview
+run:
+    devhost start

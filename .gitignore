@@ -8,3 +8,5 @@ storybook-static/
 .workspaces/
 *.sqlite-wal
 *.sqlite-shm
+.env
+.env.local
