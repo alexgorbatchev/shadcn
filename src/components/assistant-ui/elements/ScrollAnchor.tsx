@@ -22,13 +22,19 @@ export function ScrollAnchor({
 }: IScrollAnchorProps): JSX.Element {
   const viewportRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  // A frame fires scroll events before resize observations, so a scroll away from the latest message pauses following
+  // here before React renders the pause; otherwise a resize in that frame would scroll back and resume following.
+  const isFollowingRef = useRef(isFollowing);
+  useLayoutEffect(() => {
+    isFollowingRef.current = isFollowing;
+  }, [isFollowing]);
   useLayoutEffect(() => {
     if (!isFollowing) return;
     const viewport = viewportRef.current;
     const content = contentRef.current;
     if (!viewport || !content) return;
     const follow = (): void => {
-      viewport.scrollTo({ top: viewport.scrollHeight });
+      if (isFollowingRef.current) viewport.scrollTo({ top: viewport.scrollHeight });
     };
     follow();
     const observer = new ResizeObserver(follow);
@@ -52,6 +58,7 @@ export function ScrollAnchor({
         onScroll={(event) => {
           const viewport = event.currentTarget;
           const isAtLatest = viewport.scrollHeight - viewport.scrollTop - viewport.clientHeight <= 1;
+          isFollowingRef.current = isAtLatest;
           if (isAtLatest !== isFollowing) onFollowingChange(isAtLatest);
         }}
         className="h-full overflow-y-auto p-4 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
