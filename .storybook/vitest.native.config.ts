@@ -2,6 +2,7 @@ import { defineConfig } from "vitest/config";
 import { playwright } from "@vitest/browser-playwright";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
+import { emulateForcedColors } from "./emulateForcedColors.ts";
 import { nativeSwipe } from "./nativeSwipe.ts";
 import { nativeWheel } from "./nativeWheel.ts";
 import { beginResourceRequests, endResourceRequests } from "./nativeResourceRequests.js";
@@ -48,7 +49,7 @@ export default defineConfig({
       enabled: true,
       headless: true,
       screenshotDirectory: ".tmp/native-browser-screenshots",
-      commands: { nativeSwipe, nativeWheel, beginResourceRequests, endResourceRequests },
+      commands: { emulateForcedColors, nativeSwipe, nativeWheel, beginResourceRequests, endResourceRequests },
       provider: playwright(),
       instances: [
         { browser: "chromium", exclude: ["src/components/__tests__/Carousel.test.tsx"] },
