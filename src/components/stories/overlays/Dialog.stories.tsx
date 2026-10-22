@@ -135,6 +135,53 @@ export const WideForm: Story = {
     await userEvent.keyboard("{Escape}");
   },
 };
+export const TallContent: Story = {
+  render: (args) => (
+    <Dialog {...args}>
+      <DialogTrigger render={<Button />}>Review fields</DialogTrigger>
+      <DialogContent size="wide">
+        <DialogHeader>
+          <DialogTitle>Review fields</DialogTitle>
+          <DialogDescription>More fields than fit in the viewport.</DialogDescription>
+        </DialogHeader>
+        <form className="flex flex-col gap-panel" onSubmit={(event) => event.preventDefault()}>
+          <FieldGroup>
+            {Array.from({ length: 40 }, (_, index) => (
+              <Field key={index}>
+                <FieldLabel htmlFor={`tall-field-${index}`}>Field {index + 1}</FieldLabel>
+                <Input id={`tall-field-${index}`} />
+              </Field>
+            ))}
+          </FieldGroup>
+          <DialogFooter>
+            <DialogClose render={<Button variant="outline" />}>Cancel</DialogClose>
+            <Button type="submit">Apply</Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  ),
+  play: async ({ canvasElement, userEvent }) => {
+    const root = canvasElement.ownerDocument.scrollingElement ?? canvasElement.ownerDocument.documentElement;
+    await userEvent.click(within(canvasElement).getByRole("button", { name: "Review fields" }));
+    const dialog = await within(canvasElement.ownerDocument.body).findByRole("dialog", { name: "Review fields" });
+    const pageScroll = root.scrollTop;
+    await waitFor(() => {
+      const bounds = dialog.getBoundingClientRect();
+      expect(bounds.top).toBeGreaterThanOrEqual(0);
+      expect(bounds.bottom).toBeLessThanOrEqual(window.innerHeight);
+    });
+    // The footer bleeds into the popup padding without making the dialog scroll sideways.
+    await expect(dialog.scrollWidth).toBe(dialog.clientWidth);
+    const apply = within(dialog).getByRole("button", { name: "Apply" });
+    apply.focus();
+    await waitFor(() => expect(dialog.scrollTop).toBeGreaterThan(0));
+    await expect(apply.getBoundingClientRect().bottom).toBeLessThanOrEqual(window.innerHeight);
+    await expect(root.scrollTop).toBe(pageScroll);
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() => expect(dialog).not.toBeInTheDocument());
+  },
+};
 export const Open: Story = {
   args: { defaultOpen: true },
   parameters: { docs: { story: { inline: false, height: "420px" } } },

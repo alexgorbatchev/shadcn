@@ -71,11 +71,11 @@ function DialogContent({
         data-slot="dialog-content"
         className={(state) =>
           cn(
-            "fixed grid w-full gap-panel bg-popover p-panel text-sm text-popover-foreground border border-frame-edge shadow-frame duration-120 outline-none data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:data-open:animate-none motion-reduce:data-closed:animate-none",
+            "fixed grid w-full gap-panel overflow-y-auto overscroll-contain bg-popover p-panel text-sm text-popover-foreground border border-frame-edge shadow-frame duration-120 outline-none data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:data-open:animate-none motion-reduce:data-closed:animate-none",
             size === "fullscreen"
               ? "inset-0 h-dvh max-h-dvh max-w-none rounded-none"
               : cn(
-                  "top-1/2 left-1/2 max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 rounded-md",
+                  "top-1/2 left-1/2 max-h-[calc(100dvh-2rem)] max-w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 rounded-md",
                   size === "wide" ? "sm:max-w-xl" : size === "narrow" ? "sm:max-w-48" : "sm:max-w-sm",
                 ),
             typeof className === "function" ? className(state) : className,
