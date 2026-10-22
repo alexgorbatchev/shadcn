@@ -2,6 +2,7 @@ import { useId, useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, waitFor, within } from "storybook/test";
 import { DensityProvider } from "../../DensityProvider";
+import { Badge } from "../../Badge";
 import { Button } from "../../Button";
 import { Field, FieldLabel } from "../../Field";
 import { Input } from "../../Input";
@@ -159,5 +160,29 @@ export const PortalOverride: Story = {
     await expect(
       within(dialog).getByRole("button", { name: "Comfortable control" }).getBoundingClientRect().height,
     ).toBeGreaterThan(compact.getBoundingClientRect().height);
+  },
+};
+export const AncestorTokens: Story = {
+  render: () => (
+    <div className="flex flex-col gap-4">
+      <DensityProvider density="compact">
+        <Button>Reference control</Button>
+        <Badge>Reference tag</Badge>
+      </DensityProvider>
+      <div className="[--ag-control-text:30px] [--ag-text-xs:30px]">
+        <DensityProvider density="compact">
+          <Button>Isolated control</Button>
+          <Badge>Isolated tag</Badge>
+        </DensityProvider>
+      </div>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const fontSize = (element: HTMLElement): string => getComputedStyle(element).fontSize;
+    await expect(fontSize(canvas.getByRole("button", { name: "Isolated control" }))).toBe(
+      fontSize(canvas.getByRole("button", { name: "Reference control" })),
+    );
+    await expect(fontSize(canvas.getByText("Isolated tag"))).toBe(fontSize(canvas.getByText("Reference tag")));
   },
 };

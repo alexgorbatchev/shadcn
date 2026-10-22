@@ -377,6 +377,25 @@ export const NonCollapsible: Story = {
   },
 };
 
+export const NestedTheme: Story = {
+  args: { collapsible: "none" },
+  globals: { theme: "dark" },
+  render: (args) => (
+    <div data-theme="light" data-testid="Sidebar--nested-theme" className="bg-background text-foreground">
+      <SidebarProvider>
+        <Layout {...args} />
+      </SidebarProvider>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const themed = getComputedStyle(canvas.getByTestId("Sidebar--nested-theme")).backgroundColor;
+    const panel = canvas.getByRole("complementary", { name: "Project navigation" });
+    await expect(themed).not.toBe(getComputedStyle(canvasElement.ownerDocument.body).backgroundColor);
+    await expect(getComputedStyle(panel).backgroundColor).toBe(themed);
+  },
+};
+
 export const KeyboardShortcut: Story = {
   play: async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);
