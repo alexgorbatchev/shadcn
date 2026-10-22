@@ -1,0 +1,109 @@
+// Bun Snapshot v1, https://bun.sh/docs/test/snapshots
+
+exports[`generates linked docs with public aliases, optional entrypoints, metadata, and faithful CSF examples 1`] = `
+"# Button
+
+It's a control with {braces}.
+
+Story: @test/ui/components/actions/Button
+Source: src/components/stories/actions/Button.stories.tsx
+
+## Public imports
+
+\`\`\`tsx
+import { Action as LocalButton } from "@test/ui";
+\`\`\`
+
+## Supporting imports
+
+\`\`\`tsx
+import { useState } from "react";
+\`\`\`
+
+## Default component
+
+\`\`\`tsx
+LocalButton
+\`\`\`
+
+## Story controls
+
+\`\`\`tsx
+{ variant: { options: ["default", "outline"] } }
+\`\`\`
+
+## Default args
+
+\`\`\`tsx
+{ children: "Save", disabled: false }
+\`\`\`
+
+## Examples
+
+Storybook CSF excerpts. Default args and render apply unless overridden. Local helpers, fixtures, decorators, and providers may be required; these are reference excerpts, not standalone consumer modules. Interaction tests are omitted.
+
+### Default
+
+\`\`\`tsx
+{}
+\`\`\`
+
+### Disabled
+
+\`\`\`tsx
+{
+    args: { disabled: true }
+}
+\`\`\`
+
+### Nested
+
+\`\`\`tsx
+{
+    render: function Render(args) { const text = "} apostrophe's"; return <LocalButton {...args}>{text}</LocalButton>; }
+}
+\`\`\`
+
+### Inherited
+
+\`\`\`tsx
+{
+    render: function Render(args) { const text = "} apostrophe's"; return <LocalButton {...args}>{text}</LocalButton>; },
+    args: { disabled: true },
+    globals: { theme: "dark" }
+}
+\`\`\`
+"
+`;
+
+exports[`generates linked docs with public aliases, optional entrypoints, metadata, and faithful CSF examples 2`] = `
+"# Button
+
+Story: @test/ui/components/charts/Button
+Source: src/components/stories/charts/Button.stories.tsx
+
+## Public imports
+
+\`\`\`tsx
+import { Chart } from "@test/ui/chart";
+\`\`\`
+
+## Default component
+
+\`\`\`tsx
+Chart
+\`\`\`
+
+## Examples
+
+Storybook CSF excerpts. Default args and render apply unless overridden. Local helpers, fixtures, decorators, and providers may be required; these are reference excerpts, not standalone consumer modules. Interaction tests are omitted.
+
+### Default
+
+\`\`\`tsx
+{
+    render: () => <Chart />
+}
+\`\`\`
+"
+`;

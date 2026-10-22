@@ -38,6 +38,20 @@ async function checkStory(id: string, check: (page: Page) => Promise<void>): Pro
   }
 }
 
+test("standalone preview serves the LLM index and all linked pages", async () => {
+  const response = await fetch(`${origin}/llms.txt`);
+  expect(response.status).toBe(200);
+  const index = await response.text();
+  expect(index).toBe(await Bun.file("llms.txt").text());
+  const links = [...index.matchAll(/\]\(\.\/([^)]*)\)/g)];
+  expect(links.length).toBeGreaterThan(1);
+  for (const link of links) {
+    const page = await fetch(new URL(link[1], `${origin}/`));
+    expect(page.status).toBe(200);
+    expect(await page.text()).toBe(await Bun.file(link[1]).text());
+  }
+}, 30_000);
+
 test("standalone navigation preview completes its interactions", async () => {
   await checkStory("alexgorbatchev-shadcn-components-navigation-navigationmenu--with-icons", async (page) => {
     await page.getByRole("status", { name: "Navigation destination" }).filter({ hasText: "Settings" }).waitFor();

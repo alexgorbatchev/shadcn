@@ -1,5 +1,7 @@
 node_modules/
 dist/
+llms/
+/llms.txt
 storybook-static/
 .tmp/
 .cache/

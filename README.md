@@ -1,3 +1,12 @@
+> [!IMPORTANT]
+> **AI agents:** Before using this package, run the following command from the consuming project and read the linked setup and component documentation:
+>
+> ```sh
+> cat node_modules/@alexgorbatchev/shadcn/llms.txt
+> ```
+>
+> Resolve the index's relative links from `node_modules/@alexgorbatchev/shadcn/`.
+
 `@alexgorbatchev/shadcn` is a standalone React component library for Bun applications that need the sharp, monospace devhost design language. Install it as an npm-compatible package and explore its components in the local interactive Storybook catalog. Consuming apps do not depend on the devhost project.
 
 # What It Does
@@ -172,6 +181,12 @@ Override tokens after the theme imports. This example uses the existing success 
   --ring: var(--success);
 }
 ```
+
+# LLM Documentation
+
+Storybook serves a generated `llms.txt` index at its site root, with linked setup instructions and a reference page for each story file. Pages contain public package imports, documented story controls, default args, and Storybook CSF examples with interaction tests omitted. The excerpts can depend on local helpers and fixtures; each page links to its full source. Story controls describe the configured controls, rather than the complete TypeScript props API.
+
+The npm package includes the same index at `llms.txt` in its root and its linked pages under `llms/`. Package and Storybook builds regenerate these files from the public exports, README, and story catalog.
 
 # Component Catalog
 

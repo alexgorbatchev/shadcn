@@ -2,6 +2,7 @@ import { mkdir, rm } from "node:fs/promises";
 import ts from "typescript";
 import manifest from "../package.json";
 import config from "../tsconfig.json";
+import { buildLlmDocs } from "./buildLlmDocs";
 
 const entrypoints = await Promise.all(
   Object.values(manifest.exports)
@@ -66,4 +67,7 @@ await Promise.all([
   Bun.write("dist/assistant-ui/markdown.css", Bun.file("src/components/assistant-ui/markdown.css")),
   Bun.write("dist/assistant-ui/geo-map.css", Bun.file("src/components/assistant-ui/geo-map.css")),
 ]);
-console.log(`Built ${result.outputs.length} JavaScript asset(s) and exported theme/font stylesheets.`);
+await buildLlmDocs(process.cwd());
+console.log(
+  `Built ${result.outputs.length} JavaScript asset(s), exported theme/font stylesheets, and LLM documentation.`,
+);

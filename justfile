@@ -12,6 +12,10 @@ pack:
     mkdir -p .tmp/packs
     npm pack --pack-destination .tmp/packs
 
+# Generate the LLM index and Storybook reference pages
+llm-docs:
+    bun scripts/buildLlmDocs.ts
+
 check:
     bash scripts/test-git-hooks.sh .githooks
     bun run typecheck
@@ -30,5 +34,5 @@ setup:
     devhost --version
 
 # Start the devhost Storybook preview
-run:
+run: llm-docs
     devhost start

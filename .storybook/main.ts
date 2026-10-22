@@ -8,6 +8,10 @@ const storybookAllowedHosts = (process.env.__VITE_ADDITIONAL_SERVER_ALLOWED_HOST
 
 const config: StorybookConfig = {
   stories: ["../src/components/stories/**/!(__screenshots__)/*.stories.tsx", "./*.mdx"],
+  staticDirs: [
+    { from: "../.tmp/llm-docs-public", to: "/" },
+    { from: "../llms", to: "/llms" },
+  ],
   addons: ["@storybook/addon-docs", "@storybook/addon-a11y", "@storybook/addon-vitest"],
   framework: "@storybook/react-vite",
   core: { disableTelemetry: true, allowedHosts: storybookAllowedHosts },

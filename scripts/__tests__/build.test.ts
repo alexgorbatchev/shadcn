@@ -41,6 +41,21 @@ test("release tarball includes the current README", async () => {
   expect(await readme.text()).toBe(await Bun.file("README.md").text());
 });
 
+test("release tarball includes the LLM index and every linked reference", async () => {
+  const archive = new Bun.Archive(await Bun.file(`${consumerRoot}/package.tgz`).bytes());
+  const files = await archive.files();
+  const index = files.get("package/llms.txt");
+  assert(index);
+  expect(await index.text()).toBe(await Bun.file("llms.txt").text());
+  const links = [...(await index.text()).matchAll(/\]\(\.\/([^)]*)\)/g)];
+  expect(links.length).toBeGreaterThan(1);
+  for (const link of links) {
+    const page = files.get(`package/${link[1]}`);
+    assert(page, `Missing packed LLM page: ${link[1]}`);
+    expect(await page.text()).toBe(await Bun.file(link[1]).text());
+  }
+});
+
 test("every packed public entry resolves to an included artifact", async () => {
   const archive = new Bun.Archive(await Bun.file(`${consumerRoot}/package.tgz`).bytes());
   const files = await archive.files();

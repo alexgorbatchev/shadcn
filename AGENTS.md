@@ -23,6 +23,7 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - Reduced-motion interactions: `bun run test:reduced-motion` (full Storybook catalog with native reduced-motion preference)
 - Coverage gate: `bun run test:coverage` (Storybook and native browser, hook, and utility tests; 90% statements, branches, functions, and lines across runtime source)
 - Build package: `just build`
+- Generate LLM documentation: `just llm-docs` (writes root `llms.txt`, setup instructions, and Storybook reference pages under `llms/`)
 - Inspect a local archive: `just pack` (npm writes to `.tmp/packs/`; release publication uses `npm publish` directly)
 
 ## Development Setup
@@ -30,7 +31,8 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - Run commands from this standalone repository, not from the sibling devhost checkout. Use Bun 1.4.2 as declared in `package.json`; `just` is required for the validation and packaging recipes.
 - Keep the single repository `bun.lock` in sync with manifest changes. Local package verification also requires npm.
 - For routed preview prerequisites and hostname configuration, see [README.md](./README.md#devhost-preview). The direct Storybook preview needs no devhost service.
-- `dist/`, `storybook-static/`, `.cache/`, and `.tmp/` are generated or transient outputs. Edit their source files and regenerate them; keep those directories untracked.
+- `llms.txt`, `dist/`, `llms/`, `storybook-static/`, `.cache/`, and `.tmp/` are generated or transient outputs. Edit their source files and regenerate them; keep those outputs untracked.
+- Package and Storybook builds regenerate LLM documentation. The README starts with an agent alert directing consumers to read `node_modules/@alexgorbatchev/shadcn/llms.txt`. Storybook and npm archives expose root `llms.txt` with linked pages under `llms/`; `.tmp/llm-docs-public/` stages the index for Storybook's static-directory API. Direct Storybook CLI invocations need `just llm-docs` first; the documented preview commands generate it automatically.
 - `just check` is the local validation entrypoint, including a browser smoke check of the built standalone preview. `.github/workflows/storybook-pages.yml` validates and deploys static Storybook only when a GitHub Release is published; see [Pages setup](./docs/internal/storybook-pages.md). It does not run on branch pushes or pull requests.
 
 ## Contracts
