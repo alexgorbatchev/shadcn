@@ -21,7 +21,10 @@ const meta: Meta<typeof Card> = {
   component: Card,
   tags: ["autodocs", "test"],
   args: { ref: fn(), onClick: fn() },
-  argTypes: { size: { control: "select", options: ["default", "sm"] } },
+  argTypes: {
+    size: { control: "select", options: ["default", "sm"] },
+    variant: { control: "select", options: ["default", "hero"] },
+  },
   render: (args) => {
     const titleId = useId();
     const [isOpen, setIsOpen] = useState(false);
@@ -86,6 +89,53 @@ export const Default: Story = {
   },
 };
 export const Small: Story = { tags: ["visual"], ...Default, args: { size: "sm" } };
+
+export const Hero: Story = {
+  tags: ["visual"],
+  args: { variant: "hero", onPointerMove: fn(), onPointerLeave: fn() },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    const card = canvas.getByRole("region", { name: "Project settings" });
+    const moveTo = async (offsetX: number, offsetY: number): Promise<void> => {
+      const bounds = card.getBoundingClientRect();
+      await userEvent.pointer({
+        target: card,
+        coords: { clientX: bounds.left + offsetX, clientY: bounds.top + offsetY },
+      });
+    };
+    await expect(card.style.getPropertyValue("--card-spotlight-x")).toBe("");
+    await moveTo(40, 12);
+    await waitFor(() => {
+      expect(card.style.getPropertyValue("--card-spotlight-x")).toBe("40px");
+      expect(card.style.getPropertyValue("--card-spotlight-y")).toBe("12px");
+    });
+    await expect(args.onPointerMove).toHaveBeenCalled();
+    const bounds = card.getBoundingClientRect();
+    // Without delays both moves dispatch before the next animation frame, so only the latest position is written.
+    await userEvent.setup({ delay: null }).pointer([
+      { target: card, coords: { clientX: bounds.left + 60, clientY: bounds.top + 20 } },
+      { target: card, coords: { clientX: bounds.left + 90, clientY: bounds.top + 24 } },
+    ]);
+    await expect(card.style.getPropertyValue("--card-spotlight-x")).toBe("40px");
+    await waitFor(() => {
+      expect(card.style.getPropertyValue("--card-spotlight-x")).toBe("90px");
+      expect(card.style.getPropertyValue("--card-spotlight-y")).toBe("24px");
+    });
+    await userEvent.unhover(card);
+    await waitFor(() => {
+      expect(card.style.getPropertyValue("--card-spotlight-x")).toBe("");
+      expect(card.style.getPropertyValue("--card-spotlight-y")).toBe("");
+    });
+    await expect(args.onPointerLeave).toHaveBeenCalled();
+    await moveTo(card.getBoundingClientRect().width - 24, 0);
+    await waitFor(() => {
+      expect(card.style.getPropertyValue("--card-spotlight-x")).toBe(
+        `${Math.round(card.getBoundingClientRect().width - 24)}px`,
+      );
+      expect(card.style.getPropertyValue("--card-spotlight-y")).toBe("0px");
+    });
+  },
+};
 export const Compact: Story = { ...Default, args: { density: "compact" } };
 export const CompactSmall: Story = { ...Default, args: { density: "compact", size: "sm" } };
 

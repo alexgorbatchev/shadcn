@@ -1,20 +1,42 @@
 import type { IDensityProps } from "../density/types.js";
 import type { ComponentProps, ReactElement } from "react";
+import { mergeProps } from "@base-ui/react/merge-props";
+import { cva, type VariantProps } from "class-variance-authority";
+import { useCardSpotlight } from "../hooks/useCardSpotlight.js";
 import { cn } from "../utils/cn.js";
 
-type CardProps = ComponentProps<"div"> & { size?: "default" | "sm" } & IDensityProps;
+const cardVariants = cva(
+  "group/card flex flex-col gap-(--card-spacing) overflow-hidden rounded-md bg-card py-(--card-spacing) text-sm text-card-foreground border [--card-spacing:var(--ag-panel-padding)] has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:var(--ag-panel-padding-sm)] data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-md *:[img:last-child]:rounded-b-md",
+  {
+    variants: {
+      variant: {
+        default: "border-border",
+        hero: "card-spotlight",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  },
+);
 
-function Card({ density, className, size = "default", ...props }: CardProps): ReactElement {
+type CardProps = ComponentProps<"div"> &
+  VariantProps<typeof cardVariants> & { size?: "default" | "sm" } & IDensityProps;
+
+function Card({ density, className, size = "default", variant = "default", ...props }: CardProps): ReactElement {
+  const spotlight = useCardSpotlight();
   return (
     <div
       data-density={density}
       data-slot="card"
       data-size={size}
-      className={cn(
-        "group/card flex flex-col gap-(--card-spacing) overflow-hidden rounded-md bg-card py-(--card-spacing) text-sm text-card-foreground border border-border [--card-spacing:var(--ag-panel-padding)] has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:var(--ag-panel-padding-sm)] data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-md *:[img:last-child]:rounded-b-md",
-        className,
+      {...mergeProps<"div">(
+        {
+          className: cn(cardVariants({ variant }), className),
+          ...(variant === "hero" ? spotlight : undefined),
+        },
+        props,
       )}
-      {...props}
     />
   );
 }

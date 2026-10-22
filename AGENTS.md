@@ -50,6 +50,7 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - Group Storybook by relocating story files under functional subdirectories of `src/components/stories/`; derive titles from the package name and story path, omitting `src/` and `stories/`. Keep runtime module locations, flat public exports, optional feature boundaries, and tree shaking independent of sidebar organization.
 - ThemeProvider owns the document palette. DensityProvider supplies both React context and CSS variables; portal content must resolve density through context.
 - Preserve sharp control corners, framed floating surfaces, semantic palette tokens, and reduced-motion behavior. Avoid hardcoded palette classes and scale/bounce transitions.
+- Drive pointer-following effects, such as the Card `hero` spotlight (`useCardSpotlight` with the `card-spotlight` theme utility), by writing CSS variables to the element once per animation frame; never store pointer positions in React state. Keep the native border visible under forced colors.
 
 ## Storybook and Validation
 

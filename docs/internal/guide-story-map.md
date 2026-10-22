@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-09 08:17
-last_modified: 2026-10-21 09:57
+last_modified: 2026-10-21 16:17
 status: current
 ---
 
@@ -202,12 +202,12 @@ These pages are outside the registry guide's 437-preview inventory. They compose
 
 | Guide preview                                                                                              | Implementation stories                                                                                                                                                |
 | :--------------------------------------------------------------------------------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [card-demo](https://github.com/shadcn-ui/ui/blob/main/apps/v4/examples/base/card-demo.tsx)                 | [Card.Default](../../src/components/stories/layout/Card.stories.tsx#L55), [Card.LoginForm](../../src/components/stories/layout/Card.stories.tsx#L267)                 |
-| [card-small](https://github.com/shadcn-ui/ui/blob/main/apps/v4/examples/base/card-small.tsx)               | [Card.Small](../../src/components/stories/layout/Card.stories.tsx#L88)                                                                                                |
-| [card-spacing](https://github.com/shadcn-ui/ui/blob/main/apps/v4/examples/base/card-spacing.tsx)           | [Card.CustomSpacing](../../src/components/stories/layout/Card.stories.tsx#L212)                                                                                       |
-| [card-edge-to-edge](https://github.com/shadcn-ui/ui/blob/main/apps/v4/examples/base/card-edge-to-edge.tsx) | [Card.EdgeToEdge](../../src/components/stories/layout/Card.stories.tsx#L341)                                                                                          |
-| [card-image](https://github.com/shadcn-ui/ui/blob/main/apps/v4/examples/base/card-image.tsx)               | [Card.WithImage](../../src/components/stories/layout/Card.stories.tsx#L139)                                                                                           |
-| [card-rtl](https://github.com/shadcn-ui/ui/blob/main/apps/v4/examples/base/card-rtl.tsx)                   | [Card.RightToLeft](../../src/components/stories/layout/Card.stories.tsx#L247), [Card.RightToLeftLoginForm](../../src/components/stories/layout/Card.stories.tsx#L331) |
+| [card-demo](https://github.com/shadcn-ui/ui/blob/main/apps/v4/examples/base/card-demo.tsx)                 | [Card.Default](../../src/components/stories/layout/Card.stories.tsx#L58), [Card.LoginForm](../../src/components/stories/layout/Card.stories.tsx#L317)                 |
+| [card-small](https://github.com/shadcn-ui/ui/blob/main/apps/v4/examples/base/card-small.tsx)               | [Card.Small](../../src/components/stories/layout/Card.stories.tsx#L91)                                                                                                |
+| [card-spacing](https://github.com/shadcn-ui/ui/blob/main/apps/v4/examples/base/card-spacing.tsx)           | [Card.CustomSpacing](../../src/components/stories/layout/Card.stories.tsx#L262)                                                                                       |
+| [card-edge-to-edge](https://github.com/shadcn-ui/ui/blob/main/apps/v4/examples/base/card-edge-to-edge.tsx) | [Card.EdgeToEdge](../../src/components/stories/layout/Card.stories.tsx#L391)                                                                                          |
+| [card-image](https://github.com/shadcn-ui/ui/blob/main/apps/v4/examples/base/card-image.tsx)               | [Card.WithImage](../../src/components/stories/layout/Card.stories.tsx#L189)                                                                                           |
+| [card-rtl](https://github.com/shadcn-ui/ui/blob/main/apps/v4/examples/base/card-rtl.tsx)                   | [Card.RightToLeft](../../src/components/stories/layout/Card.stories.tsx#L297), [Card.RightToLeftLoginForm](../../src/components/stories/layout/Card.stories.tsx#L381) |
 
 ## Carousel
 
@@ -806,7 +806,7 @@ These pages are outside the registry guide's 437-preview inventory. They compose
 
 | Guide preview                                                                            | Implementation stories                                                                                                                                                                         |
 | :--------------------------------------------------------------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [card-rtl](https://github.com/shadcn-ui/ui/blob/main/apps/v4/examples/base/card-rtl.tsx) | [Card.RightToLeft](../../src/components/stories/layout/Card.stories.tsx#L247), [DirectionProvider.DirectionProvider](../../src/components/stories/providers/DirectionProvider.stories.tsx#L22) |
+| [card-rtl](https://github.com/shadcn-ui/ui/blob/main/apps/v4/examples/base/card-rtl.tsx) | [Card.RightToLeft](../../src/components/stories/layout/Card.stories.tsx#L297), [DirectionProvider.DirectionProvider](../../src/components/stories/providers/DirectionProvider.stories.tsx#L22) |
 
 ## Attachment
 

@@ -490,3 +490,45 @@
     --scroll-fade-b: var(--_scroll-fade-size-b);
   }
 }
+
+/* Pointer-following border highlight and surface glow. useCardSpotlight writes --card-spotlight-x/y while the
+   pointer is inside the card; without them both gradients sit off-screen and the frame shows the plain border. */
+@utility card-spotlight {
+  @media (forced-colors: none) {
+    position: relative;
+    isolation: isolate;
+    border-color: transparent;
+    background-image:
+      linear-gradient(var(--card), var(--card)),
+      radial-gradient(
+        240px circle at var(--card-spotlight-x, -999px) var(--card-spotlight-y, -999px),
+        color-mix(in oklab, var(--primary) 75%, transparent),
+        transparent 70%
+      ),
+      linear-gradient(var(--border), var(--border));
+    background-origin: border-box;
+    background-clip: padding-box, border-box, border-box;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      border-radius: inherit;
+      pointer-events: none;
+      background: radial-gradient(
+        420px circle at var(--card-spotlight-x, -999px) var(--card-spotlight-y, -999px),
+        color-mix(in oklab, var(--primary) 9%, transparent),
+        transparent 45%
+      );
+      opacity: 0;
+      transition: opacity 350ms ease-out;
+    }
+
+    @media (hover: hover) {
+      &:hover::before {
+        opacity: 1;
+      }
+    }
+  }
+}
