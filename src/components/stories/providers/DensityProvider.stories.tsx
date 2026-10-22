@@ -186,3 +186,21 @@ export const AncestorTokens: Story = {
     await expect(fontSize(canvas.getByText("Isolated tag"))).toBe(fontSize(canvas.getByText("Reference tag")));
   },
 };
+export const RenderedElement: Story = {
+  render: () => (
+    <DensityProvider density="compact" render={<section aria-label="Compact toolbar" className="flex gap-2" />}>
+      <Button>Rendered control</Button>
+      <Button>Second control</Button>
+    </DensityProvider>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const toolbar = canvas.getByRole("region", { name: "Compact toolbar" });
+    const control = canvas.getByRole("button", { name: "Rendered control" });
+    await expect(toolbar).toHaveAttribute("data-density", "compact");
+    await expect(control.parentElement).toBe(toolbar);
+    await expect(control.getBoundingClientRect().top).toBe(
+      canvas.getByRole("button", { name: "Second control" }).getBoundingClientRect().top,
+    );
+  },
+};
