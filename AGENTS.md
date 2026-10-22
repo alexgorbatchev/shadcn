@@ -10,7 +10,7 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 
 ## Commands
 
-- Install: `bun install`
+- Setup: `just setup` (locked dependencies, devhost check, and `.githooks` as `core.hooksPath`)
 - Preview: `just storybook` (loopback port 6006, no automatic browser launch)
 - Devhost preview: `just run` (loads `.env.local`, then runs `devhost start`)
 - Format: `just fix`
@@ -75,7 +75,10 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 
 ## Boundaries
 
-- Make all changes directly on `main`; do not create feature branches or linked worktrees for this repository.
+- Make every change in a linked worktree under `.workspaces/<name>` on a new branch created from local `main` (`git worktree add -b <branch> .workspaces/<name> main`). Never edit the main checkout directly; other sessions share it.
+- Validate and commit in the worktree, then fast-forward `main` from the main checkout (`git merge --ff-only <branch>`; rebase the branch onto `main` first when `main` has moved). Afterwards remove the worktree and delete the branch (`git worktree remove .workspaces/<name>`, `git branch -d <branch>`). Finish by confirming `main` is level with `origin/main` (`git fetch`, then `git status -sb` shows no ahead or behind count); the hook only attempts the push. Yield the turn to the user only after the change is merged into `main`, synced with `origin/main`, and its worktree removed.
+- `just setup` installs `.githooks` as `core.hooksPath`. Its post-commit and post-merge hooks push a branch to its same-named upstream after every commit or merge, so `main` reaches `origin/main` immediately; branches without one, including worktree branches, stay local. Hooks act only on this repository, wherever it is checked out; never invoke enclosing repositories or their recipes. `bash scripts/test-git-hooks.sh .githooks` tests them.
+- A merge into `main` publishes it on GitHub, though not as a release. Never amend, rebase, or force-push commits already on `origin/main`; fix mistakes with a follow-up change. Inspect staged changes for private hostnames before committing. When a push is rejected because `origin/main` moved, run `git pull --rebase` on `main`, then `git push`.
 - Use `.github/workflows/npm-release.yml` for authorized npm releases; follow [the release procedure](./docs/internal/npm-releases.md). Consumers use published npm versions rather than vendored archives.
 - Always consult applicable skills and verified upstream APIs before implementation.
 - Always run `just fix` and `just check` before claiming completion; report remaining failures and warnings.

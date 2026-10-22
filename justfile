@@ -13,6 +13,7 @@ pack:
     npm pack --pack-destination .tmp/packs
 
 check:
+    bash scripts/test-git-hooks.sh .githooks
     bun run typecheck
     bun run lint
     bun run test:package
@@ -22,9 +23,10 @@ check:
 fix:
     bun x --bun oxfmt --write .
 
-# Install the locked development dependencies
+# Install the locked development dependencies and the publishing Git hooks
 setup:
     bun install --frozen-lockfile
+    git config core.hooksPath .githooks
     devhost --version
 
 # Start the devhost Storybook preview
