@@ -55,6 +55,7 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 ## Storybook and Validation
 
 - Keep private hostnames in untracked `.env.local`. `devhost.toml` derives the Storybook host from `SHADCN_DEV_HOST_SUFFIX`, which the justfile defaults to `.localhost`; document new variables in `.env.example`.
+- Share previews as devhost HTTPS URLs on the configured Storybook host, started with `just run`. Never give IP addresses or loopback ports as preview links.
 - Preserve automatic port allocation in `devhost.toml`. Its explicit shell expands injected `PORT`; `--exact-port` prevents Storybook from silently choosing a different port.
 - Preserve `caddy.global.bindHost = "0.0.0.0"` and `http = true` for the external devbox gateway. Storybook itself remains on IPv4 loopback. Restart the stack after changing Caddy global settings; those fields do not hot-reload.
 - Merge `__VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS` into both Storybook `core.allowedHosts` and Vite `server.allowedHosts`. Vite configuration alone does not allow the Storybook manager's Host/Origin checks.
