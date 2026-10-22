@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-09 11:00
-last_modified: 2026-10-21 09:57
+last_modified: 2026-10-21 20:05
 status: current
 ---
 
@@ -14,7 +14,7 @@ For contributors checking the component catalog, Storybook runs axe-core's `colo
 bun run test:contrast
 ```
 
-The command uses headless Chromium through the existing Storybook Vitest addon, with native reduced-motion preference to measure settled content. It runs all stories tagged `test` in light and dark themes, each at comfortable and compact density. Story-specific globals and component density overrides still apply. No running preview server is required. Each configuration runs stories sequentially because InputGroup and Table use Chromium's shared native clipboard. Each configuration has its own dependency cache. The regular and reduced-motion interaction suites retain their existing browser preferences.
+The command uses headless Chromium through the existing Storybook Vitest addon, with native reduced-motion preference to measure settled content. It runs all stories tagged `test` in light and dark themes, each at comfortable and compact density. Story-specific globals and component density overrides still apply. No running preview server is required. Each configuration runs its stories across parallel browser pages, then runs InputGroup and Table alone in a `-clipboard` project because they use Chromium's shared native clipboard. A single page retains renderer memory from every story file it runs, so routing the whole catalog through one page crashes it near Chromium's per-renderer limit. Each project has its own dependency cache. The regular and reduced-motion interaction suites retain their existing browser preferences.
 
 For a focused run:
 
