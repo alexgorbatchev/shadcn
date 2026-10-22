@@ -338,3 +338,53 @@ export const ToastContainer: Story = {
     await waitFor(() => expect(canvas.queryByRole("heading", { name: "Workspace saved" })).not.toBeInTheDocument());
   },
 };
+
+/**
+ * A popup opened inside a provided-container popup portals into that popup's portal, which a modal dialog counts as
+ * inside it. Beside the dialog, a list that is already mounted when the dialog opens is hidden from assistive
+ * technology and pointer input.
+ */
+export const NestedSelectInDialogContainer: Story = {
+  render: () => (
+    <ScopedOverlay>
+      <Dialog>
+        <DialogTrigger render={<Button />}>Open settings</DialogTrigger>
+        <DialogContent>
+          <DialogTitle>Workspace settings</DialogTitle>
+          <Select
+            items={[
+              { value: "codex", label: "Codex" },
+              { value: "claude", label: "Claude" },
+            ]}
+            defaultValue="codex"
+          >
+            <SelectTrigger aria-label="Harness">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="codex">Codex</SelectItem>
+              <SelectItem value="claude">Claude</SelectItem>
+            </SelectContent>
+          </Select>
+        </DialogContent>
+      </Dialog>
+    </ScopedOverlay>
+  ),
+  play: async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+    const workspace = canvas.getByRole("region", { name: "Scoped workspace" });
+    await userEvent.click(canvas.getByRole("button", { name: "Open settings" }));
+    const dialog = await canvas.findByRole("dialog", { name: "Workspace settings" });
+    await waitFor(() => expect(dialog).toBeVisible());
+    await userEvent.click(within(dialog).getByRole("combobox", { name: "Harness" }));
+    const listbox = await within(workspace).findByRole("listbox");
+    const dialogPortal = Array.from(workspace.querySelectorAll(":scope > div > *")).find((node) =>
+      node.contains(dialog),
+    );
+    expect(dialogPortal?.contains(listbox)).toBe(true);
+    await userEvent.click(within(listbox).getByRole("option", { name: "Claude" }));
+    await expect(within(dialog).getByRole("combobox", { name: "Harness" })).toHaveTextContent("Claude");
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() => expect(canvas.queryByRole("dialog")).not.toBeInTheDocument());
+  },
+};

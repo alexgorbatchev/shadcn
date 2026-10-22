@@ -1,5 +1,7 @@
 import { useDensity } from "../hooks/useDensity.js";
 import { usePortalContainer } from "../hooks/usePortalContainer.js";
+import { usePortalNode } from "../hooks/usePortalNode.js";
+import { PortalProvider } from "./PortalProvider.js";
 import type { IDensityProps } from "../density/types.js";
 import type { ComponentProps, ReactElement } from "react";
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
@@ -17,9 +19,14 @@ function DialogTrigger<Payload>({ ...props }: DialogPrimitive.Trigger.Props<Payl
   return <DialogPrimitive.Trigger data-slot="dialog-trigger" {...props} />;
 }
 
-function DialogPortal({ container, ...props }: DialogPrimitive.Portal.Props): ReactElement {
+function DialogPortal({ container, ref, children, ...props }: DialogPrimitive.Portal.Props): ReactElement {
   const resolvedContainer = usePortalContainer(container);
-  return <DialogPrimitive.Portal data-slot="dialog-portal" container={resolvedContainer} {...props} />;
+  const portal = usePortalNode(ref);
+  return (
+    <DialogPrimitive.Portal data-slot="dialog-portal" container={resolvedContainer} ref={portal.ref} {...props}>
+      <PortalProvider container={portal.node}>{children}</PortalProvider>
+    </DialogPrimitive.Portal>
+  );
 }
 
 function DialogClose({ ...props }: DialogPrimitive.Close.Props): ReactElement {

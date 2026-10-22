@@ -73,11 +73,11 @@ import { ChartContainer, type ChartConfig } from "@alexgorbatchev/shadcn/chart";
 import { Carousel, CarouselContent, CarouselItem } from "@alexgorbatchev/shadcn/carousel";
 ```
 
-The patched `sonner`, `input-otp`, and `@shadcn/react` packages remain regular dependencies pending upstream fixes. Other feature dependencies are optional peers, so a core-only installation does not request them. Shared providers work across entry points.
+The patched `sonner`, `input-otp`, and `@shadcn/react` packages remain regular dependencies pending upstream fixes. `@base-ui/utils` is a regular dependency at the exact version `@base-ui/react` requires, so the portal components share Base UI's own ref merging without installing a second copy. Other feature dependencies are optional peers, so a core-only installation does not request them. Shared providers work across entry points.
 
 The optional assistant-ui catalog provides presentational families under `/assistant-ui/<family>` and runtime adapters under `/assistant-ui/native/<family>`. For example, import `ApprovalCard` from `@alexgorbatchev/shadcn/assistant-ui/approval-card`. Add `@alexgorbatchev/shadcn/assistant-ui.css` to your stylesheet. Native threads require an actual assistant-ui runtime and the selected family's optional peers. See the [assistant-ui reference](./docs/internal/assistant-ui.md) for imports, dependency-bearing styles, source inventory, and the SelectionToolbar isolation limitation.
 
-For embedded surfaces, import `PortalProvider` from the package root and pass the real overlay `container`. Dialogs, alerts, sheets, drawers, menus, navigation popups, comboboxes, selects, hover cards, tooltips, popovers, and Base UI toasts inherit that container. Native portal props can still supply an explicit container override.
+For embedded surfaces, import `PortalProvider` from the package root and pass the real overlay `container`. Dialogs, alerts, sheets, drawers, menus, navigation popups, comboboxes, selects, hover cards, tooltips, popovers, and Base UI toasts inherit that container. The container applies to the outermost popup: a popup opened inside another one, such as a select in a dialog, renders inside that popup's portal, where a modal dialog counts it as inside the dialog and keeps it reachable by assistive technology and the pointer. Native portal props can still supply an explicit container override.
 
 # Quick Start
 

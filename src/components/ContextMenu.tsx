@@ -8,6 +8,8 @@ import type {
 import type { IDensityProps } from "../density/types.js";
 import { useDensity } from "../hooks/useDensity.js";
 import { usePortalContainer } from "../hooks/usePortalContainer.js";
+import { usePortalNode } from "../hooks/usePortalNode.js";
+import { PortalProvider } from "./PortalProvider.js";
 import type { ComponentProps, ReactElement } from "react";
 import { ChevronRightIcon, CheckIcon } from "lucide-react";
 
@@ -19,9 +21,19 @@ function ContextMenu({ ...props }: ContextMenuPrimitive.Root.Props): ReactElemen
   return <ContextMenuPrimitive.Root data-slot="context-menu" {...props} />;
 }
 
-function ContextMenuPortal({ container, ...props }: ContextMenuPrimitive.Portal.Props): ReactElement {
+function ContextMenuPortal({ container, ref, children, ...props }: ContextMenuPrimitive.Portal.Props): ReactElement {
   const resolvedContainer = usePortalContainer(container);
-  return <ContextMenuPrimitive.Portal data-slot="context-menu-portal" container={resolvedContainer} {...props} />;
+  const portal = usePortalNode(ref);
+  return (
+    <ContextMenuPrimitive.Portal
+      data-slot="context-menu-portal"
+      container={resolvedContainer}
+      ref={portal.ref}
+      {...props}
+    >
+      <PortalProvider container={portal.node}>{children}</PortalProvider>
+    </ContextMenuPrimitive.Portal>
+  );
 }
 
 type ContextMenuTriggerProps = ContextMenuPrimitive.Trigger.Props & IDensityProps;

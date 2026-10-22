@@ -2,6 +2,8 @@
 
 import { useDensity } from "../hooks/useDensity.js";
 import { usePortalContainer } from "../hooks/usePortalContainer.js";
+import { usePortalNode } from "../hooks/usePortalNode.js";
+import { PortalProvider } from "./PortalProvider.js";
 import { useDirection } from "./DirectionProvider.js";
 import type {
   MenuLabelProps,
@@ -20,9 +22,14 @@ function DropdownMenu<Payload>({ ...props }: MenuPrimitive.Root.Props<Payload>):
   return <MenuPrimitive.Root data-slot="dropdown-menu" {...props} />;
 }
 
-function DropdownMenuPortal({ container, ...props }: MenuPrimitive.Portal.Props): ReactElement {
+function DropdownMenuPortal({ container, ref, children, ...props }: MenuPrimitive.Portal.Props): ReactElement {
   const resolvedContainer = usePortalContainer(container);
-  return <MenuPrimitive.Portal data-slot="dropdown-menu-portal" container={resolvedContainer} {...props} />;
+  const portal = usePortalNode(ref);
+  return (
+    <MenuPrimitive.Portal data-slot="dropdown-menu-portal" container={resolvedContainer} ref={portal.ref} {...props}>
+      <PortalProvider container={portal.node}>{children}</PortalProvider>
+    </MenuPrimitive.Portal>
+  );
 }
 
 function DropdownMenuTrigger<Payload>({ ...props }: MenuPrimitive.Trigger.Props<Payload>): ReactElement {

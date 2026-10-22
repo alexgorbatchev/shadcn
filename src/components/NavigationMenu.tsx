@@ -1,6 +1,8 @@
 import type { IDensityProps } from "../density/types.js";
 import { useDensity } from "../hooks/useDensity.js";
 import { usePortalContainer } from "../hooks/usePortalContainer.js";
+import { usePortalNode } from "../hooks/usePortalNode.js";
+import { PortalProvider } from "./PortalProvider.js";
 import { useDirection } from "./DirectionProvider.js";
 import type { ComponentPropsWithRef, ReactElement } from "react";
 import { ChevronDownIcon } from "lucide-react";
@@ -122,30 +124,33 @@ function NavigationMenuPositioner({
   const resolvedDensity = useDensity(density);
   const direction = useDirection();
   const container = usePortalContainer();
+  const portal = usePortalNode();
   return (
-    <NavigationMenuPrimitive.Portal container={container}>
-      <NavigationMenuPrimitive.Positioner
-        dir={direction}
-        side={side}
-        sideOffset={sideOffset}
-        align={align}
-        alignOffset={alignOffset}
-        className={(state) =>
-          cn(
-            "isolate  h-(--positioner-height) w-(--positioner-width) max-w-(--available-width) transition-[top,left,right,bottom] duration-[0.35s] ease-[cubic-bezier(0.22,1,0.36,1)] data-instant:transition-none data-[side=bottom]:before:top-[-10px] data-[side=bottom]:before:right-0 data-[side=bottom]:before:left-0",
-            typeof className === "function" ? className(state) : className,
-          )
-        }
-        {...props}
-      >
-        <NavigationMenuPrimitive.Popup
-          data-density={resolvedDensity}
-          data-slot="navigation-menu-popup"
-          className="data-[ending-style]:easing-[ease] xs:w-(--popup-width) relative h-(--popup-height) w-(--popup-width) origin-(--transform-origin) rounded-sm bg-popover text-popover-foreground border border-frame-edge shadow-frame transition-[opacity,transform,width,height,translate] duration-[0.35s] ease-[cubic-bezier(0.22,1,0.36,1)] outline-none  data-ending-style:opacity-0 data-ending-style:duration-150  data-starting-style:opacity-0"
+    <NavigationMenuPrimitive.Portal container={container} ref={portal.ref}>
+      <PortalProvider container={portal.node}>
+        <NavigationMenuPrimitive.Positioner
+          dir={direction}
+          side={side}
+          sideOffset={sideOffset}
+          align={align}
+          alignOffset={alignOffset}
+          className={(state) =>
+            cn(
+              "isolate  h-(--positioner-height) w-(--positioner-width) max-w-(--available-width) transition-[top,left,right,bottom] duration-[0.35s] ease-[cubic-bezier(0.22,1,0.36,1)] data-instant:transition-none data-[side=bottom]:before:top-[-10px] data-[side=bottom]:before:right-0 data-[side=bottom]:before:left-0",
+              typeof className === "function" ? className(state) : className,
+            )
+          }
+          {...props}
         >
-          <NavigationMenuPrimitive.Viewport className="relative size-full overflow-hidden" />
-        </NavigationMenuPrimitive.Popup>
-      </NavigationMenuPrimitive.Positioner>
+          <NavigationMenuPrimitive.Popup
+            data-density={resolvedDensity}
+            data-slot="navigation-menu-popup"
+            className="data-[ending-style]:easing-[ease] xs:w-(--popup-width) relative h-(--popup-height) w-(--popup-width) origin-(--transform-origin) rounded-sm bg-popover text-popover-foreground border border-frame-edge shadow-frame transition-[opacity,transform,width,height,translate] duration-[0.35s] ease-[cubic-bezier(0.22,1,0.36,1)] outline-none  data-ending-style:opacity-0 data-ending-style:duration-150  data-starting-style:opacity-0"
+          >
+            <NavigationMenuPrimitive.Viewport className="relative size-full overflow-hidden" />
+          </NavigationMenuPrimitive.Popup>
+        </NavigationMenuPrimitive.Positioner>
+      </PortalProvider>
     </NavigationMenuPrimitive.Portal>
   );
 }

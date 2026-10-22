@@ -2,6 +2,8 @@
 
 import { useDensity } from "../hooks/useDensity.js";
 import { usePortalContainer } from "../hooks/usePortalContainer.js";
+import { usePortalNode } from "../hooks/usePortalNode.js";
+import { PortalProvider } from "./PortalProvider.js";
 import type { IDensityProps } from "../density/types.js";
 import type { ComponentProps, ReactElement } from "react";
 import { Select as SelectPrimitive } from "@base-ui/react/select";
@@ -81,35 +83,38 @@ function SelectContent({
   const resolvedDensity = useDensity(density);
   const direction = useDirection();
   const container = usePortalContainer();
+  const portal = usePortalNode();
 
   return (
-    <SelectPrimitive.Portal container={container}>
-      <SelectPrimitive.Positioner
-        side={side}
-        sideOffset={sideOffset}
-        align={align}
-        alignOffset={alignOffset}
-        alignItemWithTrigger={alignItemWithTrigger}
-        className="isolate "
-      >
-        <SelectPrimitive.Popup
-          dir={direction}
-          data-density={resolvedDensity}
-          data-slot="select-content"
-          data-align-trigger={alignItemWithTrigger}
-          className={(state) =>
-            cn(
-              "relative isolate max-h-(--available-height) w-(--anchor-width) min-w-36 origin-(--transform-origin) overflow-x-hidden overflow-y-auto rounded-md bg-popover text-popover-foreground border border-frame-edge shadow-frame duration-120 data-[align-trigger=true]:animate-none data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:animate-none",
-              typeof className === "function" ? className(state) : className,
-            )
-          }
-          {...props}
+    <SelectPrimitive.Portal container={container} ref={portal.ref}>
+      <PortalProvider container={portal.node}>
+        <SelectPrimitive.Positioner
+          side={side}
+          sideOffset={sideOffset}
+          align={align}
+          alignOffset={alignOffset}
+          alignItemWithTrigger={alignItemWithTrigger}
+          className="isolate "
         >
-          <SelectScrollUpButton />
-          <SelectPrimitive.List>{children}</SelectPrimitive.List>
-          <SelectScrollDownButton />
-        </SelectPrimitive.Popup>
-      </SelectPrimitive.Positioner>
+          <SelectPrimitive.Popup
+            dir={direction}
+            data-density={resolvedDensity}
+            data-slot="select-content"
+            data-align-trigger={alignItemWithTrigger}
+            className={(state) =>
+              cn(
+                "relative isolate max-h-(--available-height) w-(--anchor-width) min-w-36 origin-(--transform-origin) overflow-x-hidden overflow-y-auto rounded-md bg-popover text-popover-foreground border border-frame-edge shadow-frame duration-120 data-[align-trigger=true]:animate-none data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:animate-none",
+                typeof className === "function" ? className(state) : className,
+              )
+            }
+            {...props}
+          >
+            <SelectScrollUpButton />
+            <SelectPrimitive.List>{children}</SelectPrimitive.List>
+            <SelectScrollDownButton />
+          </SelectPrimitive.Popup>
+        </SelectPrimitive.Positioner>
+      </PortalProvider>
     </SelectPrimitive.Portal>
   );
 }

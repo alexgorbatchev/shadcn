@@ -1,5 +1,7 @@
 import { useDensity } from "../hooks/useDensity.js";
 import { usePortalContainer } from "../hooks/usePortalContainer.js";
+import { usePortalNode } from "../hooks/usePortalNode.js";
+import { PortalProvider } from "./PortalProvider.js";
 import type { IDensityProps } from "../density/types.js";
 import type { ComponentPropsWithRef, ReactElement } from "react";
 import { useDirection } from "@base-ui/react/direction-provider";
@@ -110,31 +112,34 @@ function ComboboxContent({
   const resolvedDensity = useDensity(density);
   const direction = useDirection();
   const container = usePortalContainer();
+  const portal = usePortalNode();
 
   return (
-    <ComboboxPrimitive.Portal container={container}>
-      <ComboboxPrimitive.Positioner
-        side={side}
-        sideOffset={sideOffset}
-        align={align}
-        alignOffset={alignOffset}
-        anchor={anchor}
-        className="isolate "
-      >
-        <ComboboxPrimitive.Popup
-          dir={direction}
-          data-density={resolvedDensity}
-          data-slot="combobox-content"
-          data-chips={!!anchor}
-          className={(state) =>
-            cn(
-              "group/combobox-content relative max-h-(--available-height) w-(--anchor-width) max-w-(--available-width) min-w-[calc(var(--anchor-width)+--spacing(7))] origin-(--transform-origin) overflow-hidden rounded-md bg-popover text-popover-foreground border border-frame-edge shadow-frame duration-120 data-[chips=true]:min-w-(--anchor-width) *:data-[slot=input-group]:m-1 *:data-[slot=input-group]:mb-0 *:data-[slot=input-group]:h-control *:data-[slot=input-group]:border-input/30 *:data-[slot=input-group]:bg-input/30 *:data-[slot=input-group]:shadow-none data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:data-open:animate-none motion-reduce:data-closed:animate-none",
-              typeof className === "function" ? className(state) : className,
-            )
-          }
-          {...props}
-        />
-      </ComboboxPrimitive.Positioner>
+    <ComboboxPrimitive.Portal container={container} ref={portal.ref}>
+      <PortalProvider container={portal.node}>
+        <ComboboxPrimitive.Positioner
+          side={side}
+          sideOffset={sideOffset}
+          align={align}
+          alignOffset={alignOffset}
+          anchor={anchor}
+          className="isolate "
+        >
+          <ComboboxPrimitive.Popup
+            dir={direction}
+            data-density={resolvedDensity}
+            data-slot="combobox-content"
+            data-chips={!!anchor}
+            className={(state) =>
+              cn(
+                "group/combobox-content relative max-h-(--available-height) w-(--anchor-width) max-w-(--available-width) min-w-[calc(var(--anchor-width)+--spacing(7))] origin-(--transform-origin) overflow-hidden rounded-md bg-popover text-popover-foreground border border-frame-edge shadow-frame duration-120 data-[chips=true]:min-w-(--anchor-width) *:data-[slot=input-group]:m-1 *:data-[slot=input-group]:mb-0 *:data-[slot=input-group]:h-control *:data-[slot=input-group]:border-input/30 *:data-[slot=input-group]:bg-input/30 *:data-[slot=input-group]:shadow-none data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:data-open:animate-none motion-reduce:data-closed:animate-none",
+                typeof className === "function" ? className(state) : className,
+              )
+            }
+            {...props}
+          />
+        </ComboboxPrimitive.Positioner>
+      </PortalProvider>
     </ComboboxPrimitive.Portal>
   );
 }

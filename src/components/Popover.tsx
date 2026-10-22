@@ -2,6 +2,8 @@
 
 import { useDensity } from "../hooks/useDensity.js";
 import { usePortalContainer } from "../hooks/usePortalContainer.js";
+import { usePortalNode } from "../hooks/usePortalNode.js";
+import { PortalProvider } from "./PortalProvider.js";
 import type { IDensityProps } from "../density/types.js";
 import type { ComponentProps, ReactElement } from "react";
 import { useDirection } from "@base-ui/react/direction-provider";
@@ -32,30 +34,33 @@ function PopoverContent({
   const resolvedDensity = useDensity(density);
   const direction = useDirection();
   const container = usePortalContainer();
+  const portal = usePortalNode();
 
   return (
-    <PopoverPrimitive.Portal container={container}>
-      <PopoverPrimitive.Positioner
-        dir={direction}
-        align={align}
-        alignOffset={alignOffset}
-        side={side}
-        sideOffset={sideOffset}
-        className="isolate "
-      >
-        <PopoverPrimitive.Popup
+    <PopoverPrimitive.Portal container={container} ref={portal.ref}>
+      <PortalProvider container={portal.node}>
+        <PopoverPrimitive.Positioner
           dir={direction}
-          data-density={resolvedDensity}
-          data-slot="popover-content"
-          className={(state) =>
-            cn(
-              "flex w-72 origin-(--transform-origin) flex-col gap-2.5 rounded-md bg-popover p-2.5 text-sm text-popover-foreground shadow-frame border border-frame-edge shadow-frame outline-hidden duration-120 data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:data-open:animate-none motion-reduce:data-closed:animate-none",
-              typeof className === "function" ? className(state) : className,
-            )
-          }
-          {...props}
-        />
-      </PopoverPrimitive.Positioner>
+          align={align}
+          alignOffset={alignOffset}
+          side={side}
+          sideOffset={sideOffset}
+          className="isolate "
+        >
+          <PopoverPrimitive.Popup
+            dir={direction}
+            data-density={resolvedDensity}
+            data-slot="popover-content"
+            className={(state) =>
+              cn(
+                "flex w-72 origin-(--transform-origin) flex-col gap-2.5 rounded-md bg-popover p-2.5 text-sm text-popover-foreground shadow-frame border border-frame-edge shadow-frame outline-hidden duration-120 data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:data-open:animate-none motion-reduce:data-closed:animate-none",
+                typeof className === "function" ? className(state) : className,
+              )
+            }
+            {...props}
+          />
+        </PopoverPrimitive.Positioner>
+      </PortalProvider>
     </PopoverPrimitive.Portal>
   );
 }

@@ -1,6 +1,8 @@
 import type { IDensityProps } from "../density/types.js";
 import { useDensity } from "../hooks/useDensity.js";
 import { usePortalContainer } from "../hooks/usePortalContainer.js";
+import { usePortalNode } from "../hooks/usePortalNode.js";
+import { PortalProvider } from "./PortalProvider.js";
 import type { ComponentProps, ReactElement } from "react";
 import { useMemo } from "react";
 import { DrawerContext } from "../drawer/DrawerContext.js";
@@ -42,9 +44,14 @@ function DrawerTrigger<Payload>({ ...props }: DrawerPrimitive.Trigger.Props<Payl
   return <DrawerPrimitive.Trigger<Payload> data-slot="drawer-trigger" {...props} />;
 }
 
-function DrawerPortal({ container, ...props }: DrawerPrimitive.Portal.Props): ReactElement {
+function DrawerPortal({ container, ref, children, ...props }: DrawerPrimitive.Portal.Props): ReactElement {
   const resolvedContainer = usePortalContainer(container);
-  return <DrawerPrimitive.Portal data-slot="drawer-portal" container={resolvedContainer} {...props} />;
+  const portal = usePortalNode(ref);
+  return (
+    <DrawerPrimitive.Portal data-slot="drawer-portal" container={resolvedContainer} ref={portal.ref} {...props}>
+      <PortalProvider container={portal.node}>{children}</PortalProvider>
+    </DrawerPrimitive.Portal>
+  );
 }
 
 function DrawerClose({ ...props }: DrawerPrimitive.Close.Props): ReactElement {

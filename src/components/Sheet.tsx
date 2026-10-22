@@ -1,6 +1,8 @@
 import type { IDensityProps } from "../density/types.js";
 import { useDensity } from "../hooks/useDensity.js";
 import { usePortalContainer } from "../hooks/usePortalContainer.js";
+import { usePortalNode } from "../hooks/usePortalNode.js";
+import { PortalProvider } from "./PortalProvider.js";
 import type { ComponentProps, ReactElement } from "react";
 import { XIcon } from "lucide-react";
 
@@ -22,9 +24,14 @@ function SheetClose({ ...props }: SheetPrimitive.Close.Props): ReactElement {
   return <SheetPrimitive.Close data-slot="sheet-close" {...props} />;
 }
 
-function SheetPortal({ container, ...props }: SheetPrimitive.Portal.Props): ReactElement {
+function SheetPortal({ container, ref, children, ...props }: SheetPrimitive.Portal.Props): ReactElement {
   const resolvedContainer = usePortalContainer(container);
-  return <SheetPrimitive.Portal data-slot="sheet-portal" container={resolvedContainer} {...props} />;
+  const portal = usePortalNode(ref);
+  return (
+    <SheetPrimitive.Portal data-slot="sheet-portal" container={resolvedContainer} ref={portal.ref} {...props}>
+      <PortalProvider container={portal.node}>{children}</PortalProvider>
+    </SheetPrimitive.Portal>
+  );
 }
 
 type SheetOverlayProps = SheetPrimitive.Backdrop.Props & IDensityProps;
