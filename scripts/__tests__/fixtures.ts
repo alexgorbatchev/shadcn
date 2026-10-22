@@ -1,4 +1,28 @@
 import manifest from "../../package.json";
+
+export const fixture_scrollGuardBrowserSource: string = `
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { ScrollGuard, ThemeProvider } from "@alexgorbatchev/shadcn";
+
+const root = createRoot(document.getElementById("root"));
+root.render(
+  <StrictMode>
+    <ThemeProvider forcedTheme="dark" controlledTheme={{ theme: "dark", setTheme: () => {} }}>
+      <ScrollGuard />
+      <div id="guarded" data-scroll="none" style={{ width: 100, height: 100, overflow: "auto" }}>
+        <div style={{ width: 50, height: 300 }}>Overflowing content</div>
+      </div>
+    </ThemeProvider>
+  </StrictMode>,
+);
+let frames = 0;
+function ready() {
+  if (++frames < 12) requestAnimationFrame(ready);
+  else document.body.dataset.checked = "true";
+}
+requestAnimationFrame(ready);
+`;
 export const fixture_coverageConfigSource: string = `
 import { defineConfig } from "vitest/config";
 export default defineConfig({

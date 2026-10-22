@@ -77,6 +77,7 @@ function SheetContent({
         dir={direction}
         data-density={resolvedDensity}
         data-slot="sheet-content"
+        data-scroll="none"
         data-side={side}
         className={(state) =>
           cn(

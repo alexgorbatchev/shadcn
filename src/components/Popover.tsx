@@ -51,6 +51,7 @@ function PopoverContent({
             dir={direction}
             data-density={resolvedDensity}
             data-slot="popover-content"
+            data-scroll="none"
             className={(state) =>
               cn(
                 "flex w-72 origin-(--transform-origin) flex-col gap-2.5 rounded-md bg-popover p-2.5 text-sm text-popover-foreground shadow-frame border border-frame-edge shadow-frame outline-hidden duration-120 data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:data-open:animate-none motion-reduce:data-closed:animate-none",

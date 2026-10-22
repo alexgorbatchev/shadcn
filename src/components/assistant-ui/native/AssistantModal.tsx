@@ -48,6 +48,7 @@ export function AssistantModal(): ReactElement {
       {isPortalReady && (
         <AssistantModalPrimitive.Content
           data-density={density}
+          data-scroll="none"
           ref={contentRef}
           sideOffset={16}
           aria-labelledby={titleId}

@@ -60,6 +60,7 @@ export function ApprovalCard({
       role="group"
       data-testid="ApprovalCard"
       data-slot="approval-card"
+      data-scroll="none"
       data-variant={variant}
       aria-labelledby={titleId}
       aria-describedby={description ? descriptionId : undefined}

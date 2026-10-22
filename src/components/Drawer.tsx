@@ -116,6 +116,7 @@ function DrawerContent({ density, className, children, ...props }: DrawerContent
         <DrawerPrimitive.Popup
           data-density={resolvedDensity}
           data-slot="drawer-popup"
+          data-scroll="none"
           data-swipe-axis={swipeAxis}
           data-snap-points={hasSnapPoints ? "" : undefined}
           className={(state) =>
@@ -152,6 +153,7 @@ function DrawerContent({ density, className, children, ...props }: DrawerContent
           {showSwipeHandle && <DrawerSwipeHandle />}
           <DrawerPrimitive.Content
             data-slot="drawer-content"
+            data-scroll="none"
             className="flex min-h-0 flex-1 flex-col overflow-hidden overscroll-contain rounded-[inherit] transition-opacity duration-300 ease-out select-text group-data-nested-drawer-open/drawer-popup:opacity-0 group-data-nested-drawer-swiping/drawer-popup:opacity-100 group-data-swiping/drawer-popup:select-none"
           >
             {children}

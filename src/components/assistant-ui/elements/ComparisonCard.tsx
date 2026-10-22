@@ -22,6 +22,7 @@ export function ComparisonCard({
     <div
       data-testid="ComparisonCard"
       data-slot="comparison-card"
+      data-scroll="none"
       className={cn(paper, "flex w-full max-w-md flex-col gap-3 rounded-md p-4")}
       {...props}
     >

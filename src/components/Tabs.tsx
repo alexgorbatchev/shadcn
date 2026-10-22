@@ -82,6 +82,7 @@ function TabsContent({ density, className, ...props }: TabsContentProps): ReactE
     <TabsPrimitive.Panel
       data-density={density}
       data-slot="tabs-content"
+      data-scroll="none"
       className={(state) =>
         cn("flex-1 text-sm outline-none", typeof className === "function" ? className(state) : className)
       }

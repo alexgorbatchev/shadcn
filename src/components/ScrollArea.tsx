@@ -20,12 +20,14 @@ function ScrollArea({
     <ScrollAreaPrimitive.Root
       data-density={density}
       data-slot="scroll-area"
-      className={(state) => cn("relative", typeof className === "function" ? className(state) : className)}
+      className={(state) =>
+        cn("relative flex min-h-0 flex-col", typeof className === "function" ? className(state) : className)
+      }
       {...props}
     >
       <ScrollAreaPrimitive.Viewport
         data-slot="scroll-area-viewport"
-        className="size-full rounded-[inherit] transition-[color,box-shadow] outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-1"
+        className="size-full min-h-0 flex-1 rounded-[inherit] transition-[color,box-shadow] outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:outline-1"
       >
         {children}
       </ScrollAreaPrimitive.Viewport>

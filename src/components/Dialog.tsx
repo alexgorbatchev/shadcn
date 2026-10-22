@@ -76,9 +76,10 @@ function DialogContent({
         dir={direction}
         data-density={resolvedDensity}
         data-slot="dialog-content"
+        data-scroll="none"
         className={(state) =>
           cn(
-            "fixed grid w-full gap-panel overflow-y-auto overscroll-contain bg-popover p-panel text-sm text-popover-foreground border border-frame-edge shadow-frame duration-120 outline-none data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:data-open:animate-none motion-reduce:data-closed:animate-none",
+            "fixed flex min-h-0 w-full flex-col gap-panel overscroll-contain bg-popover p-panel text-sm text-popover-foreground border border-frame-edge shadow-frame duration-120 outline-none data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:data-open:animate-none motion-reduce:data-closed:animate-none",
             size === "fullscreen"
               ? "inset-0 h-dvh max-h-dvh max-w-none rounded-none"
               : cn(
@@ -109,7 +110,12 @@ type DialogHeaderProps = ComponentProps<"div"> & IDensityProps;
 
 function DialogHeader({ density, className, ...props }: DialogHeaderProps): ReactElement {
   return (
-    <div data-density={density} data-slot="dialog-header" className={cn("flex flex-col gap-2", className)} {...props} />
+    <div
+      data-density={density}
+      data-slot="dialog-header"
+      className={cn("flex shrink-0 flex-col gap-2", className)}
+      {...props}
+    />
   );
 }
 
@@ -129,7 +135,7 @@ function DialogFooter({
       data-density={density}
       data-slot="dialog-footer"
       className={cn(
-        "-mx-panel -mb-panel flex flex-col-reverse gap-2 rounded-b-md border-t bg-muted/50 p-panel sm:flex-row sm:justify-end",
+        "-mx-panel -mb-panel flex shrink-0 flex-col-reverse gap-2 rounded-b-md border-t bg-muted/50 p-panel sm:flex-row sm:justify-end",
         className,
       )}
       {...props}

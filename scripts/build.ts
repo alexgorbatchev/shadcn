@@ -23,6 +23,8 @@ const result = await Bun.build({
   target: "browser",
   format: "esm",
   jsx: { development: false },
+  // The consuming application decides whether library diagnostics run.
+  define: { "process.env.NODE_ENV": "process.env.NODE_ENV" },
   packages: "bundle",
   external: [
     ...Object.keys(manifest.dependencies).filter((name) => !["@shadcn/react", "sonner", "input-otp"].includes(name)),

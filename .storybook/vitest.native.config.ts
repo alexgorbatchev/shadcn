@@ -39,6 +39,7 @@ export default defineConfig({
     attachmentsDir: ".tmp/native-browser-attachments",
     include: [
       "src/components/__tests__/*.test.tsx",
+      "src/utils/__tests__/*.test.ts",
       "src/components/assistant-ui/hooks/__tests__/*.test.ts",
       "src/components/assistant-ui/hooks/__tests__/*.test.tsx",
       "src/components/assistant-ui/utils/__tests__/*.test.ts",

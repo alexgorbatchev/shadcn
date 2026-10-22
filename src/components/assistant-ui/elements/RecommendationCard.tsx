@@ -36,6 +36,7 @@ export function RecommendationCard({
     <div
       data-testid="RecommendationCard"
       data-slot="recommendation-card"
+      data-scroll="none"
       className={cn(cn(paper, "flex w-full max-w-sm flex-col gap-3 rounded-md p-4"), className)}
       {...props}
       {...focusHandlers}

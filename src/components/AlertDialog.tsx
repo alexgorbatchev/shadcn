@@ -70,6 +70,7 @@ function AlertDialogContent({ density, className, size = "default", ...props }: 
         dir={direction}
         data-density={resolvedDensity}
         data-slot="alert-dialog-content"
+        data-scroll="none"
         data-size={size}
         className={(state) =>
           cn(

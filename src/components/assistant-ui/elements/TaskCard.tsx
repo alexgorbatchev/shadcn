@@ -47,6 +47,7 @@ export function TaskCard({
     <div
       data-testid="TaskCard"
       data-slot="task-card"
+      data-scroll="none"
       data-state={state}
       className={cn(paper, "flex w-full max-w-sm flex-col overflow-hidden rounded-md", className)}
       {...props}

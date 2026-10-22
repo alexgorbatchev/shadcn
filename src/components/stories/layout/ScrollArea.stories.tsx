@@ -91,6 +91,34 @@ export const Default: Story = {
     await waitFor(() => expect(viewport?.scrollTop).toBe(0));
   },
 };
+
+export const FlexHeight: Story = {
+  render: () => (
+    <section data-scroll="none" aria-label="Release panel" className="flex max-h-64 w-64 flex-col gap-3 border p-4">
+      <h2 className="shrink-0">Release panel</h2>
+      <ScrollArea>
+        <ol className="flex flex-col gap-3">
+          {Array.from({ length: 30 }, (_, index) => (
+            <li key={index}>Release {index + 1}</li>
+          ))}
+        </ol>
+      </ScrollArea>
+      <p className="shrink-0">Stationary footer</p>
+    </section>
+  ),
+  play: async ({ canvasElement }) => {
+    const panel = within(canvasElement).getByRole("region", { name: "Release panel" });
+    const viewport = panel.querySelector('[data-slot="scroll-area-viewport"]');
+    const footer = within(panel).getByText("Stationary footer");
+    const footerTop = footer.getBoundingClientRect().top;
+    await expect(viewport?.scrollHeight).toBeGreaterThan(viewport?.clientHeight ?? 0);
+    viewport?.scrollTo({ top: 100, behavior: "instant" });
+    await waitFor(() => expect(viewport?.scrollTop).toBe(100));
+    await expect(panel.scrollTop).toBe(0);
+    await expect(footer.getBoundingClientRect().top).toBe(footerTop);
+    await expect(footer.getBoundingClientRect().bottom).toBeLessThanOrEqual(panel.getBoundingClientRect().bottom);
+  },
+};
 export const StateCallback: Story = {
   ...Default,
   args: { className: fn(() => "min-w-64"), barClassName: fn(() => "") },

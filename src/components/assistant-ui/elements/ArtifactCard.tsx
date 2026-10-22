@@ -13,7 +13,14 @@ export function ArtifactCard({
   ...props
 }: IArtifactCardProps): JSX.Element {
   return (
-    <Button data-testid="ArtifactCard" data-slot="artifact-card" variant="outline" disabled={!props.onClick} {...props}>
+    <Button
+      data-testid="ArtifactCard"
+      data-slot="artifact-card"
+      data-scroll="none"
+      variant="outline"
+      disabled={!props.onClick}
+      {...props}
+    >
       <FileTextIcon
         aria-hidden="true"
         data-icon="inline-start"

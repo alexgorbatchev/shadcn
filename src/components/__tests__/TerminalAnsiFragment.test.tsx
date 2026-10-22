@@ -47,8 +47,14 @@ test("disconnects native theme observers when terminal fragments unmount", () =>
     </ThemeProvider>,
   );
   expect(disconnect).not.toHaveBeenCalled();
-  fixture.unmount();
+  fixture.rerender(
+    <ThemeProvider forcedTheme="dark">
+      <p>Terminal removed</p>
+    </ThemeProvider>,
+  );
   expect(disconnect).toHaveBeenCalledOnce();
+  fixture.unmount();
+  expect(disconnect).toHaveBeenCalledTimes(2);
 });
 
 test("renders ANSI emphasis, reverse colors, concealed text and background-only runs", async () => {

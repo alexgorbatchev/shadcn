@@ -34,6 +34,7 @@ export function ScheduleCard({
     <div
       data-testid="ScheduleCard"
       data-slot="schedule-card"
+      data-scroll="none"
       className={cn(cn(paper, "flex w-full max-w-sm flex-col gap-3 rounded-md p-4"), className)}
       {...props}
     >

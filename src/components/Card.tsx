@@ -29,6 +29,7 @@ function Card({ density, className, size = "default", variant = "default", ...pr
     <div
       data-density={density}
       data-slot="card"
+      data-scroll="none"
       data-size={size}
       {...mergeProps<"div">(
         {
@@ -48,6 +49,7 @@ function CardHeader({ density, className, ...props }: CardHeaderProps): ReactEle
     <div
       data-density={density}
       data-slot="card-header"
+      data-scroll="none"
       className={cn(
         "group/card-header @container/card-header grid auto-rows-min items-start gap-1 rounded-t-md px-(--card-spacing) has-data-[slot=card-action]:grid-cols-[1fr_auto] has-data-[slot=card-description]:grid-rows-[auto_auto] [.border-b]:pb-(--card-spacing)",
         className,
@@ -100,7 +102,13 @@ type CardContentProps = ComponentProps<"div"> & IDensityProps;
 
 function CardContent({ density, className, ...props }: CardContentProps): ReactElement {
   return (
-    <div data-density={density} data-slot="card-content" className={cn("px-(--card-spacing)", className)} {...props} />
+    <div
+      data-density={density}
+      data-slot="card-content"
+      data-scroll="none"
+      className={cn("px-(--card-spacing)", className)}
+      {...props}
+    />
   );
 }
 
@@ -111,6 +119,7 @@ function CardFooter({ density, className, ...props }: CardFooterProps): ReactEle
     <div
       data-density={density}
       data-slot="card-footer"
+      data-scroll="none"
       className={cn("flex items-center rounded-b-md border-t bg-muted/50 p-(--card-spacing)", className)}
       {...props}
     />

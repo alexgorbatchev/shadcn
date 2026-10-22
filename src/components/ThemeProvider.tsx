@@ -3,6 +3,7 @@ import { useIsomorphicLayoutEffect, useTernaryDarkMode } from "usehooks-ts";
 import { ThemeContext } from "../theme/ThemeContext.js";
 import type { IThemeContextValue, ResolvedTheme, ThemeMode } from "../theme/types.js";
 import { useMediaQuery } from "../hooks/useMediaQuery.js";
+import { ScrollGuard } from "./ScrollGuard.js";
 
 export interface IThemeProviderProps {
   children: ReactNode;
@@ -49,7 +50,12 @@ function ThemePalette({
     [theme, resolvedTheme, setTheme],
   );
 
-  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+  return (
+    <ThemeContext.Provider value={value}>
+      <ScrollGuard />
+      {children}
+    </ThemeContext.Provider>
+  );
 }
 
 function ControlledThemeProvider({

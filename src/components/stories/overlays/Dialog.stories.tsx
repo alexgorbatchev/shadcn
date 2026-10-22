@@ -21,6 +21,7 @@ import { Field, FieldLabel, FieldGroup } from "../../Field";
 import { Input } from "../../Input";
 import { DensityProvider } from "../../DensityProvider";
 import { DirectionProvider } from "../../DirectionProvider";
+import { ScrollArea } from "../../ScrollArea";
 
 const meta: Meta<typeof Dialog> = {
   title: "@alexgorbatchev/shadcn/components/overlays/Dialog",
@@ -144,15 +145,17 @@ export const TallContent: Story = {
           <DialogTitle>Review fields</DialogTitle>
           <DialogDescription>More fields than fit in the viewport.</DialogDescription>
         </DialogHeader>
-        <form className="flex flex-col gap-panel" onSubmit={(event) => event.preventDefault()}>
-          <FieldGroup>
-            {Array.from({ length: 40 }, (_, index) => (
-              <Field key={index}>
-                <FieldLabel htmlFor={`tall-field-${index}`}>Field {index + 1}</FieldLabel>
-                <Input id={`tall-field-${index}`} />
-              </Field>
-            ))}
-          </FieldGroup>
+        <form className="flex min-h-0 flex-col gap-panel" onSubmit={(event) => event.preventDefault()}>
+          <ScrollArea className="min-h-0">
+            <FieldGroup>
+              {Array.from({ length: 40 }, (_, index) => (
+                <Field key={index}>
+                  <FieldLabel htmlFor={`tall-field-${index}`}>Field {index + 1}</FieldLabel>
+                  <Input id={`tall-field-${index}`} />
+                </Field>
+              ))}
+            </FieldGroup>
+          </ScrollArea>
           <DialogFooter>
             <DialogClose render={<Button variant="outline" />}>Cancel</DialogClose>
             <Button type="submit">Apply</Button>
@@ -174,8 +177,11 @@ export const TallContent: Story = {
     // The footer bleeds into the popup padding without making the dialog scroll sideways.
     await expect(dialog.scrollWidth).toBe(dialog.clientWidth);
     const apply = within(dialog).getByRole("button", { name: "Apply" });
+    within(dialog).getByRole("textbox", { name: "Field 40" }).focus();
+    const viewport = dialog.querySelector('[data-slot="scroll-area-viewport"]');
+    await waitFor(() => expect(viewport?.scrollTop).toBeGreaterThan(0));
+    await expect(dialog.scrollTop).toBe(0);
     apply.focus();
-    await waitFor(() => expect(dialog.scrollTop).toBeGreaterThan(0));
     await expect(apply.getBoundingClientRect().bottom).toBeLessThanOrEqual(window.innerHeight);
     await expect(root.scrollTop).toBe(pageScroll);
     await userEvent.keyboard("{Escape}");

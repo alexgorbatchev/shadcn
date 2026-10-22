@@ -31,6 +31,7 @@ export function AgentCard({
       aria-labelledby={titleId}
       aria-describedby={descriptionId}
       data-slot="agent-card"
+      data-scroll="none"
       className={cn(paper, "flex w-full max-w-sm flex-col gap-2 rounded-md p-2")}
       {...props}
     >

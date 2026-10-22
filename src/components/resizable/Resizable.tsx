@@ -7,8 +7,8 @@ function Resizable({ className, ...props }: GroupProps): ReactElement {
   return <Group data-slot="resizable-panel-group" className={cn("size-full", className)} {...props} />;
 }
 
-function ResizablePanel(props: PanelProps): ReactElement {
-  return <Panel data-slot="resizable-panel" {...props} />;
+function ResizablePanel({ style, ...props }: PanelProps): ReactElement {
+  return <Panel data-slot="resizable-panel" data-scroll="none" style={{ overflow: "clip", ...style }} {...props} />;
 }
 
 type ResizableHandleProps = SeparatorProps & { withHandle?: boolean; thickness?: "default" | "strong" };

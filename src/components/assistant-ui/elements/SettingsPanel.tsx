@@ -53,6 +53,7 @@ export function SettingsPanel({
     <div
       data-testid="SettingsPanel"
       data-slot="settings-panel"
+      data-scroll="none"
       className={cn(cn(paper, "flex w-full max-w-sm flex-col gap-4 rounded-md p-4"), className)}
       {...props}
     >

@@ -11,6 +11,7 @@ export function ChatPanel({ ...props }: ChatPanelProps): JSX.Element {
     <div
       data-testid="ChatPanel"
       data-slot="chat-panel"
+      data-scroll="none"
       className={cn(paper, "flex h-[270px] w-full max-w-md flex-col overflow-hidden rounded-md")}
       {...props}
     />

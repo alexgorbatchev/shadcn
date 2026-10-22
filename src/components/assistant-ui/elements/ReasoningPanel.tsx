@@ -36,6 +36,7 @@ export function ReasoningPanel({
     <Collapsible
       data-testid="ReasoningPanel"
       data-slot="reasoning-panel"
+      data-scroll="none"
       open={open}
       onOpenChange={(next) => onOpenChange(next)}
       render={<div className={cn("w-full max-w-sm")} />}

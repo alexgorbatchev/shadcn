@@ -143,6 +143,8 @@ export { DensityProvider } from "./components/DensityProvider.js";
 export type { IDensityProviderProps } from "./components/DensityProvider.js";
 export type { Density, IDensityProps } from "./density/types.js";
 export { ThemeProvider } from "./components/ThemeProvider.js";
+export { ScrollGuard } from "./components/ScrollGuard.js";
+export type { IScrollGuardProps } from "./components/ScrollGuard.js";
 export type { IThemeProviderProps } from "./components/ThemeProvider.js";
 export { useTheme } from "./hooks/useTheme.js";
 export type { ThemeMode, ResolvedTheme, IThemeContextValue } from "./theme/types.js";

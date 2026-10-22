@@ -19,6 +19,7 @@ export function SpecSheet({ title, subtitle, rows, visibleCount, className, ...p
     <div
       data-testid="SpecSheet"
       data-slot="spec-sheet"
+      data-scroll="none"
       className={cn(cn(paper, "flex w-full max-w-sm flex-col gap-3 rounded-md p-4"), className)}
       {...props}
     >

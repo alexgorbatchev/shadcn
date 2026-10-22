@@ -49,6 +49,7 @@ function HoverCardContent({
           <PreviewCardPrimitive.Popup
             data-density={resolvedDensity}
             data-slot="hover-card-content"
+            data-scroll="none"
             className={(state) =>
               cn(
                 " w-64 origin-(--transform-origin) rounded-sm bg-popover p-panel text-sm text-popover-foreground  border border-frame-edge shadow-frame outline-hidden duration-100       data-open:animate-in data-open:fade-in-0  data-closed:animate-out data-closed:fade-out-0 ",
