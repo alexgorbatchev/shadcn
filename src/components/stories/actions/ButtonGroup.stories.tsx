@@ -47,6 +47,36 @@ const meta: Meta<typeof ButtonGroup> = {
 };
 export default meta;
 type Story = StoryObj<typeof meta>;
+export const EqualWidthPads: Story = {
+  args: { layout: "equal" },
+  render: (args) => (
+    <div data-testid="ButtonGroup--container" className="w-80">
+      <ButtonGroup {...args}>
+        {Array.from({ length: 8 }, (_, index) => (
+          <Button key={index} variant="pad" size="content" disabled>
+            {index + 1}
+          </Button>
+        ))}
+      </ButtonGroup>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const container = canvas.getByTestId("ButtonGroup--container");
+    const group = canvas.getByRole("group", { name: "Document actions" });
+    const buttons = within(group).getAllByRole("button");
+    await expect(group.getBoundingClientRect().width).toBe(container.getBoundingClientRect().width);
+    for (const [index, button] of buttons.entries()) {
+      await expect(button.getBoundingClientRect().width).toBe(container.getBoundingClientRect().width / 8);
+      await expect(button).toBeDisabled();
+      await expect(getComputedStyle(button).borderTopStyle).toBe("solid");
+      await expect(getComputedStyle(button).borderLeftWidth).toBe(index === 0 ? "1px" : "0px");
+      if (index > 0) {
+        await expect(button.getBoundingClientRect().left).toBe(buttons[index - 1]?.getBoundingClientRect().right);
+      }
+    }
+  },
+};
 export const Horizontal: Story = {
   play: async ({ canvasElement }) => {
     const group = within(within(canvasElement).getByRole("group", { name: "Document actions" }));

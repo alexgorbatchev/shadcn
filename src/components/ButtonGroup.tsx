@@ -11,6 +11,10 @@ const buttonGroupVariants = cva(
   "flex w-fit items-stretch *:focus-visible:relative *:focus-visible:z-10 has-[>[data-slot=button-group]]:gap-2 has-[select[aria-hidden=true]:last-child]:[&>[data-slot=select-trigger]:last-of-type]:rounded-e-sm [&>[data-slot=select-trigger]:not([class*='w-'])]:w-fit [&>input]:flex-1",
   {
     variants: {
+      layout: {
+        content: "",
+        equal: "grid w-full grid-flow-col auto-cols-fr data-[orientation=vertical]:grid-flow-row",
+      },
       orientation: {
         horizontal:
           "*:data-slot:rounded-e-none [&>[data-slot]:not(:has(~[data-slot]))]:rounded-e-sm! [&>[data-slot]~[data-slot]]:rounded-s-none [&>[data-slot]~[data-slot]]:border-s-0",
@@ -26,14 +30,20 @@ const buttonGroupVariants = cva(
 
 type ButtonGroupProps = ComponentProps<"div"> & VariantProps<typeof buttonGroupVariants> & IDensityProps;
 
-function ButtonGroup({ density, className, orientation, ...props }: ButtonGroupProps): ReactElement {
+function ButtonGroup({
+  density,
+  className,
+  orientation,
+  layout = "content",
+  ...props
+}: ButtonGroupProps): ReactElement {
   return (
     <div
       role="group"
       data-density={density}
       data-slot="button-group"
       data-orientation={orientation}
-      className={cn(buttonGroupVariants({ orientation }), className)}
+      className={cn(buttonGroupVariants({ orientation, layout }), className)}
       {...props}
     />
   );
