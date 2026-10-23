@@ -106,6 +106,11 @@ export const ConstrainedRows: Story = {
     const row = canvas.getByRole("treeitem", { name: "Source with a very long descriptive name" });
     const count = within(row).getByText("1234", { exact: true });
     const actions = within(row).getByRole("button", { name: "Actions for Source with a very long descriptive name" });
+    await expect(
+      canvas.getByText("Source with a very long descriptive name", { exact: true }).getBoundingClientRect().left,
+    ).toBe(
+      canvas.getByText("README.md with a very long descriptive name", { exact: true }).getBoundingClientRect().left,
+    );
     await expect(count.getBoundingClientRect().right).toBeLessThanOrEqual(tree.getBoundingClientRect().right);
     await expect(actions.getBoundingClientRect().right).toBeLessThanOrEqual(tree.getBoundingClientRect().right);
     await userEvent.click(row);

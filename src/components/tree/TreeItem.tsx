@@ -127,7 +127,7 @@ export function TreeItem<T>({
             ) : item.isFolder() ? (
               <ChevronRightIcon aria-hidden="true" className={cn("size-3.5 shrink-0", isExpanded && "rotate-90")} />
             ) : (
-              <span className="size-3.5 shrink-0" />
+              <span className={cn("shrink-0", expandOn === "disclosure" ? "size-control-xs" : "size-3.5")} />
             )}
             <span aria-hidden="true" className="flex shrink-0 [&>svg]:size-4">
               {startEnhancer ?? (item.isFolder() ? isExpanded ? <FolderOpenIcon /> : <FolderIcon /> : <FileIcon />)}
