@@ -79,6 +79,8 @@ jobs:
           package-manager-cache: false
       - name: Install the maintained npm client
         run: npm install --global npm@12.2.0
+      - name: Install Chromium for package verification
+        run: bun x --bun playwright install --with-deps chromium
       - name: Check types
         run: bun run typecheck
       - name: Check lint and formatting

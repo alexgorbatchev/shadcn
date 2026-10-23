@@ -3,6 +3,12 @@ name: Publish Storybook
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Existing published GitHub Release tag to deploy
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -18,14 +24,29 @@ jobs:
       - name: Check out the release commit
         uses: actions/checkout@v6
         with:
-          ref: ${{ github.sha }}
+          ref: ${{ inputs.release_tag || github.event.release.tag_name }}
           persist-credentials: false
       - name: Set up Bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version-file: package.json
+      - name: Verify the published release and package version
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.release_tag || github.event.release.tag_name }}
+        run: |
+          set -euo pipefail
+          gh release view "$RELEASE_TAG" --json isDraft,tagName | bun -e '
+            const release = await Bun.stdin.json();
+            const { version } = await Bun.file("package.json").json();
+            if (release.isDraft || release.tagName !== Bun.env.RELEASE_TAG || Bun.env.RELEASE_TAG !== `v${version}`) {
+              throw new Error("A published release matching the package version is required");
+            }
+          '
       - name: Install dependencies
         run: bun install --frozen-lockfile
+      - name: Install Chromium for package verification
+        run: bun x --bun playwright install --with-deps chromium
       - name: Check types
         run: bun run typecheck
       - name: Check lint and formatting

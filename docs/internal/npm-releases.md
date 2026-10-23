@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-14 06:35
-last_modified: 2026-10-20 22:28
+last_modified: 2026-10-22 18:34
 status: current
 ---
 
@@ -29,7 +29,7 @@ Review the dry-run file listing before publishing. This first publication is a s
 
 ## Release procedure
 
-1. Set the intended version in `package.json`. Run `just fix`, `just check`, `bun run test:visual`, and `npm publish --dry-run`, and inspect the file listing before publishing. Use `just pack` only when a local archive is needed for inspection.
+1. Set the intended version in `package.json`. Install Playwright Chromium with `bun x --bun playwright install --with-deps chromium` on a fresh Linux host. Run `just fix`, `just check`, `bun run test:visual`, and `npm publish --dry-run`, and inspect the file listing before publishing. Use `just pack` only when a local archive is needed for inspection.
 2. Commit and push the package and workflow. Inspect outgoing content for private internal domains as required by project policy.
 3. Create a tag exactly matching `v` plus the package version, such as `v0.0.2`. Publish a GitHub Release for that tag. The tagged commit must contain the workflow and version change.
 4. Mark versions containing a prerelease suffix, such as `0.0.3-beta.1`, as GitHub prereleases. Prereleases publish to npm's `next` tag; stable releases publish to `latest`.
@@ -41,8 +41,8 @@ For a failed publication, first check whether the version reached npm. If it is 
 gh workflow run npm-release.yml --ref main -f release_tag=v0.0.14 -F prerelease=false
 ```
 
-Use the intended release tag and its actual prerelease flag. Both visual validation and publication check out that tag. The workflow verifies the published GitHub Release and emits npm verbose diagnostics, including token-exchange failures, to distinguish authentication errors from missing packages.
+Use the intended release tag and its actual prerelease flag. The workflow definition comes from `main`; both visual validation and publication check out the specified release tag. This permits workflow repairs without moving an existing package tag. The workflow verifies the published GitHub Release and emits npm verbose diagnostics, including token-exchange failures, to distinguish authentication errors from missing packages.
 
-Publication requires the reusable [visual regression workflow](./visual-regression.md) to pass. The publishing job rejects mismatched tags and prerelease versions marked as stable, installs the frozen Bun lockfile, checks types and lint/formatting, and runs package rendering tests in development and production. It runs `npm publish` directly from the repository, letting npm create the package internally. The existing `prepack` hook builds the package; npm selects its contents using `package.json`'s `files` field and automatically includes the README and license. The package manifest is published without custom rewriting, including its Bun patch metadata; the build bundles the patched implementations.
+Publication requires the reusable [visual regression workflow](./visual-regression.md) to pass. The publishing job rejects mismatched tags and prerelease versions marked as stable, installs the frozen Bun lockfile and Chromium with its system dependencies, checks types and lint/formatting, and runs package rendering tests in development and production. The visual job's browser installation does not carry over to the publishing job. It runs `npm publish` directly from the repository, letting npm create the package internally. The existing `prepack` hook builds the package; npm selects its contents using `package.json`'s `files` field and automatically includes the README and license. The package manifest is published without custom rewriting, including its Bun patch metadata; the build bundles the patched implementations.
 
 Node 24 runs npm 12.2.0 for trusted publishing; Bun remains the install, build, and test tool. Local `just pack` also requires npm and writes the archive to `.tmp/packs/`. Package tests install an npm-created archive in isolated Bun consumers. npm publishes with public access and provenance. Re-running an already published version fails rather than overwriting it. Publishing an older stable version can move `latest` backward. The full interaction suite and coverage remain separate local checks.
