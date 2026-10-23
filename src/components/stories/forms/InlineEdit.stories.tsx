@@ -29,6 +29,7 @@ export const Cancel: Story = {
     await expect(args.onCancel).toHaveBeenCalledOnce();
     await expect(args.onCommit).not.toHaveBeenCalled();
     await expect(within(canvasElement).getByRole("textbox")).toHaveValue("Changed");
+    await expect(within(canvasElement).getByRole("textbox")).not.toHaveFocus();
   },
 };
 export const FailedSave: Story = {

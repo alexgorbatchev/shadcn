@@ -25,6 +25,7 @@ export function InlineEdit({
 }: IInlineEditProps): ReactElement {
   const input = useRef<HTMLInputElement>(null);
   const isFinished = useRef(false);
+  const shouldCancel = useRef(false);
   const [isSaving, setSaving] = useState(false);
   const [error, setError] = useState("");
   useEffect(() => {
@@ -63,14 +64,20 @@ export function InlineEdit({
         disabled={isDisabled || isSaving}
         onChange={(event) => onValueChange(event.target.value)}
         onBlur={() => {
-          void save();
+          if (shouldCancel.current && !isFinished.current) {
+            isFinished.current = true;
+            onCancel();
+          } else void save();
         }}
         onKeyDown={(event) => {
           if (event.key === "Escape") {
             event.preventDefault();
             event.stopPropagation();
-            isFinished.current = true;
-            onCancel();
+            shouldCancel.current = true;
+            event.currentTarget.blur();
+          } else if (event.key === "Enter") {
+            event.preventDefault();
+            event.currentTarget.blur();
           }
         }}
       />

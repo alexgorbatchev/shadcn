@@ -11,6 +11,100 @@ import { renderToString } from "react-dom/server";
 import { useDragDrop } from "../../hooks/useDragDrop";
 import { useDropTarget } from "../../hooks/useDropTarget";
 import "../../../.storybook/preview.css";
+import {
+  Tree,
+  useTree,
+  syncDataLoaderFeature,
+  hotkeysCoreFeature,
+  selectionFeature,
+  dragAndDropFeature,
+  keyboardDragAndDropFeature,
+  isOrderedDragTarget,
+  AssistiveTreeDescription,
+} from "../tree";
+
+interface ITreeExampleProps {
+  isDisabled?: boolean;
+}
+interface ITreeData {
+  name: string;
+  children?: string[];
+}
+const treeItems: Record<string, ITreeData> = {
+  root: { name: "Root", children: ["folder", "first", "second"] },
+  folder: { name: "Folder", children: ["child"] },
+  child: { name: "Child" },
+  first: { name: "First" },
+  second: { name: "Second" },
+};
+function TreeExample({ isDisabled = false }: ITreeExampleProps): ReactElement {
+  const [result, setResult] = useState("Waiting");
+  const tree = useTree<ITreeData>({
+    rootItemId: "root",
+    getItemName: (item) => item.getItemData().name,
+    isItemFolder: (item) => Boolean(item.getItemData().children),
+    dataLoader: { getItem: (id) => treeItems[id]!, getChildren: (id) => treeItems[id]?.children ?? [] },
+    canReorder: true,
+    canDrag: () => !isDisabled,
+    onDrop: (items, target) =>
+      setResult(
+        JSON.stringify({
+          ids: items.map((item) => item.getId()),
+          parent: target.item.getId(),
+          before: isOrderedDragTarget(target) ? target.childIndex : null,
+        }),
+      ),
+    features: [
+      syncDataLoaderFeature,
+      hotkeysCoreFeature,
+      selectionFeature,
+      dragAndDropFeature,
+      keyboardDragAndDropFeature,
+    ],
+  });
+  return (
+    <>
+      <Tree tree={tree} label="Reorder files" />
+      <AssistiveTreeDescription tree={tree} />
+      <output aria-label="Tree drop">{result}</output>
+    </>
+  );
+}
+
+test("tree drops into a folder and reorders before and after siblings", async () => {
+  const screen = await render(<TreeExample />);
+  const first = page.getByRole("treeitem", { name: "First" });
+  const second = page.getByRole("treeitem", { name: "Second" });
+  await first.dropTo(page.getByRole("treeitem", { name: "Folder" }));
+  await expect
+    .element(screen.getByRole("status", { name: "Tree drop" }))
+    .toHaveTextContent('{"ids":["first"],"parent":"folder","before":null}');
+  await second.dropTo(first, { targetPosition: { x: 30, y: 2 } });
+  await expect
+    .element(screen.getByRole("status", { name: "Tree drop" }))
+    .toHaveTextContent('{"ids":["second"],"parent":"root","before":1}');
+  await first.dropTo(second, { targetPosition: { x: 30, y: 26 } });
+  await expect
+    .element(screen.getByRole("status", { name: "Tree drop" }))
+    .toHaveTextContent('{"ids":["first"],"parent":"root","before":3}');
+});
+
+test("tree rejects disabled dragging", async () => {
+  const screen = await render(<TreeExample isDisabled />);
+  await page.getByRole("treeitem", { name: "First" }).dropTo(page.getByRole("treeitem", { name: "Folder" }));
+  await expect.element(screen.getByRole("status", { name: "Tree drop" })).toHaveTextContent("Waiting");
+});
+
+test("tree keyboard dragging can be cancelled and completed", async () => {
+  const screen = await render(<TreeExample />);
+  await page.getByRole("treeitem", { name: "Second" }).click();
+  await userEvent.keyboard("{Control>}{Shift>}d{/Shift}{/Control}");
+  await userEvent.keyboard("{ArrowUp}{Escape}");
+  await expect.element(screen.getByRole("status", { name: "Tree drop" })).toHaveTextContent("Waiting");
+  await userEvent.keyboard("{Control>}{Shift>}d{/Shift}{/Control}");
+  await userEvent.keyboard("{ArrowUp}{Enter}");
+  await expect.element(screen.getByRole("status", { name: "Tree drop" })).not.toHaveTextContent("Waiting");
+});
 
 test("requires a provider for drag and drop hooks", () => {
   function Probe(): ReactElement {
