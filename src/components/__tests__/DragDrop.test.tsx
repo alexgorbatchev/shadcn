@@ -1,5 +1,5 @@
 import { expect, test } from "vitest";
-import { page, userEvent } from "vitest/browser";
+import { commands, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 import { useState, type ReactElement } from "react";
 import { DragDropProvider } from "../DragDropProvider";
@@ -49,6 +49,7 @@ function TreeExample({ isDisabled = false, isComposed = false }: ITreeExamplePro
     isItemFolder: (item) => Boolean(item.getItemData().children),
     dataLoader: { getItem: (id) => treeItems[id]!, getChildren: (id) => treeItems[id]?.children ?? [] },
     canReorder: true,
+    indent: 20,
     canDrag: () => !isDisabled,
     onDrop: (items, target) =>
       setResult(
@@ -130,6 +131,17 @@ test("composed tree rows preserve native before/after drop geometry through menu
   await expect.element(first).toHaveFocus();
   await userEvent.keyboard("{ArrowDown}");
   await expect.element(second).toHaveFocus();
+});
+
+test("nested outdenting places the insertion line after the complete subtree", async () => {
+  const screen = await render(<TreeExample />);
+  await page.getByRole("treeitem", { name: "Folder" }).click();
+  const geometry = await commands.treeDropGeometry("Second", "Child", "First");
+  expect(geometry.lineCenter).toBeCloseTo(geometry.expectedTop, 0);
+  expect(geometry.lineLeft).toBeCloseTo(geometry.expectedLeft, 0);
+  await expect
+    .element(screen.getByRole("status", { name: "Tree drop" }))
+    .toHaveTextContent('{"ids":["second"],"parent":"root","before":1}');
 });
 
 test("tree rejects disabled dragging", async () => {

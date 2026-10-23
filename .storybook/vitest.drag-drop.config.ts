@@ -2,6 +2,7 @@ import { defineProject } from "vitest/config";
 import { playwright } from "@vitest/browser-playwright";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
+import { treeDropGeometry } from "./treeDropGeometry.ts";
 
 export default defineProject({
   root: process.cwd(),
@@ -29,6 +30,7 @@ export default defineProject({
       headless: true,
       screenshotDirectory: ".tmp/drag-drop-screenshots",
       provider: playwright(),
+      commands: { treeDropGeometry },
       instances: [{ browser: "chromium" }],
     },
   },

@@ -49,8 +49,6 @@ export function TreeItem<T>({
   const isExpanded = item.isExpanded();
   const isSelected = item.isSelected?.() ?? false;
   const isInsideTarget = item.isUnorderedDragTarget?.() ?? false;
-  const isAbove = item.isDragTargetAbove?.() ?? false;
-  const isBelow = item.isDragTargetBelow?.() ?? false;
   const toggle = (): void => {
     if (isExpanded) item.collapse();
     else item.expand();
@@ -103,7 +101,7 @@ export function TreeItem<T>({
               onDragStart: undefined,
             }
           : {}),
-        style: { paddingInlineStart: `${item.getItemMeta().level * 20 + 8}px` },
+        style: { paddingInlineStart: `${item.getItemMeta().level * (item.getTree().getConfig().indent ?? 20) + 8}px` },
         className: cn(
           "relative flex min-h-control min-w-0 cursor-default items-center gap-2 rounded-sm py-1 pr-2 text-sm outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring",
           (isSelected || isDropTarget || isInsideTarget) && "bg-accent text-accent-foreground",
@@ -128,12 +126,6 @@ export function TreeItem<T>({
               >
                 {endEnhancer}
               </div>
-            )}
-            {isAbove && (
-              <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-0.5 bg-primary" />
-            )}
-            {isBelow && (
-              <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-0.5 bg-primary" />
             )}
           </>
         ),

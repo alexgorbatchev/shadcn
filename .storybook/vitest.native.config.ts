@@ -7,6 +7,7 @@ import { nativeScrub } from "./nativeScrub.ts";
 import { nativeSwipe } from "./nativeSwipe.ts";
 import { nativeWheel } from "./nativeWheel.ts";
 import { beginResourceRequests, endResourceRequests } from "./nativeResourceRequests.js";
+import { treeDropGeometry } from "./treeDropGeometry.ts";
 
 export default defineConfig({
   cacheDir: ".cache/storybook/native-tests",
@@ -59,6 +60,7 @@ export default defineConfig({
       headless: true,
       screenshotDirectory: ".tmp/native-browser-screenshots",
       commands: {
+        treeDropGeometry,
         emulateForcedColors,
         nativeScrub,
         nativeSwipe,

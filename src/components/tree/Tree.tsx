@@ -24,6 +24,8 @@ function Tree<T>({
   density,
 }: TreeProps<T>): ReactElement {
   const container = tree.getContainerProps(label);
+  const dragLine = tree.getDragLineData?.();
+  const element = tree.getElement();
   return (
     <div
       {...container}
@@ -45,6 +47,14 @@ function Tree<T>({
             {renderLabel?.(item)}
           </TreeItem>
         ),
+      )}
+      {dragLine && (
+        <span
+          data-slot="tree-drop-indicator"
+          aria-hidden="true"
+          className="pointer-events-none absolute h-0.5 bg-primary"
+          style={tree.getDragLineStyle(-1 - (element?.clientTop ?? 0), -(element?.clientLeft ?? 0))}
+        />
       )}
     </div>
   );
