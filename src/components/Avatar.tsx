@@ -5,7 +5,7 @@ import { Avatar as AvatarPrimitive } from "@base-ui/react/avatar";
 import { cn } from "../utils/cn.js";
 
 type AvatarProps = AvatarPrimitive.Root.Props & {
-  size?: "default" | "sm" | "lg" | "preview";
+  size?: "default" | "sm" | "lg" | "preview" | "full";
   shape?: "circle" | "square";
 } & IDensityProps;
 
@@ -21,6 +21,7 @@ function Avatar({ density, className, size = "default", shape = "circle", ...pro
           "group/avatar relative flex size-8 shrink-0 rounded-full select-none after:absolute after:inset-0 after:rounded-full after:border after:border-border  data-[size=lg]:size-10 data-[size=sm]:size-6 ",
           "data-[shape=square]:rounded-none data-[shape=square]:after:rounded-none",
           "data-[size=preview]:size-64",
+          "data-[size=full]:aspect-square data-[size=full]:h-auto data-[size=full]:w-full",
           typeof className === "function" ? className(state) : className,
         )
       }

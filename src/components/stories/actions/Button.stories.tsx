@@ -13,7 +13,7 @@ const meta: Meta<typeof Button> = {
   argTypes: {
     variant: {
       control: "select",
-      options: ["default", "outline", "secondary", "ghost", "destructive", "success", "warning", "link"],
+      options: ["default", "outline", "secondary", "ghost", "destructive", "success", "warning", "link", "pad"],
     },
     size: {
       control: "select",
@@ -56,6 +56,20 @@ export const Destructive: Story = { tags: ["visual"], ...Default, args: { varian
 export const Success: Story = { ...Default, args: { variant: "success" } };
 export const Warning: Story = { ...Default, args: { variant: "warning" } };
 export const Link: Story = { ...Default, args: { variant: "link" } };
+export const Pad: Story = { ...Default, tags: ["visual"], args: { variant: "pad", size: "content" } };
+export const DisabledPad: Story = {
+  tags: ["visual"],
+  args: { variant: "pad", size: "content", disabled: true },
+  play: async ({ canvasElement, args, userEvent }) => {
+    const button = within(canvasElement).getByRole("button");
+    await expect(button).toBeDisabled();
+    await expect(getComputedStyle(button).borderTopStyle).toBe("solid");
+    await expect(getComputedStyle(button).backgroundColor).not.toBe("rgba(0, 0, 0, 0)");
+    await userEvent.tab();
+    await expect(button).not.toHaveFocus();
+    await expect(args.onClick).not.toHaveBeenCalled();
+  },
+};
 export const Disabled: Story = {
   tags: ["visual"],
   args: { disabled: true },

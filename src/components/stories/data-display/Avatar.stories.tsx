@@ -23,7 +23,7 @@ const meta: Meta<AvatarStoryProps> = {
   title: "@alexgorbatchev/shadcn/components/data-display/Avatar",
   component: Avatar,
   tags: ["autodocs", "test"],
-  argTypes: { size: { control: "select", options: ["default", "sm", "lg", "preview"] } },
+  argTypes: { size: { control: "select", options: ["default", "sm", "lg", "preview", "full"] } },
   render: ({ imageClassName, imageRef, fallbackClassName, fallbackRef, ...args }) => (
     <Avatar {...args}>
       <AvatarImage src={fixture_avatarImage} alt="Alex" className={imageClassName} ref={imageRef} />
@@ -55,6 +55,23 @@ export const Image: Story = {
 };
 export const Small: Story = { ...Image, args: { size: "sm" } };
 export const Large: Story = { ...Image, args: { size: "lg" } };
+export const FullWidth: Story = {
+  args: { size: "full", shape: "square" },
+  decorators: [
+    (Story) => (
+      <div data-testid="Avatar--container" className="w-52">
+        <Story />
+      </div>
+    ),
+  ],
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const image = await canvas.findByRole("img", { name: "Alex" });
+    const container = canvas.getByTestId("Avatar--container");
+    await expect(image.getBoundingClientRect().width).toBe(container.getBoundingClientRect().width);
+    await expect(image.getBoundingClientRect().height).toBe(image.getBoundingClientRect().width);
+  },
+};
 export const Square: Story = {
   args: { shape: "square" },
   play: async ({ canvasElement }) => {
