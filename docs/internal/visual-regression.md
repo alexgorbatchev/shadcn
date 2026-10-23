@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-14 06:43
-last_modified: 2026-10-21 16:17
+last_modified: 2026-10-23 00:42
 status: current
 ---
 
@@ -32,6 +32,6 @@ Missing baselines fail CI. Update mode is never used by CI, so an unexpected cha
 
 ## Automation
 
-`.github/workflows/visual-regression.yml` checks pull requests and pushes to `main`. The npm release workflow calls the same workflow and requires it to pass before publishing. Failed runs upload `visual-regression-failures` artifacts for 14 days. These checks do not publish Storybook or npm packages; publishing remains restricted to published GitHub Releases.
+`.github/workflows/visual-regression.yml` checks pull requests and pushes to `main`. The npm release workflow calls the same workflow and requires it to pass before publishing. The workflow generates the LLM documentation assets before starting the Storybook test server. Failed runs upload `visual-regression-failures` artifacts for 14 days. These checks do not publish Storybook or npm packages; publishing remains restricted to published GitHub Releases.
 
 Visual checks complement the existing browser, package rendering, contrast, and coverage suites. They are separate from `just check` and do not establish full catalog visual coverage.
