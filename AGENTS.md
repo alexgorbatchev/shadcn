@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-08 06:13
-last_modified: 2026-10-23 00:57
+last_modified: 2026-10-23 03:42
 status: current
 ---
 
@@ -29,7 +29,7 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 ## Development Setup
 
 - Run commands from this standalone repository, not from the sibling devhost checkout. Use Bun 1.4.2 as declared in `package.json`; `just` is required for the validation and packaging recipes.
-- Unused-code analysis uses the native ts-unused Node CLI, validated with Node 24 and 26, with a 12 GiB V8 old-space budget. The default Node heap is insufficient for this catalog; forcing the analyzer through Bun substantially increases its memory use. Package mode and all default rules remain enabled, including native Storybook handling.
+- Unused-code analysis uses the native ts-unused Node CLI with the default Node heap, validated with Node 24 and 26. Keep the Node runtime; do not force the analyzer through Bun. Package mode and all default rules remain enabled, including native Storybook handling.
 - Keep the single repository `bun.lock` in sync with manifest changes. Package verification and `just check` require npm and Playwright Chromium. On a fresh Linux host, run `bun x --bun playwright install --with-deps chromium` before validation; installing dependencies alone does not install the browser. Each release job installs its own browser because GitHub jobs have separate filesystems.
 - For routed preview prerequisites and hostname configuration, see [README.md](./README.md#devhost-preview). The direct Storybook preview needs no devhost service.
 - `llms.txt`, `dist/`, `llms/`, `storybook-static/`, `.cache/`, and `.tmp/` are generated or transient outputs. Edit their source files and regenerate them; keep those outputs untracked.
