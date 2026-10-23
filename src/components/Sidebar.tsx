@@ -139,6 +139,7 @@ function Sidebar({
         ref={ref}
         data-density={resolvedDensity}
         data-slot="sidebar"
+        data-layout-boundary=""
         dir={direction}
         style={style}
         className={cn("flex h-full w-(--sidebar-width) flex-col bg-sidebar text-sidebar-foreground", className)}
@@ -158,6 +159,7 @@ function Sidebar({
           data-sidebar="sidebar"
           data-slot="sidebar"
           data-mobile="true"
+          data-layout-boundary=""
           style={mobileStyle}
           side={side}
           className={cn(
@@ -216,6 +218,7 @@ function Sidebar({
           <div
             data-sidebar="sidebar"
             data-slot="sidebar-inner"
+            data-layout-boundary=""
             className="flex size-full flex-col bg-sidebar group-data-[variant=floating]:rounded-sm group-data-[variant=floating]:shadow-frame group-data-[variant=floating]:ring-1 group-data-[variant=floating]:ring-frame-edge"
           >
             {children}
@@ -270,6 +273,7 @@ function SidebarRail({
       data-density={density}
       data-sidebar="rail"
       data-slot="sidebar-rail"
+      data-layout-exclude="Resize rail intentionally straddles the sidebar edge"
       aria-label="Toggle Sidebar"
       aria-expanded={isMobile ? openMobile : open}
       tabIndex={-1}
@@ -327,7 +331,10 @@ function SidebarHeader({ density, className, ...props }: ComponentProps<"div"> &
       data-density={density}
       data-slot="sidebar-header"
       data-sidebar="header"
-      className={cn("flex flex-col gap-control-gap p-panel", className)}
+      className={cn(
+        "flex flex-col gap-control-gap p-panel group-data-[collapsible=icon]:px-[calc((var(--sidebar-width-icon)-var(--ag-control-h)-1px)/2)]",
+        className,
+      )}
       {...props}
     />
   );
@@ -339,7 +346,10 @@ function SidebarFooter({ density, className, ...props }: ComponentProps<"div"> &
       data-density={density}
       data-slot="sidebar-footer"
       data-sidebar="footer"
-      className={cn("flex flex-col gap-control-gap p-panel", className)}
+      className={cn(
+        "flex flex-col gap-control-gap p-panel group-data-[collapsible=icon]:px-[calc((var(--sidebar-width-icon)-var(--ag-control-h)-1px)/2)]",
+        className,
+      )}
       {...props}
     />
   );

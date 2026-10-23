@@ -1,3 +1,4 @@
+import { LayoutGuard } from "./LayoutGuard.js";
 import { useMemo, type ReactElement, type ReactNode } from "react";
 import { useIsomorphicLayoutEffect, useTernaryDarkMode } from "usehooks-ts";
 import { ThemeContext } from "../theme/ThemeContext.js";
@@ -53,6 +54,7 @@ function ThemePalette({
   return (
     <ThemeContext.Provider value={value}>
       <ScrollGuard />
+      <LayoutGuard />
       {children}
     </ThemeContext.Provider>
   );

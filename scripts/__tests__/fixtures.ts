@@ -3,13 +3,17 @@ import manifest from "../../package.json";
 export const fixture_scrollGuardBrowserSource: string = `
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { ScrollGuard, ThemeProvider } from "@alexgorbatchev/shadcn";
+import { LayoutGuard, ScrollGuard, ThemeProvider } from "@alexgorbatchev/shadcn";
 
 const root = createRoot(document.getElementById("root"));
 root.render(
   <StrictMode>
     <ThemeProvider forcedTheme="dark" controlledTheme={{ theme: "dark", setTheme: () => {} }}>
       <ScrollGuard />
+      <LayoutGuard />
+      <div id="layout-boundary" data-layout-boundary="" style={{ width: 100, height: 100 }}>
+        <div id="escaped" style={{ width: 150, height: 50 }} />
+      </div>
       <div id="guarded" data-scroll="none" style={{ width: 100, height: 100, overflow: "auto" }}>
         <div style={{ width: 50, height: 300 }}>Overflowing content</div>
       </div>

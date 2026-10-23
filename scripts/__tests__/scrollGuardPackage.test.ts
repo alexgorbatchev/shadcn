@@ -40,11 +40,12 @@ test.each([
     [
       '[shadcn] Scrolling is forbidden by data-scroll="none": <div id="guarded"> (vertical: 300px > 100px). ' +
         "Move scrolling content into a nested ScrollArea or another explicit scroll viewport.",
+      "[shadcn] Layout containment: div#escaped exceeds div#layout-boundary right edge by 50px",
     ],
   ],
   ["production", []],
 ])(
-  "packed ScrollGuard respects the consuming application's %s mode",
+  "packed document guards respect the consuming application's %s mode",
   async (mode, expected) => {
     const build = await Bun.build({
       entrypoints: [`${consumerRoot}/consumer.tsx`],
@@ -86,7 +87,7 @@ test.each([
       });
       await page.addScriptTag({ content: await output.text() });
       await page.waitForFunction(() => document.body.dataset.checked === "true");
-      expect(errors).toEqual(expected);
+      expect(errors.toSorted()).toEqual(expected.toSorted());
       expect(
         messages.filter((message) => ["error", "warning"].includes(message.type())).map((message) => message.text()),
       ).toEqual([]);

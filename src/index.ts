@@ -434,3 +434,8 @@ export { BillingUsage } from "./components/BillingUsage.js";
 export type { BillingUsageProps, UsageMetric } from "./components/BillingUsage.js";
 
 export type { ILabelValue } from "./options/types.js";
+
+export { LayoutGuard } from "./components/LayoutGuard.js";
+export type { ILayoutGuardProps } from "./components/LayoutGuard.js";
+export { collectLayoutViolations } from "./utils/collectLayoutViolations.js";
+export type { ILayoutViolation } from "./utils/collectLayoutViolations.js";

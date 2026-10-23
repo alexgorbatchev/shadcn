@@ -1,9 +1,11 @@
+import { assertSidebarLayoutCycle } from "./helpers";
+import { assertLayoutContained } from "../../../../.storybook/assertLayoutContained";
 import type { Input } from "@base-ui/react/input";
 import type { ComponentProps, ReactElement } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useRef, useState } from "react";
 import { expect, fn, waitFor, within } from "storybook/test";
-import { FileIcon, HomeIcon, PlusIcon } from "lucide-react";
+import { FileIcon, HomeIcon, PlusIcon, SettingsIcon } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -62,7 +64,14 @@ function Layout(args: LayoutProps): ReactElement {
     <>
       <Sidebar aria-label="Project navigation" {...args}>
         <SidebarHeader>
-          <span>Workspace</span>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton tooltip="Workspace">
+                <HomeIcon aria-hidden />
+                <span>Workspace</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
           <SidebarInput aria-label="Search projects" />
         </SidebarHeader>
         <SidebarSeparator />
@@ -113,7 +122,10 @@ function Layout(args: LayoutProps): ReactElement {
         <SidebarFooter>
           <SidebarMenu>
             <SidebarMenuItem>
-              <SidebarMenuButton>Settings</SidebarMenuButton>
+              <SidebarMenuButton tooltip="Settings">
+                <SettingsIcon aria-hidden />
+                <span>Settings</span>
+              </SidebarMenuButton>
             </SidebarMenuItem>
           </SidebarMenu>
         </SidebarFooter>
@@ -129,6 +141,7 @@ function Layout(args: LayoutProps): ReactElement {
 const meta: Meta<typeof Sidebar> = {
   title: "@alexgorbatchev/shadcn/components/navigation/Sidebar",
   component: Sidebar,
+  afterEach: async ({ canvasElement }) => assertSidebarLayoutCycle(canvasElement),
   tags: ["autodocs", "test"],
   args: { collapsible: "icon" },
   render: (args) => (
@@ -140,12 +153,12 @@ const meta: Meta<typeof Sidebar> = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-function WorkspaceLayout(): ReactElement {
+function WorkspaceLayout(args: LayoutProps): ReactElement {
   const [workspace, setWorkspace] = useState("Design workspace");
   const [account, setAccount] = useState("Account ready");
   return (
     <SidebarProvider>
-      <Sidebar aria-label="Workspace navigation" collapsible="icon">
+      <Sidebar aria-label="Workspace navigation" collapsible="icon" {...args}>
         <SidebarHeader>
           <SidebarMenu>
             <SidebarMenuItem>
@@ -174,7 +187,10 @@ function WorkspaceLayout(): ReactElement {
             <SidebarGroupContent>
               <SidebarMenu>
                 <SidebarMenuItem>
-                  <SidebarMenuButton render={<a href="#workspace-project" />}>Current project</SidebarMenuButton>
+                  <SidebarMenuButton render={<a href="#workspace-project" />}>
+                    <FileIcon aria-hidden />
+                    <span>Current project</span>
+                  </SidebarMenuButton>
                 </SidebarMenuItem>
               </SidebarMenu>
             </SidebarGroupContent>
@@ -207,7 +223,7 @@ function WorkspaceLayout(): ReactElement {
   );
 }
 export const WorkspaceMenus: Story = {
-  render: () => <WorkspaceLayout />,
+  render: (args) => <WorkspaceLayout {...args} />,
   play: async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);
     const body = within(canvasElement.ownerDocument.body);
@@ -229,6 +245,7 @@ export const WorkspaceMenus: Story = {
     await waitFor(() => expect(workspace).toHaveFocus());
     await userEvent.click(canvas.getByRole("button", { name: "Toggle Sidebar" }));
     await expect(canvas.getByRole("button", { name: "Toggle Sidebar" })).toHaveAttribute("aria-expanded", "false");
+    await assertLayoutContained(canvasElement);
     const account = canvas.getByRole("button", { name: "Account actions" });
     account.focus();
     await userEvent.keyboard("{Enter}");
@@ -263,7 +280,8 @@ function RenderContracts(): ReactElement {
                   tooltip="Custom destination"
                   render={(props, state) => (
                     <a {...props} ref={linkRef} href="#custom" aria-current={state.active ? "page" : undefined}>
-                      Custom destination
+                      <HomeIcon aria-hidden />
+                      <span>Custom destination</span>
                     </a>
                   )}
                 />
@@ -313,8 +331,10 @@ export const NativeRenderContracts: Story = {
     await expect(canvas.getByRole("status", { name: "Action result" })).toHaveTextContent("Menu selected");
     await userEvent.click(canvas.getByRole("button", { name: "Toggle Sidebar" }));
     await expect(canvas.getByRole("button", { name: "Toggle Sidebar" })).toHaveAttribute("aria-expanded", "false");
+    await assertLayoutContained(canvasElement);
     await userEvent.click(canvas.getByRole("button", { name: "Cancelled rail" }));
     await expect(canvas.getByRole("button", { name: "Cancelled rail" })).toHaveAttribute("aria-expanded", "false");
+    await assertLayoutContained(canvasElement);
   },
 };
 
@@ -327,6 +347,7 @@ export const IconCollapse: Story = {
     const expandedWidth = panel.getBoundingClientRect().width;
     await userEvent.click(trigger);
     await expect(trigger).toHaveAttribute("aria-expanded", "false");
+    await assertLayoutContained(canvasElement);
     await waitFor(() => expect(panel.getBoundingClientRect().width).toBeLessThan(expandedWidth));
     await expect(canvas.getByRole("link", { name: "Home" })).toHaveAttribute("aria-current", "page");
     await waitFor(() => {
@@ -402,6 +423,7 @@ export const KeyboardShortcut: Story = {
     await userEvent.click(canvas.getByRole("textbox", { name: "Search projects" }));
     await userEvent.keyboard("{Control>}b{/Control}");
     await expect(canvas.getByRole("button", { name: "Toggle Sidebar" })).toHaveAttribute("aria-expanded", "false");
+    await assertLayoutContained(canvasElement);
     canvas.getByRole("button", { name: "Toggle Sidebar" }).focus();
     await userEvent.keyboard("{Meta>}b{/Meta}");
     await expect(canvas.getByRole("button", { name: "Toggle Sidebar" })).toHaveAttribute("aria-expanded", "true");
@@ -422,10 +444,12 @@ export const Controlled: Story = {
   play: async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole("button", { name: "Toggle Sidebar" })).toHaveAttribute("aria-expanded", "false");
+    await assertLayoutContained(canvasElement);
     await userEvent.click(canvas.getByRole("button", { name: "Toggle Sidebar" }));
     await expect(canvas.getByRole("button", { name: "Toggle Sidebar" })).toHaveAttribute("aria-expanded", "true");
     await userEvent.click(canvas.getByRole("button", { name: "Collapse desktop" }));
     await expect(canvas.getByRole("button", { name: "Toggle Sidebar" })).toHaveAttribute("aria-expanded", "false");
+    await assertLayoutContained(canvasElement);
   },
 };
 
@@ -439,6 +463,7 @@ export const ObserverCallback: Story = {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole("button", { name: "Toggle Sidebar" }));
     await expect(canvas.getByRole("button", { name: "Toggle Sidebar" })).toHaveAttribute("aria-expanded", "false");
+    await assertLayoutContained(canvasElement);
     await userEvent.click(canvas.getByRole("button", { name: "Toggle Sidebar" }));
     await expect(canvas.getByRole("button", { name: "Toggle Sidebar" })).toHaveAttribute("aria-expanded", "true");
   },
@@ -579,7 +604,16 @@ export const Loading: Story = {
   render: (args) => (
     <SidebarProvider>
       <Sidebar {...args} aria-label="Loading projects">
-        <SidebarHeader>Loading projects</SidebarHeader>
+        <SidebarHeader>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton disabled>
+                <HomeIcon aria-hidden />
+                <span>Loading projects</span>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarHeader>
         <SidebarContent>
           <SidebarMenu>
             <SidebarMenuItem>
@@ -603,6 +637,7 @@ export const Loading: Story = {
     await expect(indicator.getBoundingClientRect().height).toBeGreaterThan(0);
     await userEvent.click(canvas.getByRole("button", { name: "Toggle Sidebar" }));
     await expect(canvas.getByRole("button", { name: "Toggle Sidebar" })).toHaveAttribute("aria-expanded", "false");
+    await assertLayoutContained(canvasElement);
   },
 };
 
@@ -618,7 +653,10 @@ export const CollapsibleGroup: Story = {
                 <SidebarGroupContent>
                   <SidebarMenu>
                     <SidebarMenuItem>
-                      <SidebarMenuButton render={<a href="#folder" />}>Folder link</SidebarMenuButton>
+                      <SidebarMenuButton render={<a href="#folder" />}>
+                        <FileIcon aria-hidden />
+                        <span>Folder link</span>
+                      </SidebarMenuButton>
                     </SidebarMenuItem>
                   </SidebarMenu>
                 </SidebarGroupContent>
@@ -735,15 +773,20 @@ export const InstanceIsolation: Story = {
     await userEvent.click(canvas.getByRole("textbox", { name: "First search" }));
     await userEvent.keyboard("{Control>}b{/Control}");
     await expect(canvas.getByRole("button", { name: "First toggle" })).toHaveAttribute("aria-expanded", "false");
+    await assertLayoutContained(canvasElement);
     await expect(canvas.getByRole("button", { name: "Second toggle" })).toHaveAttribute("aria-expanded", "true");
     await userEvent.click(canvas.getByRole("textbox", { name: "Second search" }));
     await userEvent.keyboard("{Control>}b{/Control}");
     await expect(canvas.getByRole("button", { name: "First toggle" })).toHaveAttribute("aria-expanded", "false");
+    await assertLayoutContained(canvasElement);
     await expect(canvas.getByRole("button", { name: "Second toggle" })).toHaveAttribute("aria-expanded", "false");
+    await assertLayoutContained(canvasElement);
     await userEvent.click(canvas.getByRole("button", { name: "Host control" }));
     await userEvent.keyboard("{Control>}b{/Control}");
     await expect(canvas.getByRole("button", { name: "First toggle" })).toHaveAttribute("aria-expanded", "false");
+    await assertLayoutContained(canvasElement);
     await expect(canvas.getByRole("button", { name: "Second toggle" })).toHaveAttribute("aria-expanded", "false");
+    await assertLayoutContained(canvasElement);
   },
 };
 export const OwnerPersistence: Story = {
@@ -754,9 +797,28 @@ export const OwnerPersistence: Story = {
     try {
       await userEvent.click(canvas.getByRole("button", { name: "Toggle Sidebar" }));
       await expect(canvas.getByRole("button", { name: "Toggle Sidebar" })).toHaveAttribute("aria-expanded", "false");
+      await assertLayoutContained(canvasElement);
       await expect(document.cookie.split("; ")).toContain("sidebar_state=host-owned");
     } finally {
       document.cookie = "sidebar_state=; max-age=0; path=/";
     }
   },
+};
+
+export const WorkspaceMenusCompactRight: Story = {
+  ...WorkspaceMenus,
+  args: { side: "right" },
+  globals: { density: "compact", theme: "light" },
+};
+
+export const RightCompactDensity: Story = {
+  ...IconCollapse,
+  args: { side: "right" },
+  globals: { density: "compact", theme: "light" },
+};
+
+export const RightComfortableDensity: Story = {
+  ...IconCollapse,
+  args: { side: "right" },
+  globals: { density: "comfortable", theme: "light" },
 };

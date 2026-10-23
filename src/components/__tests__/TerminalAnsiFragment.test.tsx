@@ -41,6 +41,7 @@ test("remeasures ANSI contrast after the actual theme commits", async () => {
 
 test("disconnects native theme observers when terminal fragments unmount", () => {
   const disconnect = vi.spyOn(MutationObserver.prototype, "disconnect");
+  const observe = vi.spyOn(MutationObserver.prototype, "observe");
   const fixture = render(
     <ThemeProvider forcedTheme="dark">
       <TerminalBlock command="review" variant="ink" lines={["\u001b[31mred\u001b[0m"]} visibleCount={1} done />
@@ -54,7 +55,7 @@ test("disconnects native theme observers when terminal fragments unmount", () =>
   );
   expect(disconnect).toHaveBeenCalledOnce();
   fixture.unmount();
-  expect(disconnect).toHaveBeenCalledTimes(2);
+  expect(new Set(disconnect.mock.contexts)).toEqual(new Set(observe.mock.contexts));
 });
 
 test("renders ANSI emphasis, reverse colors, concealed text and background-only runs", async () => {
