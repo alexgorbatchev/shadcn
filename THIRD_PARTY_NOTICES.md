@@ -157,3 +157,61 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+## ReUI public component examples
+
+DataGrid, FilterBar, Stepper, FileUpload, Tree, Kanban and planning compositions use the reviewed public MIT registry as a reference. Local integrations use TanStack Table v9, Base UI Tabs, react-dropzone, Headless Tree, React Big Calendar and the package's drag/drop contracts. Styling, native callbacks, keyboard alternatives and behavioral tests are package-owned. Premium blocks, icons and templates are excluded.
+
+Reviewed source: https://github.com/keenthemes/reui/tree/067aa0dc7f8bbfec1cd76fc5ad31f842be5f569a
+
+MIT License
+
+Copyright (c) 2025 Keenthemes Inc
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+## Kibo UI examples
+
+RichTextEditor, FileUpload, ImageCrop, ColorPicker, TagInput, EventForm and Roadmap adapt the reviewed MIT composition patterns with native engine APIs and this package's theme. Local implementations preserve Tiptap ownership, native file validation, crop helpers, color conversion and shared roadmap state. The reviewed color-state conversion and image-size retry defects are not copied.
+
+Reviewed source: https://github.com/shadcnblocks/kibo/tree/3d63cdb15b79d972e3dc38a10997987672f9b263
+
+Copyright (c) 2023 — Present shadcnblocks
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+## Tremor Blocks
+
+StatCard, DashboardLayout, BillingUsage and SettingsSection follow the reviewed MIT dashboard, KPI, billing and form composition patterns. Local versions use semantic tokens, package primitives, consumer callbacks and behavioral stories. BarList, StatusTracker and chart compositions use package Meter/Tooltip and native Recharts; no Tremor Apache-2.0 runtime source is bundled by these additions.
+
+Reviewed source: https://github.com/tremorlabs/tremor-blocks/tree/b319e8d3d3678a4f60f4802f7e85bc1abc52d598
+
+The MIT License (MIT)
+
+Copyright (c) 2025 Tremor Labs, Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+## coss ui MIT registry reference
+
+NumberField, Toolbar, Meter and date-picker compositions consult the MIT registry under apps/ui at https://github.com/cosscom/ui/tree/3d8ca28e7d90123e9e0f44665944dc240b026ccb/apps/ui. The repository's LICENSING.md designates apps/ui and apps/origin as MIT; its default AGPL license does not apply to these directories. These package implementations use native Base UI primitives and existing Calendar/Popover presentation. No AGPL packages/ui implementation or tests are incorporated.
+
+## Mantine UI design reference
+
+The MIT examples at https://github.com/mantinedev/ui.mantine.dev/tree/966b0ff96011c3373a0a76ffd09c3150c4eb6047 inform responsive layout, authentication, account and statistic variants. Overlapping patterns are consolidated into this package's own compositions; no Mantine runtime, stylesheet or test helper is bundled.
+
+## Optional feature engines
+
+The optional feature imports use external, separately installed react-dropzone 20.1.4 (MIT), react-colorful 5.8.1 (MIT), react-image-crop 11.1.2 (ISC), Headless Tree 1.8.0 (MIT), Tiptap 3.32.0 (MIT), React Big Calendar 1.20.0 (MIT), date-fns 4.4.0 (MIT), and @date-fns/tz 1.5.0 (MIT). Their distributions retain their own license files. No third-party engine source is bundled into the package archive by these integrations. EventCalendar's companion stylesheet imports the externally installed React Big Calendar structural stylesheet and applies local semantic-token presentation.

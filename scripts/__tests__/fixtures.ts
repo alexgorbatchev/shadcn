@@ -212,6 +212,14 @@ export const fixture_optionalPeerNames: readonly string[] = Object.entries(manif
   .map(([name]) => name);
 
 export const fixture_featureTypeExports: Record<string, string> = {
+  "file-upload": "FileUpload, type FileUploadProps",
+  "color-picker": "ColorPicker, type ColorPickerProps",
+  "image-crop": "ImageCrop, cropToCanvas, type Crop",
+  editor: "RichTextEditor, useEditor, StarterKit, type Editor",
+  tree: "Tree, useTree, type TreeConfig",
+  "data-grid": "DataGrid, dataGridFeatures, type DataGridTable",
+  "event-calendar": "EventCalendar, EventForm, type EventDraft",
+  gantt: "Gantt, Roadmap, type GanttTask",
   core: "Button",
   "assistant-ui": "ApprovalCard, type IApprovalCardProps",
   chart: "ChartContainer, ChartStyle, useChart, type ChartConfig",
@@ -235,6 +243,54 @@ export const fixture_featureTypePaths: Record<string, string> = {
 };
 
 export const fixture_featureConsumers: ReadonlyArray<readonly [string, readonly string[], string, string]> = [
+  [
+    "file-upload",
+    ["react-dropzone"],
+    'import { renderToString } from "react-dom/server"; import { FileUpload } from "@alexgorbatchev/shadcn/file-upload"; const markup=renderToString(<FileUpload label="Attachments"/>); console.log(markup.includes(\'type="file"\') && markup.includes("Choose files"));',
+    "true",
+  ],
+  [
+    "color-picker",
+    ["react-colorful"],
+    'import { renderToString } from "react-dom/server"; import { ColorPicker } from "@alexgorbatchev/shadcn/color-picker"; const markup=renderToString(<ColorPicker label="Accent" defaultValue="#123456"/>); console.log(markup.includes(\'value="#123456"\') && markup.includes("Accent hex"));',
+    "true",
+  ],
+  [
+    "image-crop",
+    ["react-image-crop"],
+    'import { renderToString } from "react-dom/server"; import { ImageCrop } from "@alexgorbatchev/shadcn/image-crop"; const markup=renderToString(<ImageCrop crop={{unit:"px",x:10,y:10,width:30,height:30}} onChange={()=>{}}><img src="data:," alt="Crop source"/></ImageCrop>); console.log(markup.includes("Crop source") && markup.includes("ReactCrop"));',
+    "true",
+  ],
+  [
+    "editor",
+    ["@tiptap/core", "@tiptap/react", "@tiptap/pm", "@tiptap/starter-kit"],
+    'import { renderToString } from "react-dom/server"; import { RichTextEditor } from "@alexgorbatchev/shadcn/editor"; const markup=renderToString(<RichTextEditor label="Description" editor={null}/>); console.log(markup.includes("Description formatting") && markup.includes(\'aria-label="Bold"\'));',
+    "true",
+  ],
+  [
+    "tree",
+    ["@headless-tree/core", "@headless-tree/react"],
+    'import { renderToString } from "react-dom/server"; import { Tree,useTree,syncDataLoaderFeature,hotkeysCoreFeature } from "@alexgorbatchev/shadcn/tree"; function Example(){const tree=useTree({rootItemId:"root",getItemName:item=>item.getItemData(),isItemFolder:()=>false,dataLoader:{getItem:id=>id,getChildren:()=>["File"]},features:[syncDataLoaderFeature,hotkeysCoreFeature]});return <Tree tree={tree} label="Files"/>;} const markup=renderToString(<Example/>); console.log(markup.includes(\'role="tree"\') && markup.includes(\'aria-label="Files"\'));',
+    "true",
+  ],
+  [
+    "data-grid",
+    ["@tanstack/react-table"],
+    'import { renderToString } from "react-dom/server"; import { useTable,createColumnHelper } from "@tanstack/react-table"; import { DataGrid,dataGridFeatures } from "@alexgorbatchev/shadcn/data-grid"; const helper=createColumnHelper<typeof dataGridFeatures,{name:string}>(); const columns=helper.columns([helper.accessor("name",{header:"Name"})]); function Example(){const table=useTable({features:dataGridFeatures,data:[{name:"Alex"}],columns});return <DataGrid table={table} label="People"/>;} const markup=renderToString(<Example/>); let status="";await new HTMLRewriter().on("[role=status]",{text(chunk){status+=chunk.text;}}).transform(new Response(markup)).text();console.log(markup.includes("Alex") && status.includes("Page 1 of 1"));',
+    "true",
+  ],
+  [
+    "event-calendar",
+    ["react-big-calendar", "@types/react-big-calendar", "date-fns"],
+    'import { renderToString } from "react-dom/server"; import { EventCalendar } from "@alexgorbatchev/shadcn/event-calendar"; const markup=renderToString(<EventCalendar label="Team schedule" defaultDate={new Date(2026,9,22)} events={[]}/>); console.log(markup.includes("October 2026") && markup.includes("Team schedule"));',
+    "true",
+  ],
+  [
+    "gantt",
+    ["date-fns", "@date-fns/tz"],
+    'import { renderToString } from "react-dom/server"; import { Gantt } from "@alexgorbatchev/shadcn/gantt"; const markup=renderToString(<Gantt label="Plan" tasks={[{id:"a",title:"Design",start:new Date(2026,9,20),end:new Date(2026,9,23)}]} startDate={new Date(2026,9,20)} days={7} timeZone="UTC" onTaskSelect={()=>{}}/>); console.log(markup.includes("Design") && markup.includes("Timeline zoom"));',
+    "true",
+  ],
   [
     "virtual-table",
     ["@tanstack/react-virtual"],

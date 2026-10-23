@@ -383,3 +383,54 @@ export { PortalProvider } from "./components/PortalProvider.js";
 export type { IPortalProviderProps } from "./components/PortalProvider.js";
 export { usePortalContainer } from "./hooks/usePortalContainer.js";
 export type { PortalContainer } from "./portal/types.js";
+
+export {
+  NumberField,
+  NumberFieldGroup,
+  NumberFieldInput,
+  NumberFieldDecrement,
+  NumberFieldIncrement,
+  NumberFieldScrubArea,
+  NumberFieldScrubAreaCursor,
+} from "./components/NumberField.js";
+export { Meter, MeterLabel, MeterValue, MeterTrack, MeterIndicator } from "./components/Meter.js";
+export {
+  Toolbar,
+  ToolbarButton,
+  ToolbarLink,
+  ToolbarInput,
+  ToolbarGroup,
+  ToolbarSeparator,
+} from "./components/Toolbar.js";
+export { Stepper, StepperList, StepperTrigger, StepperIndicator, StepperContent } from "./components/Stepper.js";
+export { AppShell } from "./components/AppShell.js";
+export type { AppShellProps, AppShellNavigationItem } from "./components/AppShell.js";
+export { PageHeader } from "./components/PageHeader.js";
+export type { PageHeaderProps } from "./components/PageHeader.js";
+export { WorkspaceSwitcher } from "./components/WorkspaceSwitcher.js";
+export type { WorkspaceSwitcherProps } from "./components/WorkspaceSwitcher.js";
+export { AccountMenu } from "./components/AccountMenu.js";
+export type { AccountMenuProps, AccountAction } from "./components/AccountMenu.js";
+export { StatCard } from "./components/StatCard.js";
+export type { StatCardProps } from "./components/StatCard.js";
+export { AuthForm } from "./components/AuthForm.js";
+export type { AuthFormProps, AuthFormMode, AuthFormValues } from "./components/AuthForm.js";
+export { SettingsSection } from "./components/SettingsSection.js";
+export type { SettingsSectionProps } from "./components/SettingsSection.js";
+export { TagInput } from "./components/TagInput.js";
+export type { TagInputProps } from "./components/TagInput.js";
+
+export { FilterBar } from "./components/FilterBar.js";
+export type { FilterBarProps, FilterDefinition } from "./components/FilterBar.js";
+export { Kanban } from "./components/Kanban.js";
+export type { KanbanProps, KanbanColumn, KanbanItem } from "./components/Kanban.js";
+export { BarList } from "./components/BarList.js";
+export type { BarListProps, BarListItem } from "./components/BarList.js";
+export { StatusTracker } from "./components/StatusTracker.js";
+export type { StatusTrackerProps, StatusTrackerItem } from "./components/StatusTracker.js";
+export { DashboardLayout } from "./components/DashboardLayout.js";
+export type { DashboardLayoutProps, DashboardStat } from "./components/DashboardLayout.js";
+export { BillingUsage } from "./components/BillingUsage.js";
+export type { BillingUsageProps, UsageMetric } from "./components/BillingUsage.js";
+
+export type { ILabelValue } from "./options/types.js";

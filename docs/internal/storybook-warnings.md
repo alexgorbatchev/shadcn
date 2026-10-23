@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-21 16:03
-last_modified: 2026-10-21 17:00
+last_modified: 2026-10-22 21:06
 status: current
 ---
 
@@ -19,6 +19,10 @@ bun run vitest run --config .storybook/vitest.config.ts --project storybook src/
 ```
 
 The focused regression is `--testNamePattern 'Cancel Rename'`. Removing the blur-path fix makes that test fail with React's unawaited synchronous `act` warning. This reproduces in a single story; it differs from [Storybook's separate multi-file act-environment issue](https://github.com/storybookjs/storybook/pull/34999).
+
+## Optional event calendar transform
+
+React Big Calendar 1.20.0 publishes classic React.createElement calls. React 19.3 can report an outdated JSX transform advisory when EventCalendar mounts in development. This warning originates in the external optional peer, is not suppressed, and does not affect the package's production JSX build. Recheck the peer's published build before removing this note. Calendar interactions and the companion theme stylesheet remain covered by browser checks.
 
 ## Node TypeScript loader
 

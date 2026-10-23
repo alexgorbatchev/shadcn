@@ -69,6 +69,7 @@ await Promise.all([
   Bun.write("dist/assistant-ui/markdown.css", Bun.file("src/components/assistant-ui/markdown.css")),
   Bun.write("dist/assistant-ui/geo-map.css", Bun.file("src/components/assistant-ui/geo-map.css")),
 ]);
+await Bun.write("dist/event-calendar.css", Bun.file("src/components/event-calendar/event-calendar.css"));
 await buildLlmDocs(process.cwd());
 console.log(
   `Built ${result.outputs.length} JavaScript asset(s), exported theme/font stylesheets, and LLM documentation.`,

@@ -2,7 +2,7 @@ import { afterAll, beforeAll, expect, test } from "bun:test";
 import assert from "node:assert/strict";
 import { mkdir, rm } from "node:fs/promises";
 import manifest from "../../package.json";
-import { getPackageExportTargets, runConsumerCommand } from "./helpers";
+import { getPackageExportTargets, getInstalledRuntimeDependencies, runConsumerCommand } from "./helpers";
 import {
   fixture_chartServerRenderSource,
   fixture_otpServerRenderSource,
@@ -120,7 +120,8 @@ test.each(fixture_featureConsumers)(
       }),
     );
     await runConsumerCommand([process.execPath, "install", "--ignore-scripts"], cwd);
-    for (const peer of fixture_optionalPeerNames.filter((peer) => !peers.includes(peer))) {
+    const installedRuntimeDependencies = await getInstalledRuntimeDependencies(cwd, peers);
+    for (const peer of fixture_optionalPeerNames.filter((peer) => !installedRuntimeDependencies.has(peer))) {
       expect(await Bun.file(`${cwd}/node_modules/${peer}/package.json`).exists(), peer).toBe(false);
     }
     await Bun.write(`${cwd}/consumer.tsx`, source);
@@ -142,6 +143,16 @@ test.each(fixture_featureConsumers)(
     });
     expect(build.logs).toEqual([]);
     expect(build.success).toBe(true);
+    if (name === "event-calendar") {
+      await Bun.write(`${cwd}/calendar.css`, '@import "@alexgorbatchev/shadcn/event-calendar.css";');
+      const styles = await Bun.build({
+        entrypoints: [`${cwd}/calendar.css`],
+        outdir: `${cwd}/styles`,
+        target: "browser",
+      });
+      expect(styles.success, styles.logs.map((log) => log.message).join("\n")).toBe(true);
+      expect(styles.outputs.some((output) => output.path.endsWith(".css") && output.size > 0)).toBe(true);
+    }
     const stdout = await runConsumerCommand([process.execPath, `${cwd}/out/consumer.js`], cwd);
     expect(stdout.trim()).toBe(expected);
 

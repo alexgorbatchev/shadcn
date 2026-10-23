@@ -11,11 +11,6 @@ export interface IConversationTurn {
   text: string;
 }
 
-export interface ILabelValue {
-  label: string;
-  value: string;
-}
-
 export interface IQuestionFlowStep {
   id: string;
   question: string;

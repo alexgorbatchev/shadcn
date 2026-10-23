@@ -50,20 +50,30 @@ Package preparation and contributor commands are documented in [AGENTS.md](./AGE
 
 Import shared controls and providers from `@alexgorbatchev/shadcn`. Import the following features from their dedicated entry points and install only the peers you use. These features, their hooks, and their types are not exported from the package root.
 
-| Import path suffix  | Components                                              | Install alongside the package                                 |
-| ------------------- | ------------------------------------------------------- | ------------------------------------------------------------- |
-| `/chart`            | Chart components, ChartStyle, useChart, and chart types | `bun add recharts@3.8.0 cssesc@3.0.0 es-toolkit@1.52.0`       |
-| `/calendar`         | Calendar, CalendarDayButton                             | `bun add @daypicker/react@^10.0.2`                            |
-| `/persian-calendar` | PersianCalendar                                         | `bun add @daypicker/persian@^10.0.2 @daypicker/react@^10.0.2` |
-| `/carousel`         | Carousel components, useCarousel, and carousel types    | `bun add embla-carousel-react@^8.6.0`                         |
-| `/command`          | Command components, including CommandDialog             | `bun add cmdk@^1.1.1`                                         |
-| `/resizable`        | Resizable components and SplitView                      | `bun add react-resizable-panels@^4.14.3`                      |
-| `/fonts.css`        | JetBrains Mono font stylesheet                          | `bun add @fontsource-variable/jetbrains-mono@^5.3.0`          |
-| `/sonner`           | Sonner, SonnerToaster, Toaster, toast, useSonner        | No additional install; patched implementation is bundled      |
-| `/input-otp`        | InputOTP components                                     | No additional install; patched implementation is bundled      |
-| `/virtual-table`    | VirtualTable and row measurement props                  | `@tanstack/react-virtual@3.14.13`                             |
-| `/message-scroller` | MessageScroller components, hooks, and types            | No additional install; patched implementation is bundled      |
-| `/questionnaire`    | Questionnaire components and types                      | No additional install; patched implementation is bundled      |
+| Import path suffix  | Components                                               | Install alongside the package                                                                                    |
+| ------------------- | -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `/chart`            | Chart parts, AnalyticsChart, Sparkline, hooks and types  | `bun add recharts@3.8.0 cssesc@3.0.0 es-toolkit@1.52.0`                                                          |
+| `/calendar`         | Calendar, CalendarDayButton, DatePicker, DateRangePicker | `bun add @daypicker/react@^10.0.2`                                                                               |
+| `/persian-calendar` | PersianCalendar                                          | `bun add @daypicker/persian@^10.0.2 @daypicker/react@^10.0.2`                                                    |
+| `/carousel`         | Carousel components, useCarousel, and carousel types     | `bun add embla-carousel-react@^8.6.0`                                                                            |
+| `/command`          | Command components, including CommandDialog              | `bun add cmdk@^1.1.1`                                                                                            |
+| `/resizable`        | Resizable components and SplitView                       | `bun add react-resizable-panels@^4.14.3`                                                                         |
+| `/fonts.css`        | JetBrains Mono font stylesheet                           | `bun add @fontsource-variable/jetbrains-mono@^5.3.0`                                                             |
+| `/sonner`           | Sonner, SonnerToaster, Toaster, toast, useSonner         | No additional install; patched implementation is bundled                                                         |
+| `/input-otp`        | InputOTP components                                      | No additional install; patched implementation is bundled                                                         |
+| `/virtual-table`    | VirtualTable and row measurement props                   | `@tanstack/react-virtual@3.14.13`                                                                                |
+| `/message-scroller` | MessageScroller components, hooks, and types             | No additional install; patched implementation is bundled                                                         |
+| `/questionnaire`    | Questionnaire components and types                       | No additional install; patched implementation is bundled                                                         |
+| `/data-grid`        | DataGrid and native table helpers                        | `bun add @tanstack/react-table@9.2.8`                                                                            |
+| `/file-upload`      | FileUpload selection and validation                      | `bun add react-dropzone@^20.1.4`                                                                                 |
+| `/color-picker`     | ColorPicker                                              | `bun add react-colorful@^5.8.1`                                                                                  |
+| `/image-crop`       | ImageCrop and native export helpers                      | `bun add react-image-crop@^11.1.2`                                                                               |
+| `/tree`             | Tree, native hooks and features                          | `bun add @headless-tree/core@^1.8.0 @headless-tree/react@^1.8.0`                                                 |
+| `/editor`           | RichTextEditor, native Tiptap hooks and StarterKit       | `bun add @tiptap/core@^3.32.0 @tiptap/react@^3.32.0 @tiptap/pm@^3.32.0 @tiptap/starter-kit@^3.32.0`              |
+| `/event-calendar`   | EventCalendar, EventForm and native calendar APIs        | `bun add react-big-calendar@^1.20.0 date-fns@^4.4.0`; TypeScript: `bun add -d @types/react-big-calendar@^1.16.3` |
+| `/gantt`            | Gantt and Roadmap                                        | `bun add date-fns@^4.4.0 @date-fns/tz@^1.5.0`                                                                    |
+
+Import `@alexgorbatchev/shadcn/event-calendar.css` for EventCalendar, and `react-image-crop/dist/ReactCrop.css` for ImageCrop. The root also provides application shells, dashboard and billing layouts, authentication/settings forms, account/workspace controls, Kanban, facets, tags, number fields, toolbars, meters, stat cards and status displays. See the [component catalog reference](./docs/internal/component-catalog.md) for source groups, native APIs, dependency costs and consumer responsibilities.
 
 For example:
 

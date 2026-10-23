@@ -274,9 +274,17 @@ function ComboboxChips({ density, className, ...props }: ComboboxChipsProps): Re
 
 type ComboboxChipProps = ComboboxPrimitive.Chip.Props & {
   showRemove?: boolean;
+  removeLabel?: string;
 } & IDensityProps;
 
-function ComboboxChip({ density, className, children, showRemove = true, ...props }: ComboboxChipProps): ReactElement {
+function ComboboxChip({
+  density,
+  className,
+  children,
+  showRemove = true,
+  removeLabel = "Remove item",
+  ...props
+}: ComboboxChipProps): ReactElement {
   return (
     <ComboboxPrimitive.Chip
       data-density={density}
@@ -295,7 +303,7 @@ function ComboboxChip({ density, className, children, showRemove = true, ...prop
           render={<Button variant="ghost" size="icon-xs" />}
           className="size-tag -ms-1 opacity-50 hover:opacity-100"
           data-slot="combobox-chip-remove"
-          aria-label="Remove item"
+          aria-label={removeLabel}
         >
           <XIcon className="pointer-events-none" />
         </ComboboxPrimitive.ChipRemove>

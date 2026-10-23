@@ -1,5 +1,5 @@
 import type { JSX } from "react";
-import type { ILabelValue } from "./types.js";
+import type { ILabelValue } from "../../../options/types.js";
 import type { ComponentProps } from "react";
 import { cn } from "../../../utils/cn.js";
 import { mono } from "./constants.js";

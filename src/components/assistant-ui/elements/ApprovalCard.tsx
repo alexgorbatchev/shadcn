@@ -3,7 +3,7 @@ import { CheckIcon, Loader2Icon, TerminalIcon, XIcon } from "lucide-react";
 
 import { Button } from "../../Button.js";
 import { useReceiptFocus } from "../hooks/useReceiptFocus.js";
-import type { ILabelValue } from "./types.js";
+import type { ILabelValue } from "../../../options/types.js";
 
 export type ApprovalState = "request" | "running" | "done" | "denied";
 

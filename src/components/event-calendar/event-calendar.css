@@ -1,0 +1,83 @@
+@import "react-big-calendar/lib/css/react-big-calendar.css";
+
+.ag-event-calendar {
+  font-family: inherit;
+  color: var(--foreground);
+  font-size: 0.875rem;
+  --rbc-border: var(--border);
+}
+.ag-event-calendar
+  :is(
+    .rbc-month-view,
+    .rbc-month-row,
+    .rbc-header,
+    .rbc-day-bg,
+    .rbc-time-view,
+    .rbc-time-header-content,
+    .rbc-time-header,
+    .rbc-time-content,
+    .rbc-timeslot-group,
+    .rbc-day-slot .rbc-time-slot,
+    .rbc-agenda-view table,
+    .rbc-agenda-view tbody > tr > td,
+    .rbc-agenda-view thead > tr > th,
+    .rbc-time-content > * + * > *
+  ) {
+  border-color: var(--border);
+}
+.ag-event-calendar :is(.rbc-event, .rbc-background-event) {
+  background-color: var(--primary);
+  color: var(--primary-foreground);
+  border-color: var(--border);
+  border-radius: var(--radius-sm);
+  font: inherit;
+  text-align: start;
+}
+.ag-event-calendar .rbc-event.rbc-selected {
+  background-color: var(--accent);
+  color: var(--accent-foreground);
+}
+.ag-event-calendar .rbc-event:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  box-shadow: none;
+}
+.ag-event-calendar .rbc-off-range {
+  color: var(--muted-foreground);
+}
+.ag-event-calendar .rbc-off-range-bg {
+  background: var(--muted);
+}
+.ag-event-calendar .rbc-today {
+  background: var(--accent);
+}
+.ag-event-calendar .rbc-current-time-indicator {
+  background-color: var(--primary);
+}
+.ag-event-calendar .rbc-show-more {
+  color: var(--primary);
+  background: transparent;
+}
+.ag-event-calendar .rbc-show-more:hover {
+  color: var(--foreground);
+}
+.ag-event-calendar .rbc-slot-selection {
+  background: var(--accent);
+  color: var(--accent-foreground);
+  border: 1px solid var(--ring);
+}
+.ag-event-calendar .rbc-slot-selecting {
+  background: var(--muted);
+}
+.ag-event-calendar .rbc-time-header.rbc-overflowing {
+  border-color: var(--border);
+}
+.ag-event-calendar .rbc-events-container .rbc-event {
+  min-height: 1.5rem;
+}
+.ag-event-calendar .rbc-button-link {
+  border-radius: var(--radius-sm);
+}
+.ag-event-calendar .rbc-button-link:focus-visible {
+  outline: 2px solid var(--ring);
+}

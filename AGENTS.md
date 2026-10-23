@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-08 06:13
-last_modified: 2026-10-22 18:34
+last_modified: 2026-10-22 21:53
 status: current
 ---
 
@@ -70,6 +70,7 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - Keep development responses `no-store`. `createPreviewAssetBasePlugin` also prefixes Storybook's root-relative bootstrap scripts; Vite's `base` alone leaves those URLs shared across ports, allowing the external gateway to cache a stale module graph. Reload open Docs after dependency optimization changes as well as port changes; an already-loaded React module can differ from the renderer's new dependency graph.
 - Storybook Docs has an independent theme. Keep `ThemedDocsContainer` connected to theme globals and the shared preview preference through Storybook's native Docs theme API; validate Docs backgrounds as well as story canvases.
 - Use the Storybook Vitest addon with Playwright Chromium for browser interactions. Enable new tested stories with `test`; stories carrying `!test` are excluded. Install browser binaries with `bun x --bun playwright install chromium webkit` when needed; WebKit also needs Playwright's system dependencies on Linux. Native Drawer checks run both engines; Linux WebKit does not exercise the iOS-only touch-callout CSS feature. `just check` verifies compilation and builds; run the browser and coverage commands separately and report exclusions and coverage failures.
+- Adopt external components with this package's styling and contracts. Reuse suitable public upstream behavioral tests and write local behavioral stories or native browser tests for uncovered behavior; upstream smoke tests do not establish interaction coverage.
 - For runtime behavior changes, update corresponding behavioral stories or tests and require 90% code coverage, excluding `scripts/`. The coverage command measures runtime source, excluding story/test infrastructure and type-only files; a passing build does not establish coverage.
 - Reproduce the regression before fixing it, verify the corrected behavior, then temporarily disable only the fix and confirm the regression test fails. Test interactions and rendered behavior rather than static class strings, token values, or raw configuration objects.
 - Keep browser-test dependency caches separate from previews and static builds. Pre-optimize imported primitives in the Vitest configuration; optimization during execution can reload the test module and invalidate the run.
@@ -98,6 +99,7 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 ## References
 
 - [Consumer setup and customization](./README.md)
+- [Catalog compositions and source adoption](./docs/internal/component-catalog.md)
 - [Optional assistant-ui catalog and source inventory](./docs/internal/assistant-ui.md)
 - [Source and license attribution](./THIRD_PARTY_NOTICES.md)
 - [Storybook contrast testing and manual-review limits](./docs/internal/accessibility.md)

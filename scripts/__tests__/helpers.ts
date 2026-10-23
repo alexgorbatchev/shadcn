@@ -16,3 +16,22 @@ export async function runConsumerCommand(command: string[], cwd: string): Promis
   expect(exitCode, stdout + stderr).toBe(0);
   return stdout;
 }
+
+interface IInstalledPackageDependencies {
+  dependencies?: Record<string, string>;
+}
+/** Follow the actual selected engines' runtime dependencies, without following our optional peer list. */
+export async function getInstalledRuntimeDependencies(cwd: string, selected: readonly string[]): Promise<Set<string>> {
+  const dependencies = new Set<string>();
+  const pending = [...selected];
+  while (pending.length) {
+    const name = pending.pop();
+    if (!name || dependencies.has(name)) continue;
+    dependencies.add(name);
+    const file = Bun.file(`${cwd}/node_modules/${name}/package.json`);
+    if (!(await file.exists())) continue;
+    const manifest: IInstalledPackageDependencies = await file.json();
+    pending.push(...Object.keys(manifest.dependencies ?? {}));
+  }
+  return dependencies;
+}

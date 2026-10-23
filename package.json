@@ -994,6 +994,39 @@
     "./virtual-table": {
       "types": "./dist/components/virtual-table/index.d.ts",
       "import": "./dist/components/virtual-table/index.js"
+    },
+    "./color-picker": {
+      "types": "./dist/components/color-picker/index.d.ts",
+      "import": "./dist/components/color-picker/index.js"
+    },
+    "./file-upload": {
+      "types": "./dist/components/file-upload/index.d.ts",
+      "import": "./dist/components/file-upload/index.js"
+    },
+    "./image-crop": {
+      "types": "./dist/components/image-crop/index.d.ts",
+      "import": "./dist/components/image-crop/index.js"
+    },
+    "./editor": {
+      "types": "./dist/components/editor/index.d.ts",
+      "import": "./dist/components/editor/index.js"
+    },
+    "./tree": {
+      "types": "./dist/components/tree/index.d.ts",
+      "import": "./dist/components/tree/index.js"
+    },
+    "./data-grid": {
+      "types": "./dist/components/data-grid/index.d.ts",
+      "import": "./dist/components/data-grid/index.js"
+    },
+    "./event-calendar": {
+      "types": "./dist/components/event-calendar/index.d.ts",
+      "import": "./dist/components/event-calendar/index.js"
+    },
+    "./event-calendar.css": "./dist/event-calendar.css",
+    "./gantt": {
+      "types": "./dist/components/gantt/index.d.ts",
+      "import": "./dist/components/gantt/index.js"
     }
   },
   "publishConfig": {
@@ -1039,9 +1072,12 @@
     "@assistant-ui/react-mcp": "0.1.24",
     "@assistant-ui/react-syntax-highlighter": "0.14.7",
     "@assistant-ui/store": "0.3.22",
+    "@date-fns/tz": "1.5.0",
     "@daypicker/persian": "^10.0.2",
     "@daypicker/react": "^10.0.2",
     "@fontsource-variable/jetbrains-mono": "^5.3.0",
+    "@headless-tree/core": "1.8.0",
+    "@headless-tree/react": "1.8.0",
     "@hookform/resolvers": "5.9.1",
     "@storybook/addon-a11y": "^10.6.1",
     "@storybook/addon-docs": "^10.6.1",
@@ -1051,10 +1087,15 @@
     "@tanstack/react-table": "9.2.8",
     "@tanstack/react-virtual": "3.14.13",
     "@testing-library/react": "^16.3.3",
+    "@tiptap/core": "3.32.0",
+    "@tiptap/pm": "3.32.0",
+    "@tiptap/react": "3.32.0",
+    "@tiptap/starter-kit": "3.32.0",
     "@types/bun": "^1.4.2",
     "@types/cssesc": "3.0.2",
     "@types/leaflet": "^1.9.22",
     "@types/react": "^19.3.0",
+    "@types/react-big-calendar": "1.16.3",
     "@types/react-dom": "^19.3.0",
     "@types/react-syntax-highlighter": "^15.5.13",
     "@typescript/native": "npm:typescript@^7.0.2",
@@ -1071,6 +1112,7 @@
     "cmdk": "^1.1.1",
     "colorjs.io": "0.7.1",
     "cssesc": "3.0.0",
+    "date-fns": "4.4.0",
     "diff": "9.0.0",
     "embla-carousel-autoplay": "8.6.0",
     "embla-carousel-react": "^8.6.0",
@@ -1082,7 +1124,11 @@
     "oxlint": "^1.87.0",
     "parse-diff": "0.12.0",
     "playwright": "^1.64.0",
+    "react-big-calendar": "1.20.0",
+    "react-colorful": "5.8.1",
+    "react-dropzone": "20.1.4",
     "react-hook-form": "7.89.0",
+    "react-image-crop": "11.1.2",
     "react-markdown": "^10.1.0",
     "react-resizable-panels": "^4.14.3",
     "react-shiki": "^0.11.2",
@@ -1109,15 +1155,25 @@
     "@assistant-ui/react-mcp": "0.1.24",
     "@assistant-ui/react-syntax-highlighter": "0.14.7",
     "@assistant-ui/store": "0.3.22",
+    "@date-fns/tz": "^1.5.0",
     "@daypicker/persian": "^10.0.2",
     "@daypicker/react": "^10.0.2",
     "@fontsource-variable/jetbrains-mono": "^5.3.0",
+    "@headless-tree/core": "^1.8.0",
+    "@headless-tree/react": "^1.8.0",
+    "@tanstack/react-table": "9.2.8",
     "@tanstack/react-virtual": "^3.14.13",
+    "@tiptap/core": "^3.32.0",
+    "@tiptap/pm": "^3.32.0",
+    "@tiptap/react": "^3.32.0",
+    "@tiptap/starter-kit": "^3.32.0",
+    "@types/react-big-calendar": "^1.16.3",
     "anser": "2.3.5",
     "beautiful-mermaid": "^1.1.3",
     "cmdk": "^1.1.1",
     "colorjs.io": "0.7.1",
     "cssesc": "3.0.0",
+    "date-fns": "^4.4.0",
     "diff": "9.0.0",
     "embla-carousel-react": "^8.6.0",
     "es-toolkit": "1.52.0",
@@ -1125,7 +1181,11 @@
     "leaflet": "^1.9.4",
     "parse-diff": "0.12.0",
     "react": "^19.3.0",
+    "react-big-calendar": "^1.20.0",
+    "react-colorful": "^5.8.1",
     "react-dom": "^19.3.0",
+    "react-dropzone": "^20.1.4",
+    "react-image-crop": "^11.1.2",
     "react-markdown": "^10.1.0",
     "react-resizable-panels": "^4.14.3",
     "react-shiki": "^0.11.2",
@@ -1228,6 +1288,48 @@
       "optional": true
     },
     "@tanstack/react-virtual": {
+      "optional": true
+    },
+    "react-dropzone": {
+      "optional": true
+    },
+    "react-image-crop": {
+      "optional": true
+    },
+    "react-colorful": {
+      "optional": true
+    },
+    "@headless-tree/core": {
+      "optional": true
+    },
+    "@headless-tree/react": {
+      "optional": true
+    },
+    "@tiptap/core": {
+      "optional": true
+    },
+    "@tiptap/react": {
+      "optional": true
+    },
+    "@tiptap/pm": {
+      "optional": true
+    },
+    "@tiptap/starter-kit": {
+      "optional": true
+    },
+    "date-fns": {
+      "optional": true
+    },
+    "@date-fns/tz": {
+      "optional": true
+    },
+    "@tanstack/react-table": {
+      "optional": true
+    },
+    "react-big-calendar": {
+      "optional": true
+    },
+    "@types/react-big-calendar": {
       "optional": true
     }
   },
