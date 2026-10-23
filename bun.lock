@@ -92,7 +92,7 @@
         "storybook": "^10.6.1",
         "strip-ansi": "7.2.0",
         "tailwindcss": "^4.3.3",
-        "ts-unused": "3.3.1",
+        "ts-unused": "3.7.0",
         "typescript": "^6.0.3",
         "vite": "^8.3.4",
         "vitest": "^4.1.6",
@@ -1754,7 +1754,7 @@
 
     "ts-morph": ["ts-morph@28.0.0", "", { "dependencies": { "@ts-morph/common": "~0.29.0", "code-block-writer": "^13.0.3" } }, "sha512-Wp3tnZ2bzwxyTZMtgWVzXDfm7lB1Drz+y9DmmYH/L702PQhPyVrp3pkou3yIz4qjS14GY9kcpmLiOOMvl8oG1g=="],
 
-    "ts-unused": ["ts-unused@3.3.1", "", { "dependencies": { "ts-morph": "^28.0.0", "typescript": "6.0.3" }, "bin": { "ts-unused": "dist/cli.js" } }, "sha512-NleG/UPIa9s9TI8mT6x22CZdRdxd4JEXCJJzKAZRrNdt4bYXwwjuoNaTFAfn1/wCZd/qFBcwP7a/zwaKzdEIkw=="],
+    "ts-unused": ["ts-unused@3.7.0", "", { "dependencies": { "ts-morph": "^28.0.0", "typescript": "6.0.3" }, "bin": { "ts-unused": "dist/cli.js" } }, "sha512-daVMysqCThnAfW29dFvpKWI3RBIkj2qC28ym7SLyB57VQ/4G+TsxKbSkUKdjJEpquQo1V9xHh/SP15tbdGZotQ=="],
 
     "tsconfig-paths": ["tsconfig-paths@4.2.0", "", { "dependencies": { "json5": "^2.2.2", "minimist": "^1.2.6", "strip-bom": "^3.0.0" } }, "sha512-NoZ4roiN7LnbKn9QqE1amc9DJfzvZXxF4xDavcOWt1BPkdx+m+0gJuPM+S0vCe7zTJMYUP0R8pO2XMr+Y8oLIg=="],
 
