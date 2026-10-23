@@ -30,7 +30,10 @@ function Tree<T>({
     <div
       {...container}
       data-density={density}
-      className={cn("grid min-w-0 gap-1", variant === "default" && "rounded-sm border border-border bg-card p-2")}
+      className={cn(
+        "grid min-w-0 grid-cols-1 gap-1",
+        variant === "default" && "rounded-sm border border-border bg-card p-2",
+      )}
       onKeyDown={(event: KeyboardEvent<HTMLDivElement>) => {
         if (event.target instanceof Element && event.target.closest("input,textarea,select,form,button,[role=menu]"))
           return;

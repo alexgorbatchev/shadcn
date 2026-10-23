@@ -23,10 +23,11 @@ const items: Record<string, Item> = {
   readme: { name: "README.md" },
 };
 const action = fn();
-function Example({ isComposed = false }: { isComposed?: boolean }) {
+function Example({ isComposed = false, isConstrained = false }: { isComposed?: boolean; isConstrained?: boolean }) {
   const tree = useTree<Item>({
     rootItemId: "root",
-    getItemName: (item) => item.getItemData().name,
+    getItemName: (item) =>
+      isConstrained ? `${item.getItemData().name} with a very long descriptive name` : item.getItemData().name,
     isItemFolder: (item) => Boolean(item.getItemData().children),
     dataLoader: {
       getItem: (id) => {
@@ -51,11 +52,25 @@ function Example({ isComposed = false }: { isComposed?: boolean }) {
                   render={
                     <TreeItem
                       item={item}
-                      expandOn="doubleClick"
+                      expandOn={isConstrained ? "disclosure" : "doubleClick"}
                       endEnhancer={
-                        <Button size="sm" variant="ghost" onClick={action}>
-                          Actions for {item.getItemName()}
-                        </Button>
+                        isConstrained ? (
+                          <>
+                            <span>1234</span>
+                            <Button
+                              size="icon-xs"
+                              variant="ghost"
+                              aria-label={`Actions for ${item.getItemName()}`}
+                              onClick={action}
+                            >
+                              …
+                            </Button>
+                          </>
+                        ) : (
+                          <Button size="sm" variant="ghost" onClick={action}>
+                            Actions for {item.getItemName()}
+                          </Button>
+                        )
                       }
                     />
                   }
@@ -79,6 +94,31 @@ const meta: Meta = {
 };
 export default meta;
 type Story = StoryObj<typeof meta>;
+export const ConstrainedRows: Story = {
+  render: () => (
+    <div className="w-[260px]">
+      <Example isComposed isConstrained />
+    </div>
+  ),
+  play: async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+    const tree = canvas.getByRole("tree", { name: "Project files" });
+    const row = canvas.getByRole("treeitem", { name: "Source with a very long descriptive name" });
+    const count = within(row).getByText("1234", { exact: true });
+    const actions = within(row).getByRole("button", { name: "Actions for Source with a very long descriptive name" });
+    await expect(count.getBoundingClientRect().right).toBeLessThanOrEqual(tree.getBoundingClientRect().right);
+    await expect(actions.getBoundingClientRect().right).toBeLessThanOrEqual(tree.getBoundingClientRect().right);
+    await userEvent.click(row);
+    await expect(row).toHaveAttribute("aria-expanded", "false");
+    await userEvent.click(within(row).getByRole("button", { name: "Expand Source with a very long descriptive name" }));
+    await expect(row).toHaveAttribute("aria-expanded", "true");
+    await expect(canvas.getByRole("treeitem", { name: "Button.tsx with a very long descriptive name" })).toBeVisible();
+    await userEvent.click(
+      within(row).getByRole("button", { name: "Collapse Source with a very long descriptive name" }),
+    );
+    await expect(row).toHaveAttribute("aria-expanded", "false");
+  },
+};
 export const Default: Story = {
   play: async ({ canvasElement, userEvent }) => {
     const c = within(canvasElement);

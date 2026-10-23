@@ -5,6 +5,7 @@ import { ChevronRightIcon, FileIcon, FolderIcon, FolderOpenIcon } from "lucide-r
 import type { KeyboardEvent, MouseEvent, ReactElement, ReactNode } from "react";
 import type { IDensityProps } from "../../density/types.js";
 import { cn } from "../../utils/cn.js";
+import { Button } from "../Button.js";
 
 type TreeItemState = {
   slot: "tree-item";
@@ -18,7 +19,7 @@ type TreeItemProps<T> = useRender.ComponentProps<"div", TreeItemState> &
     item: ItemInstance<T>;
     startEnhancer?: ReactNode;
     endEnhancer?: ReactNode;
-    expandOn?: "click" | "doubleClick";
+    expandOn?: "click" | "doubleClick" | "disclosure";
     isEditing?: boolean;
     isDropTarget?: boolean;
   };
@@ -82,13 +83,13 @@ export function TreeItem<T>({
           event.preventDefault();
           item.getTree().setSelectedItems?.([item.getId()]);
           item.primaryAction();
-          if (expandOn === "doubleClick" && item.isFolder()) toggle();
+          if (expandOn !== "click" && item.isFolder()) toggle();
         },
-        ...(expandOn === "doubleClick"
+        ...(expandOn !== "click"
           ? {
               onClick: select,
               onDoubleClick: (event: MouseEvent<HTMLDivElement>) => {
-                if (!isRowControl(event) && item.isFolder()) toggle();
+                if (expandOn === "doubleClick" && !isRowControl(event) && item.isFolder()) toggle();
               },
             }
           : {}),
@@ -108,7 +109,22 @@ export function TreeItem<T>({
         ),
         children: (
           <>
-            {item.isFolder() ? (
+            {item.isFolder() && expandOn === "disclosure" ? (
+              <Button
+                variant="ghost"
+                size="icon-xs"
+                aria-label={`${isExpanded ? "Collapse" : "Expand"} ${item.getItemName()}`}
+                aria-expanded={isExpanded}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  toggle();
+                }}
+                onDoubleClick={(event) => event.stopPropagation()}
+                onKeyDown={(event) => event.stopPropagation()}
+              >
+                <ChevronRightIcon className={cn(isExpanded && "rotate-90")} />
+              </Button>
+            ) : item.isFolder() ? (
               <ChevronRightIcon aria-hidden="true" className={cn("size-3.5 shrink-0", isExpanded && "rotate-90")} />
             ) : (
               <span className="size-3.5 shrink-0" />
