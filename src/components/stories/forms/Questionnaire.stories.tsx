@@ -202,6 +202,76 @@ export const NumberShortcuts: Story = {
   },
 };
 
+export const NativeChoiceKeyboard: Story = {
+  play: async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+    const library = canvas.getByRole("radio", { name: "Component library Reusable controls" });
+    const application = canvas.getByRole("radio", { name: "Application" });
+    const other = canvas.getByRole("textbox", { name: "Another project" });
+
+    await userEvent.click(library);
+    await userEvent.keyboard("{ArrowRight}");
+    await expect(application).toBeChecked();
+    await expect(library).not.toBeChecked();
+    await expect(canvas.getByRole("group", { name: "What should we build?" })).toBeVisible();
+
+    await userEvent.keyboard("{ArrowDown}");
+    await expect(other).toHaveFocus();
+    await expect(application).toBeChecked();
+    await userEvent.keyboard("{ArrowUp}");
+    await expect(application).toHaveFocus();
+    await userEvent.keyboard("{ArrowDown}{ArrowDown}");
+    await expect(library).toHaveFocus();
+    await expect(library).toBeChecked();
+
+    await userEvent.type(other, "Documentation site");
+    await userEvent.keyboard("{ArrowUp}{ArrowDown}");
+    await expect(other).toHaveFocus();
+    await userEvent.click(canvas.getByRole("button", { name: "Next" }));
+
+    const source = canvas.getByRole("checkbox", { name: "Source code" });
+    const tests = canvas.getByRole("checkbox", { name: "Existing tests" });
+    source.focus();
+    await userEvent.keyboard(" ");
+    await expect(source).toBeChecked();
+    await userEvent.keyboard("{ArrowDown}");
+    await expect(tests).toHaveFocus();
+    await expect(tests).not.toBeChecked();
+    await userEvent.keyboard(" ");
+    await expect(tests).toBeChecked();
+
+    await userEvent.click(canvas.getByRole("button", { name: "Next" }));
+    await userEvent.click(canvas.getByRole("radio", { name: "Start now" }));
+    await userEvent.click(canvas.getByRole("button", { name: "Save plan" }));
+    await expect(canvas.getByLabelText("Saved answers")).toHaveTextContent(
+      '[["project","Documentation site"],["context","source"],["context","tests"],["schedule","now"]]',
+    );
+  },
+};
+
+export const ItemArrowNavigation: Story = {
+  play: async ({ canvasElement, userEvent, args }) => {
+    const canvas = within(canvasElement);
+    const project = canvas.getByRole("group", { name: "What should we build?" });
+    project.focus();
+    await userEvent.keyboard("{ArrowRight}");
+    await expect(args.onItemChange).not.toHaveBeenCalled();
+    await expect(project).toHaveFocus();
+
+    const application = canvas.getByRole("radio", { name: "Application" });
+    await userEvent.click(application);
+    project.focus();
+    await userEvent.keyboard("{ArrowRight}");
+    await expect(canvas.getByRole("group", { name: "What context should we inspect?" })).toHaveFocus();
+    await expect(args.onItemChange).toHaveBeenLastCalledWith("context");
+    await userEvent.keyboard("{ArrowLeft}");
+    await expect(project).toHaveFocus();
+    await expect(application).toBeChecked();
+    await expect(args.onItemChange).toHaveBeenLastCalledWith("project");
+    await expect(args.onSubmit).not.toHaveBeenCalled();
+  },
+};
+
 export const SkippedStatus: Story = {
   args: { defaultItem: "optional" },
   render: (args) => (

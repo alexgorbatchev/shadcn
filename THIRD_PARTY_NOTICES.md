@@ -14,6 +14,8 @@ Questionnaire adapts the official registry's fifteen styled parts around `@shadc
 
 ## shadcn/ui
 
+Questionnaire's NativeChoiceKeyboard and ItemArrowNavigation Storybook interactions adapt the native choice-navigation and contextual horizontal-arrow browser tests from `packages/react/src/questionnaire/questionnaire.browser.test.tsx` at upstream commit `3d98900e9b73c45f035f8109e9d41ba6a51685e7` (https://github.com/shadcn-ui/ui). Local changes use this package's styled compositions, Storybook's play context and accessible queries, and assert unanswered-item guards, focus, selection and submitted answers. The upstream MIT notice below covers these adaptations.
+
 Sidebar adapts the official provider and styled parts, preserving custom render/ref contracts, keyboard toggling within each provider, consumer-owned persistence, and native mobile Sheet behavior. Local changes support density, cancelled toggle events, observation without controlled state, inert offcanvas panels, configured mobile widths, and centered icons with accessible collapsed labels. Separator uses Base UI's current orientation attributes, and Tooltip preserves native state callbacks.
 
 Field preserves the official form composition and filters empty error messages before rendering an alert. Popover preserves native className callbacks on its popup, title, and description. Storybook form, date picker, and data table examples follow the official composition guides; the data table uses TanStack Table v9's native API.
