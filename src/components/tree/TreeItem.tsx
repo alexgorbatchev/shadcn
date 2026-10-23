@@ -42,6 +42,7 @@ export function TreeItem<T>({
   isDropTarget = false,
   density,
   render,
+  ref,
   ...props
 }: TreeItemProps<T>): ReactElement {
   const nativeProps = item.getProps();
@@ -66,9 +67,11 @@ export function TreeItem<T>({
   return useRender({
     defaultTagName: "div",
     render,
+    ref: [item.registerElement, ref ?? null],
     props: mergeProps<"div">(
       {
         ...nativeProps,
+        ref: undefined,
         onKeyDown: (event: KeyboardEvent<HTMLDivElement>) => {
           if (
             event.target !== event.currentTarget ||

@@ -13,6 +13,7 @@ import { useDropTarget } from "../../hooks/useDropTarget";
 import "../../../.storybook/preview.css";
 import {
   Tree,
+  TreeItem,
   useTree,
   syncDataLoaderFeature,
   hotkeysCoreFeature,
@@ -22,9 +23,12 @@ import {
   isOrderedDragTarget,
   AssistiveTreeDescription,
 } from "../tree";
+import { ContextMenu, ContextMenuTrigger, ContextMenuContent, ContextMenuGroup, ContextMenuItem } from "../ContextMenu";
+import { Tooltip, TooltipTrigger, TooltipContent } from "../Tooltip";
 
 interface ITreeExampleProps {
   isDisabled?: boolean;
+  isComposed?: boolean;
 }
 interface ITreeData {
   name: string;
@@ -37,7 +41,7 @@ const treeItems: Record<string, ITreeData> = {
   first: { name: "First" },
   second: { name: "Second" },
 };
-function TreeExample({ isDisabled = false }: ITreeExampleProps): ReactElement {
+function TreeExample({ isDisabled = false, isComposed = false }: ITreeExampleProps): ReactElement {
   const [result, setResult] = useState("Waiting");
   const tree = useTree<ITreeData>({
     rootItemId: "root",
@@ -64,7 +68,29 @@ function TreeExample({ isDisabled = false }: ITreeExampleProps): ReactElement {
   });
   return (
     <>
-      <Tree tree={tree} label="Reorder files" />
+      <Tree
+        tree={tree}
+        label="Reorder files"
+        renderItem={
+          isComposed
+            ? (item) => (
+                <ContextMenu>
+                  <Tooltip open={false}>
+                    <TooltipTrigger render={<ContextMenuTrigger render={<TreeItem item={item} />} />}>
+                      {item.getItemName()}
+                    </TooltipTrigger>
+                    <TooltipContent>Row information</TooltipContent>
+                  </Tooltip>
+                  <ContextMenuContent>
+                    <ContextMenuGroup>
+                      <ContextMenuItem>Inspect {item.getItemName()}</ContextMenuItem>
+                    </ContextMenuGroup>
+                  </ContextMenuContent>
+                </ContextMenu>
+              )
+            : undefined
+        }
+      />
       <AssistiveTreeDescription tree={tree} />
       <output aria-label="Tree drop">{result}</output>
     </>
@@ -87,6 +113,23 @@ test("tree drops into a folder and reorders before and after siblings", async ()
   await expect
     .element(screen.getByRole("status", { name: "Tree drop" }))
     .toHaveTextContent('{"ids":["first"],"parent":"root","before":3}');
+});
+
+test("composed tree rows preserve native before/after drop geometry through menus and tooltips", async () => {
+  const screen = await render(<TreeExample isComposed />);
+  const first = page.getByRole("treeitem", { name: "First" });
+  const second = page.getByRole("treeitem", { name: "Second" });
+  await second.dropTo(first, { targetPosition: { x: 40, y: 2 } });
+  await expect
+    .element(screen.getByRole("status", { name: "Tree drop" }))
+    .toHaveTextContent('{"ids":["second"],"parent":"root","before":1}');
+  await first.dropTo(second, { targetPosition: { x: 40, y: second.element().getBoundingClientRect().height - 2 } });
+  await expect
+    .element(screen.getByRole("status", { name: "Tree drop" }))
+    .toHaveTextContent('{"ids":["first"],"parent":"root","before":3}');
+  await expect.element(first).toHaveFocus();
+  await userEvent.keyboard("{ArrowDown}");
+  await expect.element(second).toHaveFocus();
 });
 
 test("tree rejects disabled dragging", async () => {
