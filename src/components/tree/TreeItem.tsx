@@ -111,7 +111,7 @@ export function TreeItem<T>({
           <>
             {item.isFolder() && expandOn === "disclosure" ? (
               <Button
-                variant="ghost"
+                variant="plain"
                 size="icon-xs"
                 aria-label={`${isExpanded ? "Collapse" : "Expand"} ${item.getItemName()}`}
                 aria-expanded={isExpanded}

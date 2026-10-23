@@ -115,7 +115,15 @@ export const ConstrainedRows: Story = {
     await expect(actions.getBoundingClientRect().right).toBeLessThanOrEqual(tree.getBoundingClientRect().right);
     await userEvent.click(row);
     await expect(row).toHaveAttribute("aria-expanded", "false");
-    await userEvent.click(within(row).getByRole("button", { name: "Expand Source with a very long descriptive name" }));
+    const disclosure = within(row).getByRole("button", { name: "Expand Source with a very long descriptive name" });
+    await expect(getComputedStyle(disclosure).backgroundColor).toBe("rgba(0, 0, 0, 0)");
+    await userEvent.hover(disclosure);
+    await waitFor(() => expect(disclosure.getAnimations()).toHaveLength(0));
+    await expect(getComputedStyle(disclosure).backgroundColor).toBe("rgba(0, 0, 0, 0)");
+    await userEvent.click(disclosure);
+    await userEvent.unhover(disclosure);
+    await waitFor(() => expect(disclosure.getAnimations()).toHaveLength(0));
+    await expect(getComputedStyle(disclosure).backgroundColor).toBe("rgba(0, 0, 0, 0)");
     await expect(row).toHaveAttribute("aria-expanded", "true");
     await expect(canvas.getByRole("treeitem", { name: "Button.tsx with a very long descriptive name" })).toBeVisible();
     await userEvent.click(

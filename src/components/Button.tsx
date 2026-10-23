@@ -12,6 +12,7 @@ const buttonVariants = cva(
       fullWidth: { true: "w-full" },
       align: { start: "justify-start", center: "justify-center", end: "justify-end" },
       variant: {
+        plain: "",
         pad: "rounded-none border-border bg-secondary text-secondary-foreground hover:bg-muted disabled:border-solid disabled:bg-secondary disabled:text-muted-foreground",
         default: "bg-primary text-primary-foreground hover:bg-primary/90",
         outline:

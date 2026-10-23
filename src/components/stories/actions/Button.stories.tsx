@@ -13,7 +13,18 @@ const meta: Meta<typeof Button> = {
   argTypes: {
     variant: {
       control: "select",
-      options: ["default", "outline", "secondary", "ghost", "destructive", "success", "warning", "link", "pad"],
+      options: [
+        "default",
+        "outline",
+        "secondary",
+        "ghost",
+        "plain",
+        "destructive",
+        "success",
+        "warning",
+        "link",
+        "pad",
+      ],
     },
     size: {
       control: "select",
@@ -52,6 +63,23 @@ export const HoverPrimaryLight: Story = {
 export const Outline: Story = { tags: ["visual"], ...Default, args: { variant: "outline" } };
 export const Secondary: Story = { ...Default, args: { variant: "secondary" } };
 export const Ghost: Story = { ...Default, args: { variant: "ghost" } };
+export const Plain: Story = {
+  args: { variant: "plain", "aria-expanded": true },
+  play: async ({ canvasElement, args, userEvent }) => {
+    const button = within(canvasElement).getByRole("button");
+    await expect(getComputedStyle(button).backgroundColor).toBe("rgba(0, 0, 0, 0)");
+    await userEvent.hover(button);
+    await waitFor(() => expect(button.getAnimations()).toHaveLength(0));
+    await expect(getComputedStyle(button).backgroundColor).toBe("rgba(0, 0, 0, 0)");
+    await userEvent.click(button);
+    await expect(args.onClick).toHaveBeenCalledTimes(1);
+    await userEvent.unhover(button);
+    await userEvent.tab();
+    await userEvent.tab({ shift: true });
+    await expect(button).toHaveFocus();
+    await expect(getComputedStyle(button).backgroundColor).toBe("rgba(0, 0, 0, 0)");
+  },
+};
 export const Destructive: Story = { tags: ["visual"], ...Default, args: { variant: "destructive" } };
 export const Success: Story = { ...Default, args: { variant: "success" } };
 export const Warning: Story = { ...Default, args: { variant: "warning" } };
