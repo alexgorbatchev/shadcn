@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-08 06:13
-last_modified: 2026-10-23 03:42
+last_modified: 2026-10-24 08:02
 status: current
 ---
 
@@ -12,6 +12,7 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 
 - Setup: `just setup` (locked dependencies, devhost check, and `.githooks` as `core.hooksPath`)
 - Preview: `just storybook` (loopback port 6006, no automatic browser launch)
+- Snapshot gallery: `just snapshots` (saved baselines, grouped by component, with virtual scrolling)
 - Devhost preview: `just run` (loads `.env.local`, then runs `devhost start`)
 - Format: `just fix`
 - Validate: `just check` (typecheck, lint/format check, declarations/package build, development/production package rendering, static Storybook build)
@@ -59,10 +60,10 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 
 ## Storybook and Validation
 
-- Keep private hostnames in untracked `.env.local`. `devhost.toml` derives the Storybook host from `SHADCN_DEV_HOST_SUFFIX`, which the justfile defaults to `.localhost`; document new variables in `.env.example`.
+- Keep private hostnames in untracked `.env.local`. `devhost.toml` derives the Storybook and snapshot gallery hosts from `SHADCN_DEV_HOST_SUFFIX`, which the justfile defaults to `.localhost`; document new variables in `.env.example`.
 - Share previews as devhost HTTPS URLs on the configured Storybook host, started with `just run`. Never give IP addresses or loopback ports as preview links.
 - Preserve automatic port allocation in `devhost.toml`. Its explicit shell expands injected `PORT`; `--exact-port` prevents Storybook from silently choosing a different port.
-- Preserve `caddy.global.bindHost = "0.0.0.0"` and `http = true` for the external devbox gateway. Storybook itself remains on IPv4 loopback. Restart the stack after changing Caddy global settings; those fields do not hot-reload.
+- Keep shared Caddy listeners in the `[caddy]` table of the devhost `config.toml`, with `bindHost = "0.0.0.0"` (the default) and `http = true` for the external devbox gateway. Never add Caddy settings to this repository's manifest; current devhost rejects them. Storybook and the snapshot gallery remain on IPv4 loopback. Preserve shared proxy settings when changing this repository's services.
 - Merge `__VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS` into both Storybook `core.allowedHosts` and Vite `server.allowedHosts`. Vite configuration alone does not allow the Storybook manager's Host/Origin checks.
 - Use typed `Meta` and `StoryObj`, meaningful variants and states, and accessible names for controls.
 - Use isolated iframe documentation for default-open overlays; inline examples can interfere through their document-wide portals.
@@ -106,3 +107,4 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - [Storybook contrast testing and manual-review limits](./docs/internal/accessibility.md)
 - [Visual regression baselines and CI](./docs/internal/visual-regression.md)
 - [npm release procedure](./docs/internal/npm-releases.md)
+- [Snapshot gallery](./docs/internal/snapshot-gallery.md)

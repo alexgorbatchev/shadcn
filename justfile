@@ -23,6 +23,7 @@ check:
     bun run test:package
     bun run build-storybook
     bun run test:preview
+    bun run vite build --config scripts/snapshot-gallery/vite.config.ts
 
 fix:
     bun x --bun oxfmt --write .
@@ -36,3 +37,7 @@ setup:
 # Start the devhost Storybook preview
 run: llm-docs
     devhost start
+
+# Browse saved visual regression baselines through devhost
+snapshots:
+    devhost start snapshots

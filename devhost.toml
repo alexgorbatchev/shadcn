@@ -1,9 +1,5 @@
 name = "shadcn-alexgorbatchev"
 
-[caddy.global]
-bindHost = "0.0.0.0"
-http = true
-
 [services.storybook]
 primary = true
 command = [
@@ -18,3 +14,17 @@ watch = ["src/", ".storybook/"]
 
 [services.storybook.env]
 __VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS = "{{ services.storybook.host }}"
+
+[services.snapshots]
+command = [
+  "sh",
+  "-c",
+  "exec bun ./node_modules/.bin/vite --config scripts/snapshot-gallery/vite.config.ts --port \"$PORT\"",
+]
+port = "auto"
+bindHost = "127.0.0.1"
+host = "shadcn-snapshots{{ env.SHADCN_DEV_HOST_SUFFIX }}"
+watch = ["scripts/snapshot-gallery/"]
+
+[services.snapshots.env]
+__VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS = "{{ services.snapshots.host }}"

@@ -1,0 +1,117 @@
+@import "tailwindcss" source(none);
+@import "../../src/theme.css";
+
+:root {
+  font-family: system-ui, sans-serif;
+  color: var(--foreground);
+  background: var(--background);
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+}
+.gallery {
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+.gallery-toolbar {
+  padding: 12px 16px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--border);
+}
+h1 {
+  margin: 0;
+  font-size: 18px;
+}
+p {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: var(--muted-foreground);
+}
+label {
+  display: grid;
+  gap: 4px;
+  font-size: 12px;
+}
+input,
+select {
+  width: min(340px, 85vw);
+  padding: 8px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--background);
+  color: var(--foreground);
+  font: inherit;
+}
+.gallery-viewport {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  scrollbar-gutter: stable;
+  padding: 0 12px;
+}
+.gallery-canvas {
+  position: relative;
+}
+.gallery-row {
+  position: absolute;
+  inset: 0 0 auto;
+}
+h2 {
+  margin: 0;
+  padding: 16px 0 8px;
+  font: 600 13px monospace;
+  overflow-wrap: anywhere;
+}
+.gallery-grid {
+  display: grid;
+  gap: 8px;
+  height: 100%;
+  padding-bottom: 10px;
+}
+figure {
+  margin: 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--card);
+}
+figure a {
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 0;
+  background: var(--muted);
+}
+figure canvas {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+figcaption {
+  padding: 5px 6px;
+  font: 10px/1.4 monospace;
+  overflow-wrap: anywhere;
+}
+a:focus-visible,
+input:focus-visible,
+.gallery-viewport:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: -2px;
+}
+.gallery-empty {
+  padding: 24px;
+}
