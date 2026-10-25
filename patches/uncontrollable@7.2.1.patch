@@ -1,0 +1,76 @@
+diff --git a/lib/cjs/uncontrollable.js b/lib/cjs/uncontrollable.js
+index 2346bc5f6ccfe7d161fe8c6ff65da1e22394ec3d..9ec9cef72f0bba0e5f27d4befb095590004a5085 100644
+--- a/lib/cjs/uncontrollable.js
++++ b/lib/cjs/uncontrollable.js
+@@ -21,7 +21,7 @@ var _invariant = _interopRequireDefault(require("invariant"));
+ 
+ var Utils = _interopRequireWildcard(require("./utils"));
+ 
+-var _jsxFileName = "/Users/jquense/src/uncontrollable/src/uncontrollable.js";
++var _jsx = require("react/jsx-runtime").jsx;
+ 
+ function uncontrollable(Component, controlledValues, methods) {
+   if (methods === void 0) {
+@@ -138,7 +138,7 @@ function uncontrollable(Component, controlledValues, methods) {
+         var propValue = _this2.props[propName];
+         newProps[propName] = propValue !== undefined ? propValue : _this2.state.values[propName];
+       });
+-      return _react.default.createElement(Component, (0, _extends3.default)({}, props, newProps, this.handlers, {
++      return _jsx(Component, (0, _extends3.default)({}, props, newProps, this.handlers, {
+         ref: innerRef || this.attachRef
+       }));
+     };
+@@ -162,13 +162,8 @@ function uncontrollable(Component, controlledValues, methods) {
+ 
+   if (_react.default.forwardRef) {
+     WrappedComponent = _react.default.forwardRef(function (props, ref) {
+-      return _react.default.createElement(UncontrolledComponent, (0, _extends3.default)({}, props, {
+-        innerRef: ref,
+-        __source: {
+-          fileName: _jsxFileName,
+-          lineNumber: 128
+-        },
+-        __self: this
++      return _jsx(UncontrolledComponent, (0, _extends3.default)({}, props, {
++        innerRef: ref
+       }));
+     });
+     WrappedComponent.propTypes = UncontrolledComponent.propTypes;
+diff --git a/lib/esm/uncontrollable.js b/lib/esm/uncontrollable.js
+index f5f01cea22e36071fcaa2c398bc3904504f79609..f0c15e5cf7bdc148f34599a36323f2ce8efa3d58 100644
+--- a/lib/esm/uncontrollable.js
++++ b/lib/esm/uncontrollable.js
+@@ -1,7 +1,7 @@
+ import _objectWithoutPropertiesLoose from "@babel/runtime/helpers/esm/objectWithoutPropertiesLoose";
+ import _extends from "@babel/runtime/helpers/esm/extends";
+ import _inheritsLoose from "@babel/runtime/helpers/esm/inheritsLoose";
+-var _jsxFileName = "/Users/jquense/src/uncontrollable/src/uncontrollable.js";
++import { jsx as _jsx } from "react/jsx-runtime";
+ import React from 'react';
+ import { polyfill } from 'react-lifecycles-compat';
+ import invariant from 'invariant';
+@@ -122,7 +122,7 @@ export default function uncontrollable(Component, controlledValues, methods) {
+         var propValue = _this2.props[propName];
+         newProps[propName] = propValue !== undefined ? propValue : _this2.state.values[propName];
+       });
+-      return React.createElement(Component, _extends({}, props, newProps, this.handlers, {
++      return _jsx(Component, _extends({}, props, newProps, this.handlers, {
+         ref: innerRef || this.attachRef
+       }));
+     };
+@@ -146,13 +146,8 @@ export default function uncontrollable(Component, controlledValues, methods) {
+ 
+   if (React.forwardRef) {
+     WrappedComponent = React.forwardRef(function (props, ref) {
+-      return React.createElement(UncontrolledComponent, _extends({}, props, {
+-        innerRef: ref,
+-        __source: {
+-          fileName: _jsxFileName,
+-          lineNumber: 128
+-        },
+-        __self: this
++      return _jsx(UncontrolledComponent, _extends({}, props, {
++        innerRef: ref
+       }));
+     });
+     WrappedComponent.propTypes = UncontrolledComponent.propTypes;

@@ -27,7 +27,9 @@ const result = await Bun.build({
   define: { "process.env.NODE_ENV": "process.env.NODE_ENV" },
   packages: "bundle",
   external: [
-    ...Object.keys(manifest.dependencies).filter((name) => !["@shadcn/react", "sonner", "input-otp"].includes(name)),
+    ...Object.keys(manifest.dependencies).filter(
+      (name) => !["@shadcn/react", "sonner", "input-otp", "react-big-calendar"].includes(name),
+    ),
     ...Object.keys(manifest.peerDependencies),
   ],
   minify: false,

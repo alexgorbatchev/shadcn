@@ -13,6 +13,7 @@ export default defineConfig({
   cacheDir: ".cache/storybook/native-tests",
   optimizeDeps: {
     include: [
+      "react-big-calendar",
       "date-fns",
       "@date-fns/tz",
       "@base-ui/react/number-field",

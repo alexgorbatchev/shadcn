@@ -285,7 +285,7 @@ export const fixture_featureConsumers: ReadonlyArray<readonly [string, readonly 
   ],
   [
     "event-calendar",
-    ["react-big-calendar", "@types/react-big-calendar", "date-fns"],
+    ["@types/react-big-calendar", "date-fns"],
     'import { renderToString } from "react-dom/server"; import { EventCalendar } from "@alexgorbatchev/shadcn/event-calendar"; const markup=renderToString(<EventCalendar label="Team schedule" defaultDate={new Date(2026,9,22)} events={[]}/>); console.log(markup.includes("October 2026") && markup.includes("Team schedule"));',
     "true",
   ],
@@ -484,3 +484,19 @@ export const fixture_featureConsumers: ReadonlyArray<readonly [string, readonly 
     "fonts",
   ],
 ];
+
+export const fixture_eventCalendarBrowserSource: string = `
+import { useState } from "react";
+import { createRoot } from "react-dom/client";
+import { EventCalendar } from "@alexgorbatchev/shadcn/event-calendar";
+function Consumer() {
+  const [selected, setSelected] = useState("");
+  return <>
+    <EventCalendar label="Packed calendar" defaultDate={new Date(2026,9,22)} defaultView="month" views={["month","week"]}
+      events={[{ title: "Design review", start: new Date(2026,9,22,10), end: new Date(2026,9,22,11) }]}
+      onSelectEvent={event => setSelected(event.title)} />
+    <output role="status">{selected}</output>
+  </>;
+}
+createRoot(document.getElementById("root")).render(<Consumer />);
+`;

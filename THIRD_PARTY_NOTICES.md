@@ -214,4 +214,8 @@ The MIT examples at https://github.com/mantinedev/ui.mantine.dev/tree/966b0ff960
 
 ## Optional feature engines
 
-The optional feature imports use external, separately installed react-dropzone 20.1.4 (MIT), react-colorful 5.8.1 (MIT), react-image-crop 11.1.2 (ISC), Headless Tree 1.8.0 (MIT), Tiptap 3.32.0 (MIT), React Big Calendar 1.20.0 (MIT), date-fns 4.4.0 (MIT), and @date-fns/tz 1.5.0 (MIT). Their distributions retain their own license files. No third-party engine source is bundled into the package archive by these integrations. EventCalendar's companion stylesheet imports the externally installed React Big Calendar structural stylesheet and applies local semantic-token presentation.
+The optional feature imports use external, separately installed react-dropzone 20.1.4 (MIT), react-colorful 5.8.1 (MIT), react-image-crop 11.1.2 (ISC), Headless Tree 1.8.0 (MIT), Tiptap 3.32.0 (MIT), date-fns 4.4.0 (MIT), and @date-fns/tz 1.5.0 (MIT). Their distributions retain their own license files. These feature engines remain external; the calendar exception is documented below. EventCalendar's companion stylesheet imports the installed React Big Calendar structural stylesheet and applies local semantic-token presentation.
+
+## React Big Calendar and uncontrollable
+
+The `/event-calendar` entry point bundles React Big Calendar 1.20.0 (https://github.com/bigcalendar/react-big-calendar), uncontrollable 7.2.1 (https://github.com/jquense/uncontrollable), and their runtime dependencies. The version-pinned patch replaces uncontrollable’s obsolete compiled JSX calls with React’s JSX runtime in its ESM and CommonJS builds. Native state ownership, callbacks and ref forwarding are retained. React and declared peers remain external. Complete bundled dependency notices are included in [licenses/event-calendar.txt](./licenses/event-calendar.txt).
