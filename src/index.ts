@@ -198,6 +198,8 @@ export {
   TableRow,
   TableCell,
   TableCaption,
+  TableColumnGroup,
+  TableColumn,
 } from "./components/Table.js";
 
 export { NativeSelect, NativeSelectOptGroup, NativeSelectOption } from "./components/NativeSelect.js";

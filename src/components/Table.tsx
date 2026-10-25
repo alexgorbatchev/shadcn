@@ -89,6 +89,13 @@ const visibilityClasses: Record<TableVisibility, string> = {
   "container-sm": "hidden @min-[400px]/table:table-cell",
   "container-md": "hidden @min-[480px]/table:table-cell",
 };
+// Columns resolve visibility against the same table container as their cells, so a hidden column never keeps width.
+const columnVisibilityClasses: Record<TableVisibility, string> = {
+  sm: "hidden sm:table-column",
+  lg: "hidden lg:table-column",
+  "container-sm": "hidden @min-[400px]/table:table-column",
+  "container-md": "hidden @min-[480px]/table:table-column",
+};
 interface ITableCellOptions {
   truncate?: boolean;
   textAlign?: TableTextAlign;
@@ -147,6 +154,25 @@ function TableCell({
   );
 }
 
+type TableColumnGroupProps = ComponentProps<"colgroup">;
+
+function TableColumnGroup(props: TableColumnGroupProps): ReactElement {
+  return <colgroup data-slot="table-column-group" {...props} />;
+}
+
+type TableColumnProps = ComponentProps<"col"> & Pick<ITableCellOptions, "visibleFrom">;
+
+/** A sized column; give it the same `visibleFrom` as its header and cells. */
+function TableColumn({ className, visibleFrom, ...props }: TableColumnProps): ReactElement {
+  return (
+    <col
+      data-slot="table-column"
+      className={cn(visibleFrom && columnVisibilityClasses[visibleFrom], className)}
+      {...props}
+    />
+  );
+}
+
 type TableCaptionProps = ComponentProps<"caption"> & IDensityProps;
 
 function TableCaption({ density, className, ...props }: TableCaptionProps): ReactElement {
@@ -160,4 +186,15 @@ function TableCaption({ density, className, ...props }: TableCaptionProps): Reac
   );
 }
 
-export { Table, TableHeader, TableBody, TableFooter, TableHead, TableRow, TableCell, TableCaption };
+export {
+  Table,
+  TableHeader,
+  TableBody,
+  TableFooter,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableCaption,
+  TableColumnGroup,
+  TableColumn,
+};

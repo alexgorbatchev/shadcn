@@ -27,7 +27,18 @@ import {
   tableFeatures,
   useTable,
 } from "@tanstack/react-table";
-import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "../../Table";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableColumn,
+  TableColumnGroup,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "../../Table";
 import { Button } from "../../Button";
 import { DirectionProvider } from "../../DirectionProvider";
 import { Checkbox } from "../../Checkbox";
@@ -582,5 +593,48 @@ export const ResponsiveColumns: Story = {
     await expect(canvas.getByRole("cell", { name: "123" })).toBeVisible();
     await expect(canvas.getByRole("columnheader", { name: "Format" })).toBeVisible();
     await expect(canvas.getByRole("cell", { name: "FLAC" })).toBeVisible();
+  },
+};
+
+export const ResponsiveColumnWidths: Story = {
+  render: function ResponsiveColumnWidths() {
+    const [isWide, setWide] = useState(false);
+    return (
+      <>
+        <Button onClick={() => setWide(!isWide)}>Resize table</Button>
+        {/* The outer width differs from the table container, as when a scroll viewport narrows the table. */}
+        <div className={isWide ? "w-[420px]" : "w-[390px]"}>
+          <Table layout="fixed">
+            <TableColumnGroup>
+              <TableColumn />
+              <TableColumn visibleFrom="container-sm" style={{ width: 60 }} />
+            </TableColumnGroup>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Title</TableHead>
+                <TableHead visibleFrom="container-sm">BPM</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow>
+                <TableCell>First light</TableCell>
+                <TableCell visibleFrom="container-sm">123</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </div>
+      </>
+    );
+  },
+  async play({ canvasElement }) {
+    const canvas = within(canvasElement);
+    const table = canvas.getByRole("table");
+    const title = canvas.getByRole("columnheader", { name: "Title" });
+    // Below the breakpoint the column hides with its cells, so the remaining column takes the whole width.
+    await expect(canvas.getByText("BPM", { exact: true })).not.toBeVisible();
+    await expect(title.getBoundingClientRect().width).toBe(table.getBoundingClientRect().width);
+    await userEvent.click(canvas.getByRole("button", { name: "Resize table" }));
+    await waitFor(() => expect(canvas.getByRole("columnheader", { name: "BPM" })).toBeVisible());
+    await expect(canvas.getByRole("columnheader", { name: "BPM" }).getBoundingClientRect().width).toBe(60);
   },
 };
