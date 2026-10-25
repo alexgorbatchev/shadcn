@@ -221,7 +221,8 @@ export const fixture_featureTypeExports: Record<string, string> = {
   "image-crop": "ImageCrop, cropToCanvas, type Crop",
   editor: "RichTextEditor, useEditor, StarterKit, type Editor",
   tree: "Tree, useTree, type TreeConfig",
-  "data-grid": "DataGrid, dataGridFeatures, type DataGridTable",
+  "data-grid": "DataGrid, DataGridColumnOptions, dataGridFeatures, type DataGridTable",
+  "virtual-data-grid": "VirtualDataGrid, type IVirtualTableRowProps",
   "event-calendar": "EventCalendar, EventForm, type EventDraft",
   gantt: "Gantt, Roadmap, type GanttTask",
   core: "Button",
@@ -281,6 +282,12 @@ export const fixture_featureConsumers: ReadonlyArray<readonly [string, readonly 
     "data-grid",
     ["@tanstack/react-table"],
     'import { renderToString } from "react-dom/server"; import { useTable,createColumnHelper } from "@tanstack/react-table"; import { DataGrid,dataGridFeatures } from "@alexgorbatchev/shadcn/data-grid"; const helper=createColumnHelper<typeof dataGridFeatures,{name:string}>(); const columns=helper.columns([helper.accessor("name",{header:"Name"})]); function Example(){const table=useTable({features:dataGridFeatures,data:[{name:"Alex"}],columns});return <DataGrid table={table} label="People"/>;} const markup=renderToString(<Example/>); let status="";await new HTMLRewriter().on("[role=status]",{text(chunk){status+=chunk.text;}}).transform(new Response(markup)).text();console.log(markup.includes("Alex") && status.includes("Page 1 of 1"));',
+    "true",
+  ],
+  [
+    "virtual-data-grid",
+    ["@tanstack/react-table", "@tanstack/react-virtual"],
+    'import { renderToString } from "react-dom/server"; import { useTable,createColumnHelper } from "@tanstack/react-table"; import { dataGridFeatures } from "@alexgorbatchev/shadcn/data-grid"; import { VirtualDataGrid } from "@alexgorbatchev/shadcn/virtual-data-grid"; const helper=createColumnHelper<typeof dataGridFeatures,{name:string;size:number}>(); const columns=helper.columns([helper.accessor("name",{header:"Name",meta:{fill:true}}),helper.accessor("size",{header:"Size",size:80})]); function Example(){const table=useTable({features:dataGridFeatures,data:[{name:"Alex",size:1}],columns});return <VirtualDataGrid table={table} label="People"/>;} const markup=renderToString(<Example/>); console.log(markup.includes(\'aria-rowcount="2"\') && markup.includes(\'aria-label="Resize Size"\') && markup.includes("var(--data-grid-column-1-size, 80px)"));',
     "true",
   ],
   [

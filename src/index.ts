@@ -201,6 +201,7 @@ export {
   TableColumnGroup,
   TableColumn,
 } from "./components/Table.js";
+export type { TableTextAlign, TableVisibility } from "./components/Table.js";
 
 export { NativeSelect, NativeSelectOptGroup, NativeSelectOption } from "./components/NativeSelect.js";
 

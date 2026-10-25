@@ -1020,6 +1020,10 @@
       "types": "./dist/components/data-grid/index.d.ts",
       "import": "./dist/components/data-grid/index.js"
     },
+    "./virtual-data-grid": {
+      "types": "./dist/components/virtual-data-grid/index.d.ts",
+      "import": "./dist/components/virtual-data-grid/index.js"
+    },
     "./event-calendar": {
       "types": "./dist/components/event-calendar/index.d.ts",
       "import": "./dist/components/event-calendar/index.js"

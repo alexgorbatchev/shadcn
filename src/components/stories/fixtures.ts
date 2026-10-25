@@ -1,5 +1,6 @@
 import type {
   ChartBrowserDatum,
+  GridFile,
   InvoiceRecord,
   NumberedProjectChoice,
   RuntimeChoice,
@@ -53,5 +54,14 @@ export const fixture_invoices: InvoiceRecord[] = [
 export { VirtualizedTranscript } from "./fixtures/VirtualizedTranscript";
 export { StreamingTranscript } from "./fixtures/StreamingTranscript";
 export { AnimatedTranscript } from "./fixtures/AnimatedTranscript";
+export { VirtualDataGridExample } from "./fixtures/VirtualDataGridExample";
 
 export const fixture_virtualRows: string[] = Array.from({ length: 1000 }, (_, index) => `Item ${index}`);
+
+export const fixture_gridFiles: GridFile[] = Array.from({ length: 1000 }, (_, index) => ({
+  id: `file-${index}`,
+  name: `File ${index}`,
+  kind: ["Audio", "Image", "Text"][index % 3] ?? "Text",
+  owner: ["Alex", "Blair", "Casey"][index % 3] ?? "Alex",
+  size: (index * 37) % 1000,
+}));

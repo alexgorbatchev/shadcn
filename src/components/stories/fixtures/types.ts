@@ -1,5 +1,13 @@
 import type { INamedOption } from "../../../options/types.js";
 
+export interface GridFile {
+  id: string;
+  name: string;
+  kind: string;
+  owner: string;
+  size: number;
+}
+
 export interface InvoiceRecord {
   id: string;
   email: string;

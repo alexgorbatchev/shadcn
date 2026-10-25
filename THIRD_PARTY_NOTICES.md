@@ -164,6 +164,12 @@ DataGrid, FilterBar, Stepper, FileUpload, Tree, Kanban and planning compositions
 
 Reviewed source: https://github.com/keenthemes/reui/tree/067aa0dc7f8bbfec1cd76fc5ad31f842be5f569a
 
+## TanStack Table examples
+
+VirtualDataGrid and DataGridColumnOptions follow the MIT-licensed TanStack Table React examples for virtualized rows, performant column resizing through CSS variables, column ordering, and column visibility. The package implementation, styling, keyboard resizing and behavioral tests are package-owned.
+
+Reviewed source: https://github.com/TanStack/table/tree/main/examples/react
+
 MIT License
 
 Copyright (c) 2025 Keenthemes Inc

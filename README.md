@@ -50,28 +50,29 @@ Package preparation and contributor commands are documented in [AGENTS.md](./AGE
 
 Import shared controls and providers from `@alexgorbatchev/shadcn`. Import the following features from their dedicated entry points and install only the peers you use. These features, their hooks, and their types are not exported from the package root.
 
-| Import path suffix  | Components                                               | Install alongside the package                                                                       |
-| ------------------- | -------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| `/chart`            | Chart parts, AnalyticsChart, Sparkline, hooks and types  | `bun add recharts@3.8.0 cssesc@3.0.0 es-toolkit@1.52.0`                                             |
-| `/calendar`         | Calendar, CalendarDayButton, DatePicker, DateRangePicker | `bun add @daypicker/react@^10.0.2`                                                                  |
-| `/persian-calendar` | PersianCalendar                                          | `bun add @daypicker/persian@^10.0.2 @daypicker/react@^10.0.2`                                       |
-| `/carousel`         | Carousel components, useCarousel, and carousel types     | `bun add embla-carousel-react@^8.6.0`                                                               |
-| `/command`          | Command components, including CommandDialog              | `bun add cmdk@^1.1.1`                                                                               |
-| `/resizable`        | Resizable components and SplitView                       | `bun add react-resizable-panels@^4.14.3`                                                            |
-| `/fonts.css`        | JetBrains Mono font stylesheet                           | `bun add @fontsource-variable/jetbrains-mono@^5.3.0`                                                |
-| `/sonner`           | Sonner, SonnerToaster, Toaster, toast, useSonner         | No additional install; patched implementation is bundled                                            |
-| `/input-otp`        | InputOTP components                                      | No additional install; patched implementation is bundled                                            |
-| `/virtual-table`    | VirtualTable and row measurement props                   | `@tanstack/react-virtual@3.14.13`                                                                   |
-| `/message-scroller` | MessageScroller components, hooks, and types             | No additional install; patched implementation is bundled                                            |
-| `/questionnaire`    | Questionnaire components and types                       | No additional install; patched implementation is bundled                                            |
-| `/data-grid`        | DataGrid and native table helpers                        | `bun add @tanstack/react-table@9.2.8`                                                               |
-| `/file-upload`      | FileUpload selection and validation                      | `bun add react-dropzone@^20.1.4`                                                                    |
-| `/color-picker`     | ColorPicker                                              | `bun add react-colorful@^5.8.1`                                                                     |
-| `/image-crop`       | ImageCrop and native export helpers                      | `bun add react-image-crop@^11.1.2`                                                                  |
-| `/tree`             | Tree, native hooks and features                          | `bun add @headless-tree/core@^1.8.0 @headless-tree/react@^1.8.0`                                    |
-| `/editor`           | RichTextEditor, native Tiptap hooks and StarterKit       | `bun add @tiptap/core@^3.32.0 @tiptap/react@^3.32.0 @tiptap/pm@^3.32.0 @tiptap/starter-kit@^3.32.0` |
-| `/event-calendar`   | EventCalendar, EventForm and native calendar APIs        | `bun add date-fns@^4.4.0`; TypeScript: `bun add -d @types/react-big-calendar@^1.16.3`               |
-| `/gantt`            | Gantt and Roadmap                                        | `bun add date-fns@^4.4.0 @date-fns/tz@^1.5.0`                                                       |
+| Import path suffix   | Components                                               | Install alongside the package                                                                       |
+| -------------------- | -------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `/chart`             | Chart parts, AnalyticsChart, Sparkline, hooks and types  | `bun add recharts@3.8.0 cssesc@3.0.0 es-toolkit@1.52.0`                                             |
+| `/calendar`          | Calendar, CalendarDayButton, DatePicker, DateRangePicker | `bun add @daypicker/react@^10.0.2`                                                                  |
+| `/persian-calendar`  | PersianCalendar                                          | `bun add @daypicker/persian@^10.0.2 @daypicker/react@^10.0.2`                                       |
+| `/carousel`          | Carousel components, useCarousel, and carousel types     | `bun add embla-carousel-react@^8.6.0`                                                               |
+| `/command`           | Command components, including CommandDialog              | `bun add cmdk@^1.1.1`                                                                               |
+| `/resizable`         | Resizable components and SplitView                       | `bun add react-resizable-panels@^4.14.3`                                                            |
+| `/fonts.css`         | JetBrains Mono font stylesheet                           | `bun add @fontsource-variable/jetbrains-mono@^5.3.0`                                                |
+| `/sonner`            | Sonner, SonnerToaster, Toaster, toast, useSonner         | No additional install; patched implementation is bundled                                            |
+| `/input-otp`         | InputOTP components                                      | No additional install; patched implementation is bundled                                            |
+| `/virtual-table`     | VirtualTable and row measurement props                   | `@tanstack/react-virtual@3.14.13`                                                                   |
+| `/message-scroller`  | MessageScroller components, hooks, and types             | No additional install; patched implementation is bundled                                            |
+| `/questionnaire`     | Questionnaire components and types                       | No additional install; patched implementation is bundled                                            |
+| `/data-grid`         | DataGrid, column picker, and native table helpers        | `bun add @tanstack/react-table@9.2.8`                                                               |
+| `/virtual-data-grid` | VirtualDataGrid and row measurement props                | `bun add @tanstack/react-table@9.2.8 @tanstack/react-virtual@3.14.13`                               |
+| `/file-upload`       | FileUpload selection and validation                      | `bun add react-dropzone@^20.1.4`                                                                    |
+| `/color-picker`      | ColorPicker                                              | `bun add react-colorful@^5.8.1`                                                                     |
+| `/image-crop`        | ImageCrop and native export helpers                      | `bun add react-image-crop@^11.1.2`                                                                  |
+| `/tree`              | Tree, native hooks and features                          | `bun add @headless-tree/core@^1.8.0 @headless-tree/react@^1.8.0`                                    |
+| `/editor`            | RichTextEditor, native Tiptap hooks and StarterKit       | `bun add @tiptap/core@^3.32.0 @tiptap/react@^3.32.0 @tiptap/pm@^3.32.0 @tiptap/starter-kit@^3.32.0` |
+| `/event-calendar`    | EventCalendar, EventForm and native calendar APIs        | `bun add date-fns@^4.4.0`; TypeScript: `bun add -d @types/react-big-calendar@^1.16.3`               |
+| `/gantt`             | Gantt and Roadmap                                        | `bun add date-fns@^4.4.0 @date-fns/tz@^1.5.0`                                                       |
 
 Import `@alexgorbatchev/shadcn/event-calendar.css` for EventCalendar, and `react-image-crop/dist/ReactCrop.css` for ImageCrop. The root also provides application shells, dashboard and billing layouts, authentication/settings forms, account/workspace controls, Kanban, facets, tags, number fields, toolbars, meters, stat cards and status displays. See the [component catalog reference](./docs/internal/component-catalog.md) for source groups, native APIs, dependency costs and consumer responsibilities.
 
@@ -301,6 +302,8 @@ Compose `QuestionnaireItem`, `QuestionnaireTitle`, and answer controls inside `Q
 `InlineEdit` mounts an edit session with a controlled `value`, `onValueChange`, `onCommit`, and `onCancel`. Mount it in place of the displayed label. Its input focuses and selects its text by default; `shouldSelectOnMount={false}` preserves the initial caret. Enter or blur commits once, Escape cancels without committing, and asynchronous saves disable the input until completion. Rejected saves display an error and allow retry.
 
 `VirtualTable` renders a bounded, dynamically measured set of native table rows using TanStack Virtual. Supply `items`, stable `getItemKey`, `header`, `label`, and `renderRow`; spread the supplied measurement props onto each native row. Optional `columns` accepts a `TableColumnGroup`; responsive columns keep their widths aligned with cells that share their `visibleFrom`. `maxHeight` defaults to `65vh`, `estimateRowHeight` to 80 pixels, and `overscan` to five rows. `retainedKeys` keeps editing rows mounted; the focused row is retained automatically. Filtering and selection belong to the consumer.
+
+`VirtualDataGrid` renders a TanStack Table instance built with `dataGridFeatures` through `VirtualTable`: every filtered and sorted row, without pagination, in a fixed-layout table. Column `meta` sets `label`, `textAlign`, `truncate`, `visibleFrom`, and `fill`; a `fill` column takes the width the sized columns leave. Other resizable columns get a window-splitter handle that resizes by dragging, by the arrow keys, Home, and End, and resets on double-click. Widths change through CSS variables, so a `useTable` selector can omit `columnSizing` and `columnResizing` to keep resizing from rendering rows. `renderRow` receives each row and its measurement props; spread the props onto a `TableRow` and render `DataGridCells` inside it to wrap rows in menus or drag sources. `retainedRowIds` keeps rows mounted while they hold editors. `DataGridColumnOptions` shows, hides, and reorders the columns that allow hiding; its reset restores the table's initial visibility, order, and sizes.
 
 `StarRating` takes a controlled numeric `value` from 0 to 5, `onValueChange`, and an accessible `label`. Its native radio buttons support keyboard selection and an Unrated option to clear the rating. Set `disabled` while saving. `Avatar shape="square"` displays square artwork with matching image, fallback, and border corners.
 
