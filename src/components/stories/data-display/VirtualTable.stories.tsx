@@ -4,6 +4,7 @@ import { VirtualTable } from "../../virtual-table/VirtualTable.js";
 import { TableCell, TableColumn, TableColumnGroup, TableHead, TableRow } from "../../Table.js";
 import { Button } from "../../Button.js";
 import { fixture_virtualRows } from "../fixtures";
+import { expectNoWindowErrors, recordWindowErrors } from "../helpers";
 
 const meta: Meta<typeof VirtualTable<string>> = {
   title: "@alexgorbatchev/shadcn/components/data-display/VirtualTable",
@@ -34,6 +35,7 @@ type Story = StoryObj<typeof VirtualTable<string>>;
 export const LargeCollection: Story = {
   async play({ canvasElement }) {
     const canvas = within(canvasElement);
+    const errors = recordWindowErrors();
     await expect(await canvas.findByRole("button", { name: "Item 0" })).toBeVisible();
     await expect(canvas.getByRole("table", { name: "Items" })).toHaveAttribute("aria-rowcount", "1001");
     await expect(canvas.getAllByRole("row").length).toBeLessThan(30);
@@ -47,6 +49,7 @@ export const LargeCollection: Story = {
     viewport.scrollTo({ top: viewport.scrollHeight });
     await waitFor(() => expect(canvas.getByRole("button", { name: "Item 999" })).toBeVisible());
     await expect(canvas.getByRole("button", { name: "Item 0" })).toHaveFocus();
+    await expectNoWindowErrors(errors);
   },
 };
 
@@ -54,9 +57,11 @@ export const RetainedRow: Story = {
   args: { retainedKeys: ["Item 500"] },
   async play({ canvasElement }) {
     const canvas = within(canvasElement);
+    const errors = recordWindowErrors();
     await expect(await canvas.findByRole("button", { name: "Item 0" })).toBeVisible();
     await expect(canvas.getByRole("button", { name: "Item 500" })).toBeInTheDocument();
     await expect(canvas.getAllByRole("row").length).toBeLessThan(30);
+    await expectNoWindowErrors(errors);
   },
 };
 
@@ -93,6 +98,7 @@ export const ResponsiveColumns: Story = {
   ),
   async play({ canvasElement }) {
     const canvas = within(canvasElement);
+    const errors = recordWindowErrors();
     const table = await canvas.findByRole("table", { name: "Items" });
     const viewport = canvas.getByRole("region", { name: "Items" });
     viewport.scrollTo({ top: viewport.scrollHeight / 2 });
@@ -101,5 +107,6 @@ export const ResponsiveColumns: Story = {
     await expect(canvas.getByText("Kind", { exact: true })).not.toBeVisible();
     const name = canvas.getByRole("columnheader", { name: "Name" }).getBoundingClientRect().width;
     await expect(name).toBe(table.getBoundingClientRect().width - 60);
+    await expectNoWindowErrors(errors);
   },
 };

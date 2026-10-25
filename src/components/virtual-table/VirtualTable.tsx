@@ -66,6 +66,9 @@ export function VirtualTable<T>({
     estimateSize: () => estimateRowHeight,
     overscan,
     rangeExtractor,
+    // Measuring inside the ResizeObserver callback resizes rows it observes, which the browser reports as an
+    // undelivered-notification loop; measuring on the next frame keeps each callback free of layout changes.
+    useAnimationFrameWithResizeObserver: true,
   });
   const rows = virtualizer.getVirtualItems();
   const last = rows.at(-1);

@@ -1,3 +1,4 @@
+import { expect } from "storybook/test";
 import type { CarouselApi, CarouselProps } from "../carousel/types";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../carousel/Carousel";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../Card";
@@ -516,4 +517,23 @@ export function CarouselGalleryExample({
       <output aria-label="Gallery snap">{snap}</output>
     </div>
   );
+}
+
+/** Records window error messages until the returned function is called, which stops recording and returns them. */
+export function recordWindowErrors(): () => string[] {
+  const messages: string[] = [];
+  const record = (event: ErrorEvent): void => {
+    messages.push(event.message);
+  };
+  window.addEventListener("error", record);
+  return () => {
+    window.removeEventListener("error", record);
+    return messages;
+  };
+}
+
+/** Waits two frames for deferred observer callbacks, then expects that no window errors were recorded. */
+export async function expectNoWindowErrors(stop: () => string[]): Promise<void> {
+  await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+  await expect(stop()).toEqual([]);
 }
