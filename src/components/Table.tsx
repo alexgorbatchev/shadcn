@@ -160,14 +160,19 @@ function TableColumnGroup(props: TableColumnGroupProps): ReactElement {
   return <colgroup data-slot="table-column-group" {...props} />;
 }
 
-type TableColumnProps = ComponentProps<"col"> & Pick<ITableCellOptions, "visibleFrom">;
+type TableColumnProps = ComponentProps<"col"> &
+  Pick<ITableCellOptions, "visibleFrom"> & {
+    /** Fixed column width; numbers are pixels. Columns without one share the remaining width. */
+    width?: number | string;
+  };
 
-/** A sized column; give it the same `visibleFrom` as its header and cells. */
-function TableColumn({ className, visibleFrom, ...props }: TableColumnProps): ReactElement {
+/** A column; give it the same `visibleFrom` as its header and cells. */
+function TableColumn({ className, style, visibleFrom, width, ...props }: TableColumnProps): ReactElement {
   return (
     <col
       data-slot="table-column"
       className={cn(visibleFrom && columnVisibilityClasses[visibleFrom], className)}
+      style={width === undefined ? style : { ...style, width }}
       {...props}
     />
   );

@@ -607,7 +607,7 @@ export const ResponsiveColumnWidths: Story = {
           <Table layout="fixed">
             <TableColumnGroup>
               <TableColumn />
-              <TableColumn visibleFrom="container-sm" style={{ width: 60 }} />
+              <TableColumn visibleFrom="container-sm" width={60} />
             </TableColumnGroup>
             <TableHeader>
               <TableRow>

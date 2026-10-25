@@ -65,8 +65,8 @@ export const ResponsiveColumns: Story = {
     columns: (
       <TableColumnGroup>
         <TableColumn />
-        <TableColumn visibleFrom="container-sm" style={{ width: 80 }} />
-        <TableColumn style={{ width: 60 }} />
+        <TableColumn visibleFrom="container-sm" width={80} />
+        <TableColumn width={60} />
       </TableColumnGroup>
     ),
     header: (
