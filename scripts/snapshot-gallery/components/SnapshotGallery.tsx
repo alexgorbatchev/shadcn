@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { ReactElement } from "react";
 import { useVirtualizer } from "@tanstack/react-virtual";
+import { SnapshotComponentFilter } from "./SnapshotComponentFilter";
 import { SnapshotThumbnail } from "./SnapshotThumbnail";
 import "../gallery.css";
 
@@ -38,10 +39,13 @@ const snapshots: Snapshot[] = Object.entries(images)
   })
   .sort((left, right) => left.componentPath.localeCompare(right.componentPath) || left.name.localeCompare(right.name));
 
+const componentPaths = [...new Set(snapshots.map((snapshot) => snapshot.componentPath))];
+
 export function SnapshotGallery(): ReactElement {
   const viewport = useRef<HTMLDivElement>(null);
   const [columns, setColumns] = useState(4);
   const [query, setQuery] = useState("");
+  const [componentPath, setComponentPath] = useState<string | null>(null);
   const [isTrimmed, setIsTrimmed] = useState(true);
   useEffect(() => {
     const element = viewport.current;
@@ -52,8 +56,10 @@ export function SnapshotGallery(): ReactElement {
     observer.observe(element);
     return () => observer.disconnect();
   }, []);
-  const visible = snapshots.filter((snapshot) =>
-    `${snapshot.componentPath} ${snapshot.storyPath} ${snapshot.name}`.toLowerCase().includes(query.toLowerCase()),
+  const visible = snapshots.filter(
+    (snapshot) =>
+      (componentPath === null || snapshot.componentPath === componentPath) &&
+      snapshot.name.toLowerCase().includes(query.toLowerCase()),
   );
   const groups = Map.groupBy(visible, (snapshot) => snapshot.componentPath);
   const rows: GalleryRow[] = [];
@@ -94,6 +100,14 @@ export function SnapshotGallery(): ReactElement {
             <option value="frame">Full frame</option>
           </select>
         </label>
+        <SnapshotComponentFilter
+          paths={componentPaths}
+          value={componentPath}
+          onValueChange={(value) => {
+            setComponentPath(value);
+            virtualizer.scrollToOffset(0);
+          }}
+        />
         <label>
           Filter snapshots
           <input
@@ -103,7 +117,7 @@ export function SnapshotGallery(): ReactElement {
               setQuery(event.target.value);
               virtualizer.scrollToOffset(0);
             }}
-            placeholder="Component, theme, density, viewport…"
+            placeholder="Snapshot name, theme, density, viewport…"
           />
         </label>
       </header>

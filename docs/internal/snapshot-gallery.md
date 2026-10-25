@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-24 07:59
-last_modified: 2026-10-24 07:59
+last_modified: 2026-10-25 06:17
 status: current
 ---
 
@@ -16,7 +16,7 @@ To start only the gallery through the same environment setup:
 just snapshots
 ```
 
-Filter by component, story path, theme, density, viewport, or any other part of the filename. Clearing the filter restores every baseline. The responsive grid virtualizes rows so only nearby thumbnails are mounted. The default content preview trims outer pixels matching the image’s top-left background pixel, with an eight-pixel margin. Switch Preview to Full frame to inspect original whitespace and alignment. Both modes preserve aspect ratio and fit inside a compact frame; open the original to inspect details at native resolution.
+Choose a component in the searchable Component dropdown by typing its name or repository-relative path, then selecting a suggestion with the pointer or arrow keys and Enter. Clear the selection with Show all components to restore every component. The separate snapshot text filter matches theme, density, viewport, or any other part of the snapshot filename, and combines with the selected component. Clearing either filter preserves the other. The responsive grid virtualizes rows so only nearby thumbnails are mounted. The default content preview trims outer pixels matching the image’s top-left background pixel, with an eight-pixel margin. Switch Preview to Full frame to inspect original whitespace and alignment. Both modes preserve aspect ratio and fit inside a compact frame; open the original to inspect details at native resolution.
 
 Vite discovers new, removed, and updated snapshots during development. The gallery displays saved baselines, not fresh captures, actual/diff failure attachments, or pass/fail results. Run `bun run test:visual` separately to compare current rendering against those baselines.
 

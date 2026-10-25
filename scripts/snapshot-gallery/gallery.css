@@ -1,5 +1,7 @@
 @import "tailwindcss" source(none);
 @import "../../src/theme.css";
+@source "../../src/components";
+@source not "../../src/components/stories";
 
 :root {
   font-family: system-ui, sans-serif;
@@ -35,14 +37,14 @@ p {
   font-size: 12px;
   color: var(--muted-foreground);
 }
-label {
+.gallery-toolbar > label {
   display: grid;
   gap: 4px;
   font-size: 12px;
 }
-input,
-select {
-  width: min(340px, 85vw);
+.gallery-toolbar > label > input,
+.gallery-toolbar > label > select {
+  width: min(280px, 85vw);
   padding: 8px;
   border: 1px solid var(--border);
   border-radius: 4px;
@@ -107,11 +109,19 @@ figcaption {
   overflow-wrap: anywhere;
 }
 a:focus-visible,
-input:focus-visible,
+.gallery-toolbar > label > input:focus-visible,
 .gallery-viewport:focus-visible {
   outline: 2px solid var(--ring);
   outline-offset: -2px;
 }
 .gallery-empty {
   padding: 24px;
+}
+.gallery-component-filter {
+  width: min(280px, 85vw);
+  min-width: 0;
+}
+.gallery-toolbar > div:first-child {
+  flex: 1 1 260px;
+  min-width: 0;
 }

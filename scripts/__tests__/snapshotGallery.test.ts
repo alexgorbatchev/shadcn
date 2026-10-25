@@ -63,21 +63,69 @@ test("filter resets scroll, narrows snapshots, and recovers from an empty result
   try {
     await page.goto(origin);
     const filter = page.getByRole("searchbox", { name: "Filter snapshots", exact: true });
+    const component = page.getByRole("combobox", { name: "Component", exact: true });
     await page.getByRole("heading", { name: "src/components/Badge.tsx", exact: true }).waitFor();
     await page
       .getByRole("region", { name: "Snapshot gallery", exact: true })
       .evaluate((element) => element.scrollTo(0, 1000));
-    await filter.fill("ScrollArea.tsx");
+    await component.fill("ScrollArea");
+    await page.getByRole("option", { name: "src/components/ScrollArea.tsx", exact: true }).click();
     await page.getByRole("heading", { name: "src/components/ScrollArea.tsx", exact: true }).waitFor();
     expect(await page.locator("figure").count()).toBeGreaterThan(0);
     expect(await page.locator("body").evaluate((element) => element.scrollWidth <= innerWidth)).toBe(true);
     await filter.fill("no-matching-snapshot");
     await page.getByText("No snapshots match your filter.", { exact: true }).waitFor();
     expect(await page.locator("figure").count()).toBe(0);
-    await filter.fill("Input.tsx");
+    await filter.fill("");
+    await component.fill("Input");
+    await page.getByRole("option", { name: "src/components/Input.tsx", exact: true }).click();
     await page.getByRole("heading", { name: "src/components/Input.tsx", exact: true }).waitFor();
     await page.waitForFunction(() => (document.querySelector("canvas")?.width ?? 300) !== 300);
     expect(await page.locator("figure a").first().getAttribute("target")).toBe("_blank");
+  } finally {
+    await page.close();
+  }
+}, 30_000);
+
+test("component autocomplete supports keyboard selection and combines with the snapshot filter", async () => {
+  const page = await browser.newPage();
+  page.setDefaultTimeout(5_000);
+  try {
+    await page.goto(origin);
+    const component = page.getByRole("combobox", { name: "Component", exact: true });
+    const filter = page.getByRole("searchbox", { name: "Filter snapshots", exact: true });
+    await component.fill("Button");
+    await page.getByRole("option", { name: "src/components/Button.tsx", exact: true }).waitFor();
+    expect(await page.getByRole("option").allTextContents()).toEqual(["src/components/Button.tsx"]);
+    await component.press("ArrowDown");
+    await component.press("Enter");
+    await page.getByRole("heading", { name: "src/components/Button.tsx", exact: true }).waitFor();
+    expect(await page.getByRole("heading", { level: 2 }).allTextContents()).toEqual(["src/components/Button.tsx"]);
+    await filter.fill("dark");
+    const paths = await Array.fromAsync(new Bun.Glob("src/components/stories/**/__screenshots__/**/*.png").scan("."));
+    const buttonDark = paths.filter((path) => path.includes("/Button.stories.tsx/") && path.includes("visual-dark-"));
+    await page
+      .getByText(`${buttonDark.length} / ${paths.length} snapshots · 1 components · click an image for full size`, {
+        exact: true,
+      })
+      .waitFor();
+    await component.fill("no-such-component");
+    await page.getByText("No components found.", { exact: true }).waitFor();
+    expect(await page.locator("figure").count()).toBeGreaterThan(0);
+    await component.press("Escape");
+    await page.getByRole("button", { name: "Show all components", exact: true }).click();
+    const dark = paths.filter((path) => path.includes("visual-dark-"));
+    const groups = new Set(dark.map((path) => path.slice(0, path.lastIndexOf("/"))));
+    await page
+      .getByText(
+        `${dark.length} / ${paths.length} snapshots · ${groups.size} components · click an image for full size`,
+        { exact: true },
+      )
+      .waitFor();
+    expect(await filter.inputValue()).toBe("dark");
+    expect(await component.inputValue()).toBe("");
+    await filter.fill("");
+    await page.getByRole("heading", { name: "src/components/Badge.tsx", exact: true }).waitFor();
   } finally {
     await page.close();
   }
