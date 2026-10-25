@@ -24,7 +24,6 @@ interface IVirtualTableProps<T> {
   renderRow: (item: T, props: IVirtualTableRowProps) => ReactNode;
   header: ReactNode;
   columns?: ReactNode;
-  columnCount: number;
   label: string;
   maxHeight?: number | string;
   estimateRowHeight?: number;
@@ -39,7 +38,6 @@ export function VirtualTable<T>({
   renderRow,
   header,
   columns,
-  columnCount,
   label,
   maxHeight = "65vh",
   estimateRowHeight = 80,
@@ -86,6 +84,7 @@ export function VirtualTable<T>({
         if (row && item) setFocusedKey(getItemKey(item));
       }}
     >
+      {/* Spacer rows hold only one cell, so they never add grid columns that hidden responsive cells leave empty. */}
       <Table layout={layout} aria-label={label} aria-rowcount={items.length + 1}>
         {columns}
         <TableHeader>{header}</TableHeader>
@@ -94,10 +93,7 @@ export function VirtualTable<T>({
             <Fragment key={row.key}>
               {row.start > (rows[index - 1]?.end ?? 0) && (
                 <tr aria-hidden="true">
-                  <td
-                    colSpan={columnCount}
-                    style={{ height: row.start - (rows[index - 1]?.end ?? 0), padding: 0, border: 0 }}
-                  />
+                  <td style={{ height: row.start - (rows[index - 1]?.end ?? 0), padding: 0, border: 0 }} />
                 </tr>
               )}
               {renderRow(items[row.index]!, {
@@ -109,10 +105,7 @@ export function VirtualTable<T>({
           ))}
           {last && virtualizer.getTotalSize() > last.end && (
             <tr aria-hidden="true">
-              <td
-                colSpan={columnCount}
-                style={{ height: virtualizer.getTotalSize() - last.end, padding: 0, border: 0 }}
-              />
+              <td style={{ height: virtualizer.getTotalSize() - last.end, padding: 0, border: 0 }} />
             </tr>
           )}
         </TableBody>

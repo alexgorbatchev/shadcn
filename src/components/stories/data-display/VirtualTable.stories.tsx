@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, waitFor, within } from "storybook/test";
 import { VirtualTable } from "../../virtual-table/VirtualTable.js";
-import { TableCell, TableHead, TableRow } from "../../Table.js";
+import { TableCell, TableColumn, TableColumnGroup, TableHead, TableRow } from "../../Table.js";
 import { Button } from "../../Button.js";
 import { fixture_virtualRows } from "../fixtures";
 
@@ -14,7 +14,6 @@ const meta: Meta<typeof VirtualTable<string>> = {
     getItemKey: (item) => item,
     label: "Items",
     maxHeight: 300,
-    columnCount: 1,
     header: (
       <TableRow>
         <TableHead scope="col">Name</TableHead>
@@ -58,5 +57,49 @@ export const RetainedRow: Story = {
     await expect(await canvas.findByRole("button", { name: "Item 0" })).toBeVisible();
     await expect(canvas.getByRole("button", { name: "Item 500" })).toBeInTheDocument();
     await expect(canvas.getAllByRole("row").length).toBeLessThan(30);
+  },
+};
+
+export const ResponsiveColumns: Story = {
+  args: {
+    columns: (
+      <TableColumnGroup>
+        <TableColumn />
+        <TableColumn visibleFrom="container-sm" style={{ width: 80 }} />
+        <TableColumn style={{ width: 60 }} />
+      </TableColumnGroup>
+    ),
+    header: (
+      <TableRow>
+        <TableHead scope="col">Name</TableHead>
+        <TableHead scope="col" visibleFrom="container-sm">
+          Kind
+        </TableHead>
+        <TableHead scope="col">Size</TableHead>
+      </TableRow>
+    ),
+    renderRow: (item, props) => (
+      <TableRow {...props}>
+        <TableCell>{item}</TableCell>
+        <TableCell visibleFrom="container-sm">File</TableCell>
+        <TableCell>1 KB</TableCell>
+      </TableRow>
+    ),
+  },
+  render: (args) => (
+    <div style={{ width: 350 }}>
+      <VirtualTable {...args} />
+    </div>
+  ),
+  async play({ canvasElement }) {
+    const canvas = within(canvasElement);
+    const table = await canvas.findByRole("table", { name: "Items" });
+    const viewport = canvas.getByRole("region", { name: "Items" });
+    viewport.scrollTo({ top: viewport.scrollHeight / 2 });
+    // Spacer rows above and below the rendered rows add no columns for the hidden Kind cells to leave empty.
+    await waitFor(() => expect(canvas.queryByRole("cell", { name: "Item 0" })).not.toBeInTheDocument());
+    await expect(canvas.getByText("Kind", { exact: true })).not.toBeVisible();
+    const name = canvas.getByRole("columnheader", { name: "Name" }).getBoundingClientRect().width;
+    await expect(name).toBe(table.getBoundingClientRect().width - 60);
   },
 };
