@@ -1032,6 +1032,14 @@
     "./gantt": {
       "types": "./dist/components/gantt/index.d.ts",
       "import": "./dist/components/gantt/index.js"
+    },
+    "./json-render": {
+      "types": "./dist/components/json-render/index.d.ts",
+      "import": "./dist/components/json-render/index.js"
+    },
+    "./json-render/catalog": {
+      "types": "./dist/components/json-render/catalog.d.ts",
+      "import": "./dist/components/json-render/catalog.js"
     }
   },
   "publishConfig": {
@@ -1085,6 +1093,8 @@
     "@headless-tree/core": "1.8.0",
     "@headless-tree/react": "1.8.0",
     "@hookform/resolvers": "5.9.1",
+    "@json-render/core": "0.21.1",
+    "@json-render/react": "0.21.1",
     "@storybook/addon-a11y": "^10.6.1",
     "@storybook/addon-docs": "^10.6.1",
     "@storybook/addon-vitest": "^10.6.1",
@@ -1166,6 +1176,8 @@
     "@fontsource-variable/jetbrains-mono": "^5.3.0",
     "@headless-tree/core": "^1.8.0",
     "@headless-tree/react": "^1.8.0",
+    "@json-render/core": "0.21.1",
+    "@json-render/react": "0.21.1",
     "@tanstack/react-table": "9.2.8",
     "@tanstack/react-virtual": "^3.14.13",
     "@tiptap/core": "^3.32.0",
@@ -1331,6 +1343,12 @@
       "optional": true
     },
     "@types/react-big-calendar": {
+      "optional": true
+    },
+    "@json-render/core": {
+      "optional": true
+    },
+    "@json-render/react": {
       "optional": true
     }
   },

@@ -37,6 +37,7 @@ export type ChartTooltipContentProps = Omit<
     className?: string;
     htmlProps?: ComponentProps<"div">;
     active?: boolean;
+    valueFormatter?: (value: number) => string;
     hideLabel?: boolean;
     hideIndicator?: boolean;
     indicator?: "line" | "dot" | "dashed";

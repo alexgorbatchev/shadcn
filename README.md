@@ -52,6 +52,7 @@ Import shared controls and providers from `@alexgorbatchev/shadcn`. Import the f
 
 | Import path suffix   | Components                                               | Install alongside the package                                                                       |
 | -------------------- | -------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `/json-render` | JSON Render component registry and catalog | `bun add @json-render/core@0.21.1 @json-render/react@0.21.1 embla-carousel-react@^8.6.0` |
 | `/chart`             | Chart parts, AnalyticsChart, Sparkline, hooks and types  | `bun add recharts@3.8.0 cssesc@3.0.0 es-toolkit@1.52.0`                                             |
 | `/calendar`          | Calendar, CalendarDayButton, DatePicker, DateRangePicker | `bun add @daypicker/react@^10.0.2`                                                                  |
 | `/persian-calendar`  | PersianCalendar                                          | `bun add @daypicker/persian@^10.0.2 @daypicker/react@^10.0.2`                                       |

@@ -225,3 +225,7 @@ The optional feature imports use external, separately installed react-dropzone 2
 ## React Big Calendar and uncontrollable
 
 The `/event-calendar` entry point bundles React Big Calendar 1.20.0 (https://github.com/bigcalendar/react-big-calendar), uncontrollable 7.2.1 (https://github.com/jquense/uncontrollable), and their runtime dependencies. The version-pinned patch replaces uncontrollable’s obsolete compiled JSX calls with React’s JSX runtime in its ESM and CommonJS builds. Native state ownership, callbacks and ref forwarding are retained. React and declared peers remain external. Complete bundled dependency notices are included in [licenses/event-calendar.txt](./licenses/event-calendar.txt).
+
+## JSON Render
+
+The optional `/json-render` catalog adapts component schemas and renderers from `@json-render/shadcn` 0.21.1, https://github.com/vercel-labs/json-render. Local modifications use this package’s Base UI components, native composition APIs, semantic variants, accessible labels, and explicit feature exports. JSON Render remains an external optional peer. The Apache License 2.0 is included in [licenses/json-render-APACHE-2.0.txt](./licenses/json-render-APACHE-2.0.txt).

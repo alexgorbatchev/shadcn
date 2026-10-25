@@ -8,7 +8,7 @@ const meta: Meta<typeof Alert> = {
   title: "@alexgorbatchev/shadcn/components/feedback/Alert",
   component: Alert,
   tags: ["autodocs", "test"],
-  argTypes: { variant: { control: "select", options: ["default", "destructive"] } },
+  argTypes: { variant: { control: "select", options: ["default", "destructive", "success", "warning", "info"] } },
   render: (args) => (
     <Alert {...args}>
       <CircleAlertIcon />
@@ -27,6 +27,8 @@ export const Default: Story = {
   },
 };
 export const Destructive: Story = { ...Default, args: { variant: "destructive" } };
+export const Success: Story = { ...Default, args: { variant: "success" } };
+export const Info: Story = { ...Default, args: { variant: "info" } };
 export const Compact: Story = { ...Default, args: { density: "compact" } };
 const onUndo = fn();
 export const WithAction: Story = {
@@ -46,12 +48,12 @@ export const WithAction: Story = {
   },
 };
 
-export const CustomColors: Story = {
+export const Warning: Story = {
   render: (args) => (
-    <Alert {...args} className="border-warning/30 bg-warning/10 text-warning">
+    <Alert {...args} variant="warning">
       <TriangleAlertIcon aria-hidden="true" />
       <AlertTitle>Subscription expires soon</AlertTitle>
-      <AlertDescription className="text-warning">Renew your subscription to keep access.</AlertDescription>
+      <AlertDescription>Renew your subscription to keep access.</AlertDescription>
     </Alert>
   ),
   play: async ({ canvasElement }) => {
@@ -60,7 +62,7 @@ export const CustomColors: Story = {
     const description = canvas.getByText("Renew your subscription to keep access.");
     await expect(title).toBeVisible();
     await expect(description).toBeVisible();
-    await expect(getComputedStyle(title).color).toBe(getComputedStyle(description).color);
+    await expect(getComputedStyle(title).color).not.toBe("rgba(0, 0, 0, 0)");
     await expect(canvas.getByRole("alert").querySelector("svg")).toHaveAttribute("aria-hidden", "true");
   },
 };

@@ -10,29 +10,36 @@ type AnalyticsSeries = {
 };
 type AnalyticsChartProps = IDensityProps & {
   label: string;
-  data: Record<string, string | number>[];
+  data: Record<string, string | number | null>[];
+  showDots?: boolean;
   index: string;
   series: readonly AnalyticsSeries[];
   valueFormatter?: (value: number) => string;
 };
-function AnalyticsChart({ label, data, index, series, valueFormatter, density }: AnalyticsChartProps): ReactElement {
-  const config = Object.fromEntries(
-    series.map((item, i) => [item.key, { label: item.label, color: `var(--chart-${(i % 5) + 1})` }]),
-  );
+function AnalyticsChart({
+  label,
+  data,
+  index,
+  series,
+  valueFormatter,
+  showDots = false,
+  density,
+}: AnalyticsChartProps): ReactElement {
+  const config = Object.fromEntries(series.map((item) => [item.key, { label: item.label }]));
   return (
-    <Chart aria-label={label} density={density} config={config} className="h-72 w-full aspect-auto">
+    <Chart role="region" aria-label={label} density={density} config={config} className="h-72 w-full aspect-auto">
       <ComposedChart data={data} accessibilityLayer>
         <CartesianGrid vertical={false} />
         <XAxis dataKey={index} tickLine={false} axisLine={false} />
         <YAxis tickLine={false} axisLine={false} tickFormatter={valueFormatter} />
-        <ChartTooltip content={<ChartTooltipContent />} />
+        <ChartTooltip content={<ChartTooltipContent valueFormatter={valueFormatter} />} />
         <ChartLegend content={<ChartLegendContent />} />
-        {series.map((item) =>
+        {series.map((item, i) =>
           item.type === "bar" ? (
             <Bar
               key={item.key}
               dataKey={item.key}
-              fill={config[item.key]?.color}
+              fill={`var(--chart-${(i % 5) + 1})`}
               stackId={item.stackId}
               isAnimationActive={false}
             />
@@ -40,9 +47,11 @@ function AnalyticsChart({ label, data, index, series, valueFormatter, density }:
             <Area
               key={item.key}
               dataKey={item.key}
-              stroke={config[item.key]?.color}
-              fill={config[item.key]?.color}
+              stroke={`var(--chart-${(i % 5) + 1})`}
+              fill={`var(--chart-${(i % 5) + 1})`}
               fillOpacity={0.15}
+              dot={showDots}
+              connectNulls={false}
               stackId={item.stackId}
               isAnimationActive={false}
             />
@@ -50,8 +59,9 @@ function AnalyticsChart({ label, data, index, series, valueFormatter, density }:
             <Line
               key={item.key}
               dataKey={item.key}
-              stroke={config[item.key]?.color}
-              dot={false}
+              stroke={`var(--chart-${(i % 5) + 1})`}
+              dot={showDots}
+              connectNulls={false}
               isAnimationActive={false}
             />
           ),

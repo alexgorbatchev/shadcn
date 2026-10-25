@@ -216,6 +216,7 @@ export const fixture_optionalPeerNames: readonly string[] = Object.entries(manif
   .map(([name]) => name);
 
 export const fixture_featureTypeExports: Record<string, string> = {
+  "json-render": "components, componentDefinitions",
   "file-upload": "FileUpload, type FileUploadProps",
   "color-picker": "ColorPicker, type ColorPickerProps",
   "image-crop": "ImageCrop, cropToCanvas, type Crop",
@@ -248,6 +249,12 @@ export const fixture_featureTypePaths: Record<string, string> = {
 };
 
 export const fixture_featureConsumers: ReadonlyArray<readonly [string, readonly string[], string, string]> = [
+  [
+    "json-render",
+    ["@json-render/core", "@json-render/react", "embla-carousel-react"],
+    'import { renderToString } from "react-dom/server"; import { defineCatalog } from "@json-render/core"; import { schema } from "@json-render/react/schema"; import { JSONUIProvider, Renderer, defineRegistry } from "@json-render/react"; import { components } from "@alexgorbatchev/shadcn/json-render"; import { componentDefinitions } from "@alexgorbatchev/shadcn/json-render/catalog"; const catalog=defineCatalog(schema,{components:componentDefinitions,actions:{}}); const {registry}=defineRegistry(catalog,{components}); const markup=renderToString(<JSONUIProvider registry={registry}><Renderer registry={registry} spec={{root:"text",elements:{text:{type:"Text",props:{text:"Published JSON render"}}}}}/></JSONUIProvider>); console.log(markup.includes("Published JSON render"));',
+    "true",
+  ],
   [
     "file-upload",
     ["react-dropzone"],

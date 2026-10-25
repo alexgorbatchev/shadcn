@@ -18,6 +18,7 @@ import {
 
 const consumerRoot = `${process.cwd()}/.tmp/optional-consumers/${Date.now()}`;
 const dependencyVersions: Record<string, string> = manifest.devDependencies;
+let consumerArchive: string;
 
 beforeAll(async () => {
   await mkdir(consumerRoot, { recursive: true });
@@ -26,6 +27,9 @@ beforeAll(async () => {
     `${consumerRoot}/package.tgz`,
     Bun.file(`${consumerRoot}/alexgorbatchev-shadcn-${manifest.version}.tgz`),
   );
+  const bytes = await Bun.file(`${consumerRoot}/package.tgz`).bytes();
+  consumerArchive = `shadcn-${Bun.hash(bytes).toString(16)}.tgz`;
+  await Bun.write(`${consumerRoot}/${consumerArchive}`, bytes);
 }, 30_000);
 
 afterAll(async () => {
@@ -108,7 +112,7 @@ test.each(fixture_featureConsumers)(
         private: true,
         type: "module",
         dependencies: {
-          "@alexgorbatchev/shadcn": "../package.tgz",
+          "@alexgorbatchev/shadcn": `../${consumerArchive}`,
           ...manifest.peerDependencies,
           ...Object.fromEntries(fixture_optionalPeerNames.map((peer) => [peer, undefined])),
           ...Object.fromEntries(peers.map((peer) => [peer, dependencyVersions[peer]])),
