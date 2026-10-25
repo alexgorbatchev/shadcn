@@ -38,10 +38,10 @@ The package targets client-rendered Bun React applications.
 
 # Installation
 
-Install the package in a consuming project:
+Install the package and the libraries its core components use. The package installs no third-party packages itself, so the consuming project owns every dependency version:
 
 ```sh
-bun add @alexgorbatchev/shadcn
+bun add @alexgorbatchev/shadcn @base-ui/react@^1.9.0 @base-ui/utils@0.5.0 class-variance-authority@^0.7.1 clsx@^2.1.1 lucide-react@^1.53.0 tailwind-merge@^3.7.0 tw-animate-css@^1.4.0 usehooks-ts@^3.1.1
 ```
 
 Package preparation and contributor commands are documented in [AGENTS.md](./AGENTS.md#commands).
@@ -60,11 +60,11 @@ Import shared controls and providers from `@alexgorbatchev/shadcn`. Import the f
 | `/command`           | Command components, including CommandDialog              | `bun add cmdk@^1.1.1`                                                                               |
 | `/resizable`         | Resizable components and SplitView                       | `bun add react-resizable-panels@^4.14.3`                                                            |
 | `/fonts.css`         | JetBrains Mono font stylesheet                           | `bun add @fontsource-variable/jetbrains-mono@^5.3.0`                                                |
-| `/sonner`            | Sonner, SonnerToaster, Toaster, toast, useSonner         | No additional install; patched implementation is bundled                                            |
-| `/input-otp`         | InputOTP components                                      | No additional install; patched implementation is bundled                                            |
+| `/sonner`            | Sonner, SonnerToaster, Toaster, toast, useSonner         | `bun add sonner@2.0.8`; the patched runtime is bundled                                              |
+| `/input-otp`         | InputOTP components                                      | `bun add input-otp@1.5.0`; the patched runtime is bundled                                           |
 | `/virtual-table`     | VirtualTable and row measurement props                   | `@tanstack/react-virtual@3.14.13`                                                                   |
-| `/message-scroller`  | MessageScroller components, hooks, and types             | No additional install; patched implementation is bundled                                            |
-| `/questionnaire`     | Questionnaire components and types                       | No additional install; patched implementation is bundled                                            |
+| `/message-scroller`  | MessageScroller components, hooks, and types             | `bun add @shadcn/react@0.3.1`; the patched runtime is bundled                                       |
+| `/questionnaire`     | Questionnaire components and types                       | `bun add @shadcn/react@0.3.1`; the patched runtime is bundled                                       |
 | `/data-grid`         | DataGrid, column picker, and native table helpers        | `bun add @tanstack/react-table@9.2.8`                                                               |
 | `/virtual-data-grid` | VirtualDataGrid and row measurement props                | `bun add @tanstack/react-table@9.2.8 @tanstack/react-virtual@3.14.13`                               |
 | `/file-upload`       | FileUpload selection and validation                      | `bun add react-dropzone@^20.1.4`                                                                    |
@@ -85,7 +85,7 @@ import { ChartContainer, type ChartConfig } from "@alexgorbatchev/shadcn/chart";
 import { Carousel, CarouselContent, CarouselItem } from "@alexgorbatchev/shadcn/carousel";
 ```
 
-The patched `sonner`, `input-otp`, and `@shadcn/react` packages remain regular dependencies pending upstream fixes. `react-big-calendar` is also a regular dependency: the calendar and its patched `uncontrollable` wrapper are bundled so React 19 consumers receive the JSX-runtime fix even when their package manager does not apply Bun patches. The corrected calendar runtime is isolated behind `/event-calendar`; React and declared peers remain external. This exception increases the installed dependency size even for core-only consumers. `@base-ui/utils` is a regular dependency at the exact version `@base-ui/react` requires, so the portal components share Base UI's own ref merging without installing a second copy. Other feature dependencies are optional peers, so a core-only installation does not request them. Shared providers work across entry points.
+A production install of this package adds no third-party packages: every library is an optional peer that consumers install themselves, or is bundled into the package. Core peers are listed under Installation; feature peers are listed per entry point above. The patched `sonner`, `input-otp`, and `@shadcn/react` runtimes, and the calendar with its patched `uncontrollable` wrapper, are bundled so consumers receive the fixes even when their package manager does not apply Bun patches; consumers of those three entry points still install the upstream packages for the types the declarations reference; the calendar runtime stays isolated behind `/event-calendar`. Install `@base-ui/utils` at the exact version `@base-ui/react` requires, so the portal components share Base UI's own ref merging without a second copy. Shared providers work across entry points.
 
 The optional assistant-ui catalog provides presentational families under `/assistant-ui/<family>` and runtime adapters under `/assistant-ui/native/<family>`. For example, import `ApprovalCard` from `@alexgorbatchev/shadcn/assistant-ui/approval-card`. Add `@alexgorbatchev/shadcn/assistant-ui.css` to your stylesheet. Native threads require an actual assistant-ui runtime and the selected family's optional peers. See the [assistant-ui reference](./docs/internal/assistant-ui.md) for imports, dependency-bearing styles, source inventory, and the SelectionToolbar isolation limitation.
 

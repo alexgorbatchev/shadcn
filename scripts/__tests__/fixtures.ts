@@ -211,6 +211,22 @@ for (const position of ["start", "end", "last-anchor"]) {
 console.log(JSON.stringify({ hasWindow: typeof window !== "undefined", transcripts }));
 `;
 
+/** Peers the package root imports, which every consumer installs explicitly. */
+export const fixture_corePeerNames = [
+  "@base-ui/react",
+  "@base-ui/utils",
+  "class-variance-authority",
+  "clsx",
+  "lucide-react",
+  "tailwind-merge",
+  "tw-animate-css",
+  "usehooks-ts",
+] as const;
+
+export const fixture_corePeers: Record<string, string> = Object.fromEntries(
+  fixture_corePeerNames.map((name) => [name, manifest.peerDependencies[name]]),
+);
+
 export const fixture_optionalPeerNames: readonly string[] = Object.entries(manifest.peerDependenciesMeta)
   .filter(([, metadata]) => metadata.optional)
   .map(([name]) => name);
@@ -417,7 +433,7 @@ export const fixture_featureConsumers: ReadonlyArray<readonly [string, readonly 
   ],
   [
     "sonner",
-    [],
+    ["sonner"],
     `
     import { renderToString } from "react-dom/server";
     import { jsx } from "react/jsx-runtime";
@@ -436,7 +452,7 @@ export const fixture_featureConsumers: ReadonlyArray<readonly [string, readonly 
   ],
   [
     "input-otp",
-    [],
+    ["input-otp"],
     fixture_otpServerRenderSource,
     JSON.stringify([
       { label: "Saved code", value: "123456", name: "code", maxLength: "6" },
@@ -446,7 +462,7 @@ export const fixture_featureConsumers: ReadonlyArray<readonly [string, readonly 
   ],
   [
     "message-scroller",
-    [],
+    ["@shadcn/react"],
     fixture_scrollerServerRenderSource,
     JSON.stringify({
       hasWindow: false,
@@ -465,7 +481,7 @@ export const fixture_featureConsumers: ReadonlyArray<readonly [string, readonly 
   ],
   [
     "questionnaire",
-    [],
+    ["@shadcn/react"],
     fixture_questionnaireServerRenderSource,
     JSON.stringify({
       hasWindow: false,

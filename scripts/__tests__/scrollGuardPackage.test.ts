@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdir, rm } from "node:fs/promises";
 import { chromium, type Browser, type ConsoleMessage } from "playwright";
 import manifest from "../../package.json";
-import { fixture_optionalPeerNames, fixture_scrollGuardBrowserSource } from "./fixtures";
+import { fixture_corePeers, fixture_optionalPeerNames, fixture_scrollGuardBrowserSource } from "./fixtures";
 import { runConsumerCommand } from "./helpers";
 
 const consumerRoot = `${process.cwd()}/.tmp/scroll-guard-consumer/${Date.now()}`;
@@ -21,6 +21,7 @@ beforeAll(async () => {
         "@alexgorbatchev/shadcn": `./alexgorbatchev-shadcn-${manifest.version}.tgz`,
         ...manifest.peerDependencies,
         ...Object.fromEntries(fixture_optionalPeerNames.map((peer) => [peer, undefined])),
+        ...fixture_corePeers,
       },
     }),
   );

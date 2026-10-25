@@ -4,6 +4,8 @@ import manifest from "../package.json";
 import config from "../tsconfig.json";
 import { buildLlmDocs } from "./buildLlmDocs";
 
+const PATCHED_PEERS = ["@shadcn/react", "sonner", "input-otp"];
+
 const entrypoints = await Promise.all(
   Object.values(manifest.exports)
     .filter((entry) => typeof entry !== "string")
@@ -26,12 +28,9 @@ const result = await Bun.build({
   // The consuming application decides whether library diagnostics run.
   define: { "process.env.NODE_ENV": "process.env.NODE_ENV" },
   packages: "bundle",
-  external: [
-    ...Object.keys(manifest.dependencies).filter(
-      (name) => !["@shadcn/react", "sonner", "input-otp", "react-big-calendar"].includes(name),
-    ),
-    ...Object.keys(manifest.peerDependencies),
-  ],
+  // Consumers install every peer themselves; anything else is bundled. Patched peers stay bundled so consumers run the
+  // fixes, while their installed copies supply the types the declarations reference.
+  external: Object.keys(manifest.peerDependencies).filter((name) => !PATCHED_PEERS.includes(name)),
   minify: false,
 });
 if (!result.success) {

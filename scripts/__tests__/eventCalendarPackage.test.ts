@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { mkdir, rm } from "node:fs/promises";
 import { chromium, type Browser } from "playwright";
 import manifest from "../../package.json";
-import { fixture_eventCalendarBrowserSource } from "./fixtures";
+import { fixture_corePeers, fixture_eventCalendarBrowserSource } from "./fixtures";
 import { runConsumerCommand } from "./helpers";
 
 const consumerRoot = `${process.cwd()}/.tmp/calendar-consumer/${Date.now()}`;
@@ -21,6 +21,7 @@ beforeAll(async () => {
         react: manifest.peerDependencies.react,
         "react-dom": manifest.peerDependencies["react-dom"],
         "date-fns": manifest.peerDependencies["date-fns"],
+        ...fixture_corePeers,
       },
     }),
   );

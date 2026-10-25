@@ -4,6 +4,8 @@ import { mkdir, rm } from "node:fs/promises";
 import manifest from "../../package.json";
 import { getPackageExportTargets, getInstalledRuntimeDependencies, runConsumerCommand } from "./helpers";
 import {
+  fixture_corePeerNames,
+  fixture_corePeers,
   fixture_chartServerRenderSource,
   fixture_otpServerRenderSource,
   fixture_packageRenderSource,
@@ -115,6 +117,7 @@ test.each(fixture_featureConsumers)(
           "@alexgorbatchev/shadcn": `../${consumerArchive}`,
           ...manifest.peerDependencies,
           ...Object.fromEntries(fixture_optionalPeerNames.map((peer) => [peer, undefined])),
+          ...fixture_corePeers,
           ...Object.fromEntries(peers.map((peer) => [peer, dependencyVersions[peer]])),
         },
         devDependencies: {
@@ -124,7 +127,10 @@ test.each(fixture_featureConsumers)(
       }),
     );
     await runConsumerCommand([process.execPath, "install", "--ignore-scripts"], cwd);
-    const installedRuntimeDependencies = await getInstalledRuntimeDependencies(cwd, peers);
+    const installedRuntimeDependencies = await getInstalledRuntimeDependencies(cwd, [
+      ...fixture_corePeerNames,
+      ...peers,
+    ]);
     for (const peer of fixture_optionalPeerNames.filter((peer) => !installedRuntimeDependencies.has(peer))) {
       expect(await Bun.file(`${cwd}/node_modules/${peer}/package.json`).exists(), peer).toBe(false);
     }
