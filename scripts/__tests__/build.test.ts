@@ -179,7 +179,7 @@ test.each(fixture_featureConsumers)(
       }),
     );
     const trace = await runConsumerCommand(
-      [process.execPath, `${process.cwd()}/node_modules/typescript/bin/tsc`, "-p", `${cwd}/tsconfig.json`],
+      [process.execPath, `${process.cwd()}/node_modules/typescript/bin/tsc6`, "-p", `${cwd}/tsconfig.json`],
       cwd,
     );
     expect(
@@ -235,7 +235,7 @@ test.each([
       }),
     );
     const child = Bun.spawn(
-      [process.execPath, "node_modules/typescript/bin/tsc", "--project", `${consumerPath}/tsconfig.json`],
+      [process.execPath, "node_modules/typescript/bin/tsc6", "--project", `${consumerPath}/tsconfig.json`],
       { stdout: "pipe", stderr: "pipe" },
     );
     const [stdout, stderr, exitCode] = await Promise.all([
