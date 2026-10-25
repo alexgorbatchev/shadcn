@@ -88,6 +88,8 @@ export function VirtualDataGridExample({
       data: files,
       getRowId: (file) => file.id,
       initialState: { columnVisibility: initialVisibility },
+      // Columns follow the pointer while dragging; TanStack's default resizes only when the drag ends.
+      columnResizeMode: "onChange",
     },
     ({ columnOrder, columnVisibility, rowSelection, sorting }) => ({
       columnOrder,

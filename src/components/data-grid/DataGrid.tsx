@@ -265,7 +265,7 @@ function DataGridColumnHeader<T extends RowData, V extends CellData>({
 }): ReactElement {
   const sorted = column.getIsSorted();
   return column.getCanSort() ? (
-    <Button type="button" variant="ghost" size="sm" onClick={column.getToggleSortingHandler()}>
+    <Button type="button" variant="ghost" size="inline" onClick={column.getToggleSortingHandler()}>
       {children}
       {sorted === "asc" ? (
         <ArrowUpIcon aria-hidden="true" />

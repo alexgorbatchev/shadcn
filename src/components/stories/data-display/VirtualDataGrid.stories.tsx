@@ -110,6 +110,21 @@ export const RetainedRow: Story = {
   },
 };
 
+export const AlignedHeaders: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const name = await canvas.findByRole("button", { name: "Name" });
+    const label = document.createRange();
+    label.selectNodeContents(name);
+    const value = document.createRange();
+    value.selectNodeContents(canvas.getByText("File 0"));
+    // Sort buttons add no padding of their own, so header labels line up with the values below them.
+    await expect(label.getBoundingClientRect().left).toBeCloseTo(value.getBoundingClientRect().left, 0);
+    const size = canvas.getByRole("columnheader", { name: "Size" });
+    await expect(size.scrollWidth).toBeLessThanOrEqual(size.clientWidth);
+  },
+};
+
 export const NarrowContainer: Story = {
   render: () => <VirtualDataGridExample files={fixture_gridFiles} width={360} />,
   play: async ({ canvasElement }) => {
