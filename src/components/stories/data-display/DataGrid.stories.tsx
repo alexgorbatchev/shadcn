@@ -57,6 +57,33 @@ function Example({ loading = false, pagination = true }: { loading?: boolean; pa
     />
   );
 }
+const combinedColumns = helper.columns([
+  helper.accessor("name", {
+    header: ({ column, table }) => {
+      const email = table.getColumn("email");
+      return (
+        <>
+          <DataGridColumnHeader column={column}>Name</DataGridColumnHeader>
+          {" / "}
+          {email && <DataGridColumnHeader column={email}>Email</DataGridColumnHeader>}
+        </>
+      );
+    },
+    sortFn: "alphanumeric",
+    meta: { sortColumnIds: ["email"] },
+  }),
+  helper.accessor("email", { header: "Email", sortFn: "alphanumeric" }),
+]);
+function CombinedSortExample() {
+  const table = useTable({
+    features: dataGridFeatures,
+    columns: combinedColumns,
+    data: people,
+    getRowId: (row) => row.id,
+    initialState: { columnVisibility: { email: false } },
+  });
+  return <DataGrid table={table} label="People" pagination={false} />;
+}
 const meta: Meta = {
   title: "@alexgorbatchev/shadcn/components/data-display/DataGrid",
   tags: ["autodocs", "test"],
@@ -100,5 +127,21 @@ export const WithoutPagination: Story = {
   render: () => <Example pagination={false} />,
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).queryByRole("button", { name: "Next" })).not.toBeInTheDocument();
+  },
+};
+
+export const CombinedSortHeader: Story = {
+  render: () => <CombinedSortExample />,
+  play: async ({ canvasElement, userEvent }) => {
+    const c = within(canvasElement);
+    const header = c.getByRole("columnheader", { name: "Name / Email" });
+    await expect(header).toHaveAttribute("aria-sort", "none");
+    // Sorting the hidden Email column through this header is announced on the header.
+    await userEvent.click(within(header).getByRole("button", { name: "Email" }));
+    await expect(header).toHaveAttribute("aria-sort", "ascending");
+    await userEvent.click(within(header).getByRole("button", { name: "Email" }));
+    await expect(header).toHaveAttribute("aria-sort", "descending");
+    await userEvent.click(within(header).getByRole("button", { name: "Name" }));
+    await expect(header).toHaveAttribute("aria-sort", "ascending");
   },
 };

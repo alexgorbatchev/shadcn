@@ -56,6 +56,11 @@ interface IDataGridColumnMeta {
   visibleFrom?: TableVisibility;
   /** Takes the width the sized columns leave, so it has no fixed size of its own. */
   fill?: boolean;
+  /**
+   * Other columns this header sorts with its own controls, such as a hidden column behind a second sort button. The
+   * header's `aria-sort` reports whichever of them, or the column itself, is sorted.
+   */
+  sortColumnIds?: readonly string[];
 }
 // TanStack reads the feature set's `columnMeta` slot only for its type.
 const columnMeta: IDataGridColumnMeta = {};
@@ -92,8 +97,11 @@ function getDataGridColumnLabel<T extends RowData>(column: DataGridColumn<T>): s
 }
 
 function getAriaSort<T extends RowData>(column: DataGridColumn<T>): AriaAttributes["aria-sort"] {
-  if (!column.getCanSort()) return undefined;
-  const sorted = column.getIsSorted();
+  const sortable = [column.id, ...(column.columnDef.meta?.sortColumnIds ?? [])]
+    .map((id) => column.table.getColumn(id))
+    .filter((candidate) => candidate?.getCanSort());
+  if (sortable.length === 0) return undefined;
+  const sorted = sortable.map((candidate) => candidate?.getIsSorted()).find(Boolean);
   return sorted === "asc" ? "ascending" : sorted === "desc" ? "descending" : "none";
 }
 
