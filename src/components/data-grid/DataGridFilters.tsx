@@ -22,11 +22,12 @@ import { Popover, PopoverContent, PopoverHeader, PopoverTitle, PopoverTrigger } 
 import { ScrollArea } from "../ScrollArea.js";
 import type {
   DataGridColumn,
-  IDataGridControlProps,
+  IDataGridFilterControlProps,
   IDataGridOptionsFilter,
   IDataGridRangeFilter,
 } from "./DataGrid.js";
 import { getDataGridFilterLabel } from "./getDataGridFilterLabel.js";
+import { getDataGridFilterOptions } from "./getDataGridFilterOptions.js";
 import { readDataGridOptionValues } from "./readDataGridOptionValues.js";
 import { readDataGridRange, type DataGridRange } from "./readDataGridRange.js";
 
@@ -87,12 +88,14 @@ function DataGridRangeFilterControl<T extends RowData>({
 interface IDataGridOptionsFilterControlProps<T extends RowData> {
   column: DataGridColumn<T>;
   filter: IDataGridOptionsFilter;
+  options: readonly ILabelValue[];
   label: string;
 }
 
 function DataGridOptionsFilterControl<T extends RowData>({
   column,
   filter,
+  options,
   label,
 }: IDataGridOptionsFilterControlProps<T>): ReactElement {
   const labelId = useId();
@@ -100,7 +103,7 @@ function DataGridOptionsFilterControl<T extends RowData>({
   const counts = column.getFacetedUniqueValues();
   // A saved value whose option no longer exists stays visible, so it can still be removed.
   const selected = readDataGridOptionValues(column.getFilterValue()).map(
-    (value) => filter.options.find((option) => option.value === value) ?? { label: value, value },
+    (value) => options.find((option) => option.value === value) ?? { label: value, value },
   );
   const update = (next: readonly ILabelValue[]): void =>
     column.setFilterValue(next.length ? next.map((option) => option.value) : undefined);
@@ -124,7 +127,7 @@ function DataGridOptionsFilterControl<T extends RowData>({
       </span>
       {filter.multiple === false ? (
         <Combobox
-          items={filter.options}
+          items={options}
           value={selected[0] ?? null}
           onValueChange={(option: ILabelValue | null) => update(option ? [option] : [])}
           itemToStringLabel={(option: ILabelValue) => option.label}
@@ -135,23 +138,23 @@ function DataGridOptionsFilterControl<T extends RowData>({
         </Combobox>
       ) : (
         <Combobox
-          items={filter.options}
+          items={options}
           multiple
           value={selected}
-          onValueChange={(options: ILabelValue[]) => update(options)}
+          onValueChange={(chosen: ILabelValue[]) => update(chosen)}
           itemToStringLabel={(option: ILabelValue) => option.label}
           isItemEqualToValue={(option: ILabelValue, value: ILabelValue) => option.value === value.value}
         >
           <ComboboxChips ref={anchor}>
             <ComboboxValue>
-              {(options: ILabelValue[]) => (
+              {(chosen: ILabelValue[]) => (
                 <>
-                  {options.map((option) => (
+                  {chosen.map((option) => (
                     <ComboboxChip key={option.value} removeLabel={`Remove ${option.label}`}>
                       {option.label}
                     </ComboboxChip>
                   ))}
-                  <ComboboxChipsInput aria-labelledby={labelId} placeholder={options.length ? undefined : "Any"} />
+                  <ComboboxChipsInput aria-labelledby={labelId} placeholder={chosen.length ? undefined : "Any"} />
                 </>
               )}
             </ComboboxValue>
@@ -166,12 +169,14 @@ function DataGridOptionsFilterControl<T extends RowData>({
 /**
  * Edits the filters of every column whose `meta.filter` describes one, hidden columns included. Filters combine with
  * each other and with the global filter; each control suggests only values the other filters leave. The trigger counts
- * the active column filters, and Clear filters removes them all. `label` titles the trigger and popover.
+ * the active column filters, and Clear filters removes them all. `label` titles the trigger and popover; `options`
+ * supplies options-filter choices that depend on runtime data.
  */
 export function DataGridFilters<T extends RowData>({
   table,
   label = "Filters",
-}: IDataGridControlProps<T>): ReactElement {
+  options,
+}: IDataGridFilterControlProps<T>): ReactElement {
   return (
     <Popover>
       <Subscribe source={table.atoms.columnFilters}>
@@ -204,7 +209,13 @@ export function DataGridFilters<T extends RowData>({
                     return filter.variant === "range" ? (
                       <DataGridRangeFilterControl key={column.id} column={column} filter={filter} label={name} />
                     ) : (
-                      <DataGridOptionsFilterControl key={column.id} column={column} filter={filter} label={name} />
+                      <DataGridOptionsFilterControl
+                        key={column.id}
+                        column={column}
+                        filter={filter}
+                        options={getDataGridFilterOptions(column, options)}
+                        label={name}
+                      />
                     );
                   })}
                 </div>

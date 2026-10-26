@@ -112,3 +112,42 @@ export const SavedValueWithoutOption: Story = {
     await expect(canvas.getByRole("button", { name: "Filters", hidden: true })).toBeVisible();
   },
 };
+
+export const RuntimeOptions: Story = {
+  render: () => (
+    <FilteredDataGridExample
+      recordings={fixture_gridRecordings}
+      options={{
+        genre: [
+          { label: "Deep house", value: "House" },
+          { label: "Peak-time techno", value: "Techno" },
+        ],
+      }}
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const page = within(canvasElement.ownerDocument.body);
+    await userEvent.click(canvas.getByRole("button", { name: "Filters" }));
+    const panel = within(await page.findByRole("dialog", { name: "Filters" }));
+    // Given choices replace the column's own, and choices for a column without its own come only from the controls.
+    await userEvent.click(panel.getByRole("combobox", { name: "Tags" }));
+    await expect((await page.findAllByRole("option")).map((option) => option.textContent)).toEqual([
+      "Dub 2",
+      "Vocal 3",
+    ]);
+    await userEvent.keyboard("{Escape}");
+    await userEvent.click(panel.getByRole("combobox", { name: "Genre" }));
+    await expect((await page.findAllByRole("option")).map((option) => option.textContent)).toEqual([
+      "Deep house 2",
+      "Peak-time techno 2",
+    ]);
+    await userEvent.click(page.getByRole("option", { name: "Deep house 2" }));
+    await waitFor(() => expect(rowNames(canvasElement)).toEqual(["Tide", "Drift"]));
+    await expect(
+      within(canvas.getByRole("list", { name: "Active filters", hidden: true })).getByRole("listitem", {
+        hidden: true,
+      }),
+    ).toHaveTextContent("Genre: Deep house");
+  },
+};

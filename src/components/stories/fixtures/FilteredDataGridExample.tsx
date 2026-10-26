@@ -7,6 +7,7 @@ import {
   DataGridFilterSummary,
   dataGridFeatures,
   type DataGridFeatures,
+  type DataGridFilterOptions,
 } from "../../data-grid";
 import type { GridRecording } from "./types";
 
@@ -59,25 +60,28 @@ const columns = helper.columns([
     filterFn: "arrIncludesSome",
     // Each tag counts once per recording, so a tag's count is the recordings that carry it.
     getUniqueValues: (recording) => recording.tags,
-    meta: {
-      label: "Tags",
-      filter: {
-        variant: "options",
-        options: ["Dub", "Vocal"].map((tag) => ({ label: tag, value: tag })),
-      },
-    },
+    // The recordings decide which tags exist, so the example passes them to the filter controls.
+    meta: { label: "Tags", filter: { variant: "options" } },
   }),
 ]);
 
 interface IFilteredDataGridExampleProps {
   recordings: GridRecording[];
   initialFilters?: ColumnFiltersState;
+  /** Choices added to the tags found in the recordings, or replacing them under the same column ID. */
+  options?: DataGridFilterOptions;
 }
 
 export function FilteredDataGridExample({
   recordings,
   initialFilters = [],
+  options,
 }: IFilteredDataGridExampleProps): ReactElement {
+  const tags = [...new Set(recordings.flatMap((recording) => recording.tags))].sort();
+  const filterOptions: DataGridFilterOptions = {
+    tags: tags.map((tag) => ({ label: tag, value: tag })),
+    ...options,
+  };
   const table = useTable({
     features: dataGridFeatures,
     columns,
@@ -99,9 +103,9 @@ export function FilteredDataGridExample({
               value={typeof table.state.globalFilter === "string" ? table.state.globalFilter : ""}
               onChange={(event) => table.setGlobalFilter(event.target.value)}
             />
-            <DataGridFilters table={table} />
+            <DataGridFilters table={table} options={filterOptions} />
           </div>
-          <DataGridFilterSummary table={table} />
+          <DataGridFilterSummary table={table} options={filterOptions} />
         </div>
       }
     />

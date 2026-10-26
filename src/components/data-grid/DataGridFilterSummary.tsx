@@ -3,24 +3,29 @@ import { XIcon } from "lucide-react";
 import type { ReactElement } from "react";
 import { Badge } from "../Badge.js";
 import { Button } from "../Button.js";
-import type { IDataGridControlProps } from "./DataGrid.js";
+import type { IDataGridFilterControlProps } from "./DataGrid.js";
 import { describeDataGridFilter } from "./describeDataGridFilter.js";
 import { getDataGridFilterLabel } from "./getDataGridFilterLabel.js";
+import { getDataGridFilterOptions } from "./getDataGridFilterOptions.js";
 
 /**
  * Lists the active filters of columns whose `meta.filter` describes one, each with a button that removes it, followed by
- * Clear filters. Renders nothing while no such filter is active. `label` names the list.
+ * Clear filters. Renders nothing while no such filter is active. `label` names the list; `options` supplies the
+ * options-filter choices given to `DataGridFilters`, so the summary names them the same way.
  */
 export function DataGridFilterSummary<T extends RowData>({
   table,
   label = "Active filters",
-}: IDataGridControlProps<T>): ReactElement {
+  options,
+}: IDataGridFilterControlProps<T>): ReactElement {
   return (
     <Subscribe source={table.atoms.columnFilters}>
       {() => {
         const active = table.getAllLeafColumns().flatMap((column) => {
           const filter = column.columnDef.meta?.filter;
-          const description = filter ? describeDataGridFilter(filter, column.getFilterValue()) : "";
+          const description = filter
+            ? describeDataGridFilter(filter, column.getFilterValue(), getDataGridFilterOptions(column, options))
+            : "";
           return description ? [{ column, description, name: getDataGridFilterLabel(column) }] : [];
         });
         return (

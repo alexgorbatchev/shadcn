@@ -76,7 +76,8 @@ interface IDataGridOptionsFilter {
   variant: "options";
   /** Names the filter; defaults to the column label. */
   label?: string;
-  options: readonly ILabelValue[];
+  /** Choices known where the column is defined; the filter controls' `options` prop supplies choices known later. */
+  options?: readonly ILabelValue[];
   /** Allows choosing several options; a single choice still writes a one-value array. Defaults to true. */
   multiple?: boolean;
 }
@@ -141,6 +142,13 @@ interface IDataGridControlProps<T extends RowData> {
   table: CoreTable<DataGridFeatures, T>;
   /** Names the control; each control documents its default. */
   label?: string;
+}
+/** Options-filter choices by column ID, for choices that depend on data the column definitions cannot hold. */
+type DataGridFilterOptions = Readonly<Record<string, readonly ILabelValue[]>>;
+/** Props of a control that edits or describes column filters. */
+interface IDataGridFilterControlProps<T extends RowData> extends IDataGridControlProps<T> {
+  /** Replaces the choices of the options filters it names; other filters keep their column's `meta.filter.options`. */
+  options?: DataGridFilterOptions;
 }
 type DataGridRow<T extends RowData> = Row<DataGridFeatures, T>;
 type DataGridColumn<T extends RowData> = Column<DataGridFeatures, T, CellData>;
@@ -428,6 +436,8 @@ export type {
   DataGridTable,
   IDataGridColumnMeta,
   IDataGridControlProps,
+  DataGridFilterOptions,
+  IDataGridFilterControlProps,
   IDataGridOptionsFilter,
   IDataGridRangeFilter,
 };

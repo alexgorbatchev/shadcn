@@ -15,6 +15,8 @@ export type {
   DataGridTable,
   IDataGridColumnMeta,
   IDataGridControlProps,
+  DataGridFilterOptions,
+  IDataGridFilterControlProps,
   IDataGridOptionsFilter,
   IDataGridRangeFilter,
 } from "./DataGrid.js";
