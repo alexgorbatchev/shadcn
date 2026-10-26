@@ -1,13 +1,20 @@
 import {
   FlexRender,
+  columnFacetingFeature,
   columnFilteringFeature,
   columnOrderingFeature,
   columnResizingFeature,
   columnSizingFeature,
   columnVisibilityFeature,
+  createFacetedMinMaxValues,
+  createFacetedRowModel,
+  createFacetedUniqueValues,
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
+  filterFn_arrHas,
+  filterFn_arrIncludesSome,
+  filterFn_inNumberRange,
   filterFn_includesString,
   globalFilteringFeature,
   rowPaginationFeature,
@@ -28,6 +35,7 @@ import {
 import { ArrowDownIcon, ArrowUpIcon, ChevronsUpDownIcon } from "lucide-react";
 import { useId, type AriaAttributes, type ReactElement, type ReactNode } from "react";
 import type { IDensityProps } from "../../density/types.js";
+import type { ILabelValue } from "../../options/types.js";
 import { Button } from "../Button.js";
 import {
   Table,
@@ -46,6 +54,35 @@ import { Input } from "../Input.js";
 import { DataGridColumnResizer } from "./DataGridColumnResizer.js";
 import { getDataGridColumnSizeVariables } from "./getDataGridColumnSizeVariables.js";
 
+/**
+ * A numeric range. The filter value is `[min, max]`, with `null` for an open end; pair it with
+ * `filterFn: "inNumberRange"`. The inputs suggest the range of the rows other filters leave.
+ */
+interface IDataGridRangeFilter {
+  variant: "range";
+  /** Names the filter; defaults to the column label. */
+  label?: string;
+  step?: number;
+  /** Formats the bounds in the inputs and the active-filter summary, such as `{ useGrouping: false }` for years. */
+  format?: Intl.NumberFormatOptions;
+}
+/**
+ * A choice among known values. The filter value is the chosen option values; pair it with `filterFn: "arrHas"` for a
+ * single value per row, `"arrIncludesSome"` for an array of values, or a column `filterFn` that reads them. Each option
+ * shows how many rows the other filters leave with that value, so the column's unique values must be option values;
+ * a column whose rows hold several values, or values in another form, supplies them through `getUniqueValues`.
+ */
+interface IDataGridOptionsFilter {
+  variant: "options";
+  /** Names the filter; defaults to the column label. */
+  label?: string;
+  options: readonly ILabelValue[];
+  /** Allows choosing several options; a single choice still writes a one-value array. Defaults to true. */
+  multiple?: boolean;
+}
+/** How `DataGridFilters` edits a column's filter and `DataGridFilterSummary` describes it. */
+type DataGridColumnFilter = IDataGridRangeFilter | IDataGridOptionsFilter;
+
 /** Presentation settings a column definition carries in its `meta`. */
 interface IDataGridColumnMeta {
   /** Name in the column picker and resize handle; defaults to a string header, then the column ID. */
@@ -61,10 +98,13 @@ interface IDataGridColumnMeta {
    * header's `aria-sort` reports whichever of them, or the column itself, is sorted.
    */
   sortColumnIds?: readonly string[];
+  /** Offers the column in `DataGridFilters`, whether or not it is visible. */
+  filter?: DataGridColumnFilter;
 }
 // TanStack reads the feature set's `columnMeta` slot only for its type.
 const columnMeta: IDataGridColumnMeta = {};
 const dataGridFeatures = tableFeatures({
+  columnFacetingFeature,
   columnFilteringFeature,
   columnOrderingFeature,
   columnSizingFeature,
@@ -74,10 +114,18 @@ const dataGridFeatures = tableFeatures({
   rowPaginationFeature,
   rowSelectionFeature,
   rowSortingFeature,
+  facetedRowModel: createFacetedRowModel(),
+  facetedMinMaxValues: createFacetedMinMaxValues(),
+  facetedUniqueValues: createFacetedUniqueValues(),
   filteredRowModel: createFilteredRowModel(),
   sortedRowModel: createSortedRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
-  filterFns: { includesString: filterFn_includesString },
+  filterFns: {
+    arrHas: filterFn_arrHas,
+    arrIncludesSome: filterFn_arrIncludesSome,
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
   sortFns: { alphanumeric: sortFn_alphanumeric, basic: sortFn_basic },
   columnMeta,
 });
@@ -88,6 +136,12 @@ type DataGridTable<T extends RowData, TSelected = TableState<DataGridFeatures>> 
   T,
   TSelected
 >;
+/** Props of a control that works on a whole grid, such as its column options or filters. */
+interface IDataGridControlProps<T extends RowData> {
+  table: CoreTable<DataGridFeatures, T>;
+  /** Names the control; each control documents its default. */
+  label?: string;
+}
 type DataGridRow<T extends RowData> = Row<DataGridFeatures, T>;
 type DataGridColumn<T extends RowData> = Column<DataGridFeatures, T, CellData>;
 
@@ -365,4 +419,15 @@ export {
   dataGridFeatures,
   getDataGridColumnLabel,
 };
-export type { DataGridColumn, DataGridFeatures, DataGridProps, DataGridRow, DataGridTable, IDataGridColumnMeta };
+export type {
+  DataGridColumn,
+  DataGridColumnFilter,
+  DataGridFeatures,
+  DataGridProps,
+  DataGridRow,
+  DataGridTable,
+  IDataGridColumnMeta,
+  IDataGridControlProps,
+  IDataGridOptionsFilter,
+  IDataGridRangeFilter,
+};

@@ -166,7 +166,7 @@ Reviewed source: https://github.com/keenthemes/reui/tree/067aa0dc7f8bbfec1cd76fc
 
 ## TanStack Table examples
 
-VirtualDataGrid and DataGridColumnOptions follow the MIT-licensed TanStack Table React examples for virtualized rows, performant column resizing through CSS variables, column ordering, and column visibility. The package implementation, styling, keyboard resizing and behavioral tests are package-owned.
+VirtualDataGrid, DataGridColumnOptions, and DataGridFilters follow the MIT-licensed TanStack Table React examples for virtualized rows, performant column resizing through CSS variables, column ordering, column visibility, and faceted filters. The package implementation, styling, keyboard resizing and behavioral tests are package-owned.
 
 Reviewed source: https://github.com/TanStack/table/tree/main/examples/react
 

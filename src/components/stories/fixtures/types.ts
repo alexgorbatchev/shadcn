@@ -8,6 +8,16 @@ export interface GridFile {
   size: number;
 }
 
+export interface GridRecording {
+  id: string;
+  name: string;
+  tempo: number | null;
+  year: number;
+  genre: string;
+  room: string;
+  tags: string[];
+}
+
 export interface InvoiceRecord {
   id: string;
   email: string;

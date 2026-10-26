@@ -238,7 +238,8 @@ export const fixture_featureTypeExports: Record<string, string> = {
   "image-crop": "ImageCrop, cropToCanvas, type Crop",
   editor: "RichTextEditor, useEditor, StarterKit, type Editor",
   tree: "Tree, useTree, type TreeConfig",
-  "data-grid": "DataGrid, DataGridColumnOptions, dataGridFeatures, type DataGridTable",
+  "data-grid":
+    "DataGrid, DataGridColumnOptions, DataGridFilters, DataGridFilterSummary, dataGridFeatures, type DataGridTable, type DataGridColumnFilter",
   "virtual-data-grid": "VirtualDataGrid, type IVirtualTableRowProps",
   "event-calendar": "EventCalendar, EventForm, type EventDraft",
   gantt: "Gantt, Roadmap, type GanttTask",

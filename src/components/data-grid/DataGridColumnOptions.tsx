@@ -1,27 +1,21 @@
-import { Subscribe, type RowData, type Table } from "@tanstack/react-table";
+import { Subscribe, type RowData } from "@tanstack/react-table";
 import { ArrowDownIcon, ArrowUpIcon, Columns3Icon } from "lucide-react";
 import type { ReactElement } from "react";
 import { Button } from "../Button.js";
 import { Checkbox } from "../Checkbox.js";
 import { Label } from "../Label.js";
 import { Popover, PopoverContent, PopoverHeader, PopoverTitle, PopoverTrigger } from "../Popover.js";
-import { getDataGridColumnLabel, type DataGridFeatures } from "./DataGrid.js";
+import { getDataGridColumnLabel, type IDataGridControlProps } from "./DataGrid.js";
 import { moveDataGridColumn } from "./moveDataGridColumn.js";
-
-interface IDataGridColumnOptionsProps<T extends RowData> {
-  table: Table<DataGridFeatures, T>;
-  /** Trigger and popover title. */
-  label?: string;
-}
 
 /**
  * Shows, hides, and reorders the columns that allow hiding. Columns with `enableHiding: false` keep their positions.
- * Reset restores the table's initial visibility, order, and sizes.
+ * Reset restores the table's initial visibility, order, and sizes. `label` titles the trigger and popover.
  */
 export function DataGridColumnOptions<T extends RowData>({
   table,
   label = "Columns",
-}: IDataGridColumnOptionsProps<T>): ReactElement {
+}: IDataGridControlProps<T>): ReactElement {
   return (
     <Popover>
       <PopoverTrigger render={<Button variant="outline" />}>

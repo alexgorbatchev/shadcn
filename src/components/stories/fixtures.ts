@@ -1,6 +1,7 @@
 import type {
   ChartBrowserDatum,
   GridFile,
+  GridRecording,
   InvoiceRecord,
   NumberedProjectChoice,
   RuntimeChoice,
@@ -55,6 +56,7 @@ export { VirtualizedTranscript } from "./fixtures/VirtualizedTranscript";
 export { StreamingTranscript } from "./fixtures/StreamingTranscript";
 export { AnimatedTranscript } from "./fixtures/AnimatedTranscript";
 export { VirtualDataGridExample } from "./fixtures/VirtualDataGridExample";
+export { FilteredDataGridExample } from "./fixtures/FilteredDataGridExample";
 
 export const fixture_virtualRows: string[] = Array.from({ length: 1000 }, (_, index) => `Item ${index}`);
 
@@ -65,3 +67,11 @@ export const fixture_gridFiles: GridFile[] = Array.from({ length: 1000 }, (_, in
   owner: ["Alex", "Blair", "Casey"][index % 3] ?? "Alex",
   size: (index * 37) % 1000,
 }));
+
+export const fixture_gridRecordings: GridRecording[] = [
+  { id: "r1", name: "Tide", tempo: 122, year: 1998, genre: "House", room: "Studio A", tags: ["Vocal"] },
+  { id: "r2", name: "Ember", tempo: 126.4, year: 2004, genre: "Techno", room: "Studio B", tags: ["Dub", "Vocal"] },
+  { id: "r3", name: "Drift", tempo: 128, year: 2012, genre: "House", room: "Studio A", tags: ["Dub"] },
+  { id: "r4", name: "Signal", tempo: 140, year: 2019, genre: "Techno", room: "Studio A", tags: [] },
+  { id: "r5", name: "Bloom", tempo: null, year: 2021, genre: "Ambient", room: "Studio B", tags: ["Vocal"] },
+];
