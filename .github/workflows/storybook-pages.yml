@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out the release commit
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{ inputs.release_tag || github.event.release.tag_name }}
           persist-credentials: false
@@ -56,7 +56,7 @@ jobs:
       - name: Build Storybook
         run: bun run build-storybook
       - name: Upload Storybook
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v5
         with:
           path: storybook-static
 
@@ -71,7 +71,7 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Configure Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
       - name: Deploy Storybook
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
