@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-08 06:13
-last_modified: 2026-10-24 08:02
+last_modified: 2026-10-26 17:05
 status: current
 ---
 
@@ -88,7 +88,7 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - Validate and commit in the worktree, then bring `main` level with `origin/main` again and fast-forward it from the main checkout (`git merge --ff-only <branch>`; rebase the branch onto `main` first when `main` has moved). Afterwards remove the worktree and delete the branch (`git worktree remove .workspaces/<name>`, `git branch -d <branch>`). Finish by confirming `main` is level with `origin/main` (`git fetch`, then `git status -sb` shows no ahead or behind count); the hook only attempts the push. Yield the turn to the user only after the change is merged into `main`, synced with `origin/main`, and its worktree removed.
 - `just setup` installs `.githooks` as `core.hooksPath`. Its post-commit and post-merge hooks push a branch to its same-named upstream after every commit or merge, so `main` reaches `origin/main` immediately; branches without one, including worktree branches, stay local. Hooks act only on this repository, wherever it is checked out; never invoke enclosing repositories or their recipes. `bash scripts/test-git-hooks.sh .githooks` tests them.
 - A merge into `main` publishes it on GitHub, though not as a release. Never amend, rebase, or force-push commits already on `origin/main`; fix mistakes with a follow-up change. Inspect staged changes for private hostnames before committing. When a push is rejected because `origin/main` moved, run `git pull --rebase` on `main`, then `git push`.
-- Use `.github/workflows/npm-release.yml` for authorized npm releases; follow [the release procedure](./docs/internal/npm-releases.md). Consumers use published npm versions rather than vendored archives.
+- Use `.github/workflows/npm-release.yml` for npm releases; follow [the release procedure](./docs/internal/npm-releases.md). Consumers use published npm versions rather than vendored archives.
 - Always consult applicable skills and verified upstream APIs before implementation.
 - Always run `just fix` and `just check` before claiming completion; report remaining failures and warnings.
 - Always use repository `.tmp/` for transient validation artifacts and stop owned validation servers and browser sessions.
@@ -96,7 +96,7 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - Never suppress lint rules or replace native primitives with surface approximations.
 - Never modify the devhost source repository as part of this package's work.
 - Pull and push external dependency repositories modified for this app; verify the remote and preserve concurrent changes.
-- Never publish packages, releases, tags, or production deployments without explicit authorization.
+- Always publish packages, releases, tags, and production deployments when the work requires them, without waiting for explicit authorization.
 - Always record new standing user instructions here; check with the user before changing conflicting instructions. Keep activity logs, task history, progress, handoffs, and dated amendments out of this file.
 
 ## References
