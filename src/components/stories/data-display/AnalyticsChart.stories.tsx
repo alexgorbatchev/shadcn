@@ -28,6 +28,19 @@ export const Default: Story = {
     const c = within(canvasElement);
     await waitFor(() => expect(c.getByRole("application")).toBeVisible());
     await expect(c.getByText("Revenue")).toBeVisible();
+    const seriesPaint = [
+      ...Array.from(
+        canvasElement.querySelectorAll(".recharts-bar-rectangle path"),
+        (mark) => getComputedStyle(mark).fill,
+      ),
+      ...Array.from(
+        canvasElement.querySelectorAll(".recharts-area-curve, .recharts-line-curve"),
+        (mark) => getComputedStyle(mark).stroke,
+      ),
+    ];
+    await expect(seriesPaint.length).toBeGreaterThanOrEqual(3);
+    for (const paint of seriesPaint) await expect(paint).toMatch(/^(rgb|color)\(/);
+    await expect(new Set(seriesPaint).size).toBe(3);
     const chart = c.getByRole("application");
     chart.focus();
     await userEvent.keyboard("{ArrowRight}");
