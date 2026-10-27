@@ -24,6 +24,7 @@ let consumerArchive: string;
 
 beforeAll(async () => {
   await mkdir(consumerRoot, { recursive: true });
+  await Bun.write(`${consumerRoot}/tsconfig.json`, JSON.stringify({ compilerOptions: { jsx: "react-jsx" } }));
   await runConsumerCommand(["npm", "pack", "--ignore-scripts", "--pack-destination", consumerRoot], process.cwd());
   await Bun.write(
     `${consumerRoot}/package.tgz`,
@@ -137,6 +138,7 @@ test.each(fixture_featureConsumers)(
     await Bun.write(`${cwd}/consumer.tsx`, source);
     const build = await Bun.build({
       entrypoints: [`${cwd}/consumer.tsx`],
+      tsconfig: `${consumerRoot}/tsconfig.json`,
       target: "bun",
       outdir: `${cwd}/out`,
       plugins: [
@@ -319,7 +321,7 @@ test.each(["development", "production"])(
 
 test.each(["development", "production"])("built package renders native buttons with React in %s", async (mode) => {
   const child = Bun.spawn([process.execPath, "--eval", fixture_packageRenderSource], {
-    cwd: process.cwd(),
+    cwd: consumerRoot,
     env: { ...process.env, NODE_ENV: mode },
     stdout: "pipe",
     stderr: "pipe",

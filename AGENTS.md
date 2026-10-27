@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-08 06:13
-last_modified: 2026-10-27 07:24
+last_modified: 2026-10-27 07:35
 status: current
 ---
 
@@ -31,6 +31,7 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 
 - The package bin `shadcn-prototype` is built from `cli/main.ts`; complete consumer recipes ship in `templates/prototype/`. Keep templates independent of Storybook helpers and validate them from an installed npm archive.
 - Store the template ignore file as `gitignore` and write it as `.gitignore` when creating a workspace; npm excludes a template named `.gitignore` from the archive.
+- Repository template tests resolve the core package and theme to source through TypeScript paths and `prototypeSourceAliases`; they must run before `dist/` exists. Installed-archive consumer tests use the public package exports without those aliases.
 - Keep `skills/shadcn-prototype/SKILL.md` synchronized in the same change as any CLI command, argument, option, default, environment, output, or side-effect change.
 - Run `just prototype test` for CLI behavior. `bun run test:prototype` enforces CLI line/function and browser template coverage; `just check` includes it and the installed-package prototype consumer test.
 

@@ -11,6 +11,7 @@ let browser: Browser;
 
 beforeAll(async () => {
   await mkdir(consumerRoot, { recursive: true });
+  await Bun.write(`${consumerRoot}/tsconfig.json`, JSON.stringify({ compilerOptions: { jsx: "react-jsx" } }));
   await runConsumerCommand(["npm", "pack", "--ignore-scripts", "--pack-destination", consumerRoot], process.cwd());
   await Bun.write(
     `${consumerRoot}/package.json`,
@@ -50,6 +51,7 @@ test.each([
   async (mode, expected) => {
     const build = await Bun.build({
       entrypoints: [`${consumerRoot}/consumer.tsx`],
+      tsconfig: `${consumerRoot}/tsconfig.json`,
       target: "browser",
       format: "iife",
       define: { "process.env.NODE_ENV": JSON.stringify(mode) },

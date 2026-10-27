@@ -8,9 +8,11 @@ import { nativeSwipe } from "./nativeSwipe.ts";
 import { nativeWheel } from "./nativeWheel.ts";
 import { beginResourceRequests, endResourceRequests } from "./nativeResourceRequests.js";
 import { treeDropGeometry } from "./treeDropGeometry.ts";
+import { prototypeSourceAliases } from "./prototypeSourceAliases.ts";
 
 export default defineConfig({
   cacheDir: ".cache/storybook/native-tests",
+  resolve: { alias: prototypeSourceAliases },
   optimizeDeps: {
     include: [
       "react-big-calendar",

@@ -11,7 +11,8 @@
     "verbatimModuleSyntax": true,
     "types": ["bun", "vite/client"],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@alexgorbatchev/shadcn": ["./src/index.ts"]
     }
   },
   "include": ["src", ".storybook/**/*.ts", ".storybook/**/*.tsx", "scripts", "cli"]
