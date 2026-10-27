@@ -37,7 +37,12 @@ beforeAll(async () => {
   await runConsumerCommand([process.execPath, "node_modules/.bin/shadcn-prototype", "workspace", "build"], workspace);
   server = Bun.spawn(
     [process.execPath, "node_modules/.bin/shadcn-prototype", "workspace", "start", ".", "--port", "0"],
-    { cwd: workspace, stdout: "pipe", stderr: "pipe" },
+    {
+      cwd: workspace,
+      env: { ...process.env, NO_COLOR: undefined, FORCE_COLOR: "1" },
+      stdout: "pipe",
+      stderr: "pipe",
+    },
   );
   const reader = server.stdout.getReader();
   let output = "";
@@ -46,7 +51,7 @@ beforeAll(async () => {
       const part = await reader.read();
       if (part.done) throw new Error(`Preview exited before ready: ${output}`);
       output += new TextDecoder().decode(part.value);
-      const match = output.match(/http:\/\/127\.0\.0\.1:\d+/);
+      const match = Bun.stripANSI(output).match(/http:\/\/127\.0\.0\.1:\d+(?=\/)/);
       if (match) {
         origin = match[0];
         break;

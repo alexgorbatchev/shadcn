@@ -166,7 +166,7 @@ test.each(fixture_featureConsumers)(
       expect(styles.outputs.some((output) => output.path.endsWith(".css") && output.size > 0)).toBe(true);
     }
     const stdout = await runConsumerCommand([process.execPath, `${cwd}/out/consumer.js`], cwd);
-    expect(stdout.trim()).toBe(expected);
+    expect(Bun.stripANSI(stdout).trim()).toBe(expected);
 
     await Bun.write(
       `${cwd}/types.tsx`,
