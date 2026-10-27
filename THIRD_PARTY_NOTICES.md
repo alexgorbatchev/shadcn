@@ -229,3 +229,7 @@ The `/event-calendar` entry point bundles React Big Calendar 1.20.0 (https://git
 ## JSON Render
 
 The optional `/json-render` catalog adapts component schemas and renderers from `@json-render/shadcn` 0.21.1, https://github.com/vercel-labs/json-render. Local modifications use this package’s Base UI components, native composition APIs, semantic variants, accessible labels, and explicit feature exports. JSON Render remains an external optional peer. The Apache License 2.0 is included in [licenses/json-render-APACHE-2.0.txt](./licenses/json-render-APACHE-2.0.txt).
+
+## Commander
+
+The `shadcn-prototype` executable bundles Commander 15.0.0 from https://github.com/tj/commander.js for command parsing and help. Its MIT license is included in [licenses/commander-MIT.txt](./licenses/commander-MIT.txt). Commander is isolated from the browser component entry points.

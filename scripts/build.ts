@@ -75,3 +75,13 @@ await buildLlmDocs(process.cwd());
 console.log(
   `Built ${result.outputs.length} JavaScript asset(s), exported theme/font stylesheets, and LLM documentation.`,
 );
+
+const prototypeBuild = await Bun.build({
+  entrypoints: ["cli/main.ts"],
+  outdir: "dist",
+  naming: "prototype.js",
+  target: "bun",
+  format: "esm",
+  packages: "bundle",
+});
+if (!prototypeBuild.success) throw new AggregateError(prototypeBuild.logs, "Prototype CLI build failed");

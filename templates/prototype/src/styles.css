@@ -1,0 +1,7 @@
+@import "tailwindcss";
+@import "@alexgorbatchev/shadcn/theme.css";
+@source "../node_modules/@alexgorbatchev/shadcn/dist";
+
+#root {
+  isolation: isolate;
+}

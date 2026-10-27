@@ -1,0 +1,11 @@
+set working-directory := ".."
+
+[default]
+run *args:
+    bun cli/main.ts {{args}}
+
+run-ai *args:
+    AGENT=1 bun cli/main.ts {{args}}
+
+test:
+    bun test --config=./cli/bunfig.toml --coverage cli

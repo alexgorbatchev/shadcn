@@ -1,3 +1,5 @@
+mod prototype "cli/justfile"
+
 set dotenv-filename := ".env.local"
 
 export SHADCN_DEV_HOST_SUFFIX := env("SHADCN_DEV_HOST_SUFFIX", ".localhost")
@@ -20,6 +22,7 @@ check:
     bash scripts/test-git-hooks.sh .githooks
     bun run typecheck
     bun run lint
+    bun run test:prototype
     bun run test:package
     bun run build-storybook
     bun run test:preview

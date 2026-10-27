@@ -10,7 +10,9 @@
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "types": ["bun", "vite/client"],
-    "paths": { "@/*": ["./src/*"] }
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
-  "include": ["src", ".storybook/**/*.ts", ".storybook/**/*.tsx", "scripts"]
+  "include": ["src", ".storybook/**/*.ts", ".storybook/**/*.tsx", "scripts", "cli"]
 }

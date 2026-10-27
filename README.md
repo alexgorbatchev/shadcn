@@ -194,6 +194,40 @@ Override tokens after the theme imports. This example uses the existing success 
 }
 ```
 
+# Local React Prototypes
+
+The package includes `shadcn-prototype`, a local runner for editable React mockups. Its generated workspace includes a preview host and complete dashboard, editable project directory, and settings recipes. Helpers and sample data are included; the recipes do not import Storybook files.
+
+1. Create a workspace using Bun:
+
+   ```sh
+   bunx --bun --package @alexgorbatchev/shadcn shadcn-prototype workspace create ./mockups
+   ```
+
+2. Install its declared dependencies and start the preview:
+
+   ```sh
+   cd mockups
+   bun install
+   bun node_modules/.bin/shadcn-prototype workspace start .
+   ```
+
+3. Edit a recipe under `src/prototypes/`, or copy a recipe folder and update its `prototype.ts`. The preview discovers each folder automatically. Use the workbench controls for scenarios, themes, density, viewport sizes, and reset. Open screen gives a direct URL to the canvas.
+
+4. Run `just check` in the generated workspace to typecheck and build. `dist/` contains the static site. Preview requires Bun; the `just` recipes require [just](https://just.systems).
+
+The runner creates a new directory and rejects existing destinations. It does not install dependencies automatically. The generated manifest pins this package to the runner's version and declares the libraries used by the recipes and preview. The component package's dependency-installation contract is unchanged. State is in memory and resets when the canvas reloads; the recipes do not contact real services.
+
+| Command                        | Options                                            | Behavior                                                                            |
+| ------------------------------ | -------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| `workspace create <directory>` | `-h, --help`                                       | Write a complete workspace to a new directory.                                      |
+| `workspace start [directory]`  | `-p, --port <number>` (default 5173), `-h, --help` | Run the local preview; directory defaults to `.`. Port 0 chooses an available port. |
+| `workspace build [directory]`  | `-h, --help`                                       | Build static output; directory defaults to `.`.                                     |
+| `skill`                        | `-h, --help`                                       | Print the agent skill installation instructions.                                    |
+| Root                           | `-V, --version`, `-h, --help`                      | Show the package version or command tree.                                           |
+
+Use `AGENT=1` for concise agent output. Read the [prototype agent skill](./skills/shadcn-prototype/SKILL.md) for the complete workflow, URL parameters, environment, and error handling. The generated recipes are runnable consumer examples; the Storybook excerpts below remain component references.
+
 # LLM Documentation
 
 Storybook serves a generated `llms.txt` index at its site root, with linked setup instructions and a reference page for each story file. Pages contain public package imports, documented story controls, default args, and Storybook CSF examples with interaction tests omitted. The excerpts can depend on local helpers and fixtures; each page links to its full source. Story controls describe the configured controls, rather than the complete TypeScript props API.

@@ -1,11 +1,14 @@
 {
   "name": "@alexgorbatchev/shadcn",
-  "version": "0.0.38",
+  "version": "0.0.39",
   "description": "Sharp, monospace React components with compact and comfortable densities.",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/alexgorbatchev/shadcn.git"
+  },
+  "bin": {
+    "shadcn-prototype": "dist/prototype.js"
   },
   "files": [
     "dist",
@@ -15,7 +18,8 @@
     "LICENSE",
     "THIRD_PARTY_NOTICES.md",
     "assistant-ui-catalog.json",
-    "licenses"
+    "licenses",
+    "templates/prototype"
   ],
   "type": "module",
   "sideEffects": [
@@ -1050,12 +1054,13 @@
     "test": "vitest run --config .storybook/vitest.config.ts && bun run test:native && bun run test:package",
     "test:package": "bun run build && bun test scripts/__tests__ ./.storybook/__tests__/createStorybookViteConfig.test.ts",
     "test:preview": "bun test scripts/storybookPreview.test.ts",
+    "test:prototype": "bun test --config=./cli/bunfig.toml --coverage cli && vitest run --config .storybook/vitest.prototype.config.ts --coverage",
     "test:native": "vitest run --config .storybook/vitest.native.config.ts",
     "test:coverage": "vitest run --config .storybook/vitest.coverage.config.ts --coverage",
     "test:contrast": "vitest run --config .storybook/vitest.contrast.config.ts",
     "build": "bun scripts/build.ts",
     "typecheck": "tsc --noEmit",
-    "lint": "oxlint --deny-warnings src .storybook scripts && oxfmt --check . && bun run lint:unused",
+    "lint": "oxlint --deny-warnings src .storybook scripts cli templates/prototype/src templates/prototype/vite.config.ts && oxfmt --check . && bun run lint:unused",
     "lint:unused": "ts-unused check tsconfig.json",
     "storybook": "bun scripts/buildLlmDocs.ts && storybook dev --host 127.0.0.1 -p 6006 --no-open",
     "build-storybook": "bun scripts/buildLlmDocs.ts && storybook build",
@@ -1118,6 +1123,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "colorjs.io": "0.7.1",
+    "commander": "^15.0.0",
     "cssesc": "3.0.0",
     "date-fns": "4.4.0",
     "diff": "9.0.0",

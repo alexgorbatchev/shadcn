@@ -87,6 +87,8 @@ jobs:
         run: bun run lint
       - name: Verify package rendering
         run: bun run test:package
+      - name: Verify prototype runner and recipes
+        run: bun run test:prototype
       - name: Publish package with trusted publishing
         env:
           NPM_DIST_TAG: ${{ (inputs.prerelease || github.event.release.prerelease) && 'next' || 'latest' }}

@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-14 06:35
-last_modified: 2026-10-22 18:34
+last_modified: 2026-10-27 07:24
 status: current
 ---
 
@@ -43,6 +43,6 @@ gh workflow run npm-release.yml --ref main -f release_tag=v0.0.14 -F prerelease=
 
 Use the intended release tag and its actual prerelease flag. The workflow definition comes from `main`; both visual validation and publication check out the specified release tag. This permits workflow repairs without moving an existing package tag. The workflow verifies the published GitHub Release and emits npm verbose diagnostics, including token-exchange failures, to distinguish authentication errors from missing packages.
 
-Publication requires the reusable [visual regression workflow](./visual-regression.md) to pass. The publishing job rejects mismatched tags and prerelease versions marked as stable, installs the frozen Bun lockfile and Chromium with its system dependencies, checks types and lint/formatting, and runs package rendering tests in development and production. The visual job's browser installation does not carry over to the publishing job. It runs `npm publish` directly from the repository, letting npm create the package internally. The existing `prepack` hook builds the package; npm selects its contents using `package.json`'s `files` field and automatically includes the README and license. The package manifest is published without custom rewriting, including its Bun patch metadata; the build bundles the patched implementations.
+Publication requires the reusable [visual regression workflow](./visual-regression.md) to pass. The publishing job rejects mismatched tags and prerelease versions marked as stable, installs the frozen Bun lockfile and Chromium with its system dependencies, checks types and lint/formatting, and runs package rendering tests in development and production. It also checks the installed prototype runner, generated workspace interactions, CLI line/function coverage, and browser recipe coverage. The visual job's browser installation does not carry over to the publishing job. It runs `npm publish` directly from the repository, letting npm create the package internally. The existing `prepack` hook builds the package; npm selects its contents using `package.json`'s `files` field and automatically includes the README and license. The package manifest is published without custom rewriting, including its Bun patch metadata; the build bundles the patched implementations.
 
 Node 24 runs npm 12.2.0 for trusted publishing; Bun remains the install, build, and test tool. Local `just pack` also requires npm and writes the archive to `.tmp/packs/`. Package tests install an npm-created archive in isolated Bun consumers. npm publishes with public access and provenance. Re-running an already published version fails rather than overwriting it. Publishing an older stable version can move `latest` backward. The full interaction suite and coverage remain separate local checks.

@@ -28,6 +28,10 @@ export const Default: Story = {
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
     const select = canvas.getByRole("combobox", { name: "Runtime" });
+    const styles = getComputedStyle(select);
+    const textHeight =
+      select.clientHeight - Number.parseFloat(styles.paddingTop) - Number.parseFloat(styles.paddingBottom);
+    await expect(textHeight).toBeGreaterThanOrEqual(Number.parseFloat(styles.fontSize));
     await expect(select).toHaveValue("bun");
     await userEvent.selectOptions(select, "node");
     await expect(select).toHaveValue("node");
@@ -37,6 +41,7 @@ export const Default: Story = {
 };
 export const Small: Story = { ...Default, args: { size: "sm" } };
 export const Compact: Story = { ...Default, args: { density: "compact" } };
+export const CompactSmall: Story = { ...Default, args: { density: "compact", size: "sm" } };
 export const Disabled: Story = {
   args: { disabled: true },
   play: async ({ canvasElement, args }) => {

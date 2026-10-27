@@ -26,7 +26,7 @@ function NativeSelect({
         dir={dir}
         data-slot="native-select"
         data-size={size}
-        className="h-control w-full min-w-0 appearance-none rounded-sm border border-input bg-secondary py-1 pe-8 ps-2.5 text-sm transition-colors outline-none select-none selection:bg-primary selection:text-primary-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:cursor-not-allowed aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive data-[size=sm]:h-control-sm data-[size=sm]:rounded-sm data-[size=sm]:py-0.5"
+        className="h-control w-full min-w-0 appearance-none rounded-sm border border-input bg-secondary py-0 pe-8 ps-2.5 text-sm transition-colors outline-none select-none selection:bg-primary selection:text-primary-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:cursor-not-allowed aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive data-[size=sm]:h-control-sm data-[size=sm]:rounded-sm"
         {...props}
       />
       <ChevronDownIcon

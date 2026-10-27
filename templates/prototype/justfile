@@ -1,0 +1,18 @@
+default:
+    @just --list
+
+setup:
+    bun install
+
+run:
+    bun node_modules/.bin/shadcn-prototype workspace start .
+
+run-ai:
+    AGENT=1 bun node_modules/.bin/shadcn-prototype workspace start .
+
+build:
+    bun node_modules/.bin/shadcn-prototype workspace build .
+
+check:
+    bun node_modules/.bin/tsc --noEmit
+    just build
