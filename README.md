@@ -398,7 +398,7 @@ The preview shows compact individual badges, up to five labels followed by `+N m
 
 `useDropTarget().feedback` retains the last accepted MIME type, Alt modifier, and drop effect after leaving or dropping. Use this snapshot for hint content that remains visible during an exit animation; use `isOver` to control visibility and active highlighting. New accepted drag events update feedback immediately, including modifier changes. The live `type`, `isAlt`, and `effect` fields still describe the current hover.
 
-`EmptyState` composes a title, description, and optional child actions. `JsonViewer` displays a read-only formatted JSON value with configurable `label` and `rows`.
+`EmptyState` composes a title, description, and optional child actions. `DataViewer` presents JSON-compatible data for people: records become labelled terms, lists of plain values read on one line, lists of records are numbered, booleans read Yes or No, and missing or empty values read None or Empty. Keys become sentence-case labels with common acronyms (`track_id` reads "Track ID"); pass `formatLabel` to name domain keys, falling back to the exported `formatDataLabel`. `JsonViewer` displays a read-only formatted JSON value with configurable `label` and `rows` for people who need the JSON text itself.
 
 # Devhost Preview
 
