@@ -1,12 +1,21 @@
+import type { IAnalyticsProps } from "../analytics/types.js";
+import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
 import type { IDensityProps } from "../density/types.js";
 import type { ReactElement } from "react";
 import { Tabs as TabsPrimitive } from "@base-ui/react/tabs";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../utils/cn.js";
 
-type TabsProps = TabsPrimitive.Root.Props & IDensityProps;
+type TabsProps = IAnalyticsProps & TabsPrimitive.Root.Props & IDensityProps;
 
-function Tabs({ density, className, orientation = "horizontal", ...props }: TabsProps): ReactElement {
+function Tabs({ analytics, density, className, orientation = "horizontal", ...props }: TabsProps): ReactElement {
+  const trackedOnValueChange = useAnalyticsCallback(
+    "Tabs",
+    analytics,
+    { name: "ui.change-request" },
+    props.onValueChange,
+  );
+
   return (
     <TabsPrimitive.Root
       data-density={density}
@@ -19,6 +28,7 @@ function Tabs({ density, className, orientation = "horizontal", ...props }: Tabs
         )
       }
       {...props}
+      onValueChange={trackedOnValueChange}
     />
   );
 }

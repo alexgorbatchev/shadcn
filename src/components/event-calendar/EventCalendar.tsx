@@ -1,3 +1,5 @@
+import type { IAnalyticsProps } from "../../analytics/types.js";
+import { useAnalyticsCallback } from "../../hooks/useAnalyticsCallback.js";
 import {
   Calendar as NativeCalendar,
   dateFnsLocalizer,
@@ -72,13 +74,22 @@ type EventCalendarProps<T extends object, R extends object = object> = Omit<
   IDensityProps & { label: string; height?: number | string; localizer?: CalendarProps<T, R>["localizer"] };
 /** Import @alexgorbatchev/shadcn/event-calendar.css. Native localizer and event APIs are preserved. */
 function EventCalendar<T extends object, R extends object = object>({
+  analytics,
   label,
   height = 640,
   density,
   components,
   localizer = eventCalendarLocalizer,
   ...props
-}: EventCalendarProps<T, R>): ReactElement {
+}: EventCalendarProps<T, R> & IAnalyticsProps): ReactElement {
+  const onSelectEvent = useAnalyticsCallback("EventCalendar", analytics, { name: "ui.activate" }, props.onSelectEvent);
+  const onSelectSlot = useAnalyticsCallback(
+    "EventCalendar",
+    analytics,
+    { name: "ui.change-request" },
+    props.onSelectSlot,
+  );
+  const onNavigate = useAnalyticsCallback("EventCalendar", analytics, { name: "ui.navigate" }, props.onNavigate);
   return (
     <section
       aria-label={label}
@@ -88,6 +99,9 @@ function EventCalendar<T extends object, R extends object = object>({
     >
       <NativeCalendar<T, R>
         {...props}
+        onSelectEvent={onSelectEvent}
+        onSelectSlot={onSelectSlot}
+        onNavigate={onNavigate}
         localizer={localizer}
         popup={false}
         className={cn("ag-event-calendar")}

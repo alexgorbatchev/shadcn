@@ -1,10 +1,12 @@
+import type { IAnalyticsProps } from "../analytics/types.js";
+import { useAnalytics } from "../hooks/useAnalytics.js";
 import { useRef, type ReactElement } from "react";
 import { ImageIcon, UploadIcon } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "./Avatar.js";
 import { Button } from "./Button.js";
 import { useObjectURL } from "../hooks/useObjectURL.js";
 
-interface IImagePickerProps {
+interface IImagePickerProps extends IAnalyticsProps {
   src?: string;
   file?: File | null;
   label: string;
@@ -13,7 +15,16 @@ interface IImagePickerProps {
   onClear: () => void;
 }
 
-export function ImagePicker({ src, file, label, disabled, onFileChange, onClear }: IImagePickerProps): ReactElement {
+export function ImagePicker({
+  analytics,
+  src,
+  file,
+  label,
+  disabled,
+  onFileChange,
+  onClear,
+}: IImagePickerProps): ReactElement {
+  const track = useAnalytics("ImagePicker", analytics);
   const input = useRef<HTMLInputElement>(null);
   const preview = useObjectURL(file);
   const image = file === null ? undefined : (preview ?? src);
@@ -34,7 +45,10 @@ export function ImagePicker({ src, file, label, disabled, onFileChange, onClear 
         disabled={disabled}
         onChange={(event) => {
           const selected = event.currentTarget.files?.[0];
-          if (selected) onFileChange(selected);
+          if (selected) {
+            onFileChange(selected);
+            track({ name: "ui.commit" }, event.nativeEvent);
+          }
           event.currentTarget.value = "";
         }}
       />

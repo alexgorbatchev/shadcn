@@ -1,3 +1,4 @@
+import { AnalyticsButton } from "../../analytics/AnalyticsButton.js";
 import type { JSX } from "react";
 import { Button } from "../../Button.js";
 import type { ComponentProps } from "react";
@@ -55,7 +56,8 @@ export function MapAnswer({ pins, activeId, route, onSelect, ...props }: IMapAns
             />
           );
           return onSelect ? (
-            <button
+            <AnalyticsButton
+              component="MapAnswer"
               key={pin.id}
               type="button"
               aria-label={pin.label}
@@ -65,7 +67,7 @@ export function MapAnswer({ pins, activeId, route, onSelect, ...props }: IMapAns
               style={{ left: `${pin.x}%`, top: `${pin.y}%` }}
             >
               {content}
-            </button>
+            </AnalyticsButton>
           ) : (
             <span
               key={pin.id}

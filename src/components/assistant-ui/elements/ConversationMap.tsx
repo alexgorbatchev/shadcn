@@ -1,3 +1,4 @@
+import { AnalyticsButton } from "../../analytics/AnalyticsButton.js";
 import type { JSX } from "react";
 import { useCallback, useRef, useState, type ComponentProps, type KeyboardEvent } from "react";
 import { PreviewCard } from "@base-ui/react/preview-card";
@@ -65,7 +66,7 @@ export function ConversationMap({
             payload={entry}
             delay={120}
             closeDelay={80}
-            render={<button type="button" />}
+            render={<AnalyticsButton component="ConversationMap" type="button" />}
             data-slot="conversation-map-tick"
             data-active={current ? "" : undefined}
             data-in-view={onScreen ? "" : undefined}

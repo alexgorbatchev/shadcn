@@ -1,3 +1,4 @@
+import { AnalyticsButton } from "../../analytics/AnalyticsButton.js";
 import type { ReactElement } from "react";
 import { useResolvedPortalContainer } from "../hooks/useResolvedPortalContainer.js";
 import { useDensity } from "../../../hooks/useDensity.js";
@@ -141,7 +142,8 @@ const AssistantModalThreadList: FC<AssistantModalThreadListContract> = ({ onSele
 };
 const AssistantModalResizeHandle: FC<ComponentPropsWithoutRef<"button">> = (props) => {
   return (
-    <button
+    <AnalyticsButton
+      component="AssistantModalResizeHandle"
       type="button"
       aria-label="Resize Assistant"
       className="aui-modal-resize-handle group-hover/modal:border-foreground/15 hover:border-foreground/40 focus-visible:border-ring absolute start-0 top-0 z-10 size-6 cursor-nwse-resize touch-none rounded-ss-xl border-s-2 border-t-2 border-transparent transition-colors outline-none [clip-path:polygon(0_0,100%_0,100%_6px,6px_6px,6px_100%,0_100%)] motion-reduce:transition-none rtl:cursor-nesw-resize rtl:[clip-path:polygon(0_0,100%_0,100%_100%,calc(100%_-_6px)_100%,calc(100%_-_6px)_6px,0_6px)]"

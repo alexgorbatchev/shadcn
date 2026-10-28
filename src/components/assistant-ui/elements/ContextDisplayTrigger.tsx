@@ -1,3 +1,4 @@
+import { AnalyticsButton } from "../../analytics/AnalyticsButton.js";
 import type { ComponentProps, ReactElement } from "react";
 import { PopoverTrigger } from "../../Popover.js";
 
@@ -8,7 +9,8 @@ export function ContextDisplayTrigger(props: ContextDisplayTriggerProps): ReactE
     <PopoverTrigger
       openOnHover
       render={
-        <button
+        <AnalyticsButton
+          component="ContextDisplayTrigger"
           type="button"
           data-slot="context-display-trigger"
           className="inline-flex h-control-sm items-center gap-control-gap rounded-sm px-control-x text-sm text-muted-foreground tabular-nums outline-none hover:bg-muted hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring disabled:opacity-50"

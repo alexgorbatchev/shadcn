@@ -1,3 +1,4 @@
+import { AnalyticsLink } from "./analytics/AnalyticsLink.js";
 import type { CSSProperties, ReactElement, ReactNode } from "react";
 import type { IDensityProps } from "../density/types.js";
 import {
@@ -62,7 +63,13 @@ function AppShell({
                 {navigation.map((item) => (
                   <SidebarMenuItem key={item.id}>
                     <SidebarMenuButton
-                      render={<a href={item.href} aria-current={item.active ? "page" : undefined} />}
+                      render={
+                        <AnalyticsLink
+                          component="AppShell"
+                          href={item.href}
+                          aria-current={item.active ? "page" : undefined}
+                        />
+                      }
                       isActive={item.active}
                       tooltip={item.label}
                     >

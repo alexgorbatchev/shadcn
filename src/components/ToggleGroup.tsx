@@ -1,3 +1,5 @@
+import type { IAnalyticsProps } from "../analytics/types.js";
+import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
 import { useContext, type ReactElement } from "react";
 import { Toggle as TogglePrimitive } from "@base-ui/react/toggle";
 import { ToggleGroup as ToggleGroupPrimitive } from "@base-ui/react/toggle-group";
@@ -7,7 +9,8 @@ import { ToggleGroupContext } from "../toggle-group/ToggleGroupContext.js";
 import { toggleVariants, type ToggleProps } from "./Toggle.js";
 import { cn } from "../utils/cn.js";
 
-export type ToggleGroupProps = ToggleGroupPrimitive.Props &
+export type ToggleGroupProps = IAnalyticsProps &
+  ToggleGroupPrimitive.Props &
   VariantProps<typeof toggleVariants> &
   IDensityProps &
   IToggleGroupLayout;
@@ -17,6 +20,7 @@ interface IToggleGroupLayout {
 }
 
 export function ToggleGroup({
+  analytics,
   density,
   className,
   variant,
@@ -27,6 +31,13 @@ export function ToggleGroup({
   style,
   ...props
 }: ToggleGroupProps): ReactElement {
+  const trackedOnValueChange = useAnalyticsCallback(
+    "ToggleGroup",
+    analytics,
+    { name: "ui.change-request" },
+    props.onValueChange,
+  );
+
   return (
     <ToggleGroupPrimitive
       data-density={density}
@@ -46,6 +57,7 @@ export function ToggleGroup({
         )
       }
       {...props}
+      onValueChange={trackedOnValueChange}
     >
       <ToggleGroupContext.Provider value={{ variant, size, spacing }}>{children}</ToggleGroupContext.Provider>
     </ToggleGroupPrimitive>

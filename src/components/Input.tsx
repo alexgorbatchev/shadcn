@@ -1,11 +1,15 @@
+import type { IAnalyticsProps } from "../analytics/types.js";
+import { useAnalyticsInput } from "../hooks/useAnalyticsInput.js";
 import type { IDensityProps } from "../density/types.js";
 import type { ReactElement } from "react";
 import { Input as InputPrimitive } from "@base-ui/react/input";
 import { cn } from "../utils/cn.js";
 
-type InputProps = InputPrimitive.Props & IDensityProps;
+type InputProps = IAnalyticsProps & InputPrimitive.Props & IDensityProps;
 
-function Input({ density, className, type, ...props }: InputProps): ReactElement {
+function Input({ analytics, density, className, type, ...props }: InputProps): ReactElement {
+  const analyticsInput = useAnalyticsInput("Input", analytics, props);
+
   return (
     <InputPrimitive
       type={type}
@@ -18,6 +22,7 @@ function Input({ density, className, type, ...props }: InputProps): ReactElement
         )
       }
       {...props}
+      {...analyticsInput}
     />
   );
 }

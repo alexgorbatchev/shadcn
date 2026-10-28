@@ -1,3 +1,4 @@
+import { AnalyticsButton } from "../analytics/AnalyticsButton.js";
 import type { ReactElement } from "react";
 import type { ChartProps, ChartTooltipContentProps, ChartLegendContentProps, ChartIndicatorStyle } from "./types.js";
 import { useId, useMemo } from "react";
@@ -239,7 +240,8 @@ function ChartLegendContent({
           );
           const classes = "flex items-center gap-control-gap [&>svg]:size-3 [&>svg]:text-muted-foreground";
           return onClick ? (
-            <button
+            <AnalyticsButton
+              component="ChartLegendContent"
               key={index}
               type="button"
               className={cn(classes, "outline-none focus-visible:ring-1 focus-visible:ring-ring")}
@@ -248,7 +250,7 @@ function ChartLegendContent({
               onMouseLeave={(event) => onMouseLeave?.(item, index, event)}
             >
               {content}
-            </button>
+            </AnalyticsButton>
           ) : (
             <div
               key={index}

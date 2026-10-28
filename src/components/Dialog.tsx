@@ -1,3 +1,5 @@
+import type { IAnalyticsProps } from "../analytics/types.js";
+import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
 import { useDensity } from "../hooks/useDensity.js";
 import { usePortalContainer } from "../hooks/usePortalContainer.js";
 import { usePortalNode } from "../hooks/usePortalNode.js";
@@ -11,8 +13,15 @@ import { cn } from "../utils/cn.js";
 import { Button } from "./Button.js";
 import { XIcon } from "lucide-react";
 
-function Dialog<Payload>({ ...props }: DialogPrimitive.Root.Props<Payload>): ReactElement {
-  return <DialogPrimitive.Root data-slot="dialog" {...props} />;
+function Dialog<Payload>({ analytics, ...props }: DialogPrimitive.Root.Props<Payload> & IAnalyticsProps): ReactElement {
+  const trackedOnOpenChange = useAnalyticsCallback(
+    "Dialog",
+    analytics,
+    (open, _details) => ({ name: "ui.open-request", open }),
+    props.onOpenChange,
+  );
+
+  return <DialogPrimitive.Root data-slot="dialog" {...props} onOpenChange={trackedOnOpenChange} />;
 }
 
 function DialogTrigger<Payload>({ ...props }: DialogPrimitive.Trigger.Props<Payload>): ReactElement {

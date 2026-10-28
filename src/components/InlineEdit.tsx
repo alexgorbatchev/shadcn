@@ -1,8 +1,10 @@
+import { useAnalytics } from "../hooks/useAnalytics.js";
+import type { IAnalyticsProps } from "../analytics/types.js";
 import { useEffect, useRef, useState, type ReactElement } from "react";
 import { Input } from "./Input.js";
 import type { IDensityProps } from "../density/types.js";
 
-interface IInlineEditProps extends IDensityProps {
+interface IInlineEditProps extends IDensityProps, IAnalyticsProps {
   label: string;
   value: string;
   isDisabled?: boolean;
@@ -14,6 +16,7 @@ interface IInlineEditProps extends IDensityProps {
 
 /** A mounted edit session. The consumer replaces its display with this field while editing. */
 export function InlineEdit({
+  analytics,
   label,
   value,
   density,
@@ -23,6 +26,7 @@ export function InlineEdit({
   onCommit,
   onCancel,
 }: IInlineEditProps): ReactElement {
+  const track = useAnalytics("InlineEdit", analytics);
   const input = useRef<HTMLInputElement>(null);
   const isFinished = useRef(false);
   const shouldCancel = useRef(false);
@@ -39,6 +43,7 @@ export function InlineEdit({
     setError("");
     try {
       await onCommit(value);
+      track({ name: "ui.commit" });
     } catch (error) {
       isFinished.current = false;
       setError(error instanceof Error ? error.message : "Could not save this edit.");
@@ -55,6 +60,7 @@ export function InlineEdit({
       }}
     >
       <Input
+        analytics={false}
         ref={input}
         density={density}
         aria-label={label}

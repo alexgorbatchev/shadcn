@@ -1,3 +1,5 @@
+import type { IAnalyticsProps } from "../analytics/types.js";
+import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
 import type { IDensityProps } from "../density/types.js";
 import { useDensity } from "../hooks/useDensity.js";
 import { usePortalContainer } from "../hooks/usePortalContainer.js";
@@ -15,12 +17,20 @@ import { cn } from "../utils/cn.js";
 type DrawerProps<Payload> = DrawerPrimitive.Root.Props<Payload> & { showSwipeHandle?: boolean };
 
 function Drawer<Payload>({
+  analytics,
   modal = true,
   showSwipeHandle = false,
   snapPoints,
   swipeDirection = "down",
   ...props
-}: DrawerProps<Payload>): ReactElement {
+}: DrawerProps<Payload> & IAnalyticsProps): ReactElement {
+  const trackedOnOpenChange = useAnalyticsCallback(
+    "Drawer",
+    analytics,
+    (open, _details) => ({ name: "ui.open-request", open }),
+    props.onOpenChange,
+  );
+
   const hasSnapPoints = snapPoints != null && snapPoints.length > 0;
   const contextValue = useMemo(
     () => ({ hasSnapPoints, modal, showSwipeHandle, swipeDirection }),
@@ -35,6 +45,7 @@ function Drawer<Payload>({
         snapPoints={snapPoints}
         swipeDirection={swipeDirection}
         {...props}
+        onOpenChange={trackedOnOpenChange}
       />
     </DrawerContext.Provider>
   );

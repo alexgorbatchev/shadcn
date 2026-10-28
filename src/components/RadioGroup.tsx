@@ -1,4 +1,6 @@
 "use client";
+import type { IAnalyticsProps } from "../analytics/types.js";
+import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
 
 import type { IDensityProps } from "../density/types.js";
 import type { ReactElement } from "react";
@@ -6,15 +8,23 @@ import { Radio as RadioPrimitive } from "@base-ui/react/radio";
 import { RadioGroup as RadioGroupPrimitive } from "@base-ui/react/radio-group";
 import { cn } from "../utils/cn.js";
 
-type RadioGroupProps = RadioGroupPrimitive.Props & IDensityProps;
+type RadioGroupProps = IAnalyticsProps & RadioGroupPrimitive.Props & IDensityProps;
 
-function RadioGroup({ density, className, ...props }: RadioGroupProps): ReactElement {
+function RadioGroup({ analytics, density, className, ...props }: RadioGroupProps): ReactElement {
+  const trackedOnValueChange = useAnalyticsCallback(
+    "RadioGroup",
+    analytics,
+    { name: "ui.change-request" },
+    props.onValueChange,
+  );
+
   return (
     <RadioGroupPrimitive
       data-density={density}
       data-slot="radio-group"
       className={(state) => cn("grid w-full gap-2", typeof className === "function" ? className(state) : className)}
       {...props}
+      onValueChange={trackedOnValueChange}
     />
   );
 }

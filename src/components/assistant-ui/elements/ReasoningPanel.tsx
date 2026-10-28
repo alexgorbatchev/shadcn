@@ -1,3 +1,4 @@
+import { AnalyticsButton } from "../../analytics/AnalyticsButton.js";
 import { collapsePanel } from "./constants.js";
 import type { JSX } from "react";
 import { ChevronDownIcon } from "lucide-react";
@@ -43,7 +44,8 @@ export function ReasoningPanel({
     >
       <CollapsibleTrigger
         render={
-          <button
+          <AnalyticsButton
+            component="ReasoningPanel"
             type="button"
             className="group/trigger text-muted-foreground hover:text-foreground flex items-center gap-1.5 py-1 text-[13.5px] transition-colors outline-none"
           />

@@ -152,7 +152,7 @@ function InputGroupInput({ density, className, ...props }: InputGroupInputProps)
   );
 }
 
-type InputGroupTextareaProps = ComponentProps<"textarea"> & IDensityProps;
+type InputGroupTextareaProps = ComponentProps<typeof Textarea>;
 
 function InputGroupTextarea({ density, className, ...props }: InputGroupTextareaProps): ReactElement {
   return (

@@ -1,3 +1,4 @@
+import { AnalyticsButton } from "../../analytics/AnalyticsButton.js";
 import { memo, useRef, type ComponentPropsWithoutRef, type FC } from "react";
 import {
   ComposerPrimitive,
@@ -81,7 +82,10 @@ const Categories: FC<CategoriesProps> = ({ iconMap, fallbackIcon, emptyLabel }) 
               key={cat.id}
               categoryId={cat.id}
               render={
-                <button className="hover:bg-accent focus:bg-accent data-[highlighted]:bg-accent flex cursor-pointer items-center justify-between gap-2 px-3 py-2 text-sm transition-colors outline-none" />
+                <AnalyticsButton
+                  component="ComposerTriggerPopoverCategories"
+                  className="hover:bg-accent focus:bg-accent data-[highlighted]:bg-accent flex cursor-pointer items-center justify-between gap-2 px-3 py-2 text-sm transition-colors outline-none"
+                />
               }
             >
               <span className="flex items-center gap-2">
@@ -112,7 +116,10 @@ const Items: FC<ItemsProps> = ({ iconMap, fallbackIcon, backLabel, emptyLabel, l
         <div data-slot="composer-trigger-popover-items" className="flex flex-col">
           <ComposerPrimitive.TriggerPopoverBack
             render={
-              <button className="text-muted-foreground hover:bg-accent flex cursor-pointer items-center gap-1.5 border-b px-3 py-2 text-sm tracking-wide uppercase transition-colors" />
+              <AnalyticsButton
+                component="ComposerTriggerPopoverItems"
+                className="text-muted-foreground hover:bg-accent flex cursor-pointer items-center gap-1.5 border-b px-3 py-2 text-sm tracking-wide uppercase transition-colors"
+              />
             }
           >
             <ChevronLeftIcon aria-hidden="true" className="size-3.5 shrink-0" />
@@ -129,7 +136,10 @@ const Items: FC<ItemsProps> = ({ iconMap, fallbackIcon, backLabel, emptyLabel, l
                   item={item}
                   index={index}
                   render={
-                    <button className="hover:bg-accent focus:bg-accent data-[highlighted]:bg-accent flex w-full cursor-pointer flex-col items-start gap-0.5 px-3 py-2 text-start transition-colors outline-none" />
+                    <AnalyticsButton
+                      component="ComposerTriggerPopoverItems"
+                      className="hover:bg-accent focus:bg-accent data-[highlighted]:bg-accent flex w-full cursor-pointer flex-col items-start gap-0.5 px-3 py-2 text-start transition-colors outline-none"
+                    />
                   }
                 >
                   <span className="flex items-center gap-2 text-sm font-medium">

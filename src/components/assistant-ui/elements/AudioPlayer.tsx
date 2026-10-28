@@ -1,3 +1,4 @@
+import { AnalyticsInput } from "../../analytics/AnalyticsInput.js";
 import { Button } from "../../Button.js";
 import { useMediaDuration } from "../hooks/useMediaDuration.js";
 import type { JSX } from "react";
@@ -74,7 +75,8 @@ export function AudioPlayer({ src, title, artwork, durationMs, ...props }: IAudi
       </Button>
       <div className="flex min-w-0 grow basis-16 flex-col gap-1.5">
         <span className="truncate text-base font-medium">{displayTitle}</span>
-        <input
+        <AnalyticsInput
+          component="AudioPlayer"
           type="range"
           min={0}
           max={duration ?? 0}

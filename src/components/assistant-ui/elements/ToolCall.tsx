@@ -1,3 +1,4 @@
+import { AnalyticsButton } from "../../analytics/AnalyticsButton.js";
 import { collapsePanel } from "./constants.js";
 import type { JSX } from "react";
 import { CheckIcon, ChevronRightIcon } from "lucide-react";
@@ -38,7 +39,8 @@ export function ToolCall({
     >
       <CollapsibleTrigger
         render={
-          <button
+          <AnalyticsButton
+            component="ToolCall"
             type="button"
             className="group/trigger text-muted-foreground hover:text-foreground flex w-full items-center gap-2 rounded-md py-1 text-[13.5px] transition-colors outline-none"
           />

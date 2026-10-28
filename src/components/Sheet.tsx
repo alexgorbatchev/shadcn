@@ -1,3 +1,5 @@
+import type { IAnalyticsProps } from "../analytics/types.js";
+import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
 import type { IDensityProps } from "../density/types.js";
 import { useDensity } from "../hooks/useDensity.js";
 import { usePortalContainer } from "../hooks/usePortalContainer.js";
@@ -12,8 +14,15 @@ import { cn } from "../utils/cn.js";
 import { Button } from "./Button.js";
 import { useDirection } from "./DirectionProvider.js";
 
-function Sheet<Payload>({ ...props }: SheetPrimitive.Root.Props<Payload>): ReactElement {
-  return <SheetPrimitive.Root<Payload> data-slot="sheet" {...props} />;
+function Sheet<Payload>({ analytics, ...props }: SheetPrimitive.Root.Props<Payload> & IAnalyticsProps): ReactElement {
+  const trackedOnOpenChange = useAnalyticsCallback(
+    "Sheet",
+    analytics,
+    (open, _details) => ({ name: "ui.open-request", open }),
+    props.onOpenChange,
+  );
+
+  return <SheetPrimitive.Root<Payload> data-slot="sheet" {...props} onOpenChange={trackedOnOpenChange} />;
 }
 
 function SheetTrigger<Payload>({ ...props }: SheetPrimitive.Trigger.Props<Payload>): ReactElement {

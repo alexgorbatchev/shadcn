@@ -1,3 +1,4 @@
+import { AnalyticsButton } from "../../analytics/AnalyticsButton.js";
 import { useMemo, useState, type ComponentProps, type FC, type ReactElement } from "react";
 import { useAuiState, type TaskState } from "@assistant-ui/react";
 import { ChevronDownIcon } from "lucide-react";
@@ -90,14 +91,15 @@ export function TaskTray({ className }: ComponentProps<typeof AgentStatus>): Rea
           ))}
           {hidden > 0 && (
             <li className="flex">
-              <button
+              <AnalyticsButton
+                component="TaskTray"
                 type="button"
                 data-slot="aui_task-tray-more"
                 onClick={() => setVisible((count) => count + TASK_PAGE_SIZE)}
                 className="text-muted-foreground hover:text-foreground px-2.5 py-2 text-sm transition-colors"
               >
                 Show {Math.min(hidden, TASK_PAGE_SIZE)} more
-              </button>
+              </AnalyticsButton>
             </li>
           )}
         </ul>

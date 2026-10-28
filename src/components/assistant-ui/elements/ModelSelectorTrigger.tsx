@@ -1,3 +1,4 @@
+import { AnalyticsButton } from "../../analytics/AnalyticsButton.js";
 import type { ComponentProps, ReactElement } from "react";
 import { ChevronDownIcon } from "lucide-react";
 import { PopoverTrigger } from "../../Popover.js";
@@ -19,7 +20,8 @@ export function ModelSelectorTrigger({
   return (
     <PopoverTrigger
       render={
-        <button
+        <AnalyticsButton
+          component="ModelSelectorTrigger"
           type="button"
           role="combobox"
           aria-haspopup="listbox"

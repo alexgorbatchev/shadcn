@@ -50,30 +50,31 @@ Package preparation and contributor commands are documented in [AGENTS.md](./AGE
 
 Import shared controls and providers from `@alexgorbatchev/shadcn`. Import the following features from their dedicated entry points and install only the peers you use. These features, their hooks, and their types are not exported from the package root.
 
-| Import path suffix   | Components                                               | Install alongside the package                                                                       |
-| -------------------- | -------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
-| `/json-render`       | JSON Render component registry and catalog               | `bun add @json-render/core@0.21.1 @json-render/react@0.21.1 embla-carousel-react@^8.6.0`            |
-| `/chart`             | Chart parts, AnalyticsChart, Sparkline, hooks and types  | `bun add recharts@3.8.0 cssesc@3.0.0 es-toolkit@1.52.0`                                             |
-| `/calendar`          | Calendar, CalendarDayButton, DatePicker, DateRangePicker | `bun add @daypicker/react@^10.0.2`                                                                  |
-| `/persian-calendar`  | PersianCalendar                                          | `bun add @daypicker/persian@^10.0.2 @daypicker/react@^10.0.2`                                       |
-| `/carousel`          | Carousel components, useCarousel, and carousel types     | `bun add embla-carousel-react@^8.6.0`                                                               |
-| `/command`           | Command components, including CommandDialog              | `bun add cmdk@^1.1.1`                                                                               |
-| `/resizable`         | Resizable components and SplitView                       | `bun add react-resizable-panels@^4.14.3`                                                            |
-| `/fonts.css`         | JetBrains Mono font stylesheet                           | `bun add @fontsource-variable/jetbrains-mono@^5.3.0`                                                |
-| `/sonner`            | Sonner, SonnerToaster, Toaster, toast, useSonner         | `bun add sonner@2.0.8`; the patched runtime is bundled                                              |
-| `/input-otp`         | InputOTP components                                      | `bun add input-otp@1.5.0`; the patched runtime is bundled                                           |
-| `/virtual-table`     | VirtualTable and row measurement props                   | `@tanstack/react-virtual@3.14.13`                                                                   |
-| `/message-scroller`  | MessageScroller components, hooks, and types             | `bun add @shadcn/react@0.3.1`; the patched runtime is bundled                                       |
-| `/questionnaire`     | Questionnaire components and types                       | `bun add @shadcn/react@0.3.1`; the patched runtime is bundled                                       |
-| `/data-grid`         | DataGrid, column picker, and native table helpers        | `bun add @tanstack/react-table@9.2.8`                                                               |
-| `/virtual-data-grid` | VirtualDataGrid and row measurement props                | `bun add @tanstack/react-table@9.2.8 @tanstack/react-virtual@3.14.13`                               |
-| `/file-upload`       | FileUpload selection and validation                      | `bun add react-dropzone@^20.1.4`                                                                    |
-| `/color-picker`      | ColorPicker                                              | `bun add react-colorful@^5.8.1`                                                                     |
-| `/image-crop`        | ImageCrop and native export helpers                      | `bun add react-image-crop@^11.1.2`                                                                  |
-| `/tree`              | Tree, native hooks and features                          | `bun add @headless-tree/core@^1.8.0 @headless-tree/react@^1.8.0`                                    |
-| `/editor`            | RichTextEditor, native Tiptap hooks and StarterKit       | `bun add @tiptap/core@^3.32.0 @tiptap/react@^3.32.0 @tiptap/pm@^3.32.0 @tiptap/starter-kit@^3.32.0` |
-| `/event-calendar`    | EventCalendar, EventForm and native calendar APIs        | `bun add date-fns@^4.4.0`; TypeScript: `bun add -d @types/react-big-calendar@^1.16.3`               |
-| `/gantt`             | Gantt and Roadmap                                        | `bun add date-fns@^4.4.0 @date-fns/tz@^1.5.0`                                                       |
+| Import path suffix   | Components                                                           | Install alongside the package                                                                       |
+| -------------------- | -------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| `/analytics`         | AnalyticsProvider, AnalyticsScope, AnalyticsImpression, useAnalytics | Existing core peers; no vendor SDK                                                                  |
+| `/json-render`       | JSON Render component registry and catalog                           | `bun add @json-render/core@0.21.1 @json-render/react@0.21.1 embla-carousel-react@^8.6.0`            |
+| `/chart`             | Chart parts, AnalyticsChart, Sparkline, hooks and types              | `bun add recharts@3.8.0 cssesc@3.0.0 es-toolkit@1.52.0`                                             |
+| `/calendar`          | Calendar, CalendarDayButton, DatePicker, DateRangePicker             | `bun add @daypicker/react@^10.0.2`                                                                  |
+| `/persian-calendar`  | PersianCalendar                                                      | `bun add @daypicker/persian@^10.0.2 @daypicker/react@^10.0.2`                                       |
+| `/carousel`          | Carousel components, useCarousel, and carousel types                 | `bun add embla-carousel-react@^8.6.0`                                                               |
+| `/command`           | Command components, including CommandDialog                          | `bun add cmdk@^1.1.1`                                                                               |
+| `/resizable`         | Resizable components and SplitView                                   | `bun add react-resizable-panels@^4.14.3`                                                            |
+| `/fonts.css`         | JetBrains Mono font stylesheet                                       | `bun add @fontsource-variable/jetbrains-mono@^5.3.0`                                                |
+| `/sonner`            | Sonner, SonnerToaster, Toaster, toast, useSonner                     | `bun add sonner@2.0.8`; the patched runtime is bundled                                              |
+| `/input-otp`         | InputOTP components                                                  | `bun add input-otp@1.5.0`; the patched runtime is bundled                                           |
+| `/virtual-table`     | VirtualTable and row measurement props                               | `@tanstack/react-virtual@3.14.13`                                                                   |
+| `/message-scroller`  | MessageScroller components, hooks, and types                         | `bun add @shadcn/react@0.3.1`; the patched runtime is bundled                                       |
+| `/questionnaire`     | Questionnaire components and types                                   | `bun add @shadcn/react@0.3.1`; the patched runtime is bundled                                       |
+| `/data-grid`         | DataGrid, column picker, and native table helpers                    | `bun add @tanstack/react-table@9.2.8`                                                               |
+| `/virtual-data-grid` | VirtualDataGrid and row measurement props                            | `bun add @tanstack/react-table@9.2.8 @tanstack/react-virtual@3.14.13`                               |
+| `/file-upload`       | FileUpload selection and validation                                  | `bun add react-dropzone@^20.1.4`                                                                    |
+| `/color-picker`      | ColorPicker                                                          | `bun add react-colorful@^5.8.1`                                                                     |
+| `/image-crop`        | ImageCrop and native export helpers                                  | `bun add react-image-crop@^11.1.2`                                                                  |
+| `/tree`              | Tree, native hooks and features                                      | `bun add @headless-tree/core@^1.8.0 @headless-tree/react@^1.8.0`                                    |
+| `/editor`            | RichTextEditor, native Tiptap hooks and StarterKit                   | `bun add @tiptap/core@^3.32.0 @tiptap/react@^3.32.0 @tiptap/pm@^3.32.0 @tiptap/starter-kit@^3.32.0` |
+| `/event-calendar`    | EventCalendar, EventForm and native calendar APIs                    | `bun add date-fns@^4.4.0`; TypeScript: `bun add -d @types/react-big-calendar@^1.16.3`               |
+| `/gantt`             | Gantt and Roadmap                                                    | `bun add date-fns@^4.4.0 @date-fns/tz@^1.5.0`                                                       |
 
 Import `@alexgorbatchev/shadcn/event-calendar.css` for EventCalendar, and `react-image-crop/dist/ReactCrop.css` for ImageCrop. The root also provides application shells, dashboard and billing layouts, authentication/settings forms, account/workspace controls, Kanban, facets, tags, number fields, toolbars, meters, stat cards and status displays. See the [component catalog reference](./docs/internal/component-catalog.md) for source groups, native APIs, dependency costs and consumer responsibilities.
 
@@ -90,6 +91,27 @@ A production install of this package adds no third-party packages: every library
 The optional assistant-ui catalog provides presentational families under `/assistant-ui/<family>` and runtime adapters under `/assistant-ui/native/<family>`. For example, import `ApprovalCard` from `@alexgorbatchev/shadcn/assistant-ui/approval-card`. Add `@alexgorbatchev/shadcn/assistant-ui.css` to your stylesheet. Native threads require an actual assistant-ui runtime and the selected family's optional peers. See the [assistant-ui reference](./docs/internal/assistant-ui.md) for imports, dependency-bearing styles, source inventory, and the SelectionToolbar isolation limitation.
 
 For embedded surfaces, import `PortalProvider` from the package root and pass the real overlay `container`. Dialogs, alerts, sheets, drawers, menus, navigation popups, comboboxes, selects, hover cards, tooltips, popovers, and Base UI toasts inherit that container. The container applies to the outermost popup: a popup opened inside another one, such as a select in a dialog, renders inside that popup's portal, where a modal dialog counts it as inside the dialog and keeps it reachable by assistive technology and the pointer. Native portal props can still supply an explicit container override.
+
+## Configurable analytics
+
+Wrap the application in an optional analytics provider and supply your own transport:
+
+```tsx
+import { Button } from "@alexgorbatchev/shadcn";
+import { AnalyticsProvider, AnalyticsScope, type IAnalyticsTransport } from "@alexgorbatchev/shadcn/analytics";
+
+function Settings({ transport, consent }: { transport: IAnalyticsTransport; consent: boolean }) {
+  return (
+    <AnalyticsProvider transport={transport} enabled={consent}>
+      <AnalyticsScope name="settings" properties={{ surface: "account" }}>
+        <Button analytics={{ id: "save-settings" }}>Save</Button>
+      </AnalyticsScope>
+    </AnalyticsProvider>
+  );
+}
+```
+
+The transport implements `track(event)` and may return a promise. The app owns vendor SDKs, identity, consent, and delivery. Components emit semantic UI events without extracting labels, values, URLs, or user content. Use `analytics={false}` for a control or a disabled scope for a subtree. Display components require explicit `AnalyticsImpression` observation. See the [event contract and catalog coverage](./docs/internal/analytics.md).
 
 # Quick Start
 

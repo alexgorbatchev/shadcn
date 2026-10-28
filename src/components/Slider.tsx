@@ -1,3 +1,5 @@
+import type { IAnalyticsProps } from "../analytics/types.js";
+import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
 import type { IDensityProps } from "../density/types.js";
 import type { ReactElement } from "react";
 import { Slider as SliderPrimitive } from "@base-ui/react/slider";
@@ -9,6 +11,7 @@ type SliderProps<Value extends number | readonly number[] = number | readonly nu
     Pick<SliderPrimitive.Thumb.Props, "getAriaLabel" | "getAriaValueText">;
 
 function Slider<Value extends number | readonly number[] = number | readonly number[]>({
+  analytics,
   density,
   className,
   defaultValue,
@@ -18,7 +21,14 @@ function Slider<Value extends number | readonly number[] = number | readonly num
   getAriaLabel,
   getAriaValueText,
   ...props
-}: SliderProps<Value>): ReactElement {
+}: SliderProps<Value> & IAnalyticsProps): ReactElement {
+  const trackedOnValueCommitted = useAnalyticsCallback(
+    "Slider",
+    analytics,
+    { name: "ui.commit" },
+    props.onValueCommitted,
+  );
+
   const values = value ?? defaultValue ?? min;
   const thumbCount = typeof values === "number" ? 1 : values.length;
 
@@ -38,6 +48,7 @@ function Slider<Value extends number | readonly number[] = number | readonly num
       max={max}
       thumbAlignment="edge"
       {...props}
+      onValueCommitted={trackedOnValueCommitted}
     >
       <SliderPrimitive.Control className="relative flex w-full touch-none items-center select-none data-disabled:opacity-50 data-[orientation=vertical]:h-full data-[orientation=vertical]:min-h-40 data-[orientation=vertical]:w-auto data-[orientation=vertical]:flex-col">
         <SliderPrimitive.Track

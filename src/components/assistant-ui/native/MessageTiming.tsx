@@ -1,3 +1,4 @@
+import { AnalyticsButton } from "../../analytics/AnalyticsButton.js";
 import { type ReactElement } from "react";
 import { useMessageTiming } from "@assistant-ui/react";
 import { Popover, PopoverContent, PopoverTitle, PopoverTrigger } from "../../Popover.js";
@@ -41,7 +42,8 @@ export function MessageTiming({
       <PopoverTrigger
         openOnHover
         render={
-          <button
+          <AnalyticsButton
+            component="MessageTiming"
             type="button"
             data-slot="message-timing-trigger"
             aria-label="Message timing"

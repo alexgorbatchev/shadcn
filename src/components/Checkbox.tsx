@@ -1,12 +1,21 @@
+import type { IAnalyticsProps } from "../analytics/types.js";
+import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
 import type { IDensityProps } from "../density/types.js";
 import type { ReactElement } from "react";
 import { Checkbox as CheckboxPrimitive } from "@base-ui/react/checkbox";
 import { cn } from "../utils/cn.js";
 import { CheckIcon } from "lucide-react";
 
-type CheckboxProps = CheckboxPrimitive.Root.Props & IDensityProps;
+type CheckboxProps = IAnalyticsProps & CheckboxPrimitive.Root.Props & IDensityProps;
 
-function Checkbox({ density, className, ...props }: CheckboxProps): ReactElement {
+function Checkbox({ analytics, density, className, ...props }: CheckboxProps): ReactElement {
+  const trackedOnCheckedChange = useAnalyticsCallback(
+    "Checkbox",
+    analytics,
+    { name: "ui.change-request" },
+    props.onCheckedChange,
+  );
+
   return (
     <CheckboxPrimitive.Root
       data-density={density}
@@ -18,6 +27,7 @@ function Checkbox({ density, className, ...props }: CheckboxProps): ReactElement
         )
       }
       {...props}
+      onCheckedChange={trackedOnCheckedChange}
     >
       <CheckboxPrimitive.Indicator
         data-slot="checkbox-indicator"

@@ -1,20 +1,24 @@
+import type { IAnalyticsProps } from "../../analytics/types.js";
+import { useAnalytics } from "../../hooks/useAnalytics.js";
 import type { TreeInstance, ItemInstance } from "@headless-tree/core";
 import type { KeyboardEvent, ReactElement, ReactNode } from "react";
 import type { IDensityProps } from "../../density/types.js";
 import { cn } from "../../utils/cn.js";
 import { TreeItem } from "./TreeItem.js";
 
-type TreeProps<T> = IDensityProps & {
-  tree: TreeInstance<T>;
-  label: string;
-  variant?: "default" | "sidebar";
-  renderIcon?: (item: ItemInstance<T>) => ReactNode;
-  renderLabel?: (item: ItemInstance<T>) => ReactNode;
-  renderItem?: (item: ItemInstance<T>) => ReactNode;
-};
+type TreeProps<T> = IAnalyticsProps &
+  IDensityProps & {
+    tree: TreeInstance<T>;
+    label: string;
+    variant?: "default" | "sidebar";
+    renderIcon?: (item: ItemInstance<T>) => ReactNode;
+    renderLabel?: (item: ItemInstance<T>) => ReactNode;
+    renderItem?: (item: ItemInstance<T>) => ReactNode;
+  };
 
 /** Headless Tree owns navigation, selection, expansion, and optional pointer/keyboard drag and drop. */
 function Tree<T>({
+  analytics,
   tree,
   label,
   variant = "default",
@@ -23,6 +27,7 @@ function Tree<T>({
   renderItem,
   density,
 }: TreeProps<T>): ReactElement {
+  const track = useAnalytics("Tree", analytics);
   const container = tree.getContainerProps(label);
   const dragLine = tree.getDragLineData?.();
   const element = tree.getElement();
@@ -37,7 +42,11 @@ function Tree<T>({
       onKeyDown={(event: KeyboardEvent<HTMLDivElement>) => {
         if (event.target instanceof Element && event.target.closest("input,textarea,select,form,button,[role=menu]"))
           return;
+        if (event.defaultPrevented) return;
         container.onKeyDown?.(event);
+        if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Home", "End", "Enter", " "].includes(event.key)) {
+          track({ name: "ui.navigate" }, event.nativeEvent);
+        }
       }}
     >
       {tree.getItems().map((item) =>

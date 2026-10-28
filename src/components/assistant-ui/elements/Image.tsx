@@ -1,3 +1,5 @@
+import { AnalyticsLink } from "../../analytics/AnalyticsLink.js";
+import { AnalyticsButton } from "../../analytics/AnalyticsButton.js";
 import { useState, useEffect, useRef, type ComponentProps, type JSX, type PropsWithChildren } from "react";
 import { Button } from "../../Button.js";
 import { Dialog, DialogTrigger, DialogContent, DialogTitle } from "../../Dialog.js";
@@ -172,7 +174,8 @@ export function ImageSource({ label, url, iconUrl, ...props }: IImageSourceProps
         </span>
       )}
       {href ? (
-        <a
+        <AnalyticsLink
+          component="ImageSource"
           data-slot="image-source-label"
           href={href}
           target="_blank"
@@ -181,7 +184,7 @@ export function ImageSource({ label, url, iconUrl, ...props }: IImageSourceProps
         >
           {displayLabel}
           <span className="sr-only"> (opens in a new tab)</span>
-        </a>
+        </AnalyticsLink>
       ) : (
         <span data-slot="image-source-label" className="truncate">
           {displayLabel}
@@ -215,7 +218,8 @@ export function ImageZoom({ src, alt = "Image preview", children }: ImageZoomPro
       <Dialog>
         <DialogTrigger
           render={
-            <button
+            <AnalyticsButton
+              component="ImageZoom"
               data-testid="ImageZoom--trigger"
               type="button"
               className="block w-full cursor-zoom-in"

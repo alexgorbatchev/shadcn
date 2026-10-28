@@ -1,3 +1,4 @@
+import { AnalyticsLink } from "../../analytics/AnalyticsLink.js";
 import { type ComponentProps, type ReactElement } from "react";
 import { MessagesSquare } from "lucide-react";
 import { GitHubIcon } from "../elements/GitHubIcon.js";
@@ -20,7 +21,14 @@ export function ThreadListSidebar({ ...props }: ComponentProps<typeof Sidebar>):
           <SidebarMenuItem>
             <SidebarMenuButton
               size="lg"
-              render={<a href="https://assistant-ui.com" target="_blank" rel="noopener noreferrer" />}
+              render={
+                <AnalyticsLink
+                  component="ThreadListSidebar"
+                  href="https://assistant-ui.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                />
+              }
             >
               <MessagesSquare aria-hidden="true" className="size-4 shrink-0" />
               <div className="aui-sidebar-header-heading me-6 flex flex-col gap-0.5 leading-none">
@@ -40,7 +48,12 @@ export function ThreadListSidebar({ ...props }: ComponentProps<typeof Sidebar>):
             <SidebarMenuButton
               size="lg"
               render={
-                <a href="https://github.com/assistant-ui/assistant-ui" target="_blank" rel="noopener noreferrer" />
+                <AnalyticsLink
+                  component="ThreadListSidebar"
+                  href="https://github.com/assistant-ui/assistant-ui"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                />
               }
             >
               <GitHubIcon variant="tile" />

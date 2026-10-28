@@ -1,3 +1,5 @@
+import type { IAnalyticsProps } from "../analytics/types.js";
+import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
 import type { ComponentProps, ReactElement } from "react";
 import type { Density, IDensityProps } from "../density/types.js";
 import { mergeProps } from "@base-ui/react/merge-props";
@@ -138,13 +140,24 @@ function AttachmentAction({
   return <Button data-slot="attachment-action" variant={variant} size={size} className={className} {...props} />;
 }
 type AttachmentTriggerState = { slot: "attachment-trigger"; density?: Density };
-type AttachmentTriggerProps = useRender.ComponentProps<"button", AttachmentTriggerState> & IDensityProps;
-function AttachmentTrigger({ density, className, render, type, ...props }: AttachmentTriggerProps): ReactElement {
+type AttachmentTriggerProps = IAnalyticsProps &
+  useRender.ComponentProps<"button", AttachmentTriggerState> &
+  IDensityProps;
+function AttachmentTrigger({
+  analytics,
+  density,
+  className,
+  render,
+  type,
+  ...props
+}: AttachmentTriggerProps): ReactElement {
+  const onClick = useAnalyticsCallback("AttachmentTrigger", analytics, { name: "ui.activate" }, props.onClick);
+
   return useRender({
     defaultTagName: "button",
     props: mergeProps<"button">(
       { type: render ? type : (type ?? "button"), className: cn("absolute inset-0 z-10 outline-none", className) },
-      props,
+      { ...props, onClick },
     ),
     render,
     state: { slot: "attachment-trigger", density },

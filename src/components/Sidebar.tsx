@@ -1,3 +1,6 @@
+import type { IAnalyticsProps } from "../analytics/types.js";
+import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
+import { AnalyticsButton } from "./analytics/AnalyticsButton.js";
 import type { ComponentProps, KeyboardEvent, ReactElement, ReactNode, SetStateAction } from "react";
 import type { IDensityProps } from "../density/types.js";
 import type {
@@ -269,7 +272,8 @@ function SidebarRail({
 }: ComponentProps<"button"> & IDensityProps): ReactElement {
   const { toggleSidebar, open, isMobile, openMobile } = useSidebar();
   return (
-    <button
+    <AnalyticsButton
+      component="SidebarRail"
       data-density={density}
       data-sidebar="rail"
       data-slot="sidebar-rail"
@@ -433,12 +437,18 @@ function SidebarGroupLabel({
 }
 
 function SidebarGroupAction({
+  analytics,
   density,
   className,
   render,
   type,
   ...props
-}: useRender.ComponentProps<"button", SidebarPartState> & ComponentProps<"button"> & IDensityProps): ReactElement {
+}: useRender.ComponentProps<"button", SidebarPartState> &
+  ComponentProps<"button"> &
+  IDensityProps &
+  IAnalyticsProps): ReactElement {
+  const onClick = useAnalyticsCallback("SidebarGroupAction", analytics, { name: "ui.activate" }, props.onClick);
+
   return useRender({
     defaultTagName: "button",
     props: mergeProps<"button">(
@@ -449,7 +459,7 @@ function SidebarGroupAction({
           className,
         ),
       },
-      props,
+      { ...props, onClick },
     ),
     render,
     state: {
@@ -519,6 +529,7 @@ const sidebarMenuButtonVariants = cva(
 );
 
 function SidebarMenuButton({
+  analytics,
   render,
   isActive = false,
   variant = "default",
@@ -536,7 +547,10 @@ function SidebarMenuButton({
     isActive?: boolean;
     tooltip?: string | ComponentProps<typeof TooltipContent>;
   } & VariantProps<typeof sidebarMenuButtonVariants> &
-  IDensityProps): ReactElement {
+  IDensityProps &
+  IAnalyticsProps): ReactElement {
+  const onClick = useAnalyticsCallback("SidebarMenuButton", analytics, { name: "ui.activate" }, props.onClick);
+
   const { isMobile, state } = useSidebar();
   const comp = useRender({
     defaultTagName: "button",
@@ -556,7 +570,7 @@ function SidebarMenuButton({
         type: type ?? (render ? undefined : "button"),
         className: cn(sidebarMenuButtonVariants({ variant, size }), className),
       },
-      props,
+      { ...props, onClick },
     ),
     render,
     state: {
@@ -582,6 +596,7 @@ function SidebarMenuButton({
 }
 
 function SidebarMenuAction({
+  analytics,
   density,
   className,
   render,
@@ -591,7 +606,10 @@ function SidebarMenuAction({
 }: useRender.ComponentProps<"button", SidebarPartState> &
   ComponentProps<"button"> & {
     showOnHover?: boolean;
-  } & IDensityProps): ReactElement {
+  } & IDensityProps &
+  IAnalyticsProps): ReactElement {
+  const onClick = useAnalyticsCallback("SidebarMenuAction", analytics, { name: "ui.activate" }, props.onClick);
+
   return useRender({
     defaultTagName: "button",
     props: mergeProps<"button">(
@@ -604,7 +622,7 @@ function SidebarMenuAction({
           className,
         ),
       },
-      props,
+      { ...props, onClick },
     ),
     render,
     state: {
@@ -690,6 +708,7 @@ function SidebarMenuSubItem({ density, className, ...props }: ComponentProps<"li
 }
 
 function SidebarMenuSubButton({
+  analytics,
   render,
   size = "md",
   isActive = false,
@@ -700,7 +719,10 @@ function SidebarMenuSubButton({
   ComponentProps<"a"> & {
     size?: "sm" | "md";
     isActive?: boolean;
-  } & IDensityProps): ReactElement {
+  } & IDensityProps &
+  IAnalyticsProps): ReactElement {
+  const onClick = useAnalyticsCallback("SidebarMenuSubButton", analytics, { name: "ui.activate" }, props.onClick);
+
   return useRender({
     defaultTagName: "a",
     props: mergeProps<"a">(
@@ -710,7 +732,7 @@ function SidebarMenuSubButton({
           className,
         ),
       },
-      props,
+      { ...props, onClick },
     ),
     render,
     state: {

@@ -1,3 +1,4 @@
+import { AnalyticsButton } from "../../analytics/AnalyticsButton.js";
 import type { ReactElement } from "react";
 import { type ComponentProps } from "react";
 import { type ComponentPropsWithoutRef, type ElementType, type MutableRefObject, type ForwardedRef } from "react";
@@ -134,7 +135,10 @@ export function ToolFallbackTrigger({ toolName, status, responseDeliveryStatus, 
       data-slot="tool-fallback-trigger"
       {...props}
       render={
-        <button className="aui-tool-fallback-trigger group/trigger text-muted-foreground hover:text-foreground flex w-fit max-w-full origin-left items-center gap-2 py-1.5 text-sm transition-colors " />
+        <AnalyticsButton
+          component="ToolFallbackTrigger"
+          className="aui-tool-fallback-trigger group/trigger text-muted-foreground hover:text-foreground flex w-fit max-w-full origin-left items-center gap-2 py-1.5 text-sm transition-colors "
+        />
       }
     >
       <StatusGlyph

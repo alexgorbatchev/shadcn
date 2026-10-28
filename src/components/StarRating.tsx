@@ -1,19 +1,29 @@
+import { AnalyticsButton } from "./analytics/AnalyticsButton.js";
 import type { ReactElement } from "react";
 import { Radio } from "@base-ui/react/radio";
-import { RadioGroup } from "@base-ui/react/radio-group";
+import { RadioGroup } from "./RadioGroup.js";
 import { StarIcon, CircleOffIcon } from "lucide-react";
+import type { IAnalyticsProps } from "../analytics/types.js";
 import type { IDensityProps } from "../density/types.js";
 
-interface IStarRatingProps extends IDensityProps {
+interface IStarRatingProps extends IDensityProps, IAnalyticsProps {
   label: string;
   value: number;
   disabled?: boolean;
   onValueChange: (value: number) => void;
 }
 
-export function StarRating({ label, value, disabled, density, onValueChange }: IStarRatingProps): ReactElement {
+export function StarRating({
+  analytics,
+  label,
+  value,
+  disabled,
+  density,
+  onValueChange,
+}: IStarRatingProps): ReactElement {
   return (
     <RadioGroup
+      analytics={analytics}
       aria-label={label}
       value={value}
       disabled={disabled}
@@ -26,7 +36,7 @@ export function StarRating({ label, value, disabled, density, onValueChange }: I
           key={star}
           value={star}
           nativeButton
-          render={<button type="button" />}
+          render={<AnalyticsButton component="StarRating" type="button" />}
           aria-label={star === 0 ? "Unrated" : `${star} ${star === 1 ? "star" : "stars"}`}
           title={star === 0 ? "Clear rating" : `${star} stars`}
           className="inline-flex size-5 shrink-0 items-center justify-center rounded-sm text-muted-foreground outline-none hover:text-primary focus-visible:ring-1 focus-visible:ring-ring data-disabled:cursor-not-allowed data-disabled:opacity-50"

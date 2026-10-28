@@ -1,3 +1,5 @@
+import type { IAnalyticsProps } from "../analytics/types.js";
+import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
 import type {
   MenuLabelProps,
   MenuItemProps,
@@ -47,8 +49,18 @@ function Menubar({ density, className, ...props }: MenubarProps): ReactElement {
   );
 }
 
-function MenubarMenu<Payload>({ ...props }: MenuPrimitive.Root.Props<Payload>): ReactElement {
-  return <DropdownMenu data-slot="menubar-menu" {...props} />;
+function MenubarMenu<Payload>({
+  analytics,
+  ...props
+}: MenuPrimitive.Root.Props<Payload> & IAnalyticsProps): ReactElement {
+  const trackedOnOpenChange = useAnalyticsCallback(
+    "MenubarMenu",
+    analytics,
+    (open, _details) => ({ name: "ui.open-request", open }),
+    props.onOpenChange,
+  );
+
+  return <DropdownMenu data-slot="menubar-menu" {...props} onOpenChange={trackedOnOpenChange} />;
 }
 
 function MenubarGroup({ ...props }: ComponentProps<typeof DropdownMenuGroup>): ReactElement {
@@ -105,7 +117,16 @@ function MenubarContent({
   );
 }
 
-function MenubarItem({ density, className, inset, variant = "default", ...props }: MenuItemProps): ReactElement {
+function MenubarItem({
+  analytics,
+  density,
+  className,
+  inset,
+  variant = "default",
+  ...props
+}: MenuItemProps & IAnalyticsProps): ReactElement {
+  const trackedOnClick = useAnalyticsCallback("MenubarItem", analytics, { name: "ui.activate" }, props.onClick);
+
   return (
     <DropdownMenuItem
       density={density}
@@ -119,18 +140,27 @@ function MenubarItem({ density, className, inset, variant = "default", ...props 
         )
       }
       {...props}
+      onClick={trackedOnClick}
     />
   );
 }
 
 function MenubarCheckboxItem({
+  analytics,
   density,
   className,
   children,
   checked,
   inset,
   ...props
-}: MenuCheckboxItemProps): ReactElement {
+}: MenuCheckboxItemProps & IAnalyticsProps): ReactElement {
+  const trackedOnCheckedChange = useAnalyticsCallback(
+    "MenubarCheckboxItem",
+    analytics,
+    { name: "ui.change-request" },
+    props.onCheckedChange,
+  );
+
   return (
     <MenuPrimitive.CheckboxItem
       data-density={density}
@@ -144,6 +174,7 @@ function MenubarCheckboxItem({
       }
       checked={checked}
       {...props}
+      onCheckedChange={trackedOnCheckedChange}
     >
       <span className="pointer-events-none absolute start-1.5 flex size-4 items-center justify-center [&_svg:not([class*='size-'])]:size-4">
         <MenuPrimitive.CheckboxItemIndicator>

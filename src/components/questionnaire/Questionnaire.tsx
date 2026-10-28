@@ -1,3 +1,6 @@
+import type { IAnalyticsProps } from "../../analytics/types.js";
+import { useAnalyticsCallback } from "../../hooks/useAnalyticsCallback.js";
+import { useAnalyticsInput } from "../../hooks/useAnalyticsInput.js";
 import type { ComponentProps, ReactElement } from "react";
 import type { IDensityProps } from "../../density/types.js";
 import { Questionnaire as QuestionnairePrimitive } from "@shadcn/react/questionnaire";
@@ -7,16 +10,27 @@ import { buttonVariants, type Button } from "../Button.js";
 import { CheckIcon } from "lucide-react";
 
 function Questionnaire({
+  analytics,
   density,
   className,
   ...props
-}: ComponentProps<typeof QuestionnairePrimitive.Root> & IDensityProps): ReactElement {
+}: ComponentProps<typeof QuestionnairePrimitive.Root> & IDensityProps & IAnalyticsProps): ReactElement {
+  const trackedOnItemChange = useAnalyticsCallback(
+    "Questionnaire",
+    analytics,
+    { name: "ui.navigate" },
+    props.onItemChange,
+  );
+  const trackedOnSubmit = useAnalyticsCallback("Questionnaire", analytics, { name: "ui.commit" }, props.onSubmit);
+
   return (
     <QuestionnairePrimitive.Root
       data-density={density}
       data-slot="questionnaire"
       className={cn("flex w-full min-w-0 flex-col gap-field-gap", className)}
       {...props}
+      onItemChange={trackedOnItemChange}
+      onSubmit={trackedOnSubmit}
     />
   );
 }
@@ -100,11 +114,19 @@ function QuestionnaireChoices({
 }
 
 function QuestionnaireChoice({
+  analytics,
   children,
   density,
   className,
   ...props
-}: ComponentProps<typeof QuestionnairePrimitive.Choice> & IDensityProps): ReactElement {
+}: ComponentProps<typeof QuestionnairePrimitive.Choice> & IDensityProps & IAnalyticsProps): ReactElement {
+  const trackedOnChange = useAnalyticsCallback(
+    "QuestionnaireChoice",
+    analytics,
+    { name: "ui.change-request" },
+    props.onChange,
+  );
+
   return (
     <QuestionnairePrimitive.Choice
       data-density={density}
@@ -115,6 +137,7 @@ function QuestionnaireChoice({
         className,
       )}
       {...props}
+      onChange={trackedOnChange}
     >
       <QuestionnairePrimitive.ChoiceInput
         data-density={density}
@@ -170,10 +193,13 @@ function QuestionnaireChoiceDescription({
 }
 
 function QuestionnaireInput({
+  analytics,
   density,
   className,
   ...props
-}: ComponentProps<typeof QuestionnairePrimitive.Input> & IDensityProps): ReactElement {
+}: ComponentProps<typeof QuestionnairePrimitive.Input> & IDensityProps & IAnalyticsProps): ReactElement {
+  const analyticsInput = useAnalyticsInput("QuestionnaireInput", analytics, props);
+
   return (
     <div
       data-density={density}
@@ -189,6 +215,7 @@ function QuestionnaireInput({
           className,
         )}
         {...props}
+        {...analyticsInput}
       />
     </div>
   );
@@ -224,6 +251,7 @@ function QuestionnaireActions({ density, className, ...props }: ComponentProps<"
 }
 
 function QuestionnairePrevious({
+  analytics,
   children,
   density,
   className,
@@ -232,7 +260,15 @@ function QuestionnairePrevious({
   ...props
 }: ComponentProps<typeof QuestionnairePrimitive.Previous> &
   Pick<ComponentProps<typeof Button>, "size" | "variant"> &
-  IDensityProps): ReactElement {
+  IDensityProps &
+  IAnalyticsProps): ReactElement {
+  const trackedOnClick = useAnalyticsCallback(
+    "QuestionnairePrevious",
+    analytics,
+    { name: "ui.activate" },
+    props.onClick,
+  );
+
   return (
     <QuestionnairePrimitive.Previous
       data-density={density}
@@ -245,6 +281,7 @@ function QuestionnairePrevious({
         className,
       )}
       {...props}
+      onClick={trackedOnClick}
     >
       {children ?? "Previous"}
     </QuestionnairePrimitive.Previous>
@@ -252,6 +289,7 @@ function QuestionnairePrevious({
 }
 
 function QuestionnaireSkip({
+  analytics,
   children,
   density,
   className,
@@ -260,7 +298,10 @@ function QuestionnaireSkip({
   ...props
 }: ComponentProps<typeof QuestionnairePrimitive.Skip> &
   Pick<ComponentProps<typeof Button>, "size" | "variant"> &
-  IDensityProps): ReactElement {
+  IDensityProps &
+  IAnalyticsProps): ReactElement {
+  const trackedOnClick = useAnalyticsCallback("QuestionnaireSkip", analytics, { name: "ui.activate" }, props.onClick);
+
   return (
     <QuestionnairePrimitive.Skip
       data-density={density}
@@ -273,6 +314,7 @@ function QuestionnaireSkip({
         className,
       )}
       {...props}
+      onClick={trackedOnClick}
     >
       {children ?? "Skip"}
     </QuestionnairePrimitive.Skip>
@@ -280,6 +322,7 @@ function QuestionnaireSkip({
 }
 
 function QuestionnaireNext({
+  analytics,
   children,
   density,
   className,
@@ -288,7 +331,10 @@ function QuestionnaireNext({
   ...props
 }: ComponentProps<typeof QuestionnairePrimitive.Next> &
   Pick<ComponentProps<typeof Button>, "size" | "variant"> &
-  IDensityProps): ReactElement {
+  IDensityProps &
+  IAnalyticsProps): ReactElement {
+  const trackedOnClick = useAnalyticsCallback("QuestionnaireNext", analytics, { name: "ui.activate" }, props.onClick);
+
   return (
     <QuestionnairePrimitive.Next
       data-density={density}
@@ -301,6 +347,7 @@ function QuestionnaireNext({
         className,
       )}
       {...props}
+      onClick={trackedOnClick}
     >
       {children ?? "Next"}
     </QuestionnairePrimitive.Next>
@@ -308,6 +355,7 @@ function QuestionnaireNext({
 }
 
 function QuestionnaireSubmit({
+  analytics,
   children,
   density,
   className,
@@ -316,7 +364,10 @@ function QuestionnaireSubmit({
   ...props
 }: ComponentProps<typeof QuestionnairePrimitive.Submit> &
   Pick<ComponentProps<typeof Button>, "size" | "variant"> &
-  IDensityProps): ReactElement {
+  IDensityProps &
+  IAnalyticsProps): ReactElement {
+  const trackedOnClick = useAnalyticsCallback("QuestionnaireSubmit", analytics, { name: "ui.activate" }, props.onClick);
+
   return (
     <QuestionnairePrimitive.Submit
       data-density={density}
@@ -329,6 +380,7 @@ function QuestionnaireSubmit({
         className,
       )}
       {...props}
+      onClick={trackedOnClick}
     >
       {children ?? "Submit"}
     </QuestionnairePrimitive.Submit>

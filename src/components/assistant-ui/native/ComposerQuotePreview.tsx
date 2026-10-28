@@ -1,3 +1,4 @@
+import { AnalyticsButton } from "../../analytics/AnalyticsButton.js";
 import { type ReactElement } from "react";
 import { type ComponentProps } from "react";
 import { memo } from "react";
@@ -48,7 +49,8 @@ export function ComposerQuotePreviewDismiss({ children, ...props }: ComposerQuot
       data-slot="composer-quote-dismiss"
       {...props}
       render={
-        <button
+        <AnalyticsButton
+          component="ComposerQuotePreviewDismiss"
           type="button"
           aria-label="Dismiss quote"
           data-testid="ComposerQuotePreviewDismiss"

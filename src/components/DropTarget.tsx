@@ -8,6 +8,7 @@ type DropTargetState = { slot: "drop-target"; over: boolean; effect: DataTransfe
 type DropTargetProps = Omit<useRender.ComponentProps<"div", DropTargetState>, "onDrop"> & IDropTargetOptions;
 
 export function DropTarget({
+  analytics,
   accept,
   canDrop,
   getDropEffect,
@@ -15,7 +16,7 @@ export function DropTarget({
   render,
   ...props
 }: DropTargetProps): ReactElement {
-  const target = useDropTarget({ accept, canDrop, getDropEffect, onDrop });
+  const target = useDropTarget({ analytics, accept, canDrop, getDropEffect, onDrop });
   return useRender({
     defaultTagName: "div",
     render,

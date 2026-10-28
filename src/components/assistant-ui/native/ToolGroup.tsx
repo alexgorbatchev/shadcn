@@ -1,3 +1,4 @@
+import { AnalyticsButton } from "../../analytics/AnalyticsButton.js";
 import type { ReactElement } from "react";
 import { toolGroupVariants } from "./constants.js";
 import { type ComponentProps } from "react";
@@ -76,7 +77,8 @@ export function ToolGroupTrigger({ count, active = false, ...props }: ToolGroupT
       data-slot="tool-group-trigger"
       {...props}
       render={
-        <button
+        <AnalyticsButton
+          component="ToolGroupTrigger"
           className={cn(
             "aui-tool-group-trigger group/trigger flex origin-left items-center gap-2 text-sm transition-colors ",
             "group-data-[variant=ghost]/tool-group-root:text-muted-foreground group-data-[variant=ghost]/tool-group-root:hover:text-foreground group-data-[variant=ghost]/tool-group-root:py-1.5",

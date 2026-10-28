@@ -1,3 +1,4 @@
+import { AnalyticsButton } from "../../analytics/AnalyticsButton.js";
 import { collapsePanel } from "./constants.js";
 import { cn } from "../../../utils/cn.js";
 import type { JSX } from "react";
@@ -49,7 +50,8 @@ export function ToolTimeline({
     >
       <CollapsibleTrigger
         render={
-          <button
+          <AnalyticsButton
+            component="ToolTimeline"
             type="button"
             className="group/trigger text-muted-foreground hover:text-foreground flex items-center gap-1.5 rounded-md py-1 text-[13.5px] transition-colors outline-none"
           />

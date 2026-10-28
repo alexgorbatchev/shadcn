@@ -232,6 +232,7 @@ export const fixture_optionalPeerNames: readonly string[] = Object.entries(manif
   .map(([name]) => name);
 
 export const fixture_featureTypeExports: Record<string, string> = {
+  analytics: "AnalyticsProvider, AnalyticsScope, AnalyticsImpression, useAnalytics, type UIAnalyticsEvent",
   "json-render": "components, componentDefinitions",
   "file-upload": "FileUpload, type FileUploadProps",
   "color-picker": "ColorPicker, type ColorPickerProps",
@@ -266,6 +267,12 @@ export const fixture_featureTypePaths: Record<string, string> = {
 };
 
 export const fixture_featureConsumers: ReadonlyArray<readonly [string, readonly string[], string, string]> = [
+  [
+    "analytics",
+    [],
+    'import { renderToString } from "react-dom/server"; import { AnalyticsProvider, AnalyticsScope, AnalyticsImpression } from "@alexgorbatchev/shadcn/analytics"; const markup = renderToString(<AnalyticsProvider transport={{track(){}}}><AnalyticsScope name="example"><AnalyticsImpression component="Card">Analytics consumer</AnalyticsImpression></AnalyticsScope></AnalyticsProvider>); console.log(markup.includes("Analytics consumer"));',
+    "true",
+  ],
   [
     "json-render",
     ["@json-render/core", "@json-render/react", "embla-carousel-react"],

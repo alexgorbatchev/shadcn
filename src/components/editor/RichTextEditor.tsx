@@ -1,15 +1,42 @@
+import { useEffect, useEffectEvent } from "react";
+import type { IAnalyticsProps } from "../../analytics/types.js";
+import { useAnalyticsEnabled } from "../../hooks/useAnalyticsEnabled.js";
+import { useAnalytics } from "../../hooks/useAnalytics.js";
 import { EditorContent, useEditorState, type Editor } from "@tiptap/react";
 import { BoldIcon, ItalicIcon, ListIcon, ListOrderedIcon, RedoIcon, UndoIcon } from "lucide-react";
 import type { ReactElement } from "react";
 import type { IDensityProps } from "../../density/types.js";
 import { Toolbar, ToolbarButton, ToolbarGroup, ToolbarSeparator } from "../Toolbar.js";
 
-type RichTextEditorProps = IDensityProps & {
-  editor: Editor | null;
-  label: string;
-};
+type RichTextEditorProps = IAnalyticsProps &
+  IDensityProps & {
+    editor: Editor | null;
+    label: string;
+  };
 /** The caller owns a native Tiptap editor and its extensions, content, and persistence. */
-function RichTextEditor({ editor, label, density }: RichTextEditorProps): ReactElement {
+function RichTextEditor({ editor, label, density, analytics }: RichTextEditorProps): ReactElement {
+  const enabled = useAnalyticsEnabled(analytics);
+  const track = useAnalytics("RichTextEditor", analytics);
+  const report = useEffectEvent(() => track({ name: "ui.commit" }));
+  useEffect(() => {
+    if (!editor || !enabled) return;
+    let dirty = false;
+    const update = (): void => {
+      if (editor.isFocused) dirty = true;
+    };
+    const blur = (): void => {
+      if (dirty) {
+        dirty = false;
+        report();
+      }
+    };
+    editor.on("update", update);
+    editor.on("blur", blur);
+    return () => {
+      editor.off("update", update);
+      editor.off("blur", blur);
+    };
+  }, [editor, enabled]);
   const state = useEditorState({
     editor,
     selector: ({ editor: current }) => ({

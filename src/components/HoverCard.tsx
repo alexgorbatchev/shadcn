@@ -1,3 +1,5 @@
+import type { IAnalyticsProps } from "../analytics/types.js";
+import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
 import type { IDensityProps } from "../density/types.js";
 import { useDensity } from "../hooks/useDensity.js";
 import { usePortalContainer } from "../hooks/usePortalContainer.js";
@@ -9,8 +11,18 @@ import { PreviewCard as PreviewCardPrimitive } from "@base-ui/react/preview-card
 import { useDirection } from "@base-ui/react/direction-provider";
 import { cn } from "../utils/cn.js";
 
-function HoverCard<Payload>({ ...props }: PreviewCardPrimitive.Root.Props<Payload>): ReactElement {
-  return <PreviewCardPrimitive.Root data-slot="hover-card" {...props} />;
+function HoverCard<Payload>({
+  analytics,
+  ...props
+}: PreviewCardPrimitive.Root.Props<Payload> & IAnalyticsProps): ReactElement {
+  const trackedOnOpenChange = useAnalyticsCallback(
+    "HoverCard",
+    analytics,
+    (open, _details) => ({ name: "ui.open-request", open }),
+    props.onOpenChange,
+  );
+
+  return <PreviewCardPrimitive.Root data-slot="hover-card" {...props} onOpenChange={trackedOnOpenChange} />;
 }
 
 function HoverCardTrigger<Payload>({ ...props }: PreviewCardPrimitive.Trigger.Props<Payload>): ReactElement {

@@ -1,4 +1,6 @@
-import type { ReactElement } from "react";
+import type { IAnalyticsProps } from "../../analytics/types.js";
+import { useAnalyticsCallback } from "../../hooks/useAnalyticsCallback.js";
+import type { MouseEvent, ReactElement } from "react";
 import type { ToasterProps } from "sonner";
 import type { IDensityProps } from "../../density/types.js";
 import { Toaster } from "sonner";
@@ -9,8 +11,9 @@ import { useDirection } from "@base-ui/react/direction-provider";
 import { cn } from "../../utils/cn.js";
 import { buttonVariants } from "../Button.js";
 
-type SonnerProps = ToasterProps & IDensityProps;
+type SonnerProps = ToasterProps & IDensityProps & IAnalyticsProps;
 function Sonner({
+  analytics,
   density,
   className,
   toastOptions,
@@ -20,11 +23,24 @@ function Sonner({
   expand = true,
   ...props
 }: SonnerProps): ReactElement {
+  const activate = useAnalyticsCallback<[MouseEvent<HTMLDivElement>]>(
+    "Sonner",
+    analytics,
+    { name: "ui.activate" },
+    undefined,
+  );
   const { resolvedTheme } = useTheme();
   const resolvedDensity = useDensity(density);
   const inheritedDirection = useDirection();
   return (
-    <div data-slot="sonner" data-density={resolvedDensity} className="contents">
+    <div
+      onClick={(event) => {
+        if (event.target instanceof Element && event.target.closest("button,a[href]")) activate(event);
+      }}
+      data-slot="sonner"
+      data-density={resolvedDensity}
+      className="contents"
+    >
       <Toaster
         theme={theme ?? resolvedTheme}
         dir={dir ?? inheritedDirection}

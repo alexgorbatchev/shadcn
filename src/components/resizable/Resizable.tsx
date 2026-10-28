@@ -1,10 +1,26 @@
+import type { IAnalyticsProps } from "../../analytics/types.js";
+import { useAnalyticsCallback } from "../../hooks/useAnalyticsCallback.js";
 import type { ReactElement } from "react";
 import type { GroupProps, PanelProps, SeparatorProps } from "react-resizable-panels";
 import { Group, Panel, Separator } from "react-resizable-panels";
 import { cn } from "../../utils/cn.js";
 
-function Resizable({ className, ...props }: GroupProps): ReactElement {
-  return <Group data-slot="resizable-panel-group" className={cn("size-full", className)} {...props} />;
+function Resizable({ analytics, className, ...props }: GroupProps & IAnalyticsProps): ReactElement {
+  const trackedOnLayoutChanged = useAnalyticsCallback(
+    "Resizable",
+    analytics,
+    { name: "ui.commit" },
+    props.onLayoutChanged,
+  );
+
+  return (
+    <Group
+      data-slot="resizable-panel-group"
+      className={cn("size-full", className)}
+      {...props}
+      onLayoutChanged={trackedOnLayoutChanged}
+    />
+  );
 }
 
 function ResizablePanel({ style, ...props }: PanelProps): ReactElement {

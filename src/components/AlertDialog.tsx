@@ -1,4 +1,6 @@
 "use client";
+import type { IAnalyticsProps } from "../analytics/types.js";
+import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
 
 import { useDensity } from "../hooks/useDensity.js";
 import { usePortalContainer } from "../hooks/usePortalContainer.js";
@@ -12,8 +14,18 @@ import { cn } from "../utils/cn.js";
 
 import { Button } from "./Button.js";
 
-function AlertDialog<Payload>({ ...props }: AlertDialogPrimitive.Root.Props<Payload>): ReactElement {
-  return <AlertDialogPrimitive.Root data-slot="alert-dialog" {...props} />;
+function AlertDialog<Payload>({
+  analytics,
+  ...props
+}: AlertDialogPrimitive.Root.Props<Payload> & IAnalyticsProps): ReactElement {
+  const trackedOnOpenChange = useAnalyticsCallback(
+    "AlertDialog",
+    analytics,
+    (open, _details) => ({ name: "ui.open-request", open }),
+    props.onOpenChange,
+  );
+
+  return <AlertDialogPrimitive.Root data-slot="alert-dialog" {...props} onOpenChange={trackedOnOpenChange} />;
 }
 
 function AlertDialogTrigger<Payload>({ ...props }: AlertDialogPrimitive.Trigger.Props<Payload>): ReactElement {

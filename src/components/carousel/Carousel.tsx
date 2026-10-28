@@ -1,6 +1,7 @@
+import { useAnalytics } from "../../hooks/useAnalytics.js";
 import type { ComponentProps, KeyboardEvent, ReactElement } from "react";
 import type { CarouselProps } from "./types.js";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useEffectEvent, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { useDirection } from "@base-ui/react/direction-provider";
 import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, ChevronUpIcon } from "lucide-react";
@@ -10,6 +11,7 @@ import { cn } from "../../utils/cn.js";
 import { Button } from "../Button.js";
 
 function Carousel({
+  analytics,
   density,
   orientation = "horizontal",
   opts,
@@ -20,6 +22,8 @@ function Carousel({
   onKeyDown,
   ...props
 }: CarouselProps): ReactElement {
+  const track = useAnalytics("Carousel", analytics);
+  const reportNavigation = useEffectEvent(() => track({ name: "ui.navigate" }));
   const inheritedDirection = useDirection();
   const direction = opts?.direction ?? inheritedDirection;
   const [carouselRef, api] = useEmblaCarousel(
@@ -39,10 +43,30 @@ function Carousel({
   );
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
-  const scrollPrev = useCallback(() => api?.scrollPrev(), [api]);
-  const scrollNext = useCallback(() => api?.scrollNext(), [api]);
+  const scrollPrev = useCallback(() => {
+    if (api?.canScrollPrev()) {
+      api.scrollPrev();
+      track({ name: "ui.navigate" });
+    }
+  }, [api, track]);
+  const scrollNext = useCallback(() => {
+    if (api?.canScrollNext()) {
+      api.scrollNext();
+      track({ name: "ui.navigate" });
+    }
+  }, [api, track]);
   useEffect(() => {
     if (!api) return;
+    let dragStart: number | undefined;
+    const pointerDown = (): void => {
+      dragStart = api.selectedScrollSnap();
+    };
+    const settle = (): void => {
+      if (dragStart !== undefined && dragStart !== api.selectedScrollSnap()) reportNavigation();
+      dragStart = undefined;
+    };
+    api.on("pointerDown", pointerDown);
+    api.on("settle", settle);
     const update = (): void => {
       setCanScrollPrev(api.canScrollPrev());
       setCanScrollNext(api.canScrollNext());
@@ -51,6 +75,8 @@ function Carousel({
     api.on("reInit", update);
     api.on("select", update);
     return () => {
+      api.off("pointerDown", pointerDown);
+      api.off("settle", settle);
       api.off("reInit", update);
       api.off("select", update);
     };

@@ -1,4 +1,6 @@
 "use client";
+import type { IAnalyticsProps } from "../analytics/types.js";
+import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
 
 import { useDensity } from "../hooks/useDensity.js";
 import { usePortalContainer } from "../hooks/usePortalContainer.js";
@@ -10,8 +12,18 @@ import { useDirection } from "@base-ui/react/direction-provider";
 import { Popover as PopoverPrimitive } from "@base-ui/react/popover";
 import { cn } from "../utils/cn.js";
 
-function Popover<Payload>({ ...props }: PopoverPrimitive.Root.Props<Payload>): ReactElement {
-  return <PopoverPrimitive.Root data-slot="popover" {...props} />;
+function Popover<Payload>({
+  analytics,
+  ...props
+}: PopoverPrimitive.Root.Props<Payload> & IAnalyticsProps): ReactElement {
+  const trackedOnOpenChange = useAnalyticsCallback(
+    "Popover",
+    analytics,
+    (open, _details) => ({ name: "ui.open-request", open }),
+    props.onOpenChange,
+  );
+
+  return <PopoverPrimitive.Root data-slot="popover" {...props} onOpenChange={trackedOnOpenChange} />;
 }
 
 function PopoverTrigger<Payload>({ ...props }: PopoverPrimitive.Trigger.Props<Payload>): ReactElement {

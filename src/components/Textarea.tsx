@@ -1,10 +1,14 @@
+import type { IAnalyticsProps } from "../analytics/types.js";
+import { useAnalyticsInput } from "../hooks/useAnalyticsInput.js";
 import type { IDensityProps } from "../density/types.js";
 import type { ComponentProps, ReactElement } from "react";
 import { cn } from "../utils/cn.js";
 
-type TextareaProps = ComponentProps<"textarea"> & IDensityProps;
+type TextareaProps = IAnalyticsProps & ComponentProps<"textarea"> & IDensityProps;
 
-function Textarea({ density, className, ...props }: TextareaProps): ReactElement {
+function Textarea({ analytics, density, className, ...props }: TextareaProps): ReactElement {
+  const analyticsInput = useAnalyticsInput("Textarea", analytics, props);
+
   return (
     <textarea
       data-density={density}
@@ -14,6 +18,7 @@ function Textarea({ density, className, ...props }: TextareaProps): ReactElement
         className,
       )}
       {...props}
+      {...analyticsInput}
     />
   );
 }

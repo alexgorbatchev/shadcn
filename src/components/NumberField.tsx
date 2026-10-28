@@ -1,3 +1,5 @@
+import type { IAnalyticsProps } from "../analytics/types.js";
+import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
 import { useDensity } from "../hooks/useDensity.js";
 import type { ReactElement } from "react";
 import type { IDensityProps } from "../density/types.js";
@@ -5,7 +7,19 @@ import { NumberField as NumberFieldPrimitive } from "@base-ui/react/number-field
 import { cn } from "../utils/cn.js";
 import { MinusIcon, PlusIcon, MoveHorizontalIcon } from "lucide-react";
 
-function NumberField({ density, className, ...props }: NumberFieldPrimitive.Root.Props & IDensityProps): ReactElement {
+function NumberField({
+  analytics,
+  density,
+  className,
+  ...props
+}: NumberFieldPrimitive.Root.Props & IDensityProps & IAnalyticsProps): ReactElement {
+  const trackedOnValueCommitted = useAnalyticsCallback(
+    "NumberField",
+    analytics,
+    { name: "ui.commit" },
+    props.onValueCommitted,
+  );
+
   return (
     <NumberFieldPrimitive.Root
       data-density={density}
@@ -14,6 +28,7 @@ function NumberField({ density, className, ...props }: NumberFieldPrimitive.Root
         cn("flex min-w-0 flex-col gap-field-gap", typeof className === "function" ? className(state) : className)
       }
       {...props}
+      onValueCommitted={trackedOnValueCommitted}
     />
   );
 }

@@ -1,3 +1,5 @@
+import { AnalyticsButton } from "../../analytics/AnalyticsButton.js";
+import { AnalyticsTextarea } from "../../analytics/AnalyticsTextarea.js";
 import type { ComponentPropsWithRef, ReactElement, Ref } from "react";
 import { useResolvedPortalContainer } from "../hooks/useResolvedPortalContainer.js";
 import { useDensity } from "../../../hooks/useDensity.js";
@@ -441,7 +443,8 @@ const ThreadSuggestionItem: FC = () => {
       <SuggestionPrimitive.Trigger
         send
         render={
-          <button
+          <AnalyticsButton
+            component="ThreadSuggestionItem"
             type="button"
             className="aui-thread-welcome-suggestion group hover:bg-foreground/[0.03] focus-visible:ring-ring/50 flex w-full items-baseline gap-2.5 rounded-md px-2 py-2 text-start text-sm transition-colors outline-none focus-visible:ring-1 motion-reduce:transition-none"
           />
@@ -488,7 +491,10 @@ const Composer: FC<{
           enterKeyHint="send"
           aria-label="Message input"
           render={
-            <textarea className="aui-composer-input caret-primary placeholder:text-muted-foreground/60 max-h-48 min-h-10 w-full resize-none bg-transparent px-2.5 py-1 text-lg leading-6 outline-none" />
+            <AnalyticsTextarea
+              component="Composer"
+              className="aui-composer-input caret-primary placeholder:text-muted-foreground/60 max-h-48 min-h-10 w-full resize-none bg-transparent px-2.5 py-1 text-lg leading-6 outline-none"
+            />
           }
         />
         <ComposerAction />
@@ -840,7 +846,10 @@ const EditComposer: FC = () => {
           aria-label="Edit message"
           autoFocus
           render={
-            <textarea className="aui-edit-composer-input text-foreground min-h-14 w-full resize-none bg-transparent px-2 pt-2 pb-1 text-base outline-none" />
+            <AnalyticsTextarea
+              component="EditComposer"
+              className="aui-edit-composer-input text-foreground min-h-14 w-full resize-none bg-transparent px-2 pt-2 pb-1 text-base outline-none"
+            />
           }
         />
         <div className="aui-edit-composer-footer mx-2.5 mb-2.5 flex items-center gap-1.5 self-end">

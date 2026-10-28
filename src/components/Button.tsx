@@ -1,3 +1,5 @@
+import type { IAnalyticsProps } from "../analytics/types.js";
+import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
 import type { IDensityProps } from "../density/types.js";
 import type { ReactElement } from "react";
 import { Button as ButtonPrimitive } from "@base-ui/react/button";
@@ -49,9 +51,10 @@ const buttonVariants = cva(
   },
 );
 
-type ButtonProps = ButtonPrimitive.Props & VariantProps<typeof buttonVariants> & IDensityProps;
+type ButtonProps = IAnalyticsProps & ButtonPrimitive.Props & VariantProps<typeof buttonVariants> & IDensityProps;
 
 function Button({
+  analytics,
   density,
   className,
   variant = "default",
@@ -62,6 +65,8 @@ function Button({
   children,
   ...props
 }: ButtonProps): ReactElement {
+  const trackedOnClick = useAnalyticsCallback("Button", analytics, { name: "ui.activate" }, props.onClick);
+
   return (
     <ButtonPrimitive
       data-density={density}
@@ -73,6 +78,7 @@ function Button({
         )
       }
       {...props}
+      onClick={trackedOnClick}
     >
       {truncate ? <span className="min-w-0 truncate">{children}</span> : children}
     </ButtonPrimitive>

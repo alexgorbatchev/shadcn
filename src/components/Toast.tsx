@@ -1,3 +1,5 @@
+import type { IAnalyticsProps } from "../analytics/types.js";
+import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
 import type { ReactElement } from "react";
 import type { IDensityProps } from "../density/types.js";
 import { Toast as ToastPrimitive } from "@base-ui/react/toast";
@@ -96,26 +98,33 @@ function ToastDescription({ className, ...props }: ToastPrimitive.Description.Pr
 }
 
 function ToastAction({
+  analytics,
   className,
   render = <Button variant="outline" size="sm" />,
   ...props
-}: ToastPrimitive.Action.Props): ReactElement {
+}: ToastPrimitive.Action.Props & IAnalyticsProps): ReactElement {
+  const trackedOnClick = useAnalyticsCallback("ToastAction", analytics, { name: "ui.activate" }, props.onClick);
+
   return (
     <ToastPrimitive.Action
       data-slot="toast-action"
       render={render}
       className={(state) => cn("shrink-0", typeof className === "function" ? className(state) : className)}
       {...props}
+      onClick={trackedOnClick}
     />
   );
 }
 
 function ToastClose({
+  analytics,
   className,
   children,
   render = <Button variant="ghost" size="icon-sm" />,
   ...props
-}: ToastPrimitive.Close.Props): ReactElement {
+}: ToastPrimitive.Close.Props & IAnalyticsProps): ReactElement {
+  const trackedOnClick = useAnalyticsCallback("ToastClose", analytics, { name: "ui.activate" }, props.onClick);
+
   return (
     <ToastPrimitive.Close
       data-slot="toast-close"
@@ -128,6 +137,7 @@ function ToastClose({
         )
       }
       {...props}
+      onClick={trackedOnClick}
     >
       {children ?? <XIcon aria-hidden="true" />}
     </ToastPrimitive.Close>

@@ -1,3 +1,4 @@
+import { AnalyticsLink } from "../../analytics/AnalyticsLink.js";
 import {
   type CodeHeaderProps,
   MarkdownTextPrimitive,
@@ -92,7 +93,8 @@ const defaultComponents = memoizeMarkdownComponents({
     <p className={cn("aui-md-p my-3 leading-relaxed first:mt-0 last:mb-0", className)} {...props} />
   ),
   a: ({ className, ...props }) => (
-    <a
+    <AnalyticsLink
+      component="MarkdownTextLink"
       className={cn("aui-md-a text-primary hover:text-primary/80 underline underline-offset-2", className)}
       {...props}
     />

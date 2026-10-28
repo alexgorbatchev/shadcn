@@ -1,3 +1,5 @@
+import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
+import type { IAnalyticsProps } from "../analytics/types.js";
 import type { IDensityProps } from "../density/types.js";
 import type { ComponentProps, ReactElement } from "react";
 import { ChevronRightIcon, MoreHorizontalIcon } from "lucide-react";
@@ -42,16 +44,17 @@ function BreadcrumbItem({ density, className, ...props }: BreadcrumbItemProps): 
   );
 }
 
-type BreadcrumbLinkProps = useRender.ComponentProps<"a"> & IDensityProps;
+type BreadcrumbLinkProps = IAnalyticsProps & useRender.ComponentProps<"a"> & IDensityProps;
 
-function BreadcrumbLink({ density, className, render, ...props }: BreadcrumbLinkProps): ReactElement {
+function BreadcrumbLink({ analytics, density, className, render, ...props }: BreadcrumbLinkProps): ReactElement {
+  const onClick = useAnalyticsCallback("BreadcrumbLink", analytics, { name: "ui.activate" }, props.onClick);
   return useRender({
     defaultTagName: "a",
     props: mergeProps<"a">(
       {
         className: cn("transition-colors hover:text-foreground", className),
       },
-      props,
+      { ...props, onClick },
     ),
     render,
     state: {

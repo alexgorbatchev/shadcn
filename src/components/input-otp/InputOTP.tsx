@@ -1,3 +1,5 @@
+import type { IAnalyticsProps } from "../../analytics/types.js";
+import { useAnalyticsCallback } from "../../hooks/useAnalyticsCallback.js";
 import type { ComponentProps, ReactElement } from "react";
 import type { IDensityProps } from "../../density/types.js";
 import { useContext } from "react";
@@ -5,9 +7,10 @@ import { OTPInput, OTPInputContext } from "input-otp";
 import { MinusIcon } from "lucide-react";
 import { cn } from "../../utils/cn.js";
 
-type InputOTPProps = ComponentProps<typeof OTPInput> & IDensityProps;
+type InputOTPProps = IAnalyticsProps & ComponentProps<typeof OTPInput> & IDensityProps;
 
-function InputOTP({ density, className, containerClassName, dir, ...props }: InputOTPProps): ReactElement {
+function InputOTP({ analytics, density, className, containerClassName, dir, ...props }: InputOTPProps): ReactElement {
+  const onComplete = useAnalyticsCallback("InputOTP", analytics, { name: "ui.commit" }, props.onComplete);
   return (
     <div
       data-slot="input-otp"
@@ -22,6 +25,7 @@ function InputOTP({ density, className, containerClassName, dir, ...props }: Inp
         spellCheck={false}
         className={cn("disabled:cursor-not-allowed", className)}
         {...props}
+        onComplete={onComplete}
       />
     </div>
   );

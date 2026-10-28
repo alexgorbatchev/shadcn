@@ -1,3 +1,4 @@
+import { AnalyticsButton } from "../../analytics/AnalyticsButton.js";
 import type { JSX } from "react";
 import { useId } from "react";
 import type { ComponentProps } from "react";
@@ -33,7 +34,8 @@ export function ConfidenceMarker({ claims, hoveredId, onHover, ...props }: IConf
     >
       <p className="text-base leading-relaxed">
         {claims.map((claim) => (
-          <button
+          <AnalyticsButton
+            component="ConfidenceMarker"
             key={claim.id}
             type="button"
             aria-describedby={hoveredId === claim.id ? basisId : undefined}
@@ -48,7 +50,7 @@ export function ConfidenceMarker({ claims, hoveredId, onHover, ...props }: IConf
             )}
           >
             {claim.text}{" "}
-          </button>
+          </AnalyticsButton>
         ))}
       </p>
 

@@ -1,3 +1,4 @@
+import { AnalyticsLink } from "../../analytics/AnalyticsLink.js";
 import type { JSX } from "react";
 import type { IDataTableColumn, DataTableRow } from "../utils/dataTable/types.js";
 import { cn } from "../../../utils/cn.js";
@@ -113,14 +114,20 @@ export function DataTableValueCell({ column, row, locale, relativeTo }: IDataTab
     if (!href) return <>{textValue(value)}</>;
     const external = /^https?:/.test(href);
     return external ? (
-      <a href={href} target="_blank" rel="noopener noreferrer" className="underline underline-offset-2">
+      <AnalyticsLink
+        component="DataTableValueCell"
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="underline underline-offset-2"
+      >
         {textValue(value)}
         <span className="sr-only"> (opens in a new tab)</span>
-      </a>
+      </AnalyticsLink>
     ) : (
-      <a href={href} className="underline underline-offset-2">
+      <AnalyticsLink component="DataTableValueCell" href={href} className="underline underline-offset-2">
         {textValue(value)}
-      </a>
+      </AnalyticsLink>
     );
   }
   if (format.kind === "badge") {

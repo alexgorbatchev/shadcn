@@ -1,18 +1,28 @@
+import type { IAnalyticsProps } from "../analytics/types.js";
+import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
 import type { IDensityProps } from "../density/types.js";
 import type { ReactElement } from "react";
 import { Accordion as AccordionPrimitive } from "@base-ui/react/accordion";
 import { cn } from "../utils/cn.js";
 import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 
-type AccordionProps = AccordionPrimitive.Root.Props & IDensityProps;
+type AccordionProps = IAnalyticsProps & AccordionPrimitive.Root.Props & IDensityProps;
 
-function Accordion({ density, className, ...props }: AccordionProps): ReactElement {
+function Accordion({ analytics, density, className, ...props }: AccordionProps): ReactElement {
+  const trackedOnValueChange = useAnalyticsCallback(
+    "Accordion",
+    analytics,
+    { name: "ui.change-request" },
+    props.onValueChange,
+  );
+
   return (
     <AccordionPrimitive.Root
       data-density={density}
       data-slot="accordion"
       className={(state) => cn("flex w-full flex-col", typeof className === "function" ? className(state) : className)}
       {...props}
+      onValueChange={trackedOnValueChange}
     />
   );
 }

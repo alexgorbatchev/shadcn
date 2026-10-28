@@ -1,9 +1,18 @@
+import type { IAnalyticsProps } from "../analytics/types.js";
+import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
 import type { ReactElement } from "react";
 
 import { Collapsible as CollapsiblePrimitive } from "@base-ui/react/collapsible";
 
-function Collapsible({ ...props }: CollapsiblePrimitive.Root.Props): ReactElement {
-  return <CollapsiblePrimitive.Root data-slot="collapsible" {...props} />;
+function Collapsible({ analytics, ...props }: CollapsiblePrimitive.Root.Props & IAnalyticsProps): ReactElement {
+  const trackedOnOpenChange = useAnalyticsCallback(
+    "Collapsible",
+    analytics,
+    (open, _details) => ({ name: "ui.open-request", open }),
+    props.onOpenChange,
+  );
+
+  return <CollapsiblePrimitive.Root data-slot="collapsible" {...props} onOpenChange={trackedOnOpenChange} />;
 }
 
 function CollapsibleTrigger({ ...props }: CollapsiblePrimitive.Trigger.Props): ReactElement {

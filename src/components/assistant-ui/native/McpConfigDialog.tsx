@@ -1,3 +1,5 @@
+import { AnalyticsButton } from "../../analytics/AnalyticsButton.js";
+import { AnalyticsLink } from "../../analytics/AnalyticsLink.js";
 import type { PropsWithChildren, ReactElement } from "react";
 import { type ReactNode } from "react";
 import { type FC, useId, isValidElement } from "react";
@@ -113,7 +115,8 @@ const CustomServersSection: FC = () => {
       </div>
       {!showForm && (
         <McpManagerPrimitive.AddCustomTrigger ref={addTriggerRef} onClick={openForm} asChild>
-          <button
+          <AnalyticsButton
+            component="CustomServersSection"
             className={cn(
               buttonVariants({ variant: "default" }),
               "aui-mcp-add-trigger h-control justify-start gap-2 rounded-md px-3 text-sm",
@@ -121,7 +124,7 @@ const CustomServersSection: FC = () => {
           >
             <PlusIcon aria-hidden="true" className="size-4 shrink-0" />
             Add server
-          </button>
+          </AnalyticsButton>
         </McpManagerPrimitive.AddCustomTrigger>
       )}
       {showForm && <AddServerForm onClose={closeForm} />}
@@ -223,26 +226,29 @@ const ServerActions: FC = () => {
   return (
     <div className="flex flex-wrap gap-2" onFocus={(e) => onActionFocus(e.target)}>
       <McpServerPrimitive.ConnectButton ref={actionRef} asChild>
-        <button
+        <AnalyticsButton
+          component="ServerActions"
           className={cn(buttonVariants({ variant: "default" }), "aui-mcp-server-connect h-control-sm gap-2 text-sm")}
         >
           <PlugZapIcon aria-hidden="true" className="size-3.5 shrink-0" />
           Connect
-        </button>
+        </AnalyticsButton>
       </McpServerPrimitive.ConnectButton>
       <McpServerPrimitive.OAuthLink asChild>
-        <a
+        <AnalyticsLink
+          component="ServerActions"
           className={cn(buttonVariants({ variant: "default" }), "aui-mcp-server-authorize h-control-sm gap-2 text-sm")}
         >
           Authorize
-        </a>
+        </AnalyticsLink>
       </McpServerPrimitive.OAuthLink>
       <McpServerPrimitive.DisconnectButton ref={actionRef} asChild>
-        <button
+        <AnalyticsButton
+          component="ServerActions"
           className={cn(buttonVariants({ variant: "default" }), "aui-mcp-server-disconnect h-control-sm text-sm")}
         >
           Disconnect
-        </button>
+        </AnalyticsButton>
       </McpServerPrimitive.DisconnectButton>
     </div>
   );

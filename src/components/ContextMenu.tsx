@@ -1,3 +1,5 @@
+import type { IAnalyticsProps } from "../analytics/types.js";
+import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
 import type {
   MenuLabelProps,
   MenuItemProps,
@@ -17,8 +19,15 @@ import { useDirection } from "@base-ui/react/direction-provider";
 import { ContextMenu as ContextMenuPrimitive } from "@base-ui/react/context-menu";
 import { cn } from "../utils/cn.js";
 
-function ContextMenu({ ...props }: ContextMenuPrimitive.Root.Props): ReactElement {
-  return <ContextMenuPrimitive.Root data-slot="context-menu" {...props} />;
+function ContextMenu({ analytics, ...props }: ContextMenuPrimitive.Root.Props & IAnalyticsProps): ReactElement {
+  const trackedOnOpenChange = useAnalyticsCallback(
+    "ContextMenu",
+    analytics,
+    (open, _details) => ({ name: "ui.open-request", open }),
+    props.onOpenChange,
+  );
+
+  return <ContextMenuPrimitive.Root data-slot="context-menu" {...props} onOpenChange={trackedOnOpenChange} />;
 }
 
 function ContextMenuPortal({ container, ref, children, ...props }: ContextMenuPrimitive.Portal.Props): ReactElement {
@@ -112,7 +121,16 @@ function ContextMenuLabel({ density, className, inset, ...props }: MenuLabelProp
   );
 }
 
-function ContextMenuItem({ density, className, inset, variant = "default", ...props }: MenuItemProps): ReactElement {
+function ContextMenuItem({
+  analytics,
+  density,
+  className,
+  inset,
+  variant = "default",
+  ...props
+}: MenuItemProps & IAnalyticsProps): ReactElement {
+  const trackedOnClick = useAnalyticsCallback("ContextMenuItem", analytics, { name: "ui.activate" }, props.onClick);
+
   return (
     <ContextMenuPrimitive.Item
       data-density={density}
@@ -126,12 +144,25 @@ function ContextMenuItem({ density, className, inset, variant = "default", ...pr
         )
       }
       {...props}
+      onClick={trackedOnClick}
     />
   );
 }
 
-function ContextMenuSub({ ...props }: ContextMenuPrimitive.SubmenuRoot.Props): ReactElement {
-  return <ContextMenuPrimitive.SubmenuRoot data-slot="context-menu-sub" {...props} />;
+function ContextMenuSub({
+  analytics,
+  ...props
+}: ContextMenuPrimitive.SubmenuRoot.Props & IAnalyticsProps): ReactElement {
+  const trackedOnOpenChange = useAnalyticsCallback(
+    "ContextMenuSub",
+    analytics,
+    (open, _details) => ({ name: "ui.open-request", open }),
+    props.onOpenChange,
+  );
+
+  return (
+    <ContextMenuPrimitive.SubmenuRoot data-slot="context-menu-sub" {...props} onOpenChange={trackedOnOpenChange} />
+  );
 }
 
 function ContextMenuSubTrigger({ density, className, inset, children, ...props }: MenuSubTriggerProps): ReactElement {
@@ -166,13 +197,21 @@ function ContextMenuSubContent({ ...props }: ComponentProps<typeof ContextMenuCo
 }
 
 function ContextMenuCheckboxItem({
+  analytics,
   density,
   className,
   children,
   checked,
   inset,
   ...props
-}: MenuCheckboxItemProps): ReactElement {
+}: MenuCheckboxItemProps & IAnalyticsProps): ReactElement {
+  const trackedOnCheckedChange = useAnalyticsCallback(
+    "ContextMenuCheckboxItem",
+    analytics,
+    { name: "ui.change-request" },
+    props.onCheckedChange,
+  );
+
   return (
     <ContextMenuPrimitive.CheckboxItem
       data-density={density}
@@ -186,6 +225,7 @@ function ContextMenuCheckboxItem({
       }
       checked={checked}
       {...props}
+      onCheckedChange={trackedOnCheckedChange}
     >
       <span className="pointer-events-none absolute end-2">
         <ContextMenuPrimitive.CheckboxItemIndicator>
@@ -197,8 +237,24 @@ function ContextMenuCheckboxItem({
   );
 }
 
-function ContextMenuRadioGroup({ ...props }: ContextMenuPrimitive.RadioGroup.Props): ReactElement {
-  return <ContextMenuPrimitive.RadioGroup data-slot="context-menu-radio-group" {...props} />;
+function ContextMenuRadioGroup({
+  analytics,
+  ...props
+}: ContextMenuPrimitive.RadioGroup.Props & IAnalyticsProps): ReactElement {
+  const trackedOnValueChange = useAnalyticsCallback(
+    "ContextMenuRadioGroup",
+    analytics,
+    { name: "ui.change-request" },
+    props.onValueChange,
+  );
+
+  return (
+    <ContextMenuPrimitive.RadioGroup
+      data-slot="context-menu-radio-group"
+      {...props}
+      onValueChange={trackedOnValueChange}
+    />
+  );
 }
 
 function ContextMenuRadioItem({ density, className, children, inset, ...props }: MenuRadioItemProps): ReactElement {

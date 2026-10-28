@@ -1,3 +1,4 @@
+import { AnalyticsLink } from "../../analytics/AnalyticsLink.js";
 import { type ReactElement } from "react";
 import { type ComponentProps } from "react";
 import { forwardRef, memo, useCallback, useState } from "react";
@@ -94,7 +95,8 @@ export function Source({
   ...props
 }: SourceProps): ReactElement {
   return (
-    <a
+    <AnalyticsLink
+      component="Source"
       data-slot="source"
       className={cn(
         sourceVariants({ variant, size }),

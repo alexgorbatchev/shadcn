@@ -1,3 +1,4 @@
+import { AnalyticsButton } from "../../analytics/AnalyticsButton.js";
 import type { ReactElement } from "react";
 import { AuiIf, useAuiState, ThreadPrimitive } from "@assistant-ui/react";
 import { useCallback, useEffect, useRef, useState, type FC } from "react";
@@ -45,7 +46,10 @@ const FollowupSuggestionsRow: FC = () => {
             prompt={suggestion.prompt}
             send
             render={
-              <button className="aui-thread-followup-suggestion border-frame-edge hover:bg-foreground/[0.03] hover:border-foreground/25 rounded-md border px-2.5 py-1 text-sm whitespace-nowrap transition-colors ease-in motion-reduce:transition-none" />
+              <AnalyticsButton
+                component="FollowupSuggestionsRow"
+                className="aui-thread-followup-suggestion border-frame-edge hover:bg-foreground/[0.03] hover:border-foreground/25 rounded-md border px-2.5 py-1 text-sm whitespace-nowrap transition-colors ease-in motion-reduce:transition-none"
+              />
             }
           >
             {suggestion.title ?? suggestion.prompt}

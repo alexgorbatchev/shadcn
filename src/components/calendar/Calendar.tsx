@@ -1,3 +1,4 @@
+import { useAnalyticsCallback } from "../../hooks/useAnalyticsCallback.js";
 import type { ComponentProps, ReactElement } from "react";
 import type { CalendarProps } from "./types.js";
 import { getCalendarClassNames } from "./getCalendarClassNames.js";
@@ -6,6 +7,7 @@ import { cn } from "../../utils/cn.js";
 import { buttonVariants } from "../Button.js";
 
 function Calendar({
+  analytics,
   density,
   className,
   classNames,
@@ -17,6 +19,8 @@ function Calendar({
   components,
   ...props
 }: CalendarProps): ReactElement {
+  const onDayClick = useAnalyticsCallback("Calendar", analytics, { name: "ui.change-request" }, props.onDayClick);
+  const onMonthChange = useAnalyticsCallback("Calendar", analytics, { name: "ui.navigate" }, props.onMonthChange);
   return (
     <DayPicker
       data-density={density}
@@ -35,6 +39,8 @@ function Calendar({
         ...components,
       }}
       {...props}
+      onDayClick={onDayClick}
+      onMonthChange={onMonthChange}
     />
   );
 }

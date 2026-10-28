@@ -1044,6 +1044,10 @@
     "./json-render/catalog": {
       "types": "./dist/components/json-render/catalog.d.ts",
       "import": "./dist/components/json-render/catalog.js"
+    },
+    "./analytics": {
+      "types": "./dist/components/analytics/index.d.ts",
+      "import": "./dist/components/analytics/index.js"
     }
   },
   "publishConfig": {

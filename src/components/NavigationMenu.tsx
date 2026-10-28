@@ -1,3 +1,5 @@
+import type { IAnalyticsProps } from "../analytics/types.js";
+import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
 import type { IDensityProps } from "../density/types.js";
 import { useDensity } from "../hooks/useDensity.js";
 import { usePortalContainer } from "../hooks/usePortalContainer.js";
@@ -15,12 +17,20 @@ type NavigationMenuProps<Value> = NavigationMenuPrimitive.Root.Props<Value> &
   IDensityProps;
 
 function NavigationMenu<Value>({
+  analytics,
   density,
   align = "start",
   className,
   children,
   ...props
-}: NavigationMenuProps<Value>): ReactElement {
+}: NavigationMenuProps<Value> & IAnalyticsProps): ReactElement {
+  const trackedOnValueChange = useAnalyticsCallback(
+    "NavigationMenu",
+    analytics,
+    { name: "ui.change-request" },
+    props.onValueChange,
+  );
+
   const resolvedDensity = useDensity(density);
   return (
     <NavigationMenuPrimitive.Root
@@ -33,6 +43,7 @@ function NavigationMenu<Value>({
         )
       }
       {...props}
+      onValueChange={trackedOnValueChange}
     >
       {children}
       <NavigationMenuPositioner density={resolvedDensity} align={align} />
@@ -155,9 +166,11 @@ function NavigationMenuPositioner({
   );
 }
 
-type NavigationMenuLinkProps = NavigationMenuPrimitive.Link.Props & IDensityProps;
+type NavigationMenuLinkProps = IAnalyticsProps & NavigationMenuPrimitive.Link.Props & IDensityProps;
 
-function NavigationMenuLink({ density, className, ...props }: NavigationMenuLinkProps): ReactElement {
+function NavigationMenuLink({ analytics, density, className, ...props }: NavigationMenuLinkProps): ReactElement {
+  const trackedOnClick = useAnalyticsCallback("NavigationMenuLink", analytics, { name: "ui.activate" }, props.onClick);
+
   return (
     <NavigationMenuPrimitive.Link
       data-density={density}
@@ -169,6 +182,7 @@ function NavigationMenuLink({ density, className, ...props }: NavigationMenuLink
         )
       }
       {...props}
+      onClick={trackedOnClick}
     />
   );
 }

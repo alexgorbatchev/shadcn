@@ -1,3 +1,4 @@
+import { AnalyticsButton } from "../../analytics/AnalyticsButton.js";
 import { collapsePanel } from "./constants.js";
 import type { JSX } from "react";
 import type { ReactNode } from "react";
@@ -55,7 +56,8 @@ export function RunActivity({
           <CollapsibleTrigger
             aria-busy={status === "running"}
             render={
-              <button
+              <AnalyticsButton
+                component="RunActivity"
                 type="button"
                 className="group/trigger text-muted-foreground hover:text-foreground focus-visible:ring-ring/50 flex max-w-full items-center gap-1.5 rounded-md py-1 text-sm outline-none focus-visible:ring-[3px]"
               />

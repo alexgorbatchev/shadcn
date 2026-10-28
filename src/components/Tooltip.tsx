@@ -1,3 +1,5 @@
+import type { IAnalyticsProps } from "../analytics/types.js";
+import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
 import { useDensity } from "../hooks/useDensity.js";
 import { usePortalContainer } from "../hooks/usePortalContainer.js";
 import { usePortalNode } from "../hooks/usePortalNode.js";
@@ -12,8 +14,18 @@ function TooltipProvider({ delay = 0, ...props }: TooltipPrimitive.Provider.Prop
   return <TooltipPrimitive.Provider data-slot="tooltip-provider" delay={delay} {...props} />;
 }
 
-function Tooltip<Payload>({ ...props }: TooltipPrimitive.Root.Props<Payload>): ReactElement {
-  return <TooltipPrimitive.Root<Payload> data-slot="tooltip" {...props} />;
+function Tooltip<Payload>({
+  analytics,
+  ...props
+}: TooltipPrimitive.Root.Props<Payload> & IAnalyticsProps): ReactElement {
+  const trackedOnOpenChange = useAnalyticsCallback(
+    "Tooltip",
+    analytics,
+    (open, _details) => ({ name: "ui.open-request", open }),
+    props.onOpenChange,
+  );
+
+  return <TooltipPrimitive.Root<Payload> data-slot="tooltip" {...props} onOpenChange={trackedOnOpenChange} />;
 }
 
 function TooltipTrigger<Payload>({ ...props }: TooltipPrimitive.Trigger.Props<Payload>): ReactElement {

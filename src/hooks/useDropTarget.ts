@@ -1,8 +1,10 @@
+import { useAnalytics } from "./useAnalytics.js";
 import { useId, useState } from "react";
 import { useDragDrop } from "./useDragDrop.js";
 import type { IDragDropItem, IDropTarget, IDropTargetOptions } from "../drag-drop/types.js";
 
-export function useDropTarget({ accept, canDrop, getDropEffect, onDrop }: IDropTargetOptions): IDropTarget {
+export function useDropTarget({ analytics, accept, canDrop, getDropEffect, onDrop }: IDropTargetOptions): IDropTarget {
+  const track = useAnalytics("DropTarget", analytics);
   const { active, over, enter, leave, end } = useDragDrop();
   const id = useId();
   const [feedback, setFeedback] = useState<IDropTarget["feedback"]>(null);
@@ -50,7 +52,10 @@ export function useDropTarget({ accept, canDrop, getDropEffect, onDrop }: IDropT
         const item: IDragDropItem = { type, data, labels: active?.labels ?? [] };
         leave(id);
         end();
-        if (!canDrop || canDrop(item)) onDrop(item, event);
+        if (!canDrop || canDrop(item)) {
+          onDrop(item, event);
+          track({ name: "ui.drop" }, event.nativeEvent);
+        }
       },
     },
   };

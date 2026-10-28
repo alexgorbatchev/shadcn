@@ -1,3 +1,4 @@
+import { AnalyticsLink } from "../../analytics/AnalyticsLink.js";
 import type { JSX } from "react";
 import { useState, type ComponentProps } from "react";
 import { cn } from "../../../utils/cn.js";
@@ -84,7 +85,8 @@ export function LinkPreview({
           {site ? <span className={cn(mono, "text-muted-foreground truncate")}>{site}</span> : null}
         </div>
         {safeUrl ? (
-          <a
+          <AnalyticsLink
+            component="LinkPreview"
             href={safeUrl}
             target="_blank"
             rel="noopener noreferrer"
@@ -92,7 +94,7 @@ export function LinkPreview({
           >
             {label}
             <span className="sr-only">(opens in a new tab)</span>
-          </a>
+          </AnalyticsLink>
         ) : (
           <span className="text-foreground/90 line-clamp-2 text-base leading-5 font-medium">{label}</span>
         )}

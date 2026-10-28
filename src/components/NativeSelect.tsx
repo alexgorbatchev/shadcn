@@ -1,3 +1,5 @@
+import type { IAnalyticsProps } from "../analytics/types.js";
+import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
 import type { IDensityProps } from "../density/types.js";
 import type { ComponentProps, ReactElement } from "react";
 import { ChevronDownIcon } from "lucide-react";
@@ -8,12 +10,20 @@ type NativeSelectProps = Omit<ComponentProps<"select">, "size"> & {
 };
 
 function NativeSelect({
+  analytics,
   density,
   className,
   dir,
   size = "default",
   ...props
-}: NativeSelectProps & IDensityProps): ReactElement {
+}: NativeSelectProps & IDensityProps & IAnalyticsProps): ReactElement {
+  const trackedOnChange = useAnalyticsCallback(
+    "NativeSelect",
+    analytics,
+    { name: "ui.change-request" },
+    props.onChange,
+  );
+
   return (
     <div
       dir={dir}
@@ -28,6 +38,7 @@ function NativeSelect({
         data-size={size}
         className="h-control w-full min-w-0 appearance-none rounded-sm border border-input bg-secondary py-0 pe-8 ps-2.5 text-sm transition-colors outline-none select-none selection:bg-primary selection:text-primary-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:cursor-not-allowed aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive data-[size=sm]:h-control-sm data-[size=sm]:rounded-sm"
         {...props}
+        onChange={trackedOnChange}
       />
       <ChevronDownIcon
         className="pointer-events-none absolute top-1/2 end-2.5 size-4 -translate-y-1/2 text-muted-foreground select-none"

@@ -1,4 +1,6 @@
 "use client";
+import type { IAnalyticsProps } from "../analytics/types.js";
+import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
 
 import { useDensity } from "../hooks/useDensity.js";
 import { usePortalContainer } from "../hooks/usePortalContainer.js";
@@ -18,8 +20,18 @@ import { Menu as MenuPrimitive } from "@base-ui/react/menu";
 import { cn } from "../utils/cn.js";
 import { ChevronRightIcon, CheckIcon } from "lucide-react";
 
-function DropdownMenu<Payload>({ ...props }: MenuPrimitive.Root.Props<Payload>): ReactElement {
-  return <MenuPrimitive.Root data-slot="dropdown-menu" {...props} />;
+function DropdownMenu<Payload>({
+  analytics,
+  ...props
+}: MenuPrimitive.Root.Props<Payload> & IAnalyticsProps): ReactElement {
+  const trackedOnOpenChange = useAnalyticsCallback(
+    "DropdownMenu",
+    analytics,
+    (open, _details) => ({ name: "ui.open-request", open }),
+    props.onOpenChange,
+  );
+
+  return <MenuPrimitive.Root data-slot="dropdown-menu" {...props} onOpenChange={trackedOnOpenChange} />;
 }
 
 function DropdownMenuPortal({ container, ref, children, ...props }: MenuPrimitive.Portal.Props): ReactElement {
@@ -101,7 +113,16 @@ function DropdownMenuLabel({ density, className, inset, ...props }: MenuLabelPro
   );
 }
 
-function DropdownMenuItem({ density, className, inset, variant = "default", ...props }: MenuItemProps): ReactElement {
+function DropdownMenuItem({
+  analytics,
+  density,
+  className,
+  inset,
+  variant = "default",
+  ...props
+}: MenuItemProps & IAnalyticsProps): ReactElement {
+  const trackedOnClick = useAnalyticsCallback("DropdownMenuItem", analytics, { name: "ui.activate" }, props.onClick);
+
   return (
     <MenuPrimitive.Item
       data-density={density}
@@ -115,12 +136,20 @@ function DropdownMenuItem({ density, className, inset, variant = "default", ...p
         )
       }
       {...props}
+      onClick={trackedOnClick}
     />
   );
 }
 
-function DropdownMenuSub({ ...props }: MenuPrimitive.SubmenuRoot.Props): ReactElement {
-  return <MenuPrimitive.SubmenuRoot data-slot="dropdown-menu-sub" {...props} />;
+function DropdownMenuSub({ analytics, ...props }: MenuPrimitive.SubmenuRoot.Props & IAnalyticsProps): ReactElement {
+  const trackedOnOpenChange = useAnalyticsCallback(
+    "DropdownMenuSub",
+    analytics,
+    (open, _details) => ({ name: "ui.open-request", open }),
+    props.onOpenChange,
+  );
+
+  return <MenuPrimitive.SubmenuRoot data-slot="dropdown-menu-sub" {...props} onOpenChange={trackedOnOpenChange} />;
 }
 
 function DropdownMenuSubTrigger({ density, className, inset, children, ...props }: MenuSubTriggerProps): ReactElement {
@@ -176,13 +205,21 @@ function DropdownMenuSubContent({
 }
 
 function DropdownMenuCheckboxItem({
+  analytics,
   density,
   className,
   children,
   checked,
   inset,
   ...props
-}: MenuCheckboxItemProps): ReactElement {
+}: MenuCheckboxItemProps & IAnalyticsProps): ReactElement {
+  const trackedOnCheckedChange = useAnalyticsCallback(
+    "DropdownMenuCheckboxItem",
+    analytics,
+    { name: "ui.change-request" },
+    props.onCheckedChange,
+  );
+
   return (
     <MenuPrimitive.CheckboxItem
       data-density={density}
@@ -196,6 +233,7 @@ function DropdownMenuCheckboxItem({
       }
       checked={checked}
       {...props}
+      onCheckedChange={trackedOnCheckedChange}
     >
       <span
         className="pointer-events-none absolute end-2 flex items-center justify-center"
@@ -210,8 +248,20 @@ function DropdownMenuCheckboxItem({
   );
 }
 
-function DropdownMenuRadioGroup({ ...props }: MenuPrimitive.RadioGroup.Props): ReactElement {
-  return <MenuPrimitive.RadioGroup data-slot="dropdown-menu-radio-group" {...props} />;
+function DropdownMenuRadioGroup({
+  analytics,
+  ...props
+}: MenuPrimitive.RadioGroup.Props & IAnalyticsProps): ReactElement {
+  const trackedOnValueChange = useAnalyticsCallback(
+    "DropdownMenuRadioGroup",
+    analytics,
+    { name: "ui.change-request" },
+    props.onValueChange,
+  );
+
+  return (
+    <MenuPrimitive.RadioGroup data-slot="dropdown-menu-radio-group" {...props} onValueChange={trackedOnValueChange} />
+  );
 }
 
 function DropdownMenuRadioItem({ density, className, children, inset, ...props }: MenuRadioItemProps): ReactElement {

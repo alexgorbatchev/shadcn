@@ -1,3 +1,5 @@
+import type { IAnalyticsProps } from "../../analytics/types.js";
+import { useAnalyticsCallback } from "../../hooks/useAnalyticsCallback.js";
 import { useId, type ReactElement, type ReactNode } from "react";
 import { useDropzone, type DropzoneOptions } from "react-dropzone";
 import { UploadIcon } from "lucide-react";
@@ -5,7 +7,8 @@ import type { IDensityProps } from "../../density/types.js";
 import { cn } from "../../utils/cn.js";
 import { Button } from "../Button.js";
 
-type FileUploadProps = IDensityProps &
+type FileUploadProps = IAnalyticsProps &
+  IDensityProps &
   Pick<
     DropzoneOptions,
     | "accept"
@@ -25,10 +28,20 @@ type FileUploadProps = IDensityProps &
     name?: string;
   };
 /** Native file selection and validation. Consumers own storage and upload requests. */
-function FileUpload({ label, description, children, name, density, ...options }: FileUploadProps): ReactElement {
+function FileUpload({
+  analytics,
+  label,
+  description,
+  children,
+  name,
+  density,
+  ...options
+}: FileUploadProps): ReactElement {
+  const onDrop = useAnalyticsCallback("FileUpload", analytics, { name: "ui.commit" }, options.onDrop);
   const descriptionId = useId();
   const { getRootProps, getInputProps, open, isDragActive, isDragReject, isProcessing, fileRejections } = useDropzone({
     ...options,
+    onDrop,
     noClick: true,
     noKeyboard: true,
   });

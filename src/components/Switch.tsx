@@ -1,13 +1,23 @@
+import type { IAnalyticsProps } from "../analytics/types.js";
+import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
 import type { IDensityProps } from "../density/types.js";
 import type { ReactElement } from "react";
 import { Switch as SwitchPrimitive } from "@base-ui/react/switch";
 import { cn } from "../utils/cn.js";
 
-type SwitchProps = SwitchPrimitive.Root.Props & {
-  size?: "sm" | "default";
-} & IDensityProps;
+type SwitchProps = IAnalyticsProps &
+  SwitchPrimitive.Root.Props & {
+    size?: "sm" | "default";
+  } & IDensityProps;
 
-function Switch({ density, className, size = "default", ...props }: SwitchProps): ReactElement {
+function Switch({ analytics, density, className, size = "default", ...props }: SwitchProps): ReactElement {
+  const trackedOnCheckedChange = useAnalyticsCallback(
+    "Switch",
+    analytics,
+    { name: "ui.change-request" },
+    props.onCheckedChange,
+  );
+
   return (
     <SwitchPrimitive.Root
       data-density={density}
@@ -20,6 +30,7 @@ function Switch({ density, className, size = "default", ...props }: SwitchProps)
         )
       }
       {...props}
+      onCheckedChange={trackedOnCheckedChange}
     >
       <SwitchPrimitive.Thumb
         data-slot="switch-thumb"

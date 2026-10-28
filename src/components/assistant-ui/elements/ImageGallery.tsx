@@ -1,3 +1,5 @@
+import { AnalyticsButton } from "../../analytics/AnalyticsButton.js";
+import { AnalyticsLink } from "../../analytics/AnalyticsLink.js";
 import { Button } from "../../Button.js";
 import type { JSX } from "react";
 import { ChevronLeftIcon, ChevronRightIcon, ExternalLinkIcon, ImageOffIcon } from "lucide-react";
@@ -75,7 +77,8 @@ export function ImageGallery({ images, maxVisible = 6, onOpen, ...props }: IImag
           const failed = failedImages.has(keyForImage(image));
           const overflow = imageIndex === visibleCount - 1 && images.length > visibleCount;
           return (
-            <button
+            <AnalyticsButton
+              component="ImageGallery"
               key={image.id}
               type="button"
               aria-label={`Open image: ${image.alt}`}
@@ -104,7 +107,7 @@ export function ImageGallery({ images, maxVisible = 6, onOpen, ...props }: IImag
                   +{images.length - visibleCount}
                 </span>
               ) : null}
-            </button>
+            </AnalyticsButton>
           );
         })}
       </div>
@@ -163,7 +166,8 @@ export function ImageGallery({ images, maxVisible = 6, onOpen, ...props }: IImag
                 {activeImage.caption ? <p className="text-foreground/75 truncate">{activeImage.caption}</p> : null}
                 {activeImage.source?.label ? (
                   sourceHref ? (
-                    <a
+                    <AnalyticsLink
+                      component="ImageGallery"
                       href={sourceHref}
                       target="_blank"
                       rel="noopener noreferrer"
@@ -172,7 +176,7 @@ export function ImageGallery({ images, maxVisible = 6, onOpen, ...props }: IImag
                       <span className="truncate">{activeImage.source.label}</span>
                       <ExternalLinkIcon aria-hidden="true" className={cn("size-3.5")} />
                       <span className="sr-only">(opens in a new tab)</span>
-                    </a>
+                    </AnalyticsLink>
                   ) : (
                     <span className="text-muted-foreground truncate">{activeImage.source.label}</span>
                   )

@@ -1,3 +1,5 @@
+import type { IAnalyticsProps } from "../../analytics/types.js";
+import { useAnalyticsCallback } from "../../hooks/useAnalyticsCallback.js";
 import type { ComponentProps, ReactElement } from "react";
 import type { IDensityProps } from "../../density/types.js";
 import { Command as CommandPrimitive } from "cmdk";
@@ -113,7 +115,14 @@ function CommandSeparator({ className, ...props }: ComponentProps<typeof Command
   );
 }
 
-function CommandItem({ className, children, ...props }: ComponentProps<typeof CommandPrimitive.Item>): ReactElement {
+function CommandItem({
+  analytics,
+  className,
+  children,
+  ...props
+}: ComponentProps<typeof CommandPrimitive.Item> & IAnalyticsProps): ReactElement {
+  const trackedOnSelect = useAnalyticsCallback("CommandItem", analytics, { name: "ui.activate" }, props.onSelect);
+
   return (
     <CommandPrimitive.Item
       data-slot="command-item"
@@ -122,6 +131,7 @@ function CommandItem({ className, children, ...props }: ComponentProps<typeof Co
         className,
       )}
       {...props}
+      onSelect={trackedOnSelect}
     >
       {children}
       <CheckIcon

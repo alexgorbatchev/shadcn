@@ -1,3 +1,5 @@
+import type { IAnalyticsProps } from "../analytics/types.js";
+import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
 import { useDensity } from "../hooks/useDensity.js";
 import { usePortalContainer } from "../hooks/usePortalContainer.js";
 import { usePortalNode } from "../hooks/usePortalNode.js";
@@ -12,7 +14,25 @@ import { Button } from "./Button.js";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "./InputGroup.js";
 import { ChevronDownIcon, XIcon, CheckIcon } from "lucide-react";
 
-const Combobox = ComboboxPrimitive.Root;
+function Combobox<Value, Multiple extends boolean | undefined = false, Item = Value>({
+  analytics,
+  ...props
+}: ComboboxPrimitive.Root.Props<Value, Multiple, Item> & IAnalyticsProps): ReactElement {
+  const onValueChange = useAnalyticsCallback("Combobox", analytics, { name: "ui.change-request" }, props.onValueChange);
+  const onOpenChange = useAnalyticsCallback(
+    "Combobox",
+    analytics,
+    (open, _details) => ({ name: "ui.open-request", open }),
+    props.onOpenChange,
+  );
+  return (
+    <ComboboxPrimitive.Root<Value, Multiple, Item>
+      {...props}
+      onValueChange={onValueChange}
+      onOpenChange={onOpenChange}
+    />
+  );
+}
 
 function ComboboxValue({ ...props }: ComboboxPrimitive.Value.Props): ReactElement {
   return <ComboboxPrimitive.Value {...props} />;

@@ -1,3 +1,4 @@
+import { AnalyticsButton } from "../../analytics/AnalyticsButton.js";
 import type { ReactElement } from "react";
 import { type PropsWithChildren, useState, type FC, isValidElement } from "react";
 import { XIcon, PlusIcon, FileText, Loader2Icon, AlertCircleIcon } from "lucide-react";
@@ -43,7 +44,11 @@ const AttachmentPreviewDialog: FC<AttachmentPreviewDialogProps> = ({ children, s
   if (!src) return children;
   return (
     <Dialog>
-      <DialogTrigger render={isValidElement(children) ? children : <button type="button" />}>
+      <DialogTrigger
+        render={
+          isValidElement(children) ? children : <AnalyticsButton component="AttachmentPreviewDialog" type="button" />
+        }
+      >
         {isValidElement(children) ? undefined : children}
       </DialogTrigger>
       <DialogContent size="wide">
@@ -107,7 +112,8 @@ const AttachmentUI: FC = () => {
           <AttachmentPreviewDialog src={src} name={name}>
             <TooltipTrigger
               render={
-                <button
+                <AnalyticsButton
+                  component="AttachmentUI"
                   type="button"
                   aria-label={src ? `Preview ${name}` : `${typeLabel} attachment ${name}`}
                   className="relative flex size-14 items-center justify-center overflow-hidden rounded-sm border border-border bg-secondary hover:bg-muted focus-visible:outline-2 focus-visible:outline-ring"

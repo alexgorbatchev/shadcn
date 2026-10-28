@@ -1,4 +1,6 @@
 "use client";
+import type { IAnalyticsProps } from "../analytics/types.js";
+import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
 
 import { useDensity } from "../hooks/useDensity.js";
 import { usePortalContainer } from "../hooks/usePortalContainer.js";
@@ -11,7 +13,19 @@ import { useDirection } from "@base-ui/react/direction-provider";
 import { cn } from "../utils/cn.js";
 import { ChevronDownIcon, CheckIcon, ChevronUpIcon } from "lucide-react";
 
-const Select = SelectPrimitive.Root;
+function Select<Value, Multiple extends boolean | undefined = false>({
+  analytics,
+  ...props
+}: SelectPrimitive.Root.Props<Value, Multiple> & IAnalyticsProps): ReactElement {
+  const onValueChange = useAnalyticsCallback("Select", analytics, { name: "ui.change-request" }, props.onValueChange);
+  const onOpenChange = useAnalyticsCallback(
+    "Select",
+    analytics,
+    (open, _details) => ({ name: "ui.open-request", open }),
+    props.onOpenChange,
+  );
+  return <SelectPrimitive.Root<Value, Multiple> {...props} onValueChange={onValueChange} onOpenChange={onOpenChange} />;
+}
 
 type SelectGroupProps = SelectPrimitive.Group.Props & IDensityProps;
 

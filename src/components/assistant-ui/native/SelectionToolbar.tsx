@@ -1,3 +1,4 @@
+import { AnalyticsButton } from "../../analytics/AnalyticsButton.js";
 import { type ReactElement } from "react";
 import { type ComponentProps } from "react";
 import { memo } from "react";
@@ -32,7 +33,8 @@ export function SelectionToolbarQuote({ children, ...props }: SelectionToolbarQu
       data-slot="selection-toolbar-quote"
       {...props}
       render={
-        <button
+        <AnalyticsButton
+          component="SelectionToolbarQuote"
           data-testid="SelectionToolbarQuote"
           type="button"
           className="text-popover-foreground hover:bg-accent flex items-center gap-1 rounded-sm px-2 py-1 text-sm transition-colors"

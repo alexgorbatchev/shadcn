@@ -1,3 +1,4 @@
+import { AnalyticsLink } from "../../analytics/AnalyticsLink.js";
 import type { ComponentProps, JSX } from "react";
 import {
   getMimeTypeIcon,
@@ -96,7 +97,8 @@ export function FileDownload({
   const href = getFileHref(data, mimeType, sourceType);
   if (!href) return null;
   return (
-    <a
+    <AnalyticsLink
+      component="FileDownload"
       data-testid="FileDownload"
       data-slot="file-download"
       href={href}
@@ -108,7 +110,7 @@ export function FileDownload({
     >
       {!children ? <DownloadIcon aria-hidden="true" data-icon="inline-start" /> : null}
       {children}
-    </a>
+    </AnalyticsLink>
   );
 }
 export interface IFilePlayerProps extends Omit<Omit<React.ComponentProps<"div">, "children">, "className" | "style"> {

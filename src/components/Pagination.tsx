@@ -1,3 +1,5 @@
+import { AnalyticsLink } from "./analytics/AnalyticsLink.js";
+import type { IAnalyticsProps } from "../analytics/types.js";
 import type { IDensityProps } from "../density/types.js";
 import type { ComponentProps, ReactElement } from "react";
 import { ChevronLeftIcon, ChevronRightIcon, MoreHorizontalIcon } from "lucide-react";
@@ -44,14 +46,17 @@ type PaginationLinkProps = {
   ComponentProps<"a">;
 
 function PaginationLink({
+  analytics,
   density,
   className,
   isActive,
   size = "icon",
   ...props
-}: PaginationLinkProps & IDensityProps): ReactElement {
+}: PaginationLinkProps & IDensityProps & IAnalyticsProps): ReactElement {
   return (
-    <a
+    <AnalyticsLink
+      component="PaginationLink"
+      analytics={analytics}
       data-density={density}
       className={cn(buttonVariants({ variant: isActive ? "outline" : "ghost", size }), className)}
       aria-current={isActive ? "page" : undefined}

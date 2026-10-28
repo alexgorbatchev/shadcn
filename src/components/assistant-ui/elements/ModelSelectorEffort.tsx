@@ -1,3 +1,4 @@
+import { AnalyticsButton } from "../../analytics/AnalyticsButton.js";
 import type { ComponentProps, ReactElement, ReactNode } from "react";
 import { RadioGroup } from "@base-ui/react/radio-group";
 import { Radio } from "@base-ui/react/radio";
@@ -39,7 +40,8 @@ export function ModelSelectorEffort({
             value={option.id}
             nativeButton
             render={
-              <button
+              <AnalyticsButton
+                component="ModelSelectorEffort"
                 type="button"
                 className="h-control-sm rounded-sm px-control-x text-sm text-muted-foreground outline-none hover:bg-muted hover:text-foreground focus-visible:ring-1 focus-visible:ring-ring data-checked:bg-accent data-checked:font-medium data-checked:text-accent-foreground"
               />

@@ -1,3 +1,5 @@
+import type { IAnalyticsProps } from "../../analytics/types.js";
+import { useAnalyticsCallback } from "../../hooks/useAnalyticsCallback.js";
 import type { ComponentProps, ReactElement } from "react";
 import type { IDensityProps } from "../../density/types.js";
 import { MessageScroller as MessageScrollerPrimitive } from "@shadcn/react/message-scroller";
@@ -62,10 +64,12 @@ function MessageScrollerItem({
     />
   );
 }
-type MessageScrollerButtonProps = ComponentProps<typeof MessageScrollerPrimitive.Button> &
+type MessageScrollerButtonProps = IAnalyticsProps &
+  ComponentProps<typeof MessageScrollerPrimitive.Button> &
   Pick<ComponentProps<typeof Button>, "variant" | "size"> &
   IDensityProps;
 function MessageScrollerButton({
+  analytics,
   density,
   direction = "end",
   behavior,
@@ -76,6 +80,13 @@ function MessageScrollerButton({
   size = "icon-sm",
   ...props
 }: MessageScrollerButtonProps): ReactElement {
+  const trackedOnClick = useAnalyticsCallback(
+    "MessageScrollerButton",
+    analytics,
+    { name: "ui.activate" },
+    props.onClick,
+  );
+
   const isReducedMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
   return (
     <MessageScrollerPrimitive.Button
@@ -91,6 +102,7 @@ function MessageScrollerButton({
       )}
       render={render ?? <Button density={density} variant={variant} size={size} />}
       {...props}
+      onClick={trackedOnClick}
     >
       {children ?? (
         <>

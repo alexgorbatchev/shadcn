@@ -15,6 +15,9 @@ export default defineConfig({
   resolve: { alias: prototypeSourceAliases },
   optimizeDeps: {
     include: [
+      "cmdk",
+      "react-image-crop",
+      "@base-ui/react/switch",
       "react-big-calendar",
       "date-fns",
       "@date-fns/tz",

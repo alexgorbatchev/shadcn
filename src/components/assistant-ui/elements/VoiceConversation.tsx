@@ -1,3 +1,4 @@
+import { AnalyticsButton } from "../../analytics/AnalyticsButton.js";
 import { Button } from "../../Button.js";
 import type { JSX } from "react";
 import type { IConversationTurn } from "./types.js";
@@ -53,7 +54,8 @@ export function VoiceConversation({
       className={cn(cn(paper, "flex w-full max-w-xs flex-col items-center gap-4 rounded-md px-5 py-5"), className)}
       {...props}
     >
-      <button
+      <AnalyticsButton
+        component="VoiceConversation"
         type="button"
         onClick={onInterrupt}
         disabled={!canInterrupt}
@@ -92,7 +94,7 @@ export function VoiceConversation({
           )}
           style={{ transform: `scale(${active ? 0.9 + level * 0.2 : 0.85})` }}
         />
-      </button>
+      </AnalyticsButton>
 
       <div className="flex flex-col items-center gap-1">
         <span className="text-base font-medium">{CAPTION[mode]}</span>

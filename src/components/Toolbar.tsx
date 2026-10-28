@@ -1,3 +1,6 @@
+import type { IAnalyticsProps } from "../analytics/types.js";
+import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
+import { useAnalyticsInput } from "../hooks/useAnalyticsInput.js";
 import type { ReactElement } from "react";
 import type { IDensityProps } from "../density/types.js";
 import { Toolbar as ToolbarPrimitive } from "@base-ui/react/toolbar";
@@ -21,7 +24,14 @@ function Toolbar({ density, className, ...props }: ToolbarPrimitive.Root.Props &
   );
 }
 
-function ToolbarButton({ density, className, ...props }: ToolbarPrimitive.Button.Props & IDensityProps): ReactElement {
+function ToolbarButton({
+  analytics,
+  density,
+  className,
+  ...props
+}: ToolbarPrimitive.Button.Props & IDensityProps & IAnalyticsProps): ReactElement {
+  const trackedOnClick = useAnalyticsCallback("ToolbarButton", analytics, { name: "ui.activate" }, props.onClick);
+
   return (
     <ToolbarPrimitive.Button
       data-density={density}
@@ -34,11 +44,19 @@ function ToolbarButton({ density, className, ...props }: ToolbarPrimitive.Button
         )
       }
       {...props}
+      onClick={trackedOnClick}
     />
   );
 }
 
-function ToolbarLink({ density, className, ...props }: ToolbarPrimitive.Link.Props & IDensityProps): ReactElement {
+function ToolbarLink({
+  analytics,
+  density,
+  className,
+  ...props
+}: ToolbarPrimitive.Link.Props & IDensityProps & IAnalyticsProps): ReactElement {
+  const trackedOnClick = useAnalyticsCallback("ToolbarLink", analytics, { name: "ui.activate" }, props.onClick);
+
   return (
     <ToolbarPrimitive.Link
       data-density={density}
@@ -47,11 +65,19 @@ function ToolbarLink({ density, className, ...props }: ToolbarPrimitive.Link.Pro
         cn(buttonVariants({ variant: "ghost" }), typeof className === "function" ? className(state) : className)
       }
       {...props}
+      onClick={trackedOnClick}
     />
   );
 }
 
-function ToolbarInput({ density, className, ...props }: ToolbarPrimitive.Input.Props & IDensityProps): ReactElement {
+function ToolbarInput({
+  analytics,
+  density,
+  className,
+  ...props
+}: ToolbarPrimitive.Input.Props & IDensityProps & IAnalyticsProps): ReactElement {
+  const analyticsInput = useAnalyticsInput("ToolbarInput", analytics, props);
+
   return (
     <ToolbarPrimitive.Input
       data-density={density}
@@ -63,6 +89,7 @@ function ToolbarInput({ density, className, ...props }: ToolbarPrimitive.Input.P
         )
       }
       {...props}
+      {...analyticsInput}
     />
   );
 }

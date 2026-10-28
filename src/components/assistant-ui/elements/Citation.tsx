@@ -1,3 +1,4 @@
+import { AnalyticsLink } from "../../analytics/AnalyticsLink.js";
 import type { ComponentProps, JSX } from "react";
 import { HoverCard, HoverCardTrigger, HoverCardContent } from "../../HoverCard.js";
 import { Button } from "../../Button.js";
@@ -65,14 +66,15 @@ export function Citation({ index, source, open, onOpenChange, ...props }: ICitat
         <p className={cn("text-sm leading-snug font-medium", hasMetadata && "mt-2")}>{source.title}</p>
         <p className="text-muted-foreground mt-1 text-sm leading-relaxed">{source.snippet}</p>
         {href ? (
-          <a
+          <AnalyticsLink
+            component="Citation"
             href={href}
             target="_blank"
             rel="noopener noreferrer"
             className="text-muted-foreground hover:text-foreground mt-2 inline-flex text-sm underline-offset-2 transition-colors hover:underline motion-reduce:transition-none"
           >
             Open source <span className="sr-only">(opens in a new tab)</span>
-          </a>
+          </AnalyticsLink>
         ) : null}
       </HoverCardContent>
     </HoverCard>

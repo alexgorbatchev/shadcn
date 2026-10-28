@@ -1,3 +1,5 @@
+import type { IAnalyticsProps } from "../analytics/types.js";
+import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
 import type { ReactElement } from "react";
 import type { IDensityProps } from "../density/types.js";
 import { Toggle as TogglePrimitive } from "@base-ui/react/toggle";
@@ -23,9 +25,23 @@ const toggleVariants = cva(
   },
 );
 
-export type ToggleProps = TogglePrimitive.Props & VariantProps<typeof toggleVariants> & IDensityProps;
+export type ToggleProps = IAnalyticsProps & TogglePrimitive.Props & VariantProps<typeof toggleVariants> & IDensityProps;
 
-function Toggle({ density, className, variant = "default", size = "default", ...props }: ToggleProps): ReactElement {
+function Toggle({
+  analytics,
+  density,
+  className,
+  variant = "default",
+  size = "default",
+  ...props
+}: ToggleProps): ReactElement {
+  const trackedOnPressedChange = useAnalyticsCallback(
+    "Toggle",
+    analytics,
+    { name: "ui.change-request" },
+    props.onPressedChange,
+  );
+
   return (
     <TogglePrimitive
       data-density={density}
@@ -34,6 +50,7 @@ function Toggle({ density, className, variant = "default", size = "default", ...
         cn(toggleVariants({ variant, size }), typeof className === "function" ? className(state) : className)
       }
       {...props}
+      onPressedChange={trackedOnPressedChange}
     />
   );
 }

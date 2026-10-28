@@ -1,3 +1,5 @@
+import { AnalyticsButton } from "../../analytics/AnalyticsButton.js";
+import { AnalyticsLink } from "../../analytics/AnalyticsLink.js";
 import { collapsePanel, fieldInteractive } from "./constants.js";
 import { SourceGlyph } from "./SourceGlyph.js";
 import type { JSX } from "react";
@@ -63,7 +65,8 @@ export function Sources({
       {hideTrigger ? null : (
         <CollapsibleTrigger
           render={
-            <button
+            <AnalyticsButton
+              component="Sources"
               type="button"
               className={cn(
                 fieldInteractive,
@@ -146,7 +149,8 @@ export function Sources({
               );
             if (href) {
               return (
-                <a
+                <AnalyticsLink
+                  component="Sources"
                   key={`${source.url ?? source.domain ?? source.title}-${index}`}
                   data-slot="source-card"
                   href={href}
@@ -156,7 +160,7 @@ export function Sources({
                 >
                   {content}
                   <span className="sr-only">(opens in a new tab)</span>
-                </a>
+                </AnalyticsLink>
               );
             }
             return (

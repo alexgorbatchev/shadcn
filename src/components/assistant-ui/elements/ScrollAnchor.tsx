@@ -1,3 +1,4 @@
+import { AnalyticsButton } from "../../analytics/AnalyticsButton.js";
 import { useLayoutEffect, useRef, type ComponentProps, type JSX } from "react";
 import { ArrowDownIcon } from "lucide-react";
 import { cn } from "../../../utils/cn.js";
@@ -80,7 +81,8 @@ export function ScrollAnchor({
         </div>
       </div>
       {!isFollowing && unreadCount > 0 ? (
-        <button
+        <AnalyticsButton
+          component="ScrollAnchor"
           type="button"
           onClick={() => onFollowingChange(true)}
           className={cn(
@@ -90,7 +92,7 @@ export function ScrollAnchor({
         >
           <ArrowDownIcon aria-hidden="true" className={cn("size-4")} />
           {unreadCount} new {unreadCount === 1 ? "message" : "messages"}
-        </button>
+        </AnalyticsButton>
       ) : null}
     </div>
   );

@@ -1,3 +1,4 @@
+import type { IAnalyticsProps } from "../analytics/types.js";
 import type { DragEvent, HTMLAttributes } from "react";
 
 export interface IDragDropItem {
@@ -30,7 +31,7 @@ export interface IDragSource {
   props: Pick<HTMLAttributes<HTMLElement>, "draggable" | "onDragStart" | "onDragEnd">;
   isDragging: boolean;
 }
-export interface IDropTargetOptions {
+export interface IDropTargetOptions extends IAnalyticsProps {
   accept: readonly string[];
   canDrop?: (item: IDragDropItem) => boolean;
   getDropEffect?: (item: IDragDropItem | null, event: DragEvent<HTMLElement>) => DataTransfer["dropEffect"];

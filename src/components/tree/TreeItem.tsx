@@ -1,3 +1,5 @@
+import type { IAnalyticsProps } from "../../analytics/types.js";
+import { useAnalyticsCallback } from "../../hooks/useAnalyticsCallback.js";
 import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
 import type { ItemInstance, SelectionDataRef } from "@headless-tree/core";
@@ -15,7 +17,8 @@ type TreeItemState = {
   density: IDensityProps["density"];
 };
 type TreeItemProps<T> = useRender.ComponentProps<"div", TreeItemState> &
-  IDensityProps & {
+  IDensityProps &
+  IAnalyticsProps & {
     item: ItemInstance<T>;
     startEnhancer?: ReactNode;
     endEnhancer?: ReactNode;
@@ -34,6 +37,7 @@ function isRowControl(event: MouseEvent<HTMLDivElement>): boolean {
 
 /** Registered tree row; compose menus with render and place counts/actions in endEnhancer. */
 export function TreeItem<T>({
+  analytics,
   item,
   children,
   startEnhancer,
@@ -47,6 +51,12 @@ export function TreeItem<T>({
   ...props
 }: TreeItemProps<T>): ReactElement {
   const nativeProps = item.getProps();
+  const activate = useAnalyticsCallback<[MouseEvent<HTMLDivElement>]>(
+    "TreeItem",
+    analytics,
+    { name: "ui.activate" },
+    undefined,
+  );
   const isExpanded = item.isExpanded();
   const isSelected = item.isSelected?.() ?? false;
   const isInsideTarget = item.isUnorderedDragTarget?.() ?? false;
@@ -146,7 +156,13 @@ export function TreeItem<T>({
           </>
         ),
       },
-      props,
+      {
+        ...props,
+        onClick: (event: MouseEvent<HTMLDivElement>) => {
+          props.onClick?.(event);
+          if (!isEditing && !isRowControl(event)) activate(event);
+        },
+      },
     ),
     state: {
       slot: "tree-item",
