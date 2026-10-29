@@ -180,9 +180,7 @@ function AlertDialogDescription({ density, className, ...props }: AlertDialogDes
   );
 }
 
-type AlertDialogActionProps = ComponentProps<typeof Button> & IDensityProps;
-
-function AlertDialogAction({ density, className, ...props }: AlertDialogActionProps): ReactElement {
+function AlertDialogAction({ density, className, ...props }: ComponentProps<typeof Button>): ReactElement {
   return <Button data-density={density} data-slot="alert-dialog-action" className={className} {...props} />;
 }
 

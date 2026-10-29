@@ -1,13 +1,14 @@
 import type { IAnalyticsProps } from "../analytics/types.js";
 import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
 import type { IDensityProps } from "../density/types.js";
-import type { ReactElement } from "react";
+import { useId, type ReactElement } from "react";
 import { Button as ButtonPrimitive } from "@base-ui/react/button";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../utils/cn.js";
+import { Tooltip, TooltipTrigger, TooltipContent } from "./Tooltip.js";
 
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 items-center rounded-sm border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-colors outline-none select-none focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:border-dashed disabled:border-border disabled:bg-transparent disabled:text-faint-foreground disabled:font-normal aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "group/button inline-flex shrink-0 items-center rounded-sm border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-colors outline-none select-none focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none data-disabled:border-dashed data-disabled:border-border data-disabled:bg-transparent data-disabled:text-faint-foreground data-disabled:font-normal aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       truncate: { true: "max-w-full min-w-0" },
@@ -15,7 +16,7 @@ const buttonVariants = cva(
       align: { start: "justify-start", center: "justify-center", end: "justify-end" },
       variant: {
         plain: "",
-        pad: "rounded-none border-border bg-secondary text-secondary-foreground hover:bg-muted disabled:border-solid disabled:bg-secondary disabled:text-muted-foreground",
+        pad: "rounded-none border-border bg-secondary text-secondary-foreground hover:bg-muted data-disabled:border-solid data-disabled:bg-secondary data-disabled:text-muted-foreground",
         default: "bg-primary text-primary-foreground hover:bg-primary/90",
         outline:
           "border-input bg-background hover:bg-muted hover:text-foreground aria-expanded:bg-muted aria-expanded:text-foreground",
@@ -51,7 +52,13 @@ const buttonVariants = cva(
   },
 );
 
-type ButtonProps = IAnalyticsProps & ButtonPrimitive.Props & VariantProps<typeof buttonVariants> & IDensityProps;
+type ButtonProps = IAnalyticsProps &
+  ButtonPrimitive.Props &
+  VariantProps<typeof buttonVariants> &
+  IDensityProps & {
+    /** Disables activation while keeping the button focusable and explaining why on focus or hover. */
+    disabledReason?: string;
+  };
 
 function Button({
   analytics,
@@ -63,11 +70,13 @@ function Button({
   truncate = false,
   fullWidth = false,
   children,
+  disabledReason,
   ...props
 }: ButtonProps): ReactElement {
   const trackedOnClick = useAnalyticsCallback("Button", analytics, { name: "ui.activate" }, props.onClick);
+  const reasonId = useId();
 
-  return (
+  const button = (
     <ButtonPrimitive
       data-density={density}
       data-slot="button"
@@ -78,10 +87,29 @@ function Button({
         )
       }
       {...props}
+      disabled={Boolean(disabledReason) || props.disabled}
+      focusableWhenDisabled={Boolean(disabledReason) || props.focusableWhenDisabled}
+      aria-describedby={
+        [props["aria-describedby"], disabledReason ? reasonId : undefined].filter(Boolean).join(" ") || undefined
+      }
       onClick={trackedOnClick}
     >
       {truncate ? <span className="min-w-0 truncate">{children}</span> : children}
     </ButtonPrimitive>
+  );
+
+  return (
+    <>
+      {disabledReason && (
+        <span id={reasonId} className="sr-only">
+          {disabledReason}
+        </span>
+      )}
+      <Tooltip disabled={!disabledReason}>
+        <TooltipTrigger render={button} closeOnClick={false} />
+        {disabledReason && <TooltipContent>{disabledReason}</TooltipContent>}
+      </Tooltip>
+    </>
   );
 }
 

@@ -4,6 +4,28 @@ import { expect, fn, waitFor, within } from "storybook/test";
 
 import { ArrowRightIcon, BookmarkIcon } from "lucide-react";
 import { Spinner } from "../../Spinner";
+import { useState, type ReactElement, type FormEvent, type ComponentProps } from "react";
+
+const disabledReason = "Close the editor before importing tracks.";
+const submitted = fn((event: FormEvent<HTMLFormElement>) => event.preventDefault());
+
+function DisabledReasonForm({ onClick }: Pick<ComponentProps<typeof Button>, "onClick">): ReactElement {
+  const [isProtected, setProtected] = useState(true);
+  return (
+    <form onSubmit={submitted}>
+      <p id="import-guidance">Choose audio files to import.</p>
+      <Button
+        type="submit"
+        disabledReason={isProtected ? disabledReason : undefined}
+        aria-describedby="import-guidance"
+        onClick={onClick}
+      >
+        Import tracks
+      </Button>
+      <Button onClick={() => setProtected(false)}>Enable import</Button>
+    </form>
+  );
+}
 
 const meta: Meta<typeof Button> = {
   title: "@alexgorbatchev/shadcn/components/actions/Button",
@@ -175,6 +197,64 @@ export const FocusableDisabled: Story = {
     await userEvent.keyboard(" {Enter}");
     await expect(args.onClick).not.toHaveBeenCalled();
     await expect(args.className).toHaveBeenCalledWith({ disabled: true });
+  },
+};
+
+export const DisabledWithReason: Story = {
+  tags: ["visual"],
+  args: { children: "Import tracks", disabledReason },
+  play: async ({ canvasElement, args, userEvent }) => {
+    const canvas = within(canvasElement);
+    const button = canvas.getByRole("button", { name: "Import tracks" });
+    await expect(button).toHaveAttribute("aria-disabled", "true");
+    await expect(button).not.toHaveAttribute("disabled");
+    await expect(button).toHaveAccessibleDescription(disabledReason);
+    await userEvent.tab();
+    await expect(button).toHaveFocus();
+    await waitFor(() =>
+      expect(canvasElement.ownerDocument.querySelector('[data-slot="tooltip-content"]')).toBeVisible(),
+    );
+    await expect(button).toHaveAccessibleDescription(disabledReason);
+    await userEvent.keyboard(" {Enter}");
+    await userEvent.click(button);
+    await expect(args.onClick).not.toHaveBeenCalled();
+    await userEvent.unhover(button);
+    await userEvent.tab();
+    await expect(button).not.toHaveFocus();
+    await userEvent.hover(button);
+    await waitFor(() =>
+      expect(canvasElement.ownerDocument.querySelector('[data-slot="tooltip-content"]')).toBeVisible(),
+    );
+    await expect(canvasElement.ownerDocument.querySelector('[data-slot="tooltip-content"]')).toHaveTextContent(
+      disabledReason,
+    );
+  },
+};
+
+export const DisabledReasonRecovery: Story = {
+  render: (args) => <DisabledReasonForm onClick={args.onClick} />,
+  beforeEach: () => {
+    submitted.mockClear();
+  },
+  play: async ({ canvasElement, args, userEvent }) => {
+    const canvas = within(canvasElement);
+    const button = canvas.getByRole("button", { name: "Import tracks" });
+    await expect(button).toHaveAccessibleDescription(
+      "Choose audio files to import. Close the editor before importing tracks.",
+    );
+    await userEvent.tab();
+    await expect(button).toHaveFocus();
+    await userEvent.keyboard(" {Enter}");
+    await userEvent.click(button);
+    await expect(args.onClick).not.toHaveBeenCalled();
+    await expect(submitted).not.toHaveBeenCalled();
+    await userEvent.click(canvas.getByRole("button", { name: "Enable import" }));
+    await expect(canvas.getByRole("button", { name: "Import tracks" })).toBe(button);
+    await expect(button).not.toHaveAttribute("aria-disabled");
+    await expect(button).toHaveAccessibleDescription("Choose audio files to import.");
+    await userEvent.click(button);
+    await expect(args.onClick).toHaveBeenCalledTimes(1);
+    await expect(submitted).toHaveBeenCalledTimes(1);
   },
 };
 
