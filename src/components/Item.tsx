@@ -133,15 +133,21 @@ function ItemContent({ density, className, ...props }: ItemContentProps): ReactE
   );
 }
 
-type ItemTitleProps = ComponentProps<"div"> & IDensityProps;
+type ItemTitleProps = ComponentProps<"div"> &
+  IDensityProps & {
+    /** Keep the complete title visible, including long unbroken names. */
+    wrap?: boolean;
+  };
 
-function ItemTitle({ density, className, ...props }: ItemTitleProps): ReactElement {
+function ItemTitle({ density, className, wrap = false, ...props }: ItemTitleProps): ReactElement {
   return (
     <div
       data-density={density}
       data-slot="item-title"
       className={cn(
-        "line-clamp-1 flex w-fit items-center gap-2 text-sm leading-snug font-medium underline-offset-4",
+        !wrap && "line-clamp-1",
+        "flex w-fit items-center gap-2 text-sm leading-snug font-medium underline-offset-4",
+        wrap && "min-w-0 max-w-full wrap-anywhere",
         className,
       )}
       {...props}

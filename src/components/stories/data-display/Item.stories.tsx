@@ -87,6 +87,64 @@ export const Outline: Story = { ...Default, args: { variant: "outline" } };
 export const Muted: Story = { ...Default, args: { variant: "muted", size: "sm" } };
 export const Compact: Story = { ...Default, args: { density: "compact", size: "xs" } };
 
+export const TitleMedia: Story = {
+  render: (args) => (
+    <Item {...args}>
+      <ItemContent>
+        <ItemTitle>
+          <ItemMedia>
+            <FileIcon data-testid="title-icon" aria-hidden="true" />
+          </ItemMedia>
+          <span>Document title</span>
+        </ItemTitle>
+      </ItemContent>
+    </Item>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const icon = canvas.getByTestId("title-icon").getBoundingClientRect();
+    const text = canvas.getByText("Document title").getBoundingClientRect();
+    await expect(text.left).toBeGreaterThan(icon.right);
+    await expect(Math.abs(text.top + text.height / 2 - icon.top - icon.height / 2)).toBeLessThan(1);
+  },
+};
+
+export const WrappedTitle: Story = {
+  render: (args) => (
+    <div data-testid="title-container" className="w-56">
+      <Item {...args} render={<dl />}>
+        <ItemContent>
+          <dt>
+            <ItemTitle wrap>
+              <ItemMedia>
+                <FileIcon aria-hidden="true" />
+              </ItemMedia>
+              A long saved title with repeated details and a verylongunbrokenmarkertitlethatmustremainreadable
+            </ItemTitle>
+          </dt>
+          <dd>Saved item details</dd>
+        </ItemContent>
+      </Item>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const term = canvas.getByRole("term");
+    const title = within(term).getByText(
+      "A long saved title with repeated details and a verylongunbrokenmarkertitlethatmustremainreadable",
+    );
+    await expect(title.scrollHeight).toBeLessThanOrEqual(title.clientHeight);
+    await expect(term.scrollWidth).toBeLessThanOrEqual(term.clientWidth);
+    await expect(term.getBoundingClientRect().right).toBeLessThanOrEqual(
+      canvas.getByTestId("title-container").getBoundingClientRect().right,
+    );
+    await expect(term.getBoundingClientRect().height).toBeGreaterThan(
+      Number.parseFloat(getComputedStyle(title).lineHeight) * 2,
+    );
+    await expect(canvas.getByRole("definition")).toHaveTextContent("Saved item details");
+  },
+};
+
 const separatorClassName = fn((state: Separator.State) =>
   state.orientation === "horizontal" ? "data-[orientation=horizontal]:h-2" : "data-[orientation=vertical]:w-2",
 );
