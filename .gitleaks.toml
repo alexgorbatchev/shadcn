@@ -1,0 +1,10 @@
+[extend]
+path = "base.toml"
+
+[[allowlists]]
+description = "Historical accessibility audit prose is not a credential."
+targetRules = ["generic-api-key"]
+condition = "AND"
+paths = ['''^docs/internal/catalog-audit\.md$''']
+regexTarget = "match"
+regexes = ['''^accessible description, focus/typing $''']
