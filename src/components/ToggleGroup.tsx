@@ -10,10 +10,21 @@ import { toggleVariants, type ToggleProps } from "./Toggle.js";
 import { cn } from "../utils/cn.js";
 
 export type ToggleGroupProps = IAnalyticsProps &
-  ToggleGroupPrimitive.Props &
+  Omit<ToggleGroupPrimitive.Props, "multiple" | "value" | "defaultValue"> &
   VariantProps<typeof toggleVariants> &
   IDensityProps &
-  IToggleGroupLayout;
+  IToggleGroupLayout &
+  (OptionalToggleGroupSelection | RequiredToggleGroupSelection);
+
+type OptionalToggleGroupSelection = Pick<ToggleGroupPrimitive.Props, "multiple" | "value" | "defaultValue"> & {
+  required?: false;
+};
+
+type RequiredToggleGroupSelection = {
+  /** Keep one toggle pressed. Supply exactly one initial value. */
+  required: true;
+  multiple?: false;
+} & ({ value: [string]; defaultValue?: [string] } | { value?: undefined; defaultValue: [string] });
 
 interface IToggleGroupLayout {
   spacing?: number;
@@ -29,6 +40,7 @@ export function ToggleGroup({
   orientation = "horizontal",
   children,
   style,
+  required = false,
   ...props
 }: ToggleGroupProps): ReactElement {
   const trackedOnValueChange = useAnalyticsCallback(
@@ -57,7 +69,13 @@ export function ToggleGroup({
         )
       }
       {...props}
-      onValueChange={trackedOnValueChange}
+      onValueChange={(value, details) => {
+        if (required && value.length === 0) {
+          details.cancel();
+          return;
+        }
+        trackedOnValueChange(value, details);
+      }}
     >
       <ToggleGroupContext.Provider value={{ variant, size, spacing }}>{children}</ToggleGroupContext.Provider>
     </ToggleGroupPrimitive>

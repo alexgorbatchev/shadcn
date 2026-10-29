@@ -4,6 +4,11 @@ import { ToggleGroup, ToggleGroupItem } from "../../ToggleGroup";
 import { DirectionProvider } from "../../DirectionProvider";
 import { Field, FieldLabel, FieldDescription } from "../../Field";
 import { useState } from "react";
+import { AnalyticsProvider } from "../../analytics/index.js";
+import { Button } from "../../Button.js";
+
+const trackRequiredChange = fn();
+const submitRequiredForm = fn();
 
 const meta: Meta<typeof ToggleGroup> = {
   title: "@alexgorbatchev/shadcn/components/actions/ToggleGroup",
@@ -26,7 +31,7 @@ const meta: Meta<typeof ToggleGroup> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ToggleGroup>;
 export const Single: Story = {
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);
@@ -35,9 +40,98 @@ export const Single: Story = {
     await expect(canvas.getByRole("button", { name: "Bold" })).toHaveAttribute("aria-pressed", "false");
     await expect(canvas.getByRole("button", { name: "Italic" })).toHaveAttribute("aria-pressed", "true");
     await expect(args.onValueChange).toHaveBeenCalledWith(["italic"], expect.anything());
+    await userEvent.click(canvas.getByRole("button", { name: "Italic" }));
+    await expect(canvas.getByRole("button", { name: "Italic" })).toHaveAttribute("aria-pressed", "false");
+    await expect(args.onValueChange).toHaveBeenLastCalledWith([], expect.anything());
     await userEvent.keyboard("{ArrowRight}");
     await expect(canvas.getByRole("button", { name: "Bold" })).toHaveFocus();
     await expect(canvas.getByRole("button", { name: "Underline" })).toBeDisabled();
+  },
+};
+export const RequiredSingle: Story = {
+  args: { required: true, defaultValue: ["bold"], variant: "outline", analytics: { id: "required-format" } },
+  beforeEach: () => {
+    trackRequiredChange.mockClear();
+  },
+  decorators: [
+    (Story) => (
+      <AnalyticsProvider transport={{ track: trackRequiredChange }}>
+        <Story />
+      </AnalyticsProvider>
+    ),
+  ],
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    const bold = canvas.getByRole("button", { name: "Bold" });
+    const italic = canvas.getByRole("button", { name: "Italic" });
+    await userEvent.click(bold);
+    await expect(bold).toHaveAttribute("aria-pressed", "true");
+    await expect(args.onValueChange).not.toHaveBeenCalled();
+    await expect(trackRequiredChange).not.toHaveBeenCalled();
+    await userEvent.keyboard(" ");
+    await userEvent.keyboard("{Enter}");
+    await expect(bold).toHaveAttribute("aria-pressed", "true");
+    await expect(args.onValueChange).not.toHaveBeenCalled();
+    await expect(trackRequiredChange).not.toHaveBeenCalled();
+    await userEvent.keyboard("{ArrowRight}");
+    await expect(italic).toHaveFocus();
+    await userEvent.keyboard(" ");
+    await expect(italic).toHaveAttribute("aria-pressed", "true");
+    await expect(bold).toHaveAttribute("aria-pressed", "false");
+    await expect(args.onValueChange).toHaveBeenLastCalledWith(["italic"], expect.anything());
+    await expect(args.onValueChange).toHaveBeenCalledTimes(1);
+    await userEvent.click(italic);
+    await expect(italic).toHaveAttribute("aria-pressed", "true");
+    await expect(args.onValueChange).toHaveBeenCalledTimes(1);
+    await expect(trackRequiredChange).toHaveBeenLastCalledWith(
+      expect.objectContaining({ component: "ToggleGroup", name: "ui.change-request", id: "required-format" }),
+    );
+    await expect(trackRequiredChange).toHaveBeenCalledTimes(1);
+  },
+};
+export const RequiredControlled: Story = {
+  beforeEach: () => {
+    submitRequiredForm.mockClear();
+  },
+  render: function Render(args) {
+    const [value, setValue] = useState<[string]>(["bold"]);
+    return (
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+          submitRequiredForm(value);
+        }}
+      >
+        <ToggleGroup
+          {...args}
+          required
+          multiple={false}
+          value={value}
+          defaultValue={undefined}
+          onValueChange={(values, details) => {
+            const next = values[0];
+            if (next !== undefined) setValue([next]);
+            args.onValueChange?.(values, details);
+          }}
+        >
+          <ToggleGroupItem value="bold">Bold</ToggleGroupItem>
+          <ToggleGroupItem value="italic">Italic</ToggleGroupItem>
+        </ToggleGroup>
+        <Button type="submit">Apply formatting</Button>
+      </form>
+    );
+  },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole("button", { name: "Italic" }));
+    await userEvent.keyboard("{Enter}");
+    await expect(canvas.getByRole("button", { name: "Italic" })).toHaveAttribute("aria-pressed", "true");
+    await expect(args.onValueChange).toHaveBeenLastCalledWith(["italic"], expect.anything());
+    await expect(args.onValueChange).toHaveBeenCalledTimes(1);
+    await expect(submitRequiredForm).not.toHaveBeenCalled();
+    await userEvent.click(canvas.getByRole("button", { name: "Apply formatting" }));
+    await expect(submitRequiredForm).toHaveBeenLastCalledWith(["italic"]);
+    await expect(submitRequiredForm).toHaveBeenCalledTimes(1);
   },
 };
 export const Multiple: Story = {
@@ -48,6 +142,10 @@ export const Multiple: Story = {
     await expect(canvas.getByRole("button", { name: "Bold" })).toHaveAttribute("aria-pressed", "true");
     await expect(canvas.getByRole("button", { name: "Italic" })).toHaveAttribute("aria-pressed", "true");
     await expect(args.onValueChange).toHaveBeenCalledWith(["bold", "italic"], expect.anything());
+    await userEvent.click(canvas.getByRole("button", { name: "Italic" }));
+    await expect(canvas.getByRole("button", { name: "Bold" })).toHaveAttribute("aria-pressed", "true");
+    await expect(canvas.getByRole("button", { name: "Italic" })).toHaveAttribute("aria-pressed", "false");
+    await expect(args.onValueChange).toHaveBeenLastCalledWith(["bold"], expect.anything());
   },
 };
 export const JoinedOutline: Story = {
