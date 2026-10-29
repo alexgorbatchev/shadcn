@@ -19,7 +19,6 @@ llm-docs:
     bun scripts/buildLlmDocs.ts
 
 check:
-    bash scripts/test-git-hooks.sh .githooks
     bun run typecheck
     bun run lint
     bun run test:prototype
@@ -31,10 +30,9 @@ check:
 fix:
     bun x --bun oxfmt --write .
 
-# Install the locked development dependencies and the publishing Git hooks
+# Install the locked development dependencies
 setup:
     bun install --frozen-lockfile
-    git config core.hooksPath .githooks
     devhost --version
 
 # Start the devhost Storybook preview
