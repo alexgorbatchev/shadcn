@@ -18,7 +18,6 @@ function Example() {
           {
             id: "status",
             label: "Status",
-            allLabel: "All statuses",
             options: [
               { value: "active", label: "Active" },
               { value: "done", label: "Done" },
@@ -54,7 +53,7 @@ export const Default: Story = {
     await expect(c.getByLabelText("Filters")).toHaveTextContent("roadmap active");
     await userEvent.click(c.getByRole("button", { name: "Clear filters" }));
     await expect(c.getByRole("searchbox")).toHaveValue("");
-    await expect(c.getByRole("combobox", { name: "Status" })).toHaveTextContent("All statuses");
+    await expect(c.getByRole("combobox", { name: "Status" })).toHaveTextContent("All status");
     await expect(c.getByRole("combobox", { name: "When" })).toHaveTextContent("Any time");
   },
 };
