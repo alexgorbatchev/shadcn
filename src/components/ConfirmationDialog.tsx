@@ -1,4 +1,4 @@
-import { useState, type ReactElement } from "react";
+import { useState, type ReactElement, type ReactNode } from "react";
 import {
   AlertDialog,
   AlertDialogContent,
@@ -10,6 +10,7 @@ import {
 } from "./AlertDialog.js";
 import { Button } from "./Button.js";
 import { Alert, AlertDescription } from "./Alert.js";
+import { ScrollArea } from "./ScrollArea.js";
 
 interface IConfirmationDialogProps {
   open: boolean;
@@ -18,6 +19,7 @@ interface IConfirmationDialogProps {
   confirmLabel: string;
   onOpenChange: (open: boolean) => void;
   onConfirm: () => void | Promise<void>;
+  renderError?: (error: unknown) => ReactNode;
 }
 
 export function ConfirmationDialog({
@@ -27,14 +29,16 @@ export function ConfirmationDialog({
   confirmLabel,
   onOpenChange,
   onConfirm,
+  renderError,
 }: IConfirmationDialogProps): ReactElement {
   const [isPending, setPending] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<ReactNode>(null);
   return (
     <AlertDialog
       open={open}
-      onOpenChange={(next) => {
-        if (!isPending) {
+      onOpenChange={(next, details) => {
+        if (isPending) details.cancel();
+        else {
           setError("");
           onOpenChange(next);
         }
@@ -43,13 +47,15 @@ export function ConfirmationDialog({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>{title}</AlertDialogTitle>
-          <AlertDialogDescription>{description}</AlertDialogDescription>
         </AlertDialogHeader>
-        {error && (
-          <Alert variant="destructive">
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
+        <ScrollArea>
+          <AlertDialogDescription>{description}</AlertDialogDescription>
+          {error && (
+            <Alert variant="destructive">
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+        </ScrollArea>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={isPending}>Cancel</AlertDialogCancel>
           <Button
@@ -62,7 +68,7 @@ export function ConfirmationDialog({
                 await onConfirm();
                 onOpenChange(false);
               } catch (error) {
-                setError(error instanceof Error ? error.message : "The action could not be completed.");
+                setError(renderError ? renderError(error) : "The action could not be completed.");
               } finally {
                 setPending(false);
               }

@@ -86,7 +86,7 @@ function AlertDialogContent({ density, className, size = "default", ...props }: 
         data-size={size}
         className={(state) =>
           cn(
-            "group/alert-dialog-content fixed top-1/2 left-1/2 grid w-full -translate-x-1/2 -translate-y-1/2 gap-panel rounded-md bg-popover p-panel text-popover-foreground border border-frame-edge shadow-frame duration-120 outline-none data-[size=default]:max-w-xs data-[size=sm]:max-w-xs data-[size=default]:sm:max-w-sm data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:data-open:animate-none motion-reduce:data-closed:animate-none",
+            "group/alert-dialog-content fixed top-1/2 left-1/2 flex min-h-0 max-h-[calc(100dvh-2rem)] w-full flex-col -translate-x-1/2 -translate-y-1/2 gap-panel rounded-md bg-popover p-panel text-popover-foreground border border-frame-edge shadow-frame duration-120 outline-none data-[size=default]:max-w-xs data-[size=sm]:max-w-xs data-[size=default]:sm:max-w-sm data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:data-open:animate-none motion-reduce:data-closed:animate-none",
             typeof className === "function" ? className(state) : className,
           )
         }
@@ -104,7 +104,7 @@ function AlertDialogHeader({ density, className, ...props }: AlertDialogHeaderPr
       data-density={density}
       data-slot="alert-dialog-header"
       className={cn(
-        "grid grid-rows-[auto_1fr] place-items-center gap-control-gap text-center has-data-[slot=alert-dialog-media]:grid-rows-[auto_auto_1fr] has-data-[slot=alert-dialog-media]:gap-x-4 sm:group-data-[size=default]/alert-dialog-content:place-items-start sm:group-data-[size=default]/alert-dialog-content:text-start sm:group-data-[size=default]/alert-dialog-content:has-data-[slot=alert-dialog-media]:grid-rows-[auto_1fr]",
+        "grid shrink-0 grid-rows-[auto_1fr] place-items-center gap-control-gap text-center has-data-[slot=alert-dialog-media]:grid-rows-[auto_auto_1fr] has-data-[slot=alert-dialog-media]:gap-x-4 sm:group-data-[size=default]/alert-dialog-content:place-items-start sm:group-data-[size=default]/alert-dialog-content:text-start sm:group-data-[size=default]/alert-dialog-content:has-data-[slot=alert-dialog-media]:grid-rows-[auto_1fr]",
         className,
       )}
       {...props}
@@ -120,7 +120,7 @@ function AlertDialogFooter({ density, className, ...props }: AlertDialogFooterPr
       data-density={density}
       data-slot="alert-dialog-footer"
       className={cn(
-        "-mx-panel -mb-panel flex flex-col-reverse gap-2 rounded-b-md border-t bg-muted/50 p-panel group-data-[size=sm]/alert-dialog-content:grid group-data-[size=sm]/alert-dialog-content:grid-cols-2 sm:flex-row sm:justify-end",
+        "-mx-panel -mb-panel flex shrink-0 flex-col-reverse gap-2 rounded-b-md border-t bg-muted/50 p-panel group-data-[size=sm]/alert-dialog-content:grid group-data-[size=sm]/alert-dialog-content:grid-cols-2 sm:flex-row sm:justify-end",
         className,
       )}
       {...props}

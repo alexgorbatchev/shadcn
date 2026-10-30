@@ -1,6 +1,6 @@
 import { useAnalytics } from "../hooks/useAnalytics.js";
 import type { IAnalyticsProps } from "../analytics/types.js";
-import { useEffect, useRef, useState, type ReactElement } from "react";
+import { useEffect, useRef, useState, type ReactElement, type ReactNode } from "react";
 import { Input } from "./Input.js";
 import type { IDensityProps } from "../density/types.js";
 
@@ -9,6 +9,8 @@ interface IInlineEditProps extends IDensityProps, IAnalyticsProps {
   value: string;
   isDisabled?: boolean;
   shouldSelectOnMount?: boolean;
+  hasChanges?: boolean;
+  renderError?: (error: unknown) => ReactNode;
   onValueChange: (value: string) => void;
   onCommit: (value: string) => void | Promise<void>;
   onCancel: () => void;
@@ -22,6 +24,8 @@ export function InlineEdit({
   density,
   isDisabled = false,
   shouldSelectOnMount = true,
+  hasChanges = true,
+  renderError,
   onValueChange,
   onCommit,
   onCancel,
@@ -31,7 +35,7 @@ export function InlineEdit({
   const isFinished = useRef(false);
   const shouldCancel = useRef(false);
   const [isSaving, setSaving] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<ReactNode>(null);
   useEffect(() => {
     input.current?.focus();
     if (shouldSelectOnMount) input.current?.select();
@@ -39,6 +43,10 @@ export function InlineEdit({
   const save = async (): Promise<void> => {
     if (isFinished.current || isDisabled) return;
     isFinished.current = true;
+    if (!hasChanges) {
+      onCancel();
+      return;
+    }
     setSaving(true);
     setError("");
     try {
@@ -46,7 +54,7 @@ export function InlineEdit({
       track({ name: "ui.commit" });
     } catch (error) {
       isFinished.current = false;
-      setError(error instanceof Error ? error.message : "Could not save this edit.");
+      setError(renderError ? renderError(error) : "Could not save this edit.");
     } finally {
       setSaving(false);
     }
