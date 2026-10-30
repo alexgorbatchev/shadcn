@@ -7,6 +7,8 @@ import { Button } from "./Button.js";
 type FilterDefinition = {
   id: string;
   label: string;
+  /** Text of the choice that clears this filter, such as "All statuses" or "Any time". */
+  allLabel: string;
   options: readonly ILabelValue[];
 };
 type FilterBarProps = IDensityProps & {
@@ -48,7 +50,7 @@ function FilterBar({
           aria-label={filter.label}
           value={value[filter.id] ?? ""}
           onValueChange={(next) => onValueChange({ ...value, [filter.id]: next })}
-          options={[{ value: "", label: `All ${filter.label.toLowerCase()}` }, ...filter.options]}
+          options={[{ value: "", label: filter.allLabel }, ...filter.options]}
         />
       ))}
       <Button

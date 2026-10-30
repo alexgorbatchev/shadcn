@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-22 20:55
-last_modified: 2026-10-30 09:44
+last_modified: 2026-10-30 15:37
 status: current
 ---
 
@@ -33,7 +33,7 @@ Stepper uses manual tab activation by default: arrows move focus and Enter/Space
 
 TagInput is a multiple-selection Combobox over supplied string options. Its change handler receives Base UI's native value and event details. Chip removal has a specific accessible label; `ComboboxChip.removeLabel` is also public.
 
-FilterBar supplies controlled search and single-value facets with a clear action. Consumers apply those values to domain data. It is not a query-language parser.
+FilterBar supplies controlled search and single-value facets with a clear action. Each facet names its own `allLabel`, because a generated "All {label}" does not read correctly for every label. Consumers apply those values to domain data. It is not a query-language parser.
 
 Kanban receives controlled items, ordered columns, and `onItemsChange`. Column selectors and up/down buttons offer keyboard equivalents to dragging. `canMove` is domain validation. Board drag types are scoped to each instance, so an unrelated board cannot transfer cards accidentally. Consumers must keep IDs unique and column IDs valid.
 
