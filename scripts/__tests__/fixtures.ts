@@ -1,4 +1,5 @@
 import manifest from "../../package.json";
+export { fixture_treePackageSource } from "./fixtures/treePackageSource";
 
 export const fixture_scrollGuardBrowserSource: string = `
 import { StrictMode } from "react";

@@ -1,0 +1,250 @@
+diff --git a/dist/index.d.mts b/dist/index.d.mts
+index 4e48e196d41e710b8e619ea690511b51c794f1b4..93fd4fb3f0200b483f67fe6bde43ef8727253b54 100644
+--- a/dist/index.d.mts
++++ b/dist/index.d.mts
+@@ -250,7 +250,7 @@ type HotkeysCoreFeatureDef<T> = {
+     config: {
+         hotkeys?: CustomHotkeysConfig<T>;
+         onTreeHotkey?: (name: string, e: KeyboardEvent) => void;
+-        /** Do not handle key inputs while an HTML input element is focused */
++        /** Do not handle hotkeys while an input, textarea, select, or contenteditable element is focused */
+         ignoreHotkeysOnInputs?: boolean;
+     };
+     treeInstance: {};
+diff --git a/dist/index.d.ts b/dist/index.d.ts
+index 4e48e196d41e710b8e619ea690511b51c794f1b4..93fd4fb3f0200b483f67fe6bde43ef8727253b54 100644
+--- a/dist/index.d.ts
++++ b/dist/index.d.ts
+@@ -250,7 +250,7 @@ type HotkeysCoreFeatureDef<T> = {
+     config: {
+         hotkeys?: CustomHotkeysConfig<T>;
+         onTreeHotkey?: (name: string, e: KeyboardEvent) => void;
+-        /** Do not handle key inputs while an HTML input element is focused */
++        /** Do not handle hotkeys while an input, textarea, select, or contenteditable element is focused */
+         ignoreHotkeysOnInputs?: boolean;
+     };
+     treeInstance: {};
+diff --git a/dist/index.js b/dist/index.js
+index 7b5870b65d8b434c4fdc92c0d8d866539d750a11..65b661a0fa2b440150e96096bcb70ac3c9531b67 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -1078,6 +1078,7 @@ var hotkeysCoreController = {
+     dataRef.current.pressedKeys = /* @__PURE__ */ new Set();
+   },
+   dispatchKeyDown: (tree, dataRef, eventLike, options = {}) => {
++    if (eventLike.defaultPrevented) return;
+     var _a, _b, _c, _d, _e;
+     const { isInputFocused = false, releaseAfterDispatch = false } = options;
+     const { ignoreHotkeysOnInputs, onTreeHotkey, hotkeys } = tree.getConfig();
+@@ -1090,6 +1091,24 @@ var hotkeysCoreController = {
+     });
+     (_d = (_c = dataRef.current).pressedKeys) != null ? _d : _c.pressedKeys = /* @__PURE__ */ new Set();
+     const isNewKey = !dataRef.current.pressedKeys.has(resolvedCode);
++    // Focus can return from an embedded control while a modifier is held.
++    // Reconcile native flags before matching, without inventing key repeats.
++    for (const [flag, codes] of [
++      ["ctrlKey", ["ControlLeft", "ControlRight", "Control"]],
++      ["shiftKey", ["ShiftLeft", "ShiftRight", "Shift"]],
++      ["altKey", ["AltLeft", "AltRight", "Alt"]],
++      ["metaKey", ["MetaLeft", "MetaRight", "Meta"]],
++    ]) {
++      if (eventLike[flag] === false) {
++        for (const code of codes) dataRef.current.pressedKeys.delete(code);
++      } else if (eventLike[flag] === true &&
++                 !codes.some((code) => dataRef.current.pressedKeys.has(code))) {
++        dataRef.current.pressedKeys.add(
++          codes.some((code) => code === resolvedCode) ? resolvedCode : codes[0],
++        );
++      }
++    }
++
+     if (resolvedCode) {
+       dataRef.current.pressedKeys.add(resolvedCode);
+     }
+@@ -1148,7 +1167,30 @@ var hotkeysCoreFeature = {
+   onTreeMount: (tree, element) => {
+     const data = tree.getDataRef();
+     const keydown = (e) => {
+-      const isInputFocused = e.target instanceof HTMLInputElement;
++      if (e.defaultPrevented) return;
++      const path = e.composedPath();
++      const owner = path.find(
++        (node) => node instanceof Element && node.getAttribute("role") === "tree",
++      );
++      // Nested trees own their events. Search inputs may be registered outside
++      // the container, so the absence of a tree ancestor is valid.
++      if (owner && owner !== element) return;
++      let isInputFocused = false;
++      for (const node of path) {
++        if (node === element) break;
++        if (!(node instanceof Element)) continue;
++        if (node.matches("input, textarea, select") ||
++            (node instanceof HTMLElement && node.isContentEditable)) {
++          isInputFocused = true;
++          break;
++        }
++        // A registered row may itself be an anchor or button. Its label
++        // descendants remain row-owned; embedded controls do not.
++        if (node.getAttribute("role") === "treeitem") break;
++        if (node.matches(
++          'button, a, summary, audio[controls], video[controls], [tabindex], [role="button"], [role="link"], [role="menu"], [role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"], [role="textbox"], [role="combobox"], [role="listbox"], [role="option"], [role="slider"], [role="spinbutton"], [role="checkbox"], [role="radio"], [role="switch"], [role="tab"]',
++        )) return;
++      }
+       hotkeysCoreController.dispatchKeyDown(tree, data, e, {
+         isInputFocused,
+         releaseAfterDispatch: isInputFocused
+diff --git a/dist/index.mjs b/dist/index.mjs
+index f76eabb1c4959514cd160a3415ecd04f37277a1c..f47ad750410a5e1b9e475d3689bbab51aaae84ce 100644
+--- a/dist/index.mjs
++++ b/dist/index.mjs
+@@ -1033,6 +1033,7 @@ var hotkeysCoreController = {
+     dataRef.current.pressedKeys = /* @__PURE__ */ new Set();
+   },
+   dispatchKeyDown: (tree, dataRef, eventLike, options = {}) => {
++    if (eventLike.defaultPrevented) return;
+     var _a, _b, _c, _d, _e;
+     const { isInputFocused = false, releaseAfterDispatch = false } = options;
+     const { ignoreHotkeysOnInputs, onTreeHotkey, hotkeys } = tree.getConfig();
+@@ -1045,6 +1046,24 @@ var hotkeysCoreController = {
+     });
+     (_d = (_c = dataRef.current).pressedKeys) != null ? _d : _c.pressedKeys = /* @__PURE__ */ new Set();
+     const isNewKey = !dataRef.current.pressedKeys.has(resolvedCode);
++    // Focus can return from an embedded control while a modifier is held.
++    // Reconcile native flags before matching, without inventing key repeats.
++    for (const [flag, codes] of [
++      ["ctrlKey", ["ControlLeft", "ControlRight", "Control"]],
++      ["shiftKey", ["ShiftLeft", "ShiftRight", "Shift"]],
++      ["altKey", ["AltLeft", "AltRight", "Alt"]],
++      ["metaKey", ["MetaLeft", "MetaRight", "Meta"]],
++    ]) {
++      if (eventLike[flag] === false) {
++        for (const code of codes) dataRef.current.pressedKeys.delete(code);
++      } else if (eventLike[flag] === true &&
++                 !codes.some((code) => dataRef.current.pressedKeys.has(code))) {
++        dataRef.current.pressedKeys.add(
++          codes.some((code) => code === resolvedCode) ? resolvedCode : codes[0],
++        );
++      }
++    }
++
+     if (resolvedCode) {
+       dataRef.current.pressedKeys.add(resolvedCode);
+     }
+@@ -1103,7 +1122,30 @@ var hotkeysCoreFeature = {
+   onTreeMount: (tree, element) => {
+     const data = tree.getDataRef();
+     const keydown = (e) => {
+-      const isInputFocused = e.target instanceof HTMLInputElement;
++      if (e.defaultPrevented) return;
++      const path = e.composedPath();
++      const owner = path.find(
++        (node) => node instanceof Element && node.getAttribute("role") === "tree",
++      );
++      // Nested trees own their events. Search inputs may be registered outside
++      // the container, so the absence of a tree ancestor is valid.
++      if (owner && owner !== element) return;
++      let isInputFocused = false;
++      for (const node of path) {
++        if (node === element) break;
++        if (!(node instanceof Element)) continue;
++        if (node.matches("input, textarea, select") ||
++            (node instanceof HTMLElement && node.isContentEditable)) {
++          isInputFocused = true;
++          break;
++        }
++        // A registered row may itself be an anchor or button. Its label
++        // descendants remain row-owned; embedded controls do not.
++        if (node.getAttribute("role") === "treeitem") break;
++        if (node.matches(
++          'button, a, summary, audio[controls], video[controls], [tabindex], [role="button"], [role="link"], [role="menu"], [role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"], [role="textbox"], [role="combobox"], [role="listbox"], [role="option"], [role="slider"], [role="spinbutton"], [role="checkbox"], [role="radio"], [role="switch"], [role="tab"]',
++        )) return;
++      }
+       hotkeysCoreController.dispatchKeyDown(tree, data, e, {
+         isInputFocused,
+         releaseAfterDispatch: isInputFocused
+diff --git a/src/features/hotkeys-core/feature.ts b/src/features/hotkeys-core/feature.ts
+index 69678740dd4168099a19778f0a3b5dd7111cb0b6..e4eb7a3c084af4874edfad918d1001b353a51ccc 100644
+--- a/src/features/hotkeys-core/feature.ts
++++ b/src/features/hotkeys-core/feature.ts
+@@ -8,7 +8,30 @@ export const hotkeysCoreFeature: FeatureImplementation = {
+   onTreeMount: (tree, element) => {
+     const data = tree.getDataRef<HotkeysCoreDataRef>();
+     const keydown = (e: KeyboardEvent) => {
+-      const isInputFocused = e.target instanceof HTMLInputElement;
++      if (e.defaultPrevented) return;
++      const path = e.composedPath();
++      const owner = path.find(
++        (node) => node instanceof Element && node.getAttribute("role") === "tree",
++      );
++      // Nested trees own their events. Search inputs may be registered outside
++      // the container, so the absence of a tree ancestor is valid.
++      if (owner && owner !== element) return;
++      let isInputFocused = false;
++      for (const node of path) {
++        if (node === element) break;
++        if (!(node instanceof Element)) continue;
++        if (node.matches("input, textarea, select") ||
++            (node instanceof HTMLElement && node.isContentEditable)) {
++          isInputFocused = true;
++          break;
++        }
++        // A registered row may itself be an anchor or button. Its label
++        // descendants remain row-owned; embedded controls do not.
++        if (node.getAttribute("role") === "treeitem") break;
++        if (node.matches(
++          'button, a, summary, audio[controls], video[controls], [tabindex], [role="button"], [role="link"], [role="menu"], [role="menuitem"], [role="menuitemcheckbox"], [role="menuitemradio"], [role="textbox"], [role="combobox"], [role="listbox"], [role="option"], [role="slider"], [role="spinbutton"], [role="checkbox"], [role="radio"], [role="switch"], [role="tab"]',
++        )) return;
++      }
+       hotkeysCoreController.dispatchKeyDown(tree, data, e, {
+         isInputFocused,
+         releaseAfterDispatch: isInputFocused,
+diff --git a/src/features/hotkeys-core/shared.ts b/src/features/hotkeys-core/shared.ts
+index e69526de960677edd71d92a74f645a9b04ad78a4..82020c8d792fe6e887801f32ea0d170c0cc73759 100644
+--- a/src/features/hotkeys-core/shared.ts
++++ b/src/features/hotkeys-core/shared.ts
+@@ -84,6 +84,7 @@ export const hotkeysCoreController = {
+       releaseAfterDispatch?: boolean;
+     } = {},
+   ) => {
++    if (eventLike.defaultPrevented) return;
+     const { isInputFocused = false, releaseAfterDispatch = false } = options;
+     const { ignoreHotkeysOnInputs, onTreeHotkey, hotkeys } = tree.getConfig();
+     if (isInputFocused && ignoreHotkeysOnInputs) {
+@@ -97,6 +98,24 @@ export const hotkeysCoreController = {
+ 
+     dataRef.current.pressedKeys ??= new Set();
+     const isNewKey = !dataRef.current.pressedKeys.has(resolvedCode);
++    // Focus can return from an embedded control while a modifier is held.
++    // Reconcile native flags before matching, without inventing key repeats.
++    for (const [flag, codes] of [
++      ["ctrlKey", ["ControlLeft", "ControlRight", "Control"]],
++      ["shiftKey", ["ShiftLeft", "ShiftRight", "Shift"]],
++      ["altKey", ["AltLeft", "AltRight", "Alt"]],
++      ["metaKey", ["MetaLeft", "MetaRight", "Meta"]],
++    ] as const) {
++      if (eventLike[flag] === false) {
++        for (const code of codes) dataRef.current.pressedKeys.delete(code);
++      } else if (eventLike[flag] === true &&
++                 !codes.some((code) => dataRef.current.pressedKeys.has(code))) {
++        dataRef.current.pressedKeys.add(
++          codes.some((code) => code === resolvedCode) ? resolvedCode : codes[0],
++        );
++      }
++    }
++
+     if (resolvedCode) {
+       dataRef.current.pressedKeys.add(resolvedCode);
+     }
+diff --git a/src/features/hotkeys-core/types.ts b/src/features/hotkeys-core/types.ts
+index 37e7e42642cfb53869ecb0d7886cfc890e94cc64..f93baa8473a93c347b527df7fdd720b6f7c25a9b 100644
+--- a/src/features/hotkeys-core/types.ts
++++ b/src/features/hotkeys-core/types.ts
+@@ -22,7 +22,7 @@ export type HotkeysCoreFeatureDef<T> = {
+     hotkeys?: CustomHotkeysConfig<T>;
+     onTreeHotkey?: (name: string, e: KeyboardEvent) => void;
+ 
+-    /** Do not handle key inputs while an HTML input element is focused */
++    /** Do not handle hotkeys while an input, textarea, select, or contenteditable element is focused */
+     ignoreHotkeysOnInputs?: boolean;
+   };
+   treeInstance: {};

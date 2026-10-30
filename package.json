@@ -1,6 +1,6 @@
 {
   "name": "@alexgorbatchev/shadcn",
-  "version": "0.0.46",
+  "version": "0.0.47",
   "description": "Sharp, monospace React components with compact and comfortable densities.",
   "license": "MIT",
   "repository": {
@@ -1411,6 +1411,7 @@
     "input-otp@1.5.0": "patches/input-otp@1.5.0.patch",
     "@vitest/coverage-istanbul@4.1.11": "patches/@vitest%2Fcoverage-istanbul@4.1.11.patch",
     "storybook@10.6.1": "patches/storybook@10.6.1.patch",
-    "uncontrollable@7.2.1": "patches/uncontrollable@7.2.1.patch"
+    "uncontrollable@7.2.1": "patches/uncontrollable@7.2.1.patch",
+    "@headless-tree/core@1.8.0": "patches/@headless-tree%2Fcore@1.8.0.patch"
   }
 }

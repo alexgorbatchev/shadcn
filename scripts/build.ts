@@ -4,7 +4,7 @@ import manifest from "../package.json";
 import config from "../tsconfig.json";
 import { buildLlmDocs } from "./buildLlmDocs";
 
-const PATCHED_PEERS = ["@shadcn/react", "sonner", "input-otp"];
+const PATCHED_PEERS = ["@shadcn/react", "sonner", "input-otp", "@headless-tree/core", "@headless-tree/react"];
 
 const entrypoints = await Promise.all(
   Object.values(manifest.exports)

@@ -92,6 +92,7 @@ function TreeExample({ isDisabled = false, isComposed = false, isLinked = false 
                     },
                   }}
                   dropHint={{ content: "Drop into folder", open: item.isUnorderedDragTarget() }}
+                  endEnhancer={<Button>Inspect {item.getItemName()}</Button>}
                 />
               )
             : isComposed
@@ -116,6 +117,7 @@ function TreeExample({ isDisabled = false, isComposed = false, isLinked = false 
       <AssistiveTreeDescription tree={tree} />
       <output aria-label="Tree drop">{result}</output>
       <output aria-label="Tree navigation">{navigations}</output>
+      <output aria-label="Tree drag state">{tree.getState().assistiveDndState ?? 0}</output>
     </>
   );
 }
@@ -131,6 +133,12 @@ test("linked tree rows retain native pointer dropping and keyboard drop ownershi
   await expect.element(page.getByText("Drop into folder", { exact: true })).not.toBeInTheDocument();
   await page.getByRole("treeitem", { name: "Second" }).click();
   await expect.element(screen.getByRole("status", { name: "Tree navigation" })).toHaveTextContent("1");
+  await page.getByRole("button", { name: "Inspect Second" }).click();
+  await userEvent.keyboard("{Control>}{Shift>}d{/Shift}{/Control}{ArrowUp}");
+  await expect.element(screen.getByRole("status", { name: "Tree drag state" })).toHaveTextContent("0");
+  await expect.element(page.getByRole("treeitem", { name: "Second" })).toHaveAttribute("tabindex", "0");
+  await expect.element(page.getByRole("button", { name: "Inspect Second" })).toHaveFocus();
+  await page.getByRole("treeitem", { name: "Second" }).click();
   await userEvent.keyboard("{Control>}{Shift>}d{/Shift}{/Control}");
   await userEvent.keyboard("{ArrowUp}");
   await expect.element(page.getByText("Drop into folder", { exact: true })).toBeVisible();
@@ -141,7 +149,7 @@ test("linked tree rows retain native pointer dropping and keyboard drop ownershi
   await expect
     .element(screen.getByRole("status", { name: "Tree drop" }))
     .toHaveTextContent('{"ids":["second"],"parent":"folder","before":null}');
-  await expect.element(screen.getByRole("status", { name: "Tree navigation" })).toHaveTextContent("1");
+  await expect.element(screen.getByRole("status", { name: "Tree navigation" })).toHaveTextContent("2");
   await expect.element(page.getByText("Drop into folder", { exact: true })).not.toBeInTheDocument();
   await expect.element(page.getByRole("treeitem", { name: "Second" })).toHaveFocus();
 });
