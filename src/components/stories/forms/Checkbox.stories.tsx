@@ -96,6 +96,36 @@ export const Indeterminate: Story = {
     await expect(checkbox).toBePartiallyChecked();
   },
 };
+export const MixedToChecked: Story = {
+  render: function Render() {
+    const [isMixed, setMixed] = useState(true);
+    const [isChecked, setChecked] = useState(false);
+    return (
+      <Checkbox
+        aria-label="Select visible items"
+        indeterminate={isMixed}
+        checked={isChecked}
+        onCheckedChange={(checked) => {
+          setMixed(false);
+          setChecked(checked);
+        }}
+      />
+    );
+  },
+  play: async ({ canvasElement, userEvent }) => {
+    const checkbox = within(canvasElement).getByRole("checkbox", { name: "Select visible items" });
+    await expect(checkbox).toBePartiallyChecked();
+    await expect(checkbox.querySelector('[data-slot="checkbox-mixed-indicator"]')).toBeVisible();
+    await expect(checkbox.querySelector('[data-slot="checkbox-checked-indicator"]')).toBeNull();
+    await userEvent.click(checkbox);
+    await expect(checkbox).toBeChecked();
+    await expect(checkbox).not.toBePartiallyChecked();
+    await expect(checkbox.querySelector('[data-slot="checkbox-checked-indicator"]')).toBeVisible();
+    await expect(checkbox.querySelector('[data-slot="checkbox-mixed-indicator"]')).toBeNull();
+    await userEvent.keyboard(" ");
+    await expect(checkbox).not.toBeChecked();
+  },
+};
 export const ReadOnly: Story = {
   args: { readOnly: true, defaultChecked: true },
   play: async ({ canvasElement, userEvent, args }) => {

@@ -8,6 +8,8 @@ import type { KeyboardEvent, MouseEvent, ReactElement, ReactNode } from "react";
 import type { IDensityProps } from "../../density/types.js";
 import { cn } from "../../utils/cn.js";
 import { Button } from "../Button.js";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../Tooltip.js";
+import { useId } from "react";
 
 type TreeItemState = {
   slot: "tree-item";
@@ -25,13 +27,17 @@ type TreeItemProps<T> = useRender.ComponentProps<"div", TreeItemState> &
     expandOn?: "click" | "doubleClick" | "disclosure";
     isEditing?: boolean;
     isDropTarget?: boolean;
+    /** The registered native link owns row focus; disclosure and actions remain siblings. */
+    linkProps?: useRender.ComponentProps<"a", TreeItemState>;
+    /** Domain-controlled drag feedback; omitted rows have no tooltip wrapper. */
+    dropHint?: { content: ReactNode; open: boolean; side?: "top" | "right" | "bottom" | "left" };
   };
 
 function isRowControl(event: MouseEvent<HTMLDivElement>): boolean {
   return (
     event.target !== event.currentTarget &&
     event.target instanceof Element &&
-    Boolean(event.target.closest("button,input,textarea,select,form"))
+    Boolean(event.target.closest("a,button,input,textarea,select,form"))
   );
 }
 
@@ -45,13 +51,16 @@ export function TreeItem<T>({
   expandOn = "click",
   isEditing = false,
   isDropTarget = false,
+  linkProps,
+  dropHint,
   density,
   render,
   ref,
   ...props
 }: TreeItemProps<T>): ReactElement {
   const nativeProps = item.getProps();
-  const activate = useAnalyticsCallback<[MouseEvent<HTMLDivElement>]>(
+  const hintId = useId();
+  const activate = useAnalyticsCallback<[MouseEvent<HTMLElement>]>(
     "TreeItem",
     analytics,
     { name: "ui.activate" },
@@ -60,6 +69,13 @@ export function TreeItem<T>({
   const isExpanded = item.isExpanded();
   const isSelected = item.isSelected?.() ?? false;
   const isInsideTarget = item.isUnorderedDragTarget?.() ?? false;
+  const state: TreeItemState = {
+    slot: "tree-item",
+    selected: isSelected,
+    expanded: isExpanded,
+    dropTarget: isInsideTarget || isDropTarget,
+    density,
+  };
   const toggle = (): void => {
     if (isExpanded) item.collapse();
     else item.expand();
@@ -73,13 +89,42 @@ export function TreeItem<T>({
     if (!event.shiftKey) item.getTree().getDataRef<SelectionDataRef>().current.selectUpToAnchorId = item.getId();
     item.primaryAction();
   };
-  return useRender({
-    defaultTagName: "div",
-    render,
-    ref: [item.registerElement, ref ?? null],
-    props: mergeProps<"div">(
+  const label = (
+    <>
+      <span aria-hidden="true" className="flex shrink-0 [&>svg]:size-4">
+        {startEnhancer ?? (item.isFolder() ? isExpanded ? <FolderOpenIcon /> : <FolderIcon /> : <FileIcon />)}
+      </span>
+      <div className="min-w-0 flex-1 truncate">{children ?? item.getItemName()}</div>
+    </>
+  );
+  const link = useRender({
+    defaultTagName: "a",
+    render: linkProps?.render,
+    ref: [item.registerElement, linkProps?.ref ?? null],
+    props: mergeProps<"a">(
       {
         ...nativeProps,
+        ref: undefined,
+        className: "flex min-w-0 flex-1 items-center gap-2 outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        children: label,
+        onFocus: () => item.setFocused(),
+        onClick: (event: MouseEvent<HTMLAnchorElement>) => {
+          item.setFocused();
+          if (!event.ctrlKey && !event.metaKey && !event.shiftKey) item.getTree().setSelectedItems?.([item.getId()]);
+          activate(event);
+        },
+      },
+      linkProps ?? {},
+    ),
+    state,
+  });
+  const element = useRender({
+    defaultTagName: "div",
+    render,
+    ref: [linkProps && !isEditing ? null : item.registerElement, ref ?? null],
+    props: mergeProps<"div">(
+      {
+        ...(linkProps && !isEditing ? {} : nativeProps),
         ref: undefined,
         onKeyDown: (event: KeyboardEvent<HTMLDivElement>) => {
           if (
@@ -95,9 +140,13 @@ export function TreeItem<T>({
           item.primaryAction();
           if (expandOn !== "click" && item.isFolder()) toggle();
         },
-        ...(expandOn !== "click"
+        ...(!linkProps
           ? {
-              onClick: select,
+              onClick: (event: MouseEvent<HTMLDivElement>) => {
+                if (isRowControl(event)) return;
+                if (expandOn === "click") nativeProps.onClick?.(event);
+                else select(event);
+              },
               onDoubleClick: (event: MouseEvent<HTMLDivElement>) => {
                 if (expandOn === "doubleClick" && !isRowControl(event) && item.isFolder()) toggle();
               },
@@ -139,10 +188,7 @@ export function TreeItem<T>({
             ) : (
               <span className={cn("shrink-0", expandOn === "disclosure" ? "size-control-xs" : "size-3.5")} />
             )}
-            <span aria-hidden="true" className="flex shrink-0 [&>svg]:size-4">
-              {startEnhancer ?? (item.isFolder() ? isExpanded ? <FolderOpenIcon /> : <FolderIcon /> : <FileIcon />)}
-            </span>
-            <div className="min-w-0 flex-1 truncate">{children ?? item.getItemName()}</div>
+            {linkProps && !isEditing ? link : label}
             {endEnhancer && (
               <div
                 className="flex shrink-0 items-center gap-1 text-xs tabular-nums"
@@ -164,13 +210,15 @@ export function TreeItem<T>({
         },
       },
     ),
-    state: {
-      slot: "tree-item",
-      selected: isSelected,
-      expanded: isExpanded,
-      dropTarget: isInsideTarget || isDropTarget,
-      density,
-    },
+    state,
   });
+  return dropHint ? (
+    <Tooltip open={dropHint.open} triggerId={hintId}>
+      <TooltipTrigger id={hintId} render={element} />
+      <TooltipContent side={dropHint.side}>{dropHint.content}</TooltipContent>
+    </Tooltip>
+  ) : (
+    element
+  );
 }
 export type { TreeItemProps };

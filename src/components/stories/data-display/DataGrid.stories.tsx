@@ -1,8 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, within } from "storybook/test";
 import { createColumnHelper, useTable } from "@tanstack/react-table";
-import { DataGrid, DataGridColumnHeader, DataGridFilter, dataGridFeatures } from "../../data-grid";
-import { Checkbox } from "../../Checkbox";
+import {
+  DataGrid,
+  DataGridColumnHeader,
+  DataGridFilter,
+  DataGridSelectHeader,
+  DataGridSelectCell,
+  dataGridFeatures,
+} from "../../data-grid";
 import { Button } from "../../Button";
 type Person = {
   id: string;
@@ -18,14 +24,8 @@ const helper = createColumnHelper<typeof dataGridFeatures, Person>();
 const columns = helper.columns([
   helper.display({
     id: "select",
-    header: "Select",
-    cell: ({ row }) => (
-      <Checkbox
-        aria-label={`Select ${row.original.name}`}
-        checked={row.getIsSelected()}
-        onCheckedChange={(checked) => row.toggleSelected(Boolean(checked))}
-      />
-    ),
+    header: ({ table }) => <DataGridSelectHeader table={table} />,
+    cell: ({ row, table }) => <DataGridSelectCell table={table} row={row} label={`Select ${row.original.name}`} />,
   }),
   helper.accessor("name", {
     header: ({ column }) => <DataGridColumnHeader column={column}>Name</DataGridColumnHeader>,
@@ -34,12 +34,21 @@ const columns = helper.columns([
   }),
   helper.accessor("email", { header: "Email", enableSorting: false }),
 ]);
-function Example({ loading = false, pagination = true }: { loading?: boolean; pagination?: boolean }) {
+function Example({
+  loading = false,
+  pagination = true,
+  restricted = false,
+}: {
+  loading?: boolean;
+  pagination?: boolean;
+  restricted?: boolean;
+}) {
   const table = useTable({
     features: dataGridFeatures,
     columns,
     data: people,
     getRowId: (row) => row.id,
+    enableRowSelection: (row) => !restricted || row.original.name !== "Alex",
     initialState: { pagination: { pageIndex: 0, pageSize: 2 } },
   });
   return (
@@ -127,6 +136,46 @@ export const WithoutPagination: Story = {
   render: () => <Example pagination={false} />,
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).queryByRole("button", { name: "Next" })).not.toBeInTheDocument();
+  },
+};
+
+export const FilteredSelection: Story = {
+  render: () => <Example restricted />,
+  play: async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+    const all = canvas.getByRole("checkbox", { name: "Select all filtered rows" });
+    await expect(all).not.toBeChecked();
+    const disabled = canvas.getByRole("checkbox", { name: "Select Alex" });
+    await expect(disabled).toHaveAttribute("aria-disabled", "true");
+    await userEvent.click(disabled);
+    await expect(canvas.getByRole("status")).toHaveTextContent("0 selected");
+    await userEvent.click(canvas.getByRole("checkbox", { name: "Select Zoe" }));
+    await expect(all).toBePartiallyChecked();
+    const filter = canvas.getByRole("textbox", { name: "Filter names" });
+    await userEvent.type(filter, "Kai");
+    await expect(all).not.toBeChecked();
+    await expect(all).not.toBePartiallyChecked();
+    await userEvent.click(all);
+    await expect(canvas.getByRole("checkbox", { name: "Select Kai" })).toBeChecked();
+    await expect(canvas.getByRole("status")).toHaveTextContent("2 selected");
+    await userEvent.click(all);
+    await expect(canvas.getByRole("status")).toHaveTextContent("1 selected");
+    await userEvent.clear(filter);
+    await expect(canvas.getByRole("checkbox", { name: "Select Zoe" })).toBeChecked();
+    await expect(all).toBePartiallyChecked();
+    await userEvent.click(all);
+    await expect(all).toBeChecked();
+    await expect(all).not.toBePartiallyChecked();
+    await userEvent.click(canvas.getByRole("button", { name: "Next" }));
+    await expect(canvas.getByRole("checkbox", { name: "Select Kai" })).toBeChecked();
+    all.focus();
+    await userEvent.keyboard(" ");
+    await expect(canvas.getByRole("status")).toHaveTextContent("0 selected");
+    await userEvent.type(filter, "absent");
+    await expect(all).toHaveAttribute("aria-disabled", "true");
+    await userEvent.clear(filter);
+    await userEvent.type(filter, "Alex");
+    await expect(all).toHaveAttribute("aria-disabled", "true");
   },
 };
 

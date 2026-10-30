@@ -29,6 +29,7 @@ import { Tooltip, TooltipTrigger, TooltipContent } from "../Tooltip";
 interface ITreeExampleProps {
   isDisabled?: boolean;
   isComposed?: boolean;
+  isLinked?: boolean;
 }
 interface ITreeData {
   name: string;
@@ -41,14 +42,19 @@ const treeItems: Record<string, ITreeData> = {
   first: { name: "First" },
   second: { name: "Second" },
 };
-function TreeExample({ isDisabled = false, isComposed = false }: ITreeExampleProps): ReactElement {
+function TreeExample({ isDisabled = false, isComposed = false, isLinked = false }: ITreeExampleProps): ReactElement {
   const [result, setResult] = useState("Waiting");
+  const [navigations, setNavigations] = useState(0);
   const tree = useTree<ITreeData>({
     rootItemId: "root",
     getItemName: (item) => item.getItemData().name,
     isItemFolder: (item) => Boolean(item.getItemData().children),
-    dataLoader: { getItem: (id) => treeItems[id]!, getChildren: (id) => treeItems[id]?.children ?? [] },
-    canReorder: true,
+    dataLoader: {
+      getItem: (id) => treeItems[id]!,
+      getChildren: (id) =>
+        isLinked && id === "root" ? ["first", "second", "folder"] : (treeItems[id]?.children ?? []),
+    },
+    canReorder: !isLinked,
     indent: 20,
     canDrag: () => !isDisabled,
     onDrop: (items, target) =>
@@ -73,30 +79,72 @@ function TreeExample({ isDisabled = false, isComposed = false }: ITreeExamplePro
         tree={tree}
         label="Reorder files"
         renderItem={
-          isComposed
+          isLinked
             ? (item) => (
-                <ContextMenu>
-                  <Tooltip open={false}>
-                    <TooltipTrigger render={<ContextMenuTrigger render={<TreeItem item={item} />} />}>
-                      {item.getItemName()}
-                    </TooltipTrigger>
-                    <TooltipContent>Row information</TooltipContent>
-                  </Tooltip>
-                  <ContextMenuContent>
-                    <ContextMenuGroup>
-                      <ContextMenuItem>Inspect {item.getItemName()}</ContextMenuItem>
-                    </ContextMenuGroup>
-                  </ContextMenuContent>
-                </ContextMenu>
+                <TreeItem
+                  item={item}
+                  expandOn="disclosure"
+                  linkProps={{
+                    href: `#${item.getId()}`,
+                    onClick: (event) => {
+                      event.preventDefault();
+                      setNavigations((count) => count + 1);
+                    },
+                  }}
+                  dropHint={{ content: "Drop into folder", open: item.isUnorderedDragTarget() }}
+                />
               )
-            : undefined
+            : isComposed
+              ? (item) => (
+                  <ContextMenu>
+                    <Tooltip open={false}>
+                      <TooltipTrigger render={<ContextMenuTrigger render={<TreeItem item={item} />} />}>
+                        {item.getItemName()}
+                      </TooltipTrigger>
+                      <TooltipContent>Row information</TooltipContent>
+                    </Tooltip>
+                    <ContextMenuContent>
+                      <ContextMenuGroup>
+                        <ContextMenuItem>Inspect {item.getItemName()}</ContextMenuItem>
+                      </ContextMenuGroup>
+                    </ContextMenuContent>
+                  </ContextMenu>
+                )
+              : undefined
         }
       />
       <AssistiveTreeDescription tree={tree} />
       <output aria-label="Tree drop">{result}</output>
+      <output aria-label="Tree navigation">{navigations}</output>
     </>
   );
 }
+
+test("linked tree rows retain native pointer dropping and keyboard drop ownership", async () => {
+  const screen = await render(<TreeExample isLinked />);
+  const first = page.getByRole("treeitem", { name: "First" });
+  const folder = page.getByRole("treeitem", { name: "Folder" });
+  await first.dropTo(folder);
+  await expect
+    .element(screen.getByRole("status", { name: "Tree drop" }))
+    .toHaveTextContent('{"ids":["first"],"parent":"folder","before":null}');
+  await expect.element(page.getByText("Drop into folder", { exact: true })).not.toBeInTheDocument();
+  await page.getByRole("treeitem", { name: "Second" }).click();
+  await expect.element(screen.getByRole("status", { name: "Tree navigation" })).toHaveTextContent("1");
+  await userEvent.keyboard("{Control>}{Shift>}d{/Shift}{/Control}");
+  await userEvent.keyboard("{ArrowUp}");
+  await expect.element(page.getByText("Drop into folder", { exact: true })).toBeVisible();
+  await userEvent.keyboard("{Escape}");
+  await expect.element(page.getByText("Drop into folder", { exact: true })).not.toBeInTheDocument();
+  await userEvent.keyboard("{Control>}{Shift>}d{/Shift}{/Control}");
+  await userEvent.keyboard("{ArrowUp}{Enter}");
+  await expect
+    .element(screen.getByRole("status", { name: "Tree drop" }))
+    .toHaveTextContent('{"ids":["second"],"parent":"folder","before":null}');
+  await expect.element(screen.getByRole("status", { name: "Tree navigation" })).toHaveTextContent("1");
+  await expect.element(page.getByText("Drop into folder", { exact: true })).not.toBeInTheDocument();
+  await expect.element(page.getByRole("treeitem", { name: "Second" })).toHaveFocus();
+});
 
 test("tree drops into a folder and reorders before and after siblings", async () => {
   const screen = await render(<TreeExample />);

@@ -4,7 +4,7 @@ import type { IDensityProps } from "../density/types.js";
 import type { ReactElement } from "react";
 import { Checkbox as CheckboxPrimitive } from "@base-ui/react/checkbox";
 import { cn } from "../utils/cn.js";
-import { CheckIcon } from "lucide-react";
+import { CheckIcon, MinusIcon } from "lucide-react";
 
 type CheckboxProps = IAnalyticsProps & CheckboxPrimitive.Root.Props & IDensityProps;
 
@@ -32,9 +32,16 @@ function Checkbox({ analytics, density, className, ...props }: CheckboxProps): R
       <CheckboxPrimitive.Indicator
         data-slot="checkbox-indicator"
         className="grid place-content-center text-current transition-none [&>svg]:size-3.5"
-      >
-        <CheckIcon />
-      </CheckboxPrimitive.Indicator>
+        render={(indicatorProps, state) => (
+          <span {...indicatorProps}>
+            {state.indeterminate ? (
+              <MinusIcon data-slot="checkbox-mixed-indicator" />
+            ) : (
+              <CheckIcon data-slot="checkbox-checked-indicator" />
+            )}
+          </span>
+        )}
+      />
     </CheckboxPrimitive.Root>
   );
 }

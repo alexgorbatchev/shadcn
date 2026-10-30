@@ -23,3 +23,7 @@ export type {
 export { DataGridColumnOptions } from "./DataGridColumnOptions.js";
 export { DataGridFilters } from "./DataGridFilters.js";
 export { DataGridFilterSummary } from "./DataGridFilterSummary.js";
+export { DataGridSelectHeader } from "./DataGridSelectHeader.js";
+export type { DataGridSelectHeaderProps } from "./DataGridSelectHeader.js";
+export { DataGridSelectCell } from "./DataGridSelectCell.js";
+export type { DataGridSelectCellProps } from "./DataGridSelectCell.js";

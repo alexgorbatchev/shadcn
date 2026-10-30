@@ -23,6 +23,61 @@ const items: Record<string, Item> = {
   readme: { name: "README.md" },
 };
 const action = fn();
+const navigate = fn();
+const primary = fn();
+const sourceLinkRef = fn();
+const sourceRowRef = fn();
+const renderedLinkClick = fn();
+function LinkExample() {
+  const [hintOpen, setHintOpen] = useState(false);
+  const tree = useTree<Item>({
+    rootItemId: "root",
+    getItemName: (item) => item.getItemData().name,
+    isItemFolder: (item) => Boolean(item.getItemData().children),
+    dataLoader: {
+      getItem: (id) => items[id]!,
+      getChildren: (id) => items[id]?.children ?? [],
+    },
+    onPrimaryAction: primary,
+    features: [syncDataLoaderFeature, hotkeysCoreFeature, selectionFeature],
+  });
+  return (
+    <>
+      <Button onClick={() => setHintOpen((open) => !open)}>Toggle drop hint</Button>
+      <Tree
+        tree={tree}
+        label="Linked files"
+        renderItem={(item) => (
+          <ContextMenu>
+            <TreeItem
+              item={item}
+              expandOn="disclosure"
+              render={<ContextMenuTrigger />}
+              ref={item.getId() === "src" ? sourceRowRef : undefined}
+              linkProps={{
+                render: <a onClick={renderedLinkClick} />,
+                href: `#${item.getId()}`,
+                ref: item.getId() === "src" ? sourceLinkRef : undefined,
+                "aria-current": item.getId() === "src" ? "page" : undefined,
+                onClick: (event) => {
+                  navigate(item.getId(), event.defaultPrevented, event.ctrlKey, event.metaKey);
+                  event.preventDefault();
+                },
+              }}
+              dropHint={{ content: "Move to folder", open: hintOpen && item.getId() === "src" }}
+              endEnhancer={<Button onClick={action}>Inspect {item.getItemName()}</Button>}
+            />
+            <ContextMenuContent>
+              <ContextMenuGroup>
+                <ContextMenuItem onClick={action}>Details {item.getItemName()}</ContextMenuItem>
+              </ContextMenuGroup>
+            </ContextMenuContent>
+          </ContextMenu>
+        )}
+      />
+    </>
+  );
+}
 function Example({ isComposed = false, isConstrained = false }: { isComposed?: boolean; isConstrained?: boolean }) {
   const tree = useTree<Item>({
     rootItemId: "root",
@@ -94,6 +149,74 @@ const meta: Meta = {
 };
 export default meta;
 type Story = StoryObj<typeof meta>;
+export const LinkRows: Story = {
+  render: () => <LinkExample />,
+  play: async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+    const source = canvas.getByRole("treeitem", { name: "Source" });
+    await expect(source.tagName).toBe("A");
+    await expect(source).toHaveAttribute("href", "#src");
+    await expect(source).toHaveAttribute("aria-current", "page");
+    await expect(sourceLinkRef).toHaveBeenLastCalledWith(source);
+    await expect(sourceRowRef).toHaveBeenLastCalledWith(source.parentElement);
+    await expect(source.parentElement).not.toHaveAttribute("tabindex");
+    await expect(source.querySelector("button")).toBeNull();
+    await userEvent.click(source);
+    await expect(navigate).toHaveBeenLastCalledWith("src", false, false, false);
+    await expect(primary).not.toHaveBeenCalled();
+    await expect(source).toHaveAttribute("aria-expanded", "false");
+    await expect(source).toHaveAttribute("aria-selected", "true");
+    await expect(source).toHaveFocus();
+    await userEvent.keyboard("{Enter}");
+    await expect(navigate).toHaveBeenCalledTimes(2);
+    await userEvent.keyboard("{Control>}");
+    await userEvent.click(source);
+    await userEvent.keyboard("{/Control}");
+    await expect(navigate).toHaveBeenLastCalledWith("src", false, true, false);
+    await expect(primary).not.toHaveBeenCalled();
+    await userEvent.keyboard("{ArrowRight}");
+    await expect(source).toHaveAttribute("aria-expanded", "true");
+    await userEvent.keyboard("{ArrowDown}");
+    const child = canvas.getByRole("treeitem", { name: "Button.tsx" });
+    await waitFor(() => expect(child).toHaveFocus());
+    await expect(
+      canvas.getByRole("tree", { name: "Linked files" }).querySelectorAll('[role="treeitem"][tabindex="0"]'),
+    ).toHaveLength(1);
+    await userEvent.keyboard("{ArrowLeft}");
+    await waitFor(() => expect(source).toHaveFocus());
+    await userEvent.click(canvas.getByRole("button", { name: "Collapse Source" }));
+    await expect(source).toHaveAttribute("aria-expanded", "false");
+    await expect(navigate).toHaveBeenCalledTimes(3);
+    await userEvent.click(canvas.getByRole("button", { name: "Inspect Source" }));
+    await expect(action).toHaveBeenCalledTimes(1);
+    await expect(navigate).toHaveBeenCalledTimes(3);
+    await expect(primary).not.toHaveBeenCalled();
+    await userEvent.pointer({ target: source, keys: "[MouseRight]" });
+    const menu = await within(canvasElement.ownerDocument.body).findByRole("menuitem", { name: "Details Source" });
+    await expect(menu).toBeVisible();
+    await userEvent.keyboard("{Escape}");
+    await userEvent.click(source);
+    await expect(navigate).toHaveBeenCalledTimes(4);
+    await expect(renderedLinkClick).toHaveBeenCalledTimes(4);
+    await userEvent.keyboard("{ArrowDown}");
+    await waitFor(() => expect(canvas.getByRole("treeitem", { name: "README.md" })).toHaveFocus());
+  },
+};
+export const ControlledDropHint: Story = {
+  render: () => <LinkExample />,
+  play: async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+    const document = canvasElement.ownerDocument;
+    await expect(document.querySelector('[data-slot="tooltip-content"]')).not.toBeInTheDocument();
+    await userEvent.click(canvas.getByRole("button", { name: "Toggle drop hint" }));
+    await waitFor(() =>
+      expect(document.querySelector('[data-slot="tooltip-content"]')).toHaveTextContent("Move to folder"),
+    );
+    await waitFor(() => expect(document.querySelector('[data-slot="tooltip-content"]')).toBeVisible());
+    await userEvent.click(canvas.getByRole("button", { name: "Toggle drop hint" }));
+    await waitFor(() => expect(document.querySelector('[data-slot="tooltip-content"]')).not.toBeInTheDocument());
+  },
+};
 export const ConstrainedRows: Story = {
   render: () => (
     <div className="w-[260px]">
