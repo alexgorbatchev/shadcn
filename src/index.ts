@@ -17,6 +17,28 @@ export {
   DropdownMenuSubTrigger,
   DropdownMenuSubContent,
 } from "./components/DropdownMenu.js";
+export {
+  ActionsMenu,
+  ActionsMenuTrigger,
+  ActionsMenuContextTarget,
+  ActionsMenuContextContent,
+} from "./components/ActionsMenu.js";
+export type { IActionsMenuProps, ActionsMenuTriggerProps } from "./components/ActionsMenu.js";
+export {
+  MenuGroup,
+  MenuLabel,
+  MenuLinkItem,
+  MenuItem,
+  MenuCheckboxItem,
+  MenuRadioGroup,
+  MenuRadioItem,
+  MenuSeparator,
+  MenuShortcut,
+  MenuSub,
+  MenuSubTrigger,
+  MenuSubContent,
+} from "./components/MenuParts.js";
+export { FormDialog } from "./components/FormDialog.js";
 export { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "./components/Accordion.js";
 export {
   Popover,
