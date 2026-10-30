@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn, within } from "storybook/test";
 import { useState } from "react";
 import { Roadmap, type RoadmapItem } from "../../gantt";
+import { chooseOption } from "../helpers";
 const select = fn();
 function Example() {
   const [items, setItems] = useState<RoadmapItem[]>([
@@ -39,7 +40,7 @@ type Story = StoryObj<typeof meta>;
 export const Default: Story = {
   play: async ({ canvasElement, userEvent }) => {
     const c = within(canvasElement);
-    await userEvent.selectOptions(c.getByRole("combobox", { name: "Move Design to" }), "done");
+    await chooseOption(c.getByRole("combobox", { name: "Move Design to" }), "Done");
     await userEvent.click(c.getByRole("button", { name: "Design" }));
     await expect(select).toHaveBeenCalledWith(expect.objectContaining({ columnId: "done" }));
     await userEvent.click(c.getByRole("tab", { name: "Timeline" }));

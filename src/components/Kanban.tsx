@@ -5,7 +5,7 @@ import { DragSource } from "./DragSource.js";
 import { DropTarget } from "./DropTarget.js";
 import { Button } from "./Button.js";
 import { Badge } from "./Badge.js";
-import { NativeSelect, NativeSelectOption } from "./NativeSelect.js";
+import { OptionSelect } from "./OptionSelect.js";
 import { ArrowDownIcon, ArrowUpIcon } from "lucide-react";
 type KanbanColumn = {
   id: string;
@@ -101,22 +101,17 @@ function Kanban<T extends KanbanItem>({
                         >
                           <div>{renderItem ? renderItem(item) : <h3 className="font-medium">{item.title}</h3>}</div>
                           <div className="flex items-center gap-1">
-                            <NativeSelect
+                            <OptionSelect
                               aria-label={`Move ${item.title} to`}
                               value={column.id}
                               disabled={disabled}
-                              onChange={(event) => move(item.id, event.target.value)}
-                            >
-                              {columns.map((target) => (
-                                <NativeSelectOption
-                                  key={target.id}
-                                  value={target.id}
-                                  disabled={Boolean(canMove && !canMove(item, target.id))}
-                                >
-                                  {target.label}
-                                </NativeSelectOption>
-                              ))}
-                            </NativeSelect>
+                              onValueChange={(next) => move(item.id, next)}
+                              options={columns.map((target) => ({
+                                value: target.id,
+                                label: target.label,
+                                disabled: Boolean(canMove && !canMove(item, target.id)),
+                              }))}
+                            />
                             <Button
                               type="button"
                               variant="ghost"

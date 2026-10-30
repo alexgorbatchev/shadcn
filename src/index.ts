@@ -227,7 +227,8 @@ export {
 } from "./components/Table.js";
 export type { TableTextAlign, TableVisibility } from "./components/Table.js";
 
-export { NativeSelect, NativeSelectOptGroup, NativeSelectOption } from "./components/NativeSelect.js";
+export { OptionSelect } from "./components/OptionSelect.js";
+export type { OptionSelectOption, OptionSelectProps } from "./components/OptionSelect.js";
 
 export { Kbd, KbdGroup } from "./components/Kbd.js";
 
@@ -468,6 +469,8 @@ export { WeatherForecast } from "./components/WeatherForecast.js";
 export type { WeatherForecastDay, WeatherForecastProps } from "./components/WeatherForecast.js";
 export { PageHeader } from "./components/PageHeader.js";
 export type { PageHeaderProps } from "./components/PageHeader.js";
+export { PageIntro } from "./components/PageIntro.js";
+export type { PageIntroHighlight, PageIntroProps } from "./components/PageIntro.js";
 export { WorkspaceSwitcher } from "./components/WorkspaceSwitcher.js";
 export type { WorkspaceSwitcherProps } from "./components/WorkspaceSwitcher.js";
 export { AccountMenu } from "./components/AccountMenu.js";

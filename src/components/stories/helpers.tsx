@@ -1,4 +1,4 @@
-import { expect } from "storybook/test";
+import { expect, userEvent, waitFor, within } from "storybook/test";
 import type { CarouselApi, CarouselProps } from "../carousel/types";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "../carousel/Carousel";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "../Card";
@@ -558,4 +558,12 @@ export function ClientRouterLink({ to, onNavigate, onClick, ...props }: IClientR
       }}
     />
   );
+}
+
+/** Picks an option from a `Select` through the same pointer path a person uses. */
+export async function chooseOption(trigger: HTMLElement, name: string): Promise<void> {
+  const body = within(trigger.ownerDocument.body);
+  await userEvent.click(trigger);
+  await userEvent.click(await body.findByRole("option", { name }));
+  await waitFor(() => expect(body.queryByRole("listbox")).not.toBeInTheDocument());
 }

@@ -44,8 +44,9 @@ import { DirectionProvider } from "../../DirectionProvider";
 import { Checkbox } from "../../Checkbox";
 import { Input } from "../../Input";
 import { Field, FieldGroup, FieldLabel } from "../../Field";
-import { NativeSelect, NativeSelectOption } from "../../NativeSelect";
+import { OptionSelect } from "../../OptionSelect";
 import { fixture_invoices } from "../fixtures";
+import { chooseOption } from "../helpers";
 
 const meta: Meta<typeof Table> = {
   title: "@alexgorbatchev/shadcn/components/data-display/Table",
@@ -342,14 +343,15 @@ function InvoiceTable({ records = fixture_invoices, hasRowActions = false, ...ar
       </Field>
       <Field>
         <FieldLabel htmlFor={id + "-size"}>Invoices per page</FieldLabel>
-        <NativeSelect
+        <OptionSelect
           id={id + "-size"}
           value={String(table.state.pagination.pageSize)}
-          onChange={(event) => table.setPageSize(Number(event.target.value))}
-        >
-          <NativeSelectOption value="2">2</NativeSelectOption>
-          <NativeSelectOption value="5">5</NativeSelectOption>
-        </NativeSelect>
+          onValueChange={(next) => table.setPageSize(Number(next))}
+          options={[
+            { value: "2", label: "2" },
+            { value: "5", label: "5" },
+          ]}
+        />
       </Field>
     </FieldGroup>
   );
@@ -412,7 +414,7 @@ export const DataTablePagination: Story = {
     await expect(canvas.getByRole("button", { name: "Next invoices" })).toBeDisabled();
     await userEvent.click(canvas.getByRole("button", { name: "Previous invoices" }));
     await expect(canvas.getByRole("cell", { name: "casey@example.com" })).toBeVisible();
-    await userEvent.selectOptions(canvas.getByRole("combobox", { name: "Invoices per page" }), "5");
+    await chooseOption(canvas.getByRole("combobox", { name: "Invoices per page" }), "5");
     await expect(within(canvas.getByRole("table", { name: "Customer invoices" })).getAllByRole("row")).toHaveLength(6);
     await expect(canvas.getByRole("button", { name: "Next invoices" })).toBeDisabled();
   },

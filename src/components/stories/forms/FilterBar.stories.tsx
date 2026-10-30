@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, within } from "storybook/test";
 import { useState } from "react";
 import { FilterBar } from "../../FilterBar";
+import { chooseOption } from "../helpers";
 function Example() {
   const [search, setSearch] = useState("");
   const [value, setValue] = useState<Record<string, string>>({});
@@ -42,10 +43,10 @@ export const Default: Story = {
     const c = within(canvasElement);
     await expect(c.getByRole("button", { name: "Clear filters" })).toBeDisabled();
     await userEvent.type(c.getByRole("searchbox"), "roadmap");
-    await userEvent.selectOptions(c.getByRole("combobox", { name: "Status" }), "active");
+    await chooseOption(c.getByRole("combobox", { name: "Status" }), "Active");
     await expect(c.getByLabelText("Filters")).toHaveTextContent("roadmap active");
     await userEvent.click(c.getByRole("button", { name: "Clear filters" }));
     await expect(c.getByRole("searchbox")).toHaveValue("");
-    await expect(c.getByRole("combobox")).toHaveValue("");
+    await expect(c.getByRole("combobox")).toHaveTextContent("All status");
   },
 };

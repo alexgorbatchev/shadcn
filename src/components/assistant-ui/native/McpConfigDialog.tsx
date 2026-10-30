@@ -1,5 +1,6 @@
 import { AnalyticsButton } from "../../analytics/AnalyticsButton.js";
 import { AnalyticsLink } from "../../analytics/AnalyticsLink.js";
+import { OptionSelect } from "../../OptionSelect.js";
 import type { PropsWithChildren, ReactElement } from "react";
 import { type ReactNode } from "react";
 import { type FC, useId, isValidElement } from "react";
@@ -95,6 +96,31 @@ export function McpConfigDialog({ children }: McpConfigDialog.Props): ReactEleme
   );
 }
 McpConfigDialog.displayName = "McpConfigDialog";
+const MCP_AUTH_OPTIONS = [
+  { value: "oauth", label: "OAuth" },
+  { value: "bearer", label: "Bearer token" },
+  { value: "none", label: "None" },
+];
+
+interface McpAuthSelectProps {
+  id?: string;
+  value?: string;
+  onChange?: (event: { target: { value: string } }) => void;
+}
+
+// AuthSelect's `asChild` slot supplies these; its handler reads only `target.value`.
+function McpAuthSelect({ id, value, onChange }: McpAuthSelectProps): ReactElement {
+  return (
+    <OptionSelect
+      id={id}
+      width="full"
+      value={value}
+      options={MCP_AUTH_OPTIONS}
+      onValueChange={(next) => onChange?.({ target: { value: next } })}
+    />
+  );
+}
+
 const ConnectorsSection: FC = () => {
   return (
     <section className="aui-mcp-connectors flex flex-col gap-2">
@@ -285,10 +311,9 @@ const AddServerForm: FC<AddServerFormContract> = ({ onClose }) => {
           </McpAddFormPrimitive.UrlField>
         </FormRow>
         <FormRow label="Auth" htmlFor={fieldIds.auth}>
-          <McpAddFormPrimitive.AuthSelect
-            id={fieldIds.auth}
-            className="aui-mcp-auth-select bg-background h-control w-full rounded-sm border px-control-x text-control"
-          />
+          <McpAddFormPrimitive.AuthSelect id={fieldIds.auth} asChild>
+            <McpAuthSelect />
+          </McpAddFormPrimitive.AuthSelect>
         </FormRow>
         <McpAddFormPrimitive.AuthFields>
           {({ authType }) =>

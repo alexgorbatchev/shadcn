@@ -2,7 +2,7 @@ import type { ILabelValue } from "../options/types.js";
 import type { ReactElement } from "react";
 import type { IDensityProps } from "../density/types.js";
 import { Input } from "./Input.js";
-import { NativeSelect, NativeSelectOption } from "./NativeSelect.js";
+import { OptionSelect } from "./OptionSelect.js";
 import { Button } from "./Button.js";
 type FilterDefinition = {
   id: string;
@@ -43,19 +43,13 @@ function FilterBar({
         className="min-w-40 flex-1"
       />
       {filters.map((filter) => (
-        <NativeSelect
+        <OptionSelect
           key={filter.id}
           aria-label={filter.label}
           value={value[filter.id] ?? ""}
-          onChange={(event) => onValueChange({ ...value, [filter.id]: event.target.value })}
-        >
-          <NativeSelectOption value="">All {filter.label.toLowerCase()}</NativeSelectOption>
-          {filter.options.map((option) => (
-            <NativeSelectOption key={option.value} value={option.value}>
-              {option.label}
-            </NativeSelectOption>
-          ))}
-        </NativeSelect>
+          onValueChange={(next) => onValueChange({ ...value, [filter.id]: next })}
+          options={[{ value: "", label: `All ${filter.label.toLowerCase()}` }, ...filter.options]}
+        />
       ))}
       <Button
         type="button"

@@ -788,18 +788,6 @@ These pages are outside the registry guide's 437-preview inventory. They compose
 | [kbd-input-group](https://github.com/shadcn-ui/ui/blob/main/apps/v4/examples/base/kbd-input-group.tsx) | [Kbd.InInputGroup](../../src/components/stories/data-display/Kbd.stories.tsx#L76) |
 | [kbd-rtl](https://github.com/shadcn-ui/ui/blob/main/apps/v4/examples/base/kbd-rtl.tsx)                 | [Kbd.RightToLeft](../../src/components/stories/data-display/Kbd.stories.tsx#L100) |
 
-## NativeSelect
-
-[Official guide](https://ui.shadcn.com/docs/components/base/native-select)
-
-| Guide preview                                                                                                        | Implementation stories                                                                      |
-| :------------------------------------------------------------------------------------------------------------------- | :------------------------------------------------------------------------------------------ |
-| [native-select-demo](https://github.com/shadcn-ui/ui/blob/main/apps/v4/examples/base/native-select-demo.tsx)         | [NativeSelect.Default](../../src/components/stories/forms/NativeSelect.stories.tsx#L27)     |
-| [native-select-groups](https://github.com/shadcn-ui/ui/blob/main/apps/v4/examples/base/native-select-groups.tsx)     | [NativeSelect.Default](../../src/components/stories/forms/NativeSelect.stories.tsx#L27)     |
-| [native-select-disabled](https://github.com/shadcn-ui/ui/blob/main/apps/v4/examples/base/native-select-disabled.tsx) | [NativeSelect.Disabled](../../src/components/stories/forms/NativeSelect.stories.tsx#L40)    |
-| [native-select-invalid](https://github.com/shadcn-ui/ui/blob/main/apps/v4/examples/base/native-select-invalid.tsx)   | [NativeSelect.Invalid](../../src/components/stories/forms/NativeSelect.stories.tsx#L48)     |
-| [native-select-rtl](https://github.com/shadcn-ui/ui/blob/main/apps/v4/examples/base/native-select-rtl.tsx)           | [NativeSelect.RightToLeft](../../src/components/stories/forms/NativeSelect.stories.tsx#L68) |
-
 ## DirectionProvider
 
 [Official guide](https://ui.shadcn.com/docs/components/base/direction)

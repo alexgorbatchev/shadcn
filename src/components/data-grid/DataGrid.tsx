@@ -49,7 +49,7 @@ import {
   type TableTextAlign,
   type TableVisibility,
 } from "../Table.js";
-import { NativeSelect, NativeSelectOption } from "../NativeSelect.js";
+import { OptionSelect } from "../OptionSelect.js";
 import { Input } from "../Input.js";
 import { DataGridColumnResizer } from "./DataGridColumnResizer.js";
 import { getDataGridColumnSizeVariables } from "./getDataGridColumnSizeVariables.js";
@@ -378,22 +378,15 @@ function DataGridPagination<T extends RowData>({ table }: { table: DataGridTable
         {Math.max(1, table.getPageCount())}
       </span>
       <div className="flex items-center gap-2">
-        <NativeSelect
+        <OptionSelect
           aria-label="Rows per page"
-          value={table.state.pagination.pageSize}
-          onChange={(event) => table.setPageSize(Number(event.target.value))}
-        >
-          {[10, 20, 50, 100].map((size) => (
-            <NativeSelectOption key={size} value={size}>
-              {size} rows
-            </NativeSelectOption>
-          ))}
-          {![10, 20, 50, 100].includes(table.state.pagination.pageSize) && (
-            <NativeSelectOption value={table.state.pagination.pageSize}>
-              {table.state.pagination.pageSize} rows
-            </NativeSelectOption>
-          )}
-        </NativeSelect>
+          value={String(table.state.pagination.pageSize)}
+          onValueChange={(next) => table.setPageSize(Number(next))}
+          options={[...new Set([10, 20, 50, 100, table.state.pagination.pageSize])].map((size) => ({
+            value: String(size),
+            label: `${size} rows`,
+          }))}
+        />
         <Button
           type="button"
           variant="outline"

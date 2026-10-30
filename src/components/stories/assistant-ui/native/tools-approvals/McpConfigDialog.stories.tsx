@@ -4,6 +4,7 @@ import { expect, waitFor, within } from "storybook/test";
 import { McpConfigDialog } from "../../../../assistant-ui/native/McpConfigDialog.js";
 import { NativeRuntimeFixture } from "../helpers.js";
 import { fixture_mcpConfig } from "../fixtures/mcp.js";
+import { chooseOption } from "../../../helpers";
 const meta: Meta<typeof McpConfigDialog> = {
   title: "@alexgorbatchev/shadcn/components/assistant-ui/native/tools-approvals/McpConfigDialog",
   component: McpConfigDialog,
@@ -34,11 +35,11 @@ export const AuthFields: Story = {
     const canvas = within(canvasElement);
     await userEvent.click(canvas.getByRole("button", { name: "MCP servers" }));
     await userEvent.click(await canvas.findByRole("button", { name: "Add server" }));
-    await expect(canvas.getByRole("option", { name: "OAuth" })).toBeInTheDocument();
-    await userEvent.selectOptions(canvas.getByRole("combobox", { name: "Auth" }), "bearer");
+    await expect(canvas.getByRole("combobox", { name: "Auth" })).toHaveTextContent("OAuth");
+    await chooseOption(canvas.getByRole("combobox", { name: "Auth" }), "Bearer token");
     await expect(canvas.getByLabelText("Bearer token")).toBeVisible();
     await expect(canvas.queryByLabelText("OAuth scopes")).not.toBeInTheDocument();
-    await userEvent.selectOptions(canvas.getByRole("combobox", { name: "Auth" }), "none");
+    await chooseOption(canvas.getByRole("combobox", { name: "Auth" }), "None");
     await expect(canvas.queryByLabelText("Bearer token")).not.toBeInTheDocument();
   },
 };
@@ -67,7 +68,7 @@ export const AddAndRemove: Story = {
       await userEvent.clear(input);
       await userEvent.type(input, "https://example.com/mcp");
     }
-    await userEvent.selectOptions(canvas.getByRole("combobox", { name: "Auth" }), "none");
+    await chooseOption(canvas.getByRole("combobox", { name: "Auth" }), "None");
     await userEvent.click(canvas.getByRole("button", { name: "Add server" }));
     await expect(await canvas.findByText("Local inspection")).toBeVisible();
     await waitFor(() => expect(canvas.getByRole("button", { name: "Add server" })).toHaveFocus());

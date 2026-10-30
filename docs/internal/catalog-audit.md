@@ -98,7 +98,6 @@ The [refreshed TypeScript AST export audit](../../.tmp/catalog-final-exports.jso
 | toggle-group     |                      2 | [ToggleGroup.tsx](../../src/components/ToggleGroup.tsx)             | [ToggleGroup.stories.tsx](../../src/components/stories/actions/ToggleGroup.stories.tsx)               |
 | tooltip          |                      4 | [Tooltip.tsx](../../src/components/Tooltip.tsx)                     | [Tooltip.stories.tsx](../../src/components/stories/overlays/Tooltip.stories.tsx)                      |
 | kbd              |                      2 | [Kbd.tsx](../../src/components/Kbd.tsx)                             | [Kbd.stories.tsx](../../src/components/stories/data-display/Kbd.stories.tsx)                          |
-| native-select    |                      3 | [NativeSelect.tsx](../../src/components/NativeSelect.tsx)           | [NativeSelect.stories.tsx](../../src/components/stories/forms/NativeSelect.stories.tsx)               |
 | direction        |                      2 | [DirectionProvider.tsx](../../src/components/DirectionProvider.tsx) | [DirectionProvider.stories.tsx](../../src/components/stories/providers/DirectionProvider.stories.tsx) |
 | attachment       |                      9 | [Attachment.tsx](../../src/components/Attachment.tsx)               | [Attachment.stories.tsx](../../src/components/stories/messaging/Attachment.stories.tsx)               |
 | bubble           |                      4 | [Bubble.tsx](../../src/components/Bubble.tsx)                       | [Bubble.stories.tsx](../../src/components/stories/messaging/Bubble.stories.tsx)                       |
@@ -204,7 +203,7 @@ The Spinner guide's alternate icon example defines a separate Spinner implementa
 
 [The restored full run](../../.tmp/primitives-guide-focused.log) passes 618 story tests, two native keyboard tests and two package-render tests. Removing only native aspect-ratio sizing makes [all four image stories fail](../../.tmp/primitives-guide-aspect-disabled.log); removing only Spinner's spin animation makes [Default fail](../../.tmp/primitives-guide-spinner-disabled.log), with eight other Spinner stories passing. Both negative controls restore source in finally. These probes validate existing runtime contracts, rather than new runtime fixes.
 
-### Badge, Progress, NativeSelect, Toggle and ToggleGroup guide comparisons
+### Badge, Progress, Toggle and ToggleGroup guide comparisons
 
 The official Base UI guides for [Badge](https://ui.shadcn.com/docs/components/base/badge), [Progress](https://ui.shadcn.com/docs/components/base/progress), [NativeSelect](https://ui.shadcn.com/docs/components/base/native-select), [Toggle](https://ui.shadcn.com/docs/components/base/toggle) and [ToggleGroup](https://ui.shadcn.com/docs/components/base/toggle-group) are compared with 52 browser stories. Badge's existing sixteen stories account for its guide compositions; the other four families add fourteen stories and strengthen existing geometry checks.
 
@@ -213,8 +212,6 @@ The official Base UI guides for [Badge](https://ui.shadcn.com/docs/components/ba
 | Badge variants, icons, spinner, link, custom colors and RTL | Existing variant stories, LeadingIcon, TrailingIcon, WithSpinner, AsLink and RightToLeft; custom colors use semantic Success/Warning variants       |
 | Progress label/value and controlled progress                | InProgress/Empty/Complete/Indeterminate, Controlled; native Slider keyboard updates the value, accessible progress state and actual indicator width |
 | Progress RTL                                                | RightToLeft verifies label at inline start, value at inline end and indicator filling from the correct edge                                         |
-| NativeSelect simple/groups, disabled and invalid            | NativeForm, Default, Disabled, Invalid; native optgroup/options, disabled option, error association, form value and reset                           |
-| NativeSelect RTL and sizes                                  | RightToLeft verifies wrapper direction, icon containment, reserved icon space and native selection; Small/Compact remain tested                     |
 | Toggle default/outline, icon/text, sizes and disabled       | Default, Outline, IconOnly, Small, Large, Compact, Pressed, Disabled; native pointer and keyboard pressed state                                     |
 | Toggle RTL                                                  | RightToLeft, SmallRightToLeft and LargeRightToLeft verify leading/trailing icon order, mirrored edge spacing and native activation                  |
 | ToggleGroup default/multiple, outline, sizes and spacing    | Single, Multiple, JoinedOutline, Vertical, Spacing; actual selection, native arrow navigation, joined border/corners and spacing                    |

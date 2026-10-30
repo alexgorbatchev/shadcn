@@ -11,8 +11,7 @@ import {
   FieldGroup,
   FieldLabel,
   Grid,
-  NativeSelect,
-  NativeSelectOption,
+  OptionSelect,
   PageHeader,
   StatCard,
   Table,
@@ -36,11 +35,13 @@ export function Dashboard({ scenario }: PrototypeProps): ReactElement {
         <FieldGroup>
           <Field>
             <FieldLabel htmlFor="team">Team</FieldLabel>
-            <NativeSelect id="team" value={team} onChange={(event) => setTeam(event.target.value)}>
-              <NativeSelectOption>All teams</NativeSelectOption>
-              <NativeSelectOption>Product</NativeSelectOption>
-              <NativeSelectOption>Engineering</NativeSelectOption>
-            </NativeSelect>
+            <OptionSelect
+              id="team"
+              width="full"
+              value={team}
+              onValueChange={setTeam}
+              options={["All teams", "Product", "Engineering"].map((value) => ({ value, label: value }))}
+            />
           </Field>
         </FieldGroup>
         <Grid columns={{ base: 1, sm: 2 }} gap="panel">

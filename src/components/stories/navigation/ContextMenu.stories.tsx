@@ -6,7 +6,7 @@ import { FileIcon, SaveIcon, TrashIcon } from "lucide-react";
 import { Button } from "../../Button";
 import { DirectionProvider } from "../../DirectionProvider";
 import { Toggle } from "../../Toggle";
-import { NativeSelect, NativeSelectOption } from "../../NativeSelect";
+import { OptionSelect } from "../../OptionSelect";
 import {
   ContextMenu,
   ContextMenuCheckboxItem,
@@ -96,10 +96,15 @@ export const Default: Story = {
         <Toggle aria-label="Show details" pressed={checked} onPressedChange={setChecked}>
           Show details
         </Toggle>
-        <NativeSelect aria-label="Sort projects" value={sort} onChange={(event) => setSort(event.currentTarget.value)}>
-          <NativeSelectOption value="name">Sort by name</NativeSelectOption>
-          <NativeSelectOption value="date">Sort by date</NativeSelectOption>
-        </NativeSelect>
+        <OptionSelect
+          aria-label="Sort projects"
+          value={sort}
+          onValueChange={setSort}
+          options={[
+            { value: "name", label: "Sort by name" },
+            { value: "date", label: "Sort by date" },
+          ]}
+        />
         <ContextMenu {...args}>
           <ContextMenuTrigger className="border border-border p-panel">Right click the project</ContextMenuTrigger>
           <ContextMenuContent aria-label="Project actions">
@@ -197,10 +202,15 @@ export const NativePartCallbacks: Story = {
         <Toggle aria-label="Show details" pressed={checked} onPressedChange={setChecked}>
           Show details
         </Toggle>
-        <NativeSelect aria-label="Sort projects" value={sort} onChange={(event) => setSort(event.currentTarget.value)}>
-          <NativeSelectOption value="name">Sort by name</NativeSelectOption>
-          <NativeSelectOption value="date">Sort by date</NativeSelectOption>
-        </NativeSelect>
+        <OptionSelect
+          aria-label="Sort projects"
+          value={sort}
+          onValueChange={setSort}
+          options={[
+            { value: "name", label: "Sort by name" },
+            { value: "date", label: "Sort by date" },
+          ]}
+        />
         <ContextMenu>
           <ContextMenuTrigger className={args.triggerClassName}>Right click for callbacks</ContextMenuTrigger>
           <ContextMenuContent aria-label="Callback actions" className={args.contentClassName}>

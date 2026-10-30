@@ -6,7 +6,7 @@ import { DragDropProvider } from "../DragDropProvider.js";
 import { DragSource } from "../DragSource.js";
 import { DropTarget } from "../DropTarget.js";
 import { Button } from "../Button.js";
-import { NativeSelect, NativeSelectOption } from "../NativeSelect.js";
+import { OptionSelect } from "../OptionSelect.js";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "../Table.js";
 import { ArrowLeftIcon, ArrowRightIcon } from "lucide-react";
 type GanttTask = {
@@ -54,11 +54,16 @@ function Gantt<T extends GanttTask>({
       <section aria-label={label} data-density={density} data-scroll="none" className="grid min-w-0 gap-3">
         <div className="flex items-center justify-between gap-3">
           <h2 className="font-semibold">{label}</h2>
-          <NativeSelect aria-label="Timeline zoom" value={zoom} onChange={(event) => setZoom(event.target.value)}>
-            <NativeSelectOption value="day">Day scale</NativeSelectOption>
-            <NativeSelectOption value="week">Week scale</NativeSelectOption>
-            <NativeSelectOption value="month">Month scale</NativeSelectOption>
-          </NativeSelect>
+          <OptionSelect
+            aria-label="Timeline zoom"
+            value={zoom}
+            onValueChange={setZoom}
+            options={[
+              { value: "day", label: "Day scale" },
+              { value: "week", label: "Week scale" },
+              { value: "month", label: "Month scale" },
+            ]}
+          />
         </div>
         <div
           role="region"

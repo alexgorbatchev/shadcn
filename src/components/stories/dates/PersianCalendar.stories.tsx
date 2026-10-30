@@ -5,6 +5,7 @@ import { enUS } from "@daypicker/persian";
 import { useState } from "react";
 import { expect, userEvent, waitFor, within } from "storybook/test";
 import { PersianCalendar } from "../../persian-calendar/PersianCalendar";
+import { chooseOption } from "../helpers";
 
 type PersianCalendarStoryProps = Omit<
   ComponentProps<typeof PersianCalendar>,
@@ -78,8 +79,8 @@ export const Dropdowns: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const month = canvas.getByRole("combobox", { name: "ماه را انتخاب کنید" });
-    await expect(within(month).getByRole("option", { name: "مهر" })).toHaveProperty("selected", true);
-    await userEvent.selectOptions(month, within(month).getByRole("option", { name: "آبان" }));
+    await expect(month).toHaveTextContent("مهر");
+    await chooseOption(month, "آبان");
     await expect(canvas.getByRole("grid", { name: "آبان ۱۴۰۵" })).toBeVisible();
     await userEvent.click(canvas.getByRole("button", { name: "یک‌شنبه ۱۰-ام آبان ۱۴۰۵" }));
     await expect(canvas.getByLabelText("Gregorian selection")).toHaveTextContent("2026-11-01");
@@ -115,8 +116,8 @@ export const EnglishDropdowns: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const month = canvas.getByRole("combobox", { name: "Choose the Month" });
-    await expect(within(month).getByRole("option", { name: "Mehr" })).toHaveProperty("selected", true);
-    await userEvent.selectOptions(month, within(month).getByRole("option", { name: "Aban" }));
+    await expect(month).toHaveTextContent("Mehr");
+    await chooseOption(month, "Aban");
     await expect(canvas.getByRole("grid", { name: "Aban 1405" })).toBeVisible();
     await userEvent.click(canvas.getByRole("button", { name: "Sunday, Aban 10th, 1405" }));
     await expect(canvas.getByLabelText("Gregorian selection")).toHaveTextContent("2026-11-01");

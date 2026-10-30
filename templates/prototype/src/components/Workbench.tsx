@@ -5,8 +5,7 @@ import {
   Field,
   FieldGroup,
   FieldLabel,
-  NativeSelect,
-  NativeSelectOption,
+  OptionSelect,
   ThemeProvider,
 } from "@alexgorbatchev/shadcn";
 import type { PrototypeDefinition, Scenario } from "../types";
@@ -50,60 +49,71 @@ export function Workbench(): ReactElement {
                 <div className="grid grid-cols-2 items-end gap-4 md:grid-cols-4 xl:grid-cols-7">
                   <Field>
                     <FieldLabel htmlFor="prototype">Prototype</FieldLabel>
-                    <NativeSelect id="prototype" value={selected} onChange={(event) => setSelected(event.target.value)}>
-                      {prototypes.map((prototype) => (
-                        <NativeSelectOption key={prototype.id} value={prototype.id}>
-                          {prototype.title}
-                        </NativeSelectOption>
-                      ))}
-                    </NativeSelect>
+                    <OptionSelect
+                      id="prototype"
+                      width="full"
+                      value={selected}
+                      onValueChange={setSelected}
+                      options={prototypes.map((prototype) => ({ value: prototype.id, label: prototype.title }))}
+                    />
                   </Field>
                   <Field>
                     <FieldLabel htmlFor="scenario">Scenario</FieldLabel>
-                    <NativeSelect
+                    <OptionSelect
                       id="scenario"
+                      width="full"
                       value={scenario}
-                      onChange={(event) => {
-                        const value = event.target.value;
+                      onValueChange={(value) => {
                         if (value === "populated" || value === "empty" || value === "loading" || value === "error")
                           setScenario(value);
                       }}
-                    >
-                      <NativeSelectOption value="populated">Populated</NativeSelectOption>
-                      <NativeSelectOption value="empty">Empty</NativeSelectOption>
-                      <NativeSelectOption value="loading">Loading</NativeSelectOption>
-                      <NativeSelectOption value="error">Error</NativeSelectOption>
-                    </NativeSelect>
+                      options={[
+                        { value: "populated", label: "Populated" },
+                        { value: "empty", label: "Empty" },
+                        { value: "loading", label: "Loading" },
+                        { value: "error", label: "Error" },
+                      ]}
+                    />
                   </Field>
                   <Field>
                     <FieldLabel htmlFor="theme">Theme</FieldLabel>
-                    <NativeSelect
+                    <OptionSelect
                       id="theme"
+                      width="full"
                       value={theme}
-                      onChange={(event) => setTheme(event.target.value === "light" ? "light" : "dark")}
-                    >
-                      <NativeSelectOption value="dark">Dark</NativeSelectOption>
-                      <NativeSelectOption value="light">Light</NativeSelectOption>
-                    </NativeSelect>
+                      onValueChange={(value) => setTheme(value === "light" ? "light" : "dark")}
+                      options={[
+                        { value: "dark", label: "Dark" },
+                        { value: "light", label: "Light" },
+                      ]}
+                    />
                   </Field>
                   <Field>
                     <FieldLabel htmlFor="density">Density</FieldLabel>
-                    <NativeSelect
+                    <OptionSelect
                       id="density"
+                      width="full"
                       value={density}
-                      onChange={(event) => setDensity(event.target.value === "compact" ? "compact" : "comfortable")}
-                    >
-                      <NativeSelectOption value="comfortable">Comfortable</NativeSelectOption>
-                      <NativeSelectOption value="compact">Compact</NativeSelectOption>
-                    </NativeSelect>
+                      onValueChange={(value) => setDensity(value === "compact" ? "compact" : "comfortable")}
+                      options={[
+                        { value: "comfortable", label: "Comfortable" },
+                        { value: "compact", label: "Compact" },
+                      ]}
+                    />
                   </Field>
                   <Field>
                     <FieldLabel htmlFor="viewport">Viewport</FieldLabel>
-                    <NativeSelect id="viewport" value={viewport} onChange={(event) => setViewport(event.target.value)}>
-                      <NativeSelectOption value="responsive">Responsive</NativeSelectOption>
-                      <NativeSelectOption value="390">Mobile · 390px</NativeSelectOption>
-                      <NativeSelectOption value="1280">Desktop · 1280px</NativeSelectOption>
-                    </NativeSelect>
+                    <OptionSelect
+                      id="viewport"
+                      width="full"
+                      value={viewport}
+                      onValueChange={setViewport}
+                      options={[
+                        { value: "responsive", label: "Responsive" },
+                        { value: "390", label: "Mobile · 390px" },
+                        { value: "1280", label: "Desktop · 1280px" },
+                      ]}
+                    />
                   </Field>
                   <Button onClick={() => setRevision((value) => value + 1)}>Reset data</Button>
                   <a className="text-sm underline" href={`?${canvasParameters}`} target="_blank" rel="noreferrer">

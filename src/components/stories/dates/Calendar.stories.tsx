@@ -14,7 +14,7 @@ import { Field, FieldGroup, FieldLabel } from "../../Field";
 import { Input } from "../../Input";
 import { Popover, PopoverContent, PopoverTitle, PopoverTrigger } from "../../Popover";
 import { ToggleGroup, ToggleGroupItem } from "../../ToggleGroup";
-import { DateInputPickerExample } from "../helpers";
+import { chooseOption, DateInputPickerExample } from "../helpers";
 import { cn } from "../../../utils/cn";
 
 type CalendarStoryProps = Omit<ComponentProps<typeof Calendar>, "mode" | "required" | "selected" | "onSelect">;
@@ -100,9 +100,9 @@ export const Dropdowns: Story = {
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await userEvent.selectOptions(canvas.getByRole("combobox", { name: "Choose the Month" }), "10");
+    await chooseOption(canvas.getByRole("combobox", { name: "Choose the Month" }), "Nov");
     await expect(canvas.getByRole("grid", { name: "November 2026" })).toBeVisible();
-    await userEvent.selectOptions(canvas.getByRole("combobox", { name: "Choose the Year" }), "2027");
+    await chooseOption(canvas.getByRole("combobox", { name: "Choose the Year" }), "2027");
     await expect(canvas.getByRole("grid", { name: "November 2027" })).toBeVisible();
   },
 };
@@ -662,8 +662,8 @@ export const DatePickerBirthDate: Story = {
     await userEvent.click(trigger);
     const dialog = await within(canvasElement.ownerDocument.body).findByRole("dialog", { name: "Choose a birth date" });
     await expect(getComputedStyle(dialog).direction).toBe(args.dir ?? "ltr");
-    await userEvent.selectOptions(within(dialog).getByRole("combobox", { name: "Choose the Year" }), "2000");
-    await userEvent.selectOptions(within(dialog).getByRole("combobox", { name: "Choose the Month" }), "5");
+    await chooseOption(within(dialog).getByRole("combobox", { name: "Choose the Year" }), "2000");
+    await chooseOption(within(dialog).getByRole("combobox", { name: "Choose the Month" }), "Jun");
     await userEvent.click(within(dialog).getByRole("button", { name: "Thursday, June 15th, 2000" }));
     await expect(trigger).toHaveAccessibleName("June 15, 2000");
     await waitFor(() => expect(trigger).toHaveFocus());

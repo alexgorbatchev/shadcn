@@ -5,7 +5,7 @@ import type { CalendarProps } from "../calendar/types.js";
 import { DayPicker } from "@daypicker/persian";
 import { getCalendarClassNames } from "../calendar/getCalendarClassNames.js";
 import { cn } from "../../utils/cn.js";
-import { CalendarDayButton } from "../calendar/Calendar.js";
+import { CalendarDayButton, CalendarDropdown } from "../calendar/Calendar.js";
 
 type PersianCalendarProps = IAnalyticsProps &
   ComponentProps<typeof DayPicker> &
@@ -42,7 +42,7 @@ function PersianCalendar({
       captionLayout={captionLayout}
       className={cn("group/calendar bg-background p-panel [--cell-size:var(--ag-control-h)]", className)}
       classNames={getCalendarClassNames({ buttonVariant, classNames })}
-      components={{ DayButton: CalendarDayButton, ...components }}
+      components={{ DayButton: CalendarDayButton, Dropdown: CalendarDropdown, ...components }}
       {...props}
       onDayClick={onDayClick}
       onMonthChange={onMonthChange}

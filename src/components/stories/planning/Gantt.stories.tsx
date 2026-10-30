@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn, within } from "storybook/test";
 import { useState } from "react";
 import { Gantt, type GanttTask } from "../../gantt";
+import { chooseOption } from "../helpers";
 const tasks: GanttTask[] = [
   {
     id: "design",
@@ -46,9 +47,9 @@ export const Default: Story = {
     await userEvent.click(c.getByRole("button", { name: "Move Design one day earlier" }));
     await userEvent.click(c.getByRole("button", { name: "Design" }));
     await expect(select).toHaveBeenCalled();
-    await userEvent.selectOptions(c.getByRole("combobox", { name: "Timeline zoom" }), "week");
+    await chooseOption(c.getByRole("combobox", { name: "Timeline zoom" }), "Week scale");
     await expect(c.getByRole("table")).toBeVisible();
-    await userEvent.selectOptions(c.getByRole("combobox"), "month");
+    await chooseOption(c.getByRole("combobox"), "Month scale");
     await expect(c.getByRole("table")).toBeVisible();
   },
 };

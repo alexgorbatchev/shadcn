@@ -9,6 +9,11 @@ afterEach(() => {
   window.history.replaceState(null, "", original);
 });
 
+async function choose(label: string, option: string) {
+  await page.getByLabelText(label, { exact: true }).click();
+  await page.getByRole("option", { name: option, exact: true }).click();
+}
+
 function openCanvas(prototype: string, parameters = "") {
   window.history.replaceState(null, "", `?canvas=1&prototype=${prototype}${parameters}`);
   return render(<Workbench />);
@@ -16,9 +21,9 @@ function openCanvas(prototype: string, parameters = "") {
 
 test("dashboard filtering updates the project counts and rows", async () => {
   await openCanvas("dashboard");
-  await page.getByLabelText("Team", { exact: true }).selectOptions("Engineering");
+  await choose("Team", "Engineering");
   await expect.element(page.getByRole("row")).toHaveLength(2);
-  await page.getByLabelText("Team", { exact: true }).selectOptions("Product");
+  await choose("Team", "Product");
   await expect.element(page.getByRole("row")).toHaveLength(3);
 });
 
@@ -73,20 +78,20 @@ test("workbench controls update the canvas URL and reset replaces the iframe", a
   window.history.replaceState(null, "", "?prototype=dashboard");
   const screen = await render(<Workbench />);
   const firstFrame = screen.container.querySelector("iframe");
-  await page.getByLabelText("Prototype", { exact: true }).selectOptions("projects");
-  await page.getByLabelText("Scenario", { exact: true }).selectOptions("error");
-  await page.getByLabelText("Theme", { exact: true }).selectOptions("light");
-  await page.getByLabelText("Density", { exact: true }).selectOptions("compact");
-  await page.getByLabelText("Viewport", { exact: true }).selectOptions("390");
+  await choose("Prototype", "Projects");
+  await choose("Scenario", "Error");
+  await choose("Theme", "Light");
+  await choose("Density", "Compact");
+  await choose("Viewport", "Mobile · 390px");
   const link = page.getByRole("link", { name: "Open screen", exact: true });
   await expect
     .element(link)
     .toHaveAttribute("href", "?canvas=1&prototype=projects&scenario=error&theme=light&density=compact");
   await page.getByRole("button", { name: "Reset data", exact: true }).click();
   expect(screen.container.querySelector("iframe")).not.toBe(firstFrame);
-  await page.getByLabelText("Theme", { exact: true }).selectOptions("dark");
-  await page.getByLabelText("Density", { exact: true }).selectOptions("comfortable");
-  await page.getByLabelText("Scenario", { exact: true }).selectOptions("populated");
+  await choose("Theme", "Dark");
+  await choose("Density", "Comfortable");
+  await choose("Scenario", "Populated");
 });
 
 test("workbench defaults and unknown selections remain understandable", async () => {
@@ -96,5 +101,5 @@ test("workbench defaults and unknown selections remain understandable", async ()
   await screen.unmount();
   window.history.replaceState(null, "", "?");
   await render(<Workbench />);
-  await expect.element(page.getByLabelText("Prototype", { exact: true })).toHaveValue("dashboard");
+  await expect.element(page.getByLabelText("Prototype", { exact: true })).toHaveTextContent("Dashboard");
 });

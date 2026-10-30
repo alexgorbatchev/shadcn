@@ -2,6 +2,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, within } from "storybook/test";
 import { useState } from "react";
 import { Kanban, type KanbanItem } from "../../Kanban";
+import { chooseOption } from "../helpers";
 const columns = [
   { id: "todo", label: "To do" },
   { id: "doing", label: "In progress" },
@@ -39,7 +40,7 @@ export const Default: Story = {
     await expect(todo.getAllByRole("listitem")[0]).toHaveTextContent("Build");
     await userEvent.click(c.getByRole("button", { name: "Move Build down" }));
     await expect(todo.getAllByRole("listitem")[0]).toHaveTextContent("Design");
-    await userEvent.selectOptions(c.getByRole("combobox", { name: "Move Design to" }), "doing");
+    await chooseOption(c.getByRole("combobox", { name: "Move Design to" }), "In progress");
     await expect(
       within(c.getByRole("region", { name: "In progress" })).getByRole("group", { name: "Design" }),
     ).toBeVisible();
@@ -56,7 +57,9 @@ export const Disabled: Story = {
 };
 export const Restricted: Story = {
   render: () => <Example restricted />,
-  play: async ({ canvasElement }) => {
-    await expect(within(canvasElement).getAllByRole("option", { name: "Done" })[0]).toBeDisabled();
+  play: async ({ canvasElement, userEvent }) => {
+    await userEvent.click(within(canvasElement).getByRole("combobox", { name: "Move Design to" }));
+    const body = within(canvasElement.ownerDocument.body);
+    await expect(await body.findByRole("option", { name: "Done" })).toHaveAttribute("aria-disabled", "true");
   },
 };

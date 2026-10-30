@@ -90,13 +90,19 @@ afterAll(async () => {
   await rm(root, { recursive: true, force: true });
 }, 30_000);
 
+async function choose(target: Page, label: string, option: string) {
+  await target.getByLabel(label, { exact: true }).click();
+  await target.getByRole("option", { name: option, exact: true }).click();
+}
+
 test("packed recipes run, edit data, reset, and use an actual mobile viewport", async () => {
   await page.goto(origin);
   const canvas = page.frameLocator('iframe[title="Prototype preview"]');
   await canvas.getByRole("heading", { name: "Delivery overview" }).waitFor();
-  await canvas.getByLabel("Team", { exact: true }).selectOption("Engineering");
+  await canvas.getByLabel("Team", { exact: true }).click();
+  await canvas.getByRole("option", { name: "Engineering", exact: true }).click();
   expect(await canvas.getByRole("row").count()).toBe(2);
-  await page.getByLabel("Prototype", { exact: true }).selectOption("projects");
+  await choose(page, "Prototype", "Projects");
   await canvas.getByRole("button", { name: "Edit Onboarding redesign", exact: true }).click();
   await canvas.getByLabel("Project name", { exact: true }).fill("New onboarding");
   await canvas.getByRole("button", { name: "Save project", exact: true }).click();
@@ -111,7 +117,7 @@ test("packed recipes run, edit data, reset, and use an actual mobile viewport", 
   expect(await canvas.getByRole("cell", { name: "Onboarding redesign", exact: true }).count()).toBe(1);
   await canvas.getByLabel("Search projects", { exact: true }).fill("no match");
   await canvas.getByText("No matching projects", { exact: true }).waitFor();
-  await page.getByLabel("Prototype", { exact: true }).selectOption("settings");
+  await choose(page, "Prototype", "Settings");
   await canvas.getByLabel("Contact email", { exact: true }).fill("invalid");
   await canvas.getByRole("button", { name: "Save settings", exact: true }).click();
   expect(await canvas.getByRole("status").textContent()).toBe("");
@@ -128,11 +134,11 @@ test("packed recipes run, edit data, reset, and use an actual mobile viewport", 
     .getByRole("status")
     .filter({ hasText: "Saved Orbit. Email updates disabled for team@example.com." })
     .waitFor();
-  await page.getByLabel("Viewport", { exact: true }).selectOption("390");
+  await choose(page, "Viewport", "Mobile · 390px");
   expect(await canvas.locator("html").evaluate(() => window.innerWidth)).toBe(390);
-  await page.getByLabel("Theme", { exact: true }).selectOption("light");
+  await choose(page, "Theme", "Light");
   await canvas.locator('html[data-theme="light"]').waitFor();
-  await page.getByLabel("Density", { exact: true }).selectOption("compact");
+  await choose(page, "Density", "Compact");
   await canvas.locator('[data-density="compact"]').first().waitFor();
   await page.screenshot({ path: resolve(".tmp/prototype-validation/workbench.png") });
   expect(errors).toEqual([]);
@@ -171,8 +177,7 @@ test("copying a recipe discovers a new screen without host changes", async () =>
     definition,
     (await Bun.file(definition).text()).replace('title: "Dashboard"', 'title: "Copied dashboard"'),
   );
-  await page.getByRole("option", { name: "Copied dashboard", exact: true }).waitFor({ state: "attached" });
-  await page.getByLabel("Prototype", { exact: true }).selectOption("copied");
+  await choose(page, "Prototype", "Copied dashboard");
   await page
     .frameLocator('iframe[title="Prototype preview"]')
     .getByRole("heading", { name: "Live delivery overview", exact: true })

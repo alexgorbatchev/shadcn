@@ -10,6 +10,7 @@ import {
   dataGridFeatures,
 } from "../../data-grid";
 import { Button } from "../../Button";
+import { chooseOption } from "../helpers";
 type Person = {
   id: string;
   name: string;
@@ -119,7 +120,7 @@ export const Default: Story = {
     await expect(c.getByRole("table")).not.toHaveTextContent("Zoe");
     await userEvent.click(c.getByRole("button", { name: "Toggle email" }));
     await expect(c.queryByRole("columnheader", { name: "Email" })).not.toBeInTheDocument();
-    await userEvent.selectOptions(c.getByRole("combobox", { name: "Rows per page" }), "10");
+    await chooseOption(c.getByRole("combobox", { name: "Rows per page" }), "10 rows");
     await userEvent.clear(c.getByRole("textbox"));
     await expect(c.getByRole("status")).toHaveTextContent("Page 1 of 1");
     await userEvent.type(c.getByRole("textbox"), "absent");

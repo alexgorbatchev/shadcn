@@ -1,10 +1,11 @@
 import { useAnalyticsCallback } from "../../hooks/useAnalyticsCallback.js";
-import type { ComponentProps, ReactElement } from "react";
+import type { ChangeEvent, ComponentProps, ReactElement } from "react";
 import type { CalendarProps } from "./types.js";
 import { getCalendarClassNames } from "./getCalendarClassNames.js";
-import { DayButton, DayPicker } from "@daypicker/react";
+import { DayButton, DayPicker, type DropdownProps } from "@daypicker/react";
 import { cn } from "../../utils/cn.js";
 import { buttonVariants } from "../Button.js";
+import { OptionSelect } from "../OptionSelect.js";
 
 function Calendar({
   analytics,
@@ -36,6 +37,7 @@ function Calendar({
       classNames={getCalendarClassNames({ buttonVariant, classNames })}
       components={{
         DayButton: CalendarDayButton,
+        Dropdown: CalendarDropdown,
         ...components,
       }}
       {...props}
@@ -66,4 +68,24 @@ function CalendarDayButton({ className, day, modifiers, ...props }: ComponentPro
   );
 }
 
-export { Calendar, CalendarDayButton };
+function CalendarDropdown({
+  options,
+  value,
+  onChange,
+  disabled,
+  "aria-label": ariaLabel,
+}: DropdownProps): ReactElement {
+  return (
+    <OptionSelect
+      aria-label={ariaLabel}
+      disabled={disabled}
+      size="sm"
+      value={String(value)}
+      options={(options ?? []).map((option) => ({ ...option, value: String(option.value) }))}
+      // DayPicker reads only `target.value` from the change event its dropdown slot reports.
+      onValueChange={(next) => onChange?.({ target: { value: next } } as ChangeEvent<HTMLSelectElement>)}
+    />
+  );
+}
+
+export { Calendar, CalendarDayButton, CalendarDropdown };
