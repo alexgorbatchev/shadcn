@@ -431,7 +431,41 @@ export {
 } from "./components/Toolbar.js";
 export { Stepper, StepperList, StepperTrigger, StepperIndicator, StepperContent } from "./components/Stepper.js";
 export { AppShell } from "./components/AppShell.js";
-export type { AppShellProps, AppShellNavigationItem } from "./components/AppShell.js";
+export type { AppShellContent, AppShellProps, AppShellNavigationItem } from "./components/AppShell.js";
+export { Stack } from "./components/Stack.js";
+export type { StackProps } from "./components/Stack.js";
+export { Grid, GridItem } from "./components/Grid.js";
+export type { GridProps, GridItemProps } from "./components/Grid.js";
+export { Container } from "./components/Container.js";
+export type { ContainerProps } from "./components/Container.js";
+export type {
+  ContainerWidth,
+  GridAlign,
+  GridColumns,
+  GridMinColumnWidth,
+  GridSpan,
+  LayoutBreakpoint,
+  LayoutHeight,
+  LayoutSpacing,
+  ResponsiveValue,
+  StackAlign,
+  StackDirection,
+  StackJustify,
+} from "./layout/types.js";
+export { Text } from "./components/Text.js";
+export type { TextProps, TextSize, TextTone, TextWeight } from "./components/Text.js";
+export type { TextAlign } from "./typography/types.js";
+export { Heading } from "./components/Heading.js";
+export type { HeadingProps, HeadingLevel, HeadingSize } from "./components/Heading.js";
+export { WeatherSummary } from "./components/WeatherSummary.js";
+export type {
+  IWeatherDay,
+  TemperatureUnit,
+  WeatherCondition,
+  WeatherSummaryProps,
+} from "./components/WeatherSummary.js";
+export { WeatherForecast } from "./components/WeatherForecast.js";
+export type { WeatherForecastDay, WeatherForecastProps } from "./components/WeatherForecast.js";
 export { PageHeader } from "./components/PageHeader.js";
 export type { PageHeaderProps } from "./components/PageHeader.js";
 export { WorkspaceSwitcher } from "./components/WorkspaceSwitcher.js";

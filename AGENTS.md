@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-08 06:13
-last_modified: 2026-10-29 07:20
+last_modified: 2026-10-30 09:44
 status: current
 ---
 
@@ -75,6 +75,7 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - Keep shared Caddy listeners in the `[caddy]` table of the devhost `config.toml`, with `bindHost = "0.0.0.0"` (the default) and `http = true` for the external devbox gateway. Never add Caddy settings to this repository's manifest; current devhost rejects them. Storybook and the snapshot gallery remain on IPv4 loopback. Preserve shared proxy settings when changing this repository's services.
 - Merge `__VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS` into both Storybook `core.allowedHosts` and Vite `server.allowedHosts`. Vite configuration alone does not allow the Storybook manager's Host/Origin checks.
 - Use typed `Meta` and `StoryObj`, meaningful variants and states, and accessible names for controls.
+- Bind new story types to the component, `type Story = StoryObj<typeof Component>`, while keeping `const meta: Meta<typeof Component>`. `StoryObj<typeof meta>` over DOM-element props adds about 85,000 entries per story file to the single TypeScript 6 identity cache that `ts-unused` uses; the catalog is close to its roughly 16.7 million entry cap, and overflowing it crashes `lint:unused` with `Map maximum size exceeded`.
 - Use isolated iframe documentation for default-open overlays; inline examples can interfere through their document-wide portals.
 - Scope TypeScript docgen to component source; preview infrastructure and stories are not public component APIs.
 - Keep Vite dependency caches and development asset URL prefixes isolated by the actual Storybook port, with a separate production-build cache. Concurrent servers sharing optimized files can mix React instances and fail hooks in Docs; immutable browser caches can retain imports into an older server's cache. After a port changes, reload an already-open preview so it uses the current server's module graph.

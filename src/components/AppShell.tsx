@@ -19,10 +19,21 @@ import { Separator } from "./Separator.js";
 type AppShellNavigationItem = {
   id: string;
   label: string;
-  href: string;
   icon?: ReactNode;
   active?: boolean;
-};
+} & (
+  | { href: string; render?: never }
+  | {
+      href?: never;
+      /** A router link element, such as `<Link to="/settings" />`; it owns the destination and navigation. */
+      render: ReactElement;
+    }
+);
+/**
+ * - `scroll`: children scroll in a padded column.
+ * - `fill`: children fill the remaining area without padding or scrolling and own their overflow.
+ */
+type AppShellContent = "scroll" | "fill";
 type AppShellProps = IDensityProps & {
   navigation: readonly AppShellNavigationItem[];
   brand: ReactNode;
@@ -33,6 +44,7 @@ type AppShellProps = IDensityProps & {
   height?: CSSProperties["height"];
   defaultSidebarOpen?: boolean;
   label?: string;
+  content?: AppShellContent;
 };
 function AppShell({
   navigation,
@@ -44,6 +56,7 @@ function AppShell({
   height = "100dvh",
   defaultSidebarOpen = true,
   label = "Application",
+  content = "scroll",
   density,
 }: AppShellProps): ReactElement {
   return (
@@ -66,8 +79,10 @@ function AppShell({
                       render={
                         <AnalyticsLink
                           component="AppShell"
-                          href={item.href}
-                          aria-current={item.active ? "page" : undefined}
+                          render={item.render}
+                          // Omit unset keys: a router link computes its own href and active state.
+                          {...(item.href === undefined ? {} : { href: item.href })}
+                          {...(item.active ? { "aria-current": "page" } : {})}
                         />
                       }
                       isActive={item.active}
@@ -93,9 +108,15 @@ function AppShell({
           <Separator orientation="vertical" className="h-control" />
           {header}
         </header>
-        <ScrollArea className="min-h-0 flex-1">
-          <div className="flex min-w-0 flex-col gap-panel p-panel">{children}</div>
-        </ScrollArea>
+        {content === "fill" ? (
+          <div data-slot="app-shell-content" data-scroll="none" className="flex min-h-0 min-w-0 flex-1 flex-col">
+            {children}
+          </div>
+        ) : (
+          <ScrollArea className="min-h-0 flex-1">
+            <div className="flex min-w-0 flex-col gap-panel p-panel">{children}</div>
+          </ScrollArea>
+        )}
         {footer && (
           <footer className="shrink-0 border-t border-border p-panel" data-scroll="none">
             {footer}
@@ -106,4 +127,4 @@ function AppShell({
   );
 }
 export { AppShell };
-export type { AppShellNavigationItem, AppShellProps };
+export type { AppShellContent, AppShellNavigationItem, AppShellProps };

@@ -10,6 +10,7 @@ import {
   Field,
   FieldGroup,
   FieldLabel,
+  Grid,
   NativeSelect,
   NativeSelectOption,
   PageHeader,
@@ -42,10 +43,10 @@ export function Dashboard({ scenario }: PrototypeProps): ReactElement {
             </NativeSelect>
           </Field>
         </FieldGroup>
-        <div className="grid gap-4 sm:grid-cols-2">
+        <Grid columns={{ base: 1, sm: 2 }} gap="panel">
           <StatCard label="Active projects" value={visible.length} />
           <StatCard label="Ready for review" value={visible.filter((delivery) => delivery.status === "Ready").length} />
-        </div>
+        </Grid>
         <Card>
           <CardHeader>
             <CardTitle>Delivery queue</CardTitle>

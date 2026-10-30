@@ -7,6 +7,8 @@ import { cn } from "../utils/cn.js";
 type ScrollAreaProps = ScrollAreaPrimitive.Root.Props &
   IDensityProps & {
     scrollbars?: ReactNode;
+    /** Take the remaining space of a parent flex layout, such as a Stack, and scroll within it. */
+    grow?: boolean;
   };
 
 function ScrollArea({
@@ -14,6 +16,7 @@ function ScrollArea({
   className,
   children,
   scrollbars = <ScrollBar />,
+  grow = false,
   ...props
 }: ScrollAreaProps): ReactElement {
   return (
@@ -21,7 +24,11 @@ function ScrollArea({
       data-density={density}
       data-slot="scroll-area"
       className={(state) =>
-        cn("relative flex min-h-0 flex-col", typeof className === "function" ? className(state) : className)
+        cn(
+          "relative flex min-h-0 flex-col",
+          grow && "min-w-0 flex-1",
+          typeof className === "function" ? className(state) : className,
+        )
       }
       {...props}
     >

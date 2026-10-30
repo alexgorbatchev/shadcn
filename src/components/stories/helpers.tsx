@@ -10,7 +10,7 @@ import { Calendar } from "../calendar/Calendar";
 import { Field, FieldError, FieldGroup, FieldLabel } from "../Field";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "../InputGroup";
 import { Popover, PopoverContent, PopoverTitle, PopoverTrigger } from "../Popover";
-import { useState, type ComponentProps, type ReactElement } from "react";
+import { useState, type ComponentProps, type MouseEvent, type ReactElement } from "react";
 import {
   Combobox,
   ComboboxChips,
@@ -536,4 +536,26 @@ export function recordWindowErrors(): () => string[] {
 export async function expectNoWindowErrors(stop: () => string[]): Promise<void> {
   await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
   await expect(stop()).toEqual([]);
+}
+
+interface IClientRouterLinkProps extends Omit<ComponentProps<"a">, "href"> {
+  to: string;
+  onNavigate: (to: string) => void;
+}
+
+/** Mirrors client router links: the click handler runs first, then the router prevents the document load. */
+export function ClientRouterLink({ to, onNavigate, onClick, ...props }: IClientRouterLinkProps): ReactElement {
+  return (
+    <a
+      {...props}
+      href={to}
+      data-router-link=""
+      onClick={(event: MouseEvent<HTMLAnchorElement>) => {
+        onClick?.(event);
+        if (event.defaultPrevented) return;
+        event.preventDefault();
+        onNavigate(to);
+      }}
+    />
+  );
 }

@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-22 20:55
-last_modified: 2026-10-25 10:55
+last_modified: 2026-10-30 09:44
 status: current
 ---
 
@@ -23,11 +23,11 @@ Exact reviewed source revisions and links are in [upstream test reuse](./upstrea
 
 ## Core imports
 
-The package root exports NumberField parts, Toolbar parts, Meter parts, Stepper parts, TagInput, FilterBar, Kanban, AppShell, PageHeader, WorkspaceSwitcher, AccountMenu, AuthForm, SettingsSection, StatCard, BarList, StatusTracker, DashboardLayout, and BillingUsage.
+The package root exports NumberField parts, Toolbar parts, Meter parts, Stepper parts, TagInput, FilterBar, Kanban, AppShell, PageHeader, WorkspaceSwitcher, AccountMenu, AuthForm, SettingsSection, StatCard, BarList, StatusTracker, DashboardLayout, BillingUsage, the layout components Stack, Grid, GridItem, and Container, the typography components Text and Heading, and WeatherSummary and WeatherForecast. `EmailCodeAuthForm` ships from `/input-otp` with the InputOTP parts it composes.
 
 NumberField's noninteractive viewport scrub cursor uses Base UI's document.body portal and resolves density through React context. Its viewport portal is independent of custom popup containers.
 
-AppShell owns the bounded application frame and main ScrollArea. Its `navigation` entries are ordinary links; consumers own routing. WorkspaceSwitcher and AccountMenu report selections/actions. AuthForm, SettingsSection, EventForm, and BillingUsage call consumer handlers; they do not implement authentication, persistence, billing, or network upload services.
+AppShell owns the bounded application frame and main ScrollArea. Its `navigation` entries are plain links or consumer router link elements passed through `render`; consumers own routing. `content="fill"` replaces the padded ScrollArea with a non-scrolling region for full-height screens. WorkspaceSwitcher and AccountMenu report selections/actions. AuthForm, EmailCodeAuthForm, SettingsSection, EventForm, and BillingUsage call consumer handlers; they do not implement authentication, persistence, billing, or network upload services.
 
 Stepper uses manual tab activation by default: arrows move focus and Enter/Space selects a step. Disabled steps remain unavailable. Consumers own validation and which steps are complete. The completed indicator supplies a visual check; consumers should give steps meaningful labels.
 

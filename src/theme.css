@@ -65,7 +65,9 @@
   --spacing-tag: var(--ag-tag-h);
   --spacing-tag-x: var(--ag-tag-x);
   --spacing-panel: var(--ag-panel-padding);
+  --spacing-panel-sm: var(--ag-panel-padding-sm);
   --spacing-field-gap: var(--ag-field-gap);
+  --spacing-section: var(--ag-section-gap);
   --shadow-frame: 0 0 0 1px var(--frame-halo), var(--ag-shadow);
 }
 
@@ -86,6 +88,7 @@
     --ag-panel-padding: 16px;
     --ag-panel-padding-sm: 12px;
     --ag-field-gap: 20px;
+    --ag-section-gap: 32px;
     color-scheme: dark;
     --background: #121417;
     --foreground: #eceff3;
@@ -216,6 +219,7 @@
     --ag-panel-padding: 16px;
     --ag-panel-padding-sm: 12px;
     --ag-field-gap: 20px;
+    --ag-section-gap: 32px;
   }
 
   [data-density="compact"] {
@@ -232,6 +236,7 @@
     --ag-panel-padding: 8px;
     --ag-panel-padding-sm: 6px;
     --ag-field-gap: 8px;
+    --ag-section-gap: 16px;
   }
 
   * {

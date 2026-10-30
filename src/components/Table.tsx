@@ -2,6 +2,7 @@ import type { IDensityProps } from "../density/types.js";
 import type { ComponentProps, ReactElement } from "react";
 
 import { cn } from "../utils/cn.js";
+import type { TextAlign } from "../typography/types.js";
 
 type TableProps = ComponentProps<"table"> & IDensityProps & { layout?: "auto" | "fixed" };
 
@@ -76,7 +77,7 @@ function TableRow({ density, className, ...props }: TableRowProps): ReactElement
   );
 }
 
-type TableTextAlign = "start" | "center" | "end";
+type TableTextAlign = TextAlign;
 const alignmentClasses: Record<TableTextAlign, string> = {
   start: "text-start",
   center: "text-center",

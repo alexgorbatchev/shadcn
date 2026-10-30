@@ -1,5 +1,5 @@
 import type { IAnalyticsProps } from "../analytics/types.js";
-import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
+import { useLinkAnalyticsCallback } from "../hooks/useLinkAnalyticsCallback.js";
 import type { Density, IDensityProps } from "../density/types.js";
 import type { ReactElement } from "react";
 import type { VariantProps } from "class-variance-authority";
@@ -27,7 +27,7 @@ function ButtonLink({
   children,
   ...props
 }: ButtonLinkProps): ReactElement {
-  const onClick = useAnalyticsCallback("ButtonLink", analytics, { name: "ui.activate" }, props.onClick);
+  const onClick = useLinkAnalyticsCallback("ButtonLink", analytics, props.onClick, render !== undefined);
   return useRender({
     defaultTagName: "a",
     props: mergeProps<"a">(

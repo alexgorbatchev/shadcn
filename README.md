@@ -261,8 +261,10 @@ The npm package includes the same index at `llms.txt` in its root and its linked
 | Area                     | Components                                                                                                                                                                                    |
 | :----------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Actions and status       | Alert, Badge, Button, ButtonGroup, ButtonLink, Sonner, Toast, Toggle, ToggleGroup                                                                                                             |
-| Forms and selections     | Calendar, Checkbox, Combobox, Command, Field, Input, InputGroup, InputOTP, Label, NativeSelect, Questionnaire, RadioGroup, Select, Slider, Switch, Textarea                                   |
+| Forms and selections     | AuthForm, Calendar, Checkbox, Combobox, Command, EmailCodeAuthForm, Field, Input, InputGroup, InputOTP, Label, NativeSelect, Questionnaire, RadioGroup, Select, Slider, Switch, Textarea      |
 | Structure and navigation | Accordion, AspectRatio, Avatar, Breadcrumb, Card, Carousel, Chart, Collapsible, Empty, Item, Kbd, Menubar, NavigationMenu, Pagination, Resizable, ScrollArea, Separator, Sidebar, Table, Tabs |
+| Layout and typography    | AppShell, Container, Grid, GridItem, Heading, PageHeader, Stack, Text                                                                                                                         |
+| Data display             | WeatherForecast, WeatherSummary                                                                                                                                                               |
 | Overlays                 | AlertDialog, ContextMenu, Dialog, Drawer, DropdownMenu, HoverCard, Popover, Sheet, Tooltip                                                                                                    |
 | Loading                  | Progress, Skeleton, Spinner                                                                                                                                                                   |
 | Conversations            | Attachment, Bubble, Marker, Message, MessageScroller                                                                                                                                          |
@@ -316,7 +318,7 @@ Compose data tables with the exported Table parts and `@tanstack/react-table@9.2
 
 Compose `Sidebar` and `SidebarInset` inside `SidebarProvider`. Use Header, Content, Group, Menu, and Footer parts to organize navigation, and `SidebarTrigger` or `SidebarRail` to toggle it. `useSidebar` exposes desktop and mobile state. Desktop collapse supports `offcanvas`, `icon`, and `none`; the mobile panel uses a titled Sheet with Escape dismissal and focus restoration. Menu buttons accept native custom elements through `render`; use anchors for navigation and keep their accessible text when collapsed. Cmd/Ctrl+B toggles the sidebar while focus is inside its provider. Set `open`/`onOpenChange` for controlled desktop state, or observe changes without supplying `open`. Persist changes in your application through `onOpenChange`, and restore them through `defaultOpen` or controlled `open`. Set widths through the typed `SidebarStyle` variables `--sidebar-width`, `--sidebar-width-mobile`, and `--sidebar-width-icon`. Sidebar colors follow the palette of the subtree they render in; set `--sidebar`, `--sidebar-foreground`, `--sidebar-primary`, `--sidebar-primary-foreground`, `--sidebar-accent`, `--sidebar-accent-foreground`, `--sidebar-border`, or `--sidebar-ring` to give the sidebar its own colors.
 
-`InputOTP` uses one real input for typing, selection, paste, and autofill. Compose its visual slots inside `InputOTPGroup`; supply `maxLength` and an accessible label. Use `defaultValue` to initialize an uncontrolled code, or `value` and `onChange` to control it. Changing `defaultValue` after mounting preserves the current input. Import the OTP parts together from `@alexgorbatchev/shadcn/input-otp`; its bundled implementation owns their context. `Calendar` supports single, multiple, and range selection. `ResizablePanelGroup` sizes use explicit percentage strings such as `defaultSize="50%"`; numeric sizes are pixels. `CommandDialog` supplies the modal title and description; set `Command`'s `label` to name its search input.
+`InputOTP` uses one real input for typing, selection, paste, and autofill. Compose its visual slots inside `InputOTPGroup`; supply `maxLength` and an accessible label. Use `defaultValue` to initialize an uncontrolled code, or `value` and `onChange` to control it. Changing `defaultValue` after mounting preserves the current input. Import the OTP parts together from `@alexgorbatchev/shadcn/input-otp`; its bundled implementation owns their context. `EmailCodeAuthForm` from the same entry point is passwordless sign-in in two steps: the email step calls `onRequestCode(email)`, and the code step collects a numeric code of `codeLength` digits (default 6) and calls `onVerifyCode(email, code)` when the code is complete or submitted. It offers Resend code and Use a different email, shows pending state while a handler runs, and shows a rejected handler's message without leaving the current step. `Calendar` supports single, multiple, and range selection. `ResizablePanelGroup` sizes use explicit percentage strings such as `defaultSize="50%"`; numeric sizes are pixels. `CommandDialog` supplies the modal title and description; set `Command`'s `label` to name its search input.
 
 Use the Theme toolbar to select light, dark, or system palettes; Docs and example frames follow that selection. Local and routed previews can run on separate ports with independent dependency caches. Reload an open preview after restarting it on a different port.
 
@@ -357,6 +359,66 @@ Import the scroller parts and hooks together from `@alexgorbatchev/shadcn/messag
 Bun 1.4.0's CSS bundler lowers logical positioning to language-based selectors. A plain CSS reproduction confirms that `dir="rtl"` with inherited `lang="en"` positions a logical inline-end marker on the wrong side; production CSS contains the same lowering. This affects Bubble reactions and vertical line-tab markers. Direction changes independent of language remain a Bun consumer limitation. The Storybook/Vite build preserves native logical positioning. See [Bun's CSS lowering documentation](https://bun.com/docs/bundler/css#dir-selector).
 
 Compose `QuestionnaireItem`, `QuestionnaireTitle`, and answer controls inside `Questionnaire`, which renders a native form. `QuestionnaireChoice` supplies native radios or, with `multiple`, checkboxes; label every `QuestionnaireInput`. Read answers with `FormData.get()` or `getAll()`. `QuestionnaireProgress` and the Previous, Skip, Next, and Submit parts follow the active item. Optional steps need an answer or an explicit skip; observe `onStatusChange` to distinguish skipped answers. Letter and number shortcuts select answers without advancing. Use `item`/`onItemChange` for controlled navigation and `invalid` for external validation. Draft defaults and native reset restore initial answers and navigation. These parts accept density overrides and native render/ref props where supported. See the [upstream composition guide](https://ui.shadcn.com/docs/components/base/questionnaire).
+
+# Page layout
+
+Compose screens from layout components instead of utility classes. Each one accepts `render` for a semantic element, such as `render={<section aria-label="Members" />}`, `<ul />`, `<li />`, `<form />`, or `<main />`; props, handlers, and refs merge with the rendered element.
+
+- `Stack` arranges children along one axis. `direction` is `vertical` (default) or `horizontal`, or a breakpoint map such as `{ base: "vertical", md: "horizontal" }`. `gap` and `padding` take the density-aware spacing tokens `none`, `control`, `panel-sm`, `panel`, `field`, and `section`. `align`, `justify`, and `wrap` position children. `grow` takes the remaining space of a parent `Stack` and lets its content shrink; `height` is `auto`, `full`, `viewport`, or `min-viewport`.
+- `Grid` lays out equal columns: `columns` is 1–6 or 12, or a breakpoint map such as `{ base: 1, md: 2, xl: 4 }`. `minColumnWidth` (`xs`, `sm`, `md`, `lg`) instead fits as many columns as the grid's own width allows, so card grids adapt inside narrow panes. `GridItem span` widens a cell; `span="full"` always spans every column.
+- `Container` centers a column with a maximum `width` (`xs` 20rem, `sm` 24rem, `md` 42rem, `lg` 64rem, `xl` 80rem, or `full`).
+- `Text` renders body copy as a paragraph with semantic `size`, `tone`, `weight`, `align`, `truncate`, and `tabular` options; use `render={<span />}` for inline text. `Heading` renders `h1`–`h6` from its required `level`, with a `size` chosen independently of the outline level.
+- `ScrollArea grow` scrolls inside the remaining space of a parent `Stack`.
+
+A header row with trailing actions, a two-column form, and a centered sign-in page:
+
+```tsx
+import {
+  AuthForm,
+  Button,
+  Container,
+  Field,
+  FieldLabel,
+  Grid,
+  GridItem,
+  Heading,
+  Input,
+  Stack,
+  Textarea,
+} from "@alexgorbatchev/shadcn";
+
+<Stack direction="horizontal" justify="between" align="center" gap="control" wrap render={<header />}>
+  <Heading level={2}>Members</Heading>
+  <Button>Invite</Button>
+</Stack>;
+
+<Grid columns={{ base: 1, md: 2 }} gap="field" render={<form onSubmit={save} />}>
+  <Field>
+    <FieldLabel htmlFor="first-name">First name</FieldLabel>
+    <Input id="first-name" />
+  </Field>
+  <Field>
+    <FieldLabel htmlFor="last-name">Last name</FieldLabel>
+    <Input id="last-name" />
+  </Field>
+  <GridItem span="full">
+    <Field>
+      <FieldLabel htmlFor="notes">Notes</FieldLabel>
+      <Textarea id="notes" />
+    </Field>
+  </GridItem>
+</Grid>;
+
+<Stack height="min-viewport" align="center" justify="center" padding="panel" render={<main />}>
+  <Container width="sm">
+    <AuthForm onSubmit={signIn} />
+  </Container>
+</Stack>;
+```
+
+`AppShell` navigation items take either `href` or `render`, a router link element such as `{ id: "plans", label: "Plans", render: <Link to="/plans" />, active: true }`; the router element owns its destination and client-side navigation while the item keeps its active state, `aria-current="page"`, and activation analytics. `content="scroll"` (default) places children in a padded scrolling column; `content="fill"` gives them the remaining area without padding or scrolling, for full-height screens that manage their own scroll regions.
+
+`WeatherSummary` shows one day's forecast: a `label`, a `condition` from `clear`, `partly-cloudy`, `cloudy`, `fog`, `drizzle`, `rain`, `snow`, or `thunderstorm` with its icon, `high` and `low` temperatures in `unit` (`celsius` by default), and an optional `precipitationProbability` from 0 to 100. Values are rounded and formatted with `Intl` for `locale`; `conditionLabel` localizes the condition name. `WeatherForecast` renders several days, each with an `id`, as a list named by `label`: `variant="strip"` (default) wraps compact days side by side, and `variant="list"` shows one detailed day per row.
 
 # Inline editing and ratings
 

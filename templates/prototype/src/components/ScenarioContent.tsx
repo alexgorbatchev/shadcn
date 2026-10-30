@@ -8,6 +8,7 @@ import {
   EmptyTitle,
   EmptyDescription,
   Spinner,
+  Stack,
 } from "@alexgorbatchev/shadcn";
 import type { Scenario } from "../types";
 
@@ -16,10 +17,10 @@ type ScenarioContentProps = { scenario: Scenario; children: ReactNode };
 export function ScenarioContent({ scenario, children }: ScenarioContentProps): ReactElement {
   if (scenario === "loading")
     return (
-      <div role="status" className="flex items-center gap-2">
+      <Stack role="status" direction="horizontal" align="center" gap="control">
         <Spinner />
         Loading sample data…
-      </div>
+      </Stack>
     );
   if (scenario === "error")
     return (

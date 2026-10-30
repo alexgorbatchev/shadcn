@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-20 23:00
-last_modified: 2026-10-21 16:35
+last_modified: 2026-10-30 09:44
 status: current
 ---
 
@@ -45,6 +45,12 @@ The Markdown stylesheet imports the maintained streaming-dot stylesheet. The map
 The default Shiki and Prism syntax themes use the package's semantic colors and respond to consumer palette changes. Shiki uses its native CSS-variable theme API; consumers can additionally override its `--assistant-code-*` token variables or supply an explicit supported Shiki theme. Explicit Shiki themes retain their own foreground and background colors. Highlighted lines use native marks with an outline that preserves token contrast. Both renderers keep their maintained tokenization engines and language registration.
 
 Image actions display native copy, download, and regeneration failures and allow retry. Pending copy and regeneration controls are disabled; changing the image releases the new image's controls and discards stale copy feedback.
+
+## Page-layout elements
+
+`CanvasSplit layout="fill"` fills its container as a page layout: it takes the container's full width and height, the thread and document panes scroll independently, the thread pane is 320–440px wide, and the panes stack below a 48rem container width. The default `layout="card"` keeps the framed demo size. `Timeline` renders an ordered list; events take optional `time`, `detail`, `meta`, `actions`, and a `connector` annotation for the segment to the next visible event, `when` is optional for neutral entries, `visibleCount` defaults to every event, and `fullWidth` spans the container. `RecommendationCard` renders each of its accept, alternatives, and reject actions only when the handler is supplied, with configurable labels and an `accepted` or `rejected` receipt.
+
+`GeoMap height="fill"` fills its parent's height, with the place list scrolling below the map; `showPlaces={false}` hides the list. The map follows container resizes. `tileUrl` is a Leaflet URL template, so a same-origin tile proxy such as `/api/map-tiles/{z}/{x}/{y}` works. `attribution` is HTML for Leaflet's attribution control; changing it replaces the text without recreating the map, which suits providers that report attribution per viewport. A controlled `selectedId` change pans the map to that place.
 
 ## Portals and injected roots
 

@@ -1,4 +1,5 @@
 import { Button } from "../../Button.js";
+import { ScrollArea } from "../../ScrollArea.js";
 import { isCoordinate, markerIcon } from "../utils/geoMap.js";
 import type { JSX } from "react";
 import type { Map as LeafletMap, Marker as LeafletMarker } from "leaflet";
@@ -26,9 +27,14 @@ export interface IGeoMapProps extends Omit<ComponentProps<"div">, "children" | "
   selectedId?: string | undefined;
   onSelect?: ((id: string) => void) | undefined;
   theme?: "light" | "dark" | "auto" | undefined;
+  /** Leaflet URL template such as `/api/tiles/{z}/{x}/{y}`; relative same-origin proxy URLs work. */
   tileUrl?: string | undefined;
+  /** Provider attribution HTML for the map's attribution control; updating it keeps the map and its view. */
   attribution?: string | undefined;
-  height?: number | undefined;
+  /** Map height in pixels, or `fill` to fill the parent's height with the place list scrolling below the map. */
+  height?: number | "fill" | undefined;
+  /** Show the selectable place list below the map. */
+  showPlaces?: boolean | undefined;
   variant?: "default" | "embedded";
 }
 type LeafletModule = typeof import("leaflet");
@@ -44,6 +50,7 @@ export function GeoMap({
   tileUrl,
   attribution,
   height = 260,
+  showPlaces = true,
   variant = "default",
   ...props
 }: IGeoMapProps): JSX.Element {
@@ -101,6 +108,7 @@ export function GeoMap({
     if (!container) return undefined;
     let cancelled = false;
     let map: LeafletMap | null = null;
+    let resizeObserver: ResizeObserver | null = null;
     setMapReady(false);
     void (async () => {
       const leaflet = await import("leaflet");
@@ -108,19 +116,36 @@ export function GeoMap({
       leafletRef.current = leaflet;
       map = leaflet.map(container, { keyboard: true });
       mapRef.current = map;
-      leaflet
-        .tileLayer(resolvedTileUrl, {
-          attribution: resolvedAttribution,
-        })
-        .addTo(map);
+      leaflet.tileLayer(resolvedTileUrl).addTo(map);
+      // Leaflet only tracks window resizes; a filled or resizable parent resizes the container on its own.
+      const resizedMap = map;
+      resizeObserver = new ResizeObserver(() => resizedMap.invalidateSize());
+      resizeObserver.observe(container);
       setMapReady(true);
     })();
     return () => {
       cancelled = true;
+      resizeObserver?.disconnect();
       if (mapRef.current === map) mapRef.current = null;
       map?.remove();
     };
-  }, [resolvedAttribution, resolvedTileUrl]);
+  }, [resolvedTileUrl]);
+  useEffect(() => {
+    const control = mapRef.current?.attributionControl;
+    if (!mapReady || !control) return undefined;
+    // Providers such as Google Map Tiles report attribution per viewport; replacing it must not reset the map.
+    control.addAttribution(resolvedAttribution);
+    return () => {
+      control.removeAttribution(resolvedAttribution);
+    };
+  }, [mapReady, resolvedAttribution]);
+  const pannedSelectionRef = useRef(selectedId);
+  useEffect(() => {
+    if (!mapReady || selectedId === pannedSelectionRef.current) return;
+    pannedSelectionRef.current = selectedId;
+    const place = mapContentRef.current.validPlaces.find((candidate) => candidate.id === selectedId);
+    if (place) mapRef.current?.panTo([place.lat, place.lng]);
+  }, [mapReady, selectedId]);
   useEffect(() => {
     const leaflet = leafletRef.current;
     const map = mapRef.current;
@@ -179,11 +204,50 @@ export function GeoMap({
       markersRef.current.get(place.id)?.setIcon(markerIcon(leaflet, place.id === activeId));
     }
   }, [activeId, contentSignature]);
+  const isFill = height === "fill";
+  const placeList = (
+    <ol className="mt-2 flex flex-col gap-0.5">
+      {validPlaces.map((place) => {
+        const selected = place.id === activeId;
+        return (
+          <li key={place.id}>
+            <Button
+              variant="ghost"
+              align="start"
+              type="button"
+              aria-current={selected || undefined}
+              onClick={() => selectPlace(place)}
+            >
+              <span className="min-w-0 flex-1">
+                <span className="text-foreground/90 block text-base leading-5 break-words">{place.label}</span>
+                {place.description ? (
+                  <span className="text-muted-foreground block text-sm leading-4 break-words">{place.description}</span>
+                ) : null}
+              </span>
+              {variant === "default" ? (
+                <span
+                  data-slot="geo-map-coordinates"
+                  className={cn(mono, "text-muted-foreground shrink-0 pt-0.5 tabular-nums")}
+                >
+                  {place.lat.toFixed(4)}, {place.lng.toFixed(4)}
+                </span>
+              ) : null}
+            </Button>
+          </li>
+        );
+      })}
+    </ol>
+  );
   return (
     <div
       data-testid="GeoMap"
       data-slot="geo-map"
-      className={cn(paper, "flex w-full flex-col overflow-hidden rounded-md p-2", variant === "default" && "max-w-sm")}
+      data-height={isFill ? "fill" : undefined}
+      className={cn(
+        paper,
+        "flex w-full flex-col overflow-hidden rounded-md p-2",
+        isFill ? "h-full min-h-0" : variant === "default" && "max-w-sm",
+      )}
       {...props}
     >
       <div
@@ -193,9 +257,9 @@ export function GeoMap({
         role="region"
         aria-label={`Map of ${validPlaces.length} places`}
         aria-busy={!mapReady || undefined}
-        style={{ height }}
+        style={isFill ? undefined : { height }}
         data-theme={theme}
-        className={cn(field, "relative overflow-hidden rounded-md")}
+        className={cn(field, "relative overflow-hidden rounded-md", isFill && "min-h-40 flex-1")}
       >
         {!mapReady ? (
           <span className="text-muted-foreground absolute inset-0 flex items-center justify-center text-sm">
@@ -204,39 +268,7 @@ export function GeoMap({
         ) : null}
       </div>
 
-      <ol className="mt-2 flex flex-col gap-0.5">
-        {validPlaces.map((place) => {
-          const selected = place.id === activeId;
-          return (
-            <li key={place.id}>
-              <Button
-                variant="ghost"
-                align="start"
-                type="button"
-                aria-current={selected || undefined}
-                onClick={() => selectPlace(place)}
-              >
-                <span className="min-w-0 flex-1">
-                  <span className="text-foreground/90 block text-base leading-5 break-words">{place.label}</span>
-                  {place.description ? (
-                    <span className="text-muted-foreground block text-sm leading-4 break-words">
-                      {place.description}
-                    </span>
-                  ) : null}
-                </span>
-                {variant === "default" ? (
-                  <span
-                    data-slot="geo-map-coordinates"
-                    className={cn(mono, "text-muted-foreground shrink-0 pt-0.5 tabular-nums")}
-                  >
-                    {place.lat.toFixed(4)}, {place.lng.toFixed(4)}
-                  </span>
-                ) : null}
-              </Button>
-            </li>
-          );
-        })}
-      </ol>
+      {showPlaces && (isFill ? <ScrollArea className="max-h-[40%] shrink-0">{placeList}</ScrollArea> : placeList)}
     </div>
   );
 }

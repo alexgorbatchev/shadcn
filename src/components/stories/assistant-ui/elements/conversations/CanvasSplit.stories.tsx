@@ -57,3 +57,96 @@ export const ReadOnly: Story = {
     for (const button of within(canvasElement).getAllByRole("button")) await expect(button).toBeDisabled();
   },
 };
+
+const fillRender: Story["render"] = (args) => (
+  <CanvasSplit layout="fill">
+    <CanvasSplitThread aria-label="Thread">
+      {Array.from({ length: 24 }, (_, index) => (
+        <CanvasSplitMessage key={index} speaker={index % 2 === 0 ? "user" : "assistant"}>
+          Message {index + 1}
+        </CanvasSplitMessage>
+      ))}
+    </CanvasSplitThread>
+    <CanvasSplitDocument aria-label="Document">
+      <CanvasSplitHeader {...args} />
+      <CanvasSplitBody aria-label="Document body">
+        {Array.from({ length: 40 }, (_, index) => (
+          <CanvasSplitLine key={index}>Line {index + 1}</CanvasSplitLine>
+        ))}
+      </CanvasSplitBody>
+    </CanvasSplitDocument>
+  </CanvasSplit>
+);
+
+function panesOf(canvasElement: HTMLElement): { root: DOMRect; thread: HTMLElement; body: HTMLElement } {
+  return {
+    root: canvasElement.querySelector("[data-slot=canvas-split]")!.getBoundingClientRect(),
+    thread: canvasElement.querySelector<HTMLElement>("[data-slot=canvas-split-thread]")!,
+    body: canvasElement.querySelector<HTMLElement>("[data-slot=canvas-split-body]")!,
+  };
+}
+
+export const FillSideBySide: Story = {
+  decorators: [
+    (Story) => (
+      <div className="h-[400px] w-[960px]" data-scroll="none">
+        <Story />
+      </div>
+    ),
+  ],
+  render: fillRender,
+  play: async ({ canvasElement }) => {
+    const { root, thread, body } = panesOf(canvasElement);
+    await expect(root.width).toBeCloseTo(960, 0);
+    await expect(root.height).toBeCloseTo(400, 0);
+    const threadBounds = thread.getBoundingClientRect();
+    await expect(threadBounds.width).toBeGreaterThanOrEqual(320);
+    await expect(threadBounds.width).toBeLessThanOrEqual(440);
+    await expect(threadBounds.height).toBeCloseTo(400, 0);
+    await expect(body.getBoundingClientRect().left).toBeGreaterThanOrEqual(threadBounds.right - 1);
+    await expect(body.getBoundingClientRect().bottom).toBeCloseTo(root.bottom, 0);
+    await expect(thread.scrollHeight).toBeGreaterThan(thread.clientHeight);
+    await expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
+    body.scrollTop = body.scrollHeight;
+    await waitFor(() => expect(body.scrollTop).toBeGreaterThan(0));
+    await expect(thread.scrollTop).toBe(0);
+  },
+};
+
+export const FillStacked: Story = {
+  decorators: [
+    (Story) => (
+      <div className="h-[520px] w-[360px]" data-scroll="none">
+        <Story />
+      </div>
+    ),
+  ],
+  render: fillRender,
+  play: async ({ canvasElement }) => {
+    const { root, thread, body } = panesOf(canvasElement);
+    const threadBounds = thread.getBoundingClientRect();
+    await expect(threadBounds.width).toBeCloseTo(root.width, 0);
+    await expect(body.getBoundingClientRect().top).toBeGreaterThanOrEqual(threadBounds.bottom);
+    await expect(body.getBoundingClientRect().bottom).toBeCloseTo(root.bottom, 0);
+    await expect(thread.scrollHeight).toBeGreaterThan(thread.clientHeight);
+    await expect(body.scrollHeight).toBeGreaterThan(body.clientHeight);
+  },
+};
+
+export const CardSize: Story = {
+  decorators: [
+    (Story) => (
+      <div className="w-[960px]">
+        <Story />
+      </div>
+    ),
+  ],
+  play: async ({ canvasElement }) => {
+    const root = canvasElement.querySelector("[data-slot=canvas-split]")!;
+    await expect(root).toHaveAttribute("data-layout", "card");
+    await expect(root.getBoundingClientRect().width).toBeCloseTo(768, 0);
+    const thread = canvasElement.querySelector("[data-slot=canvas-split-thread]")!.getBoundingClientRect();
+    await expect(thread.width).toBeCloseTo(240, 0);
+    await expect(thread.height).toBeCloseTo(320, 0);
+  },
+};

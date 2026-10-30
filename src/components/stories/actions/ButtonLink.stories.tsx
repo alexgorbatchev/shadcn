@@ -2,8 +2,10 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import type { ComponentProps, MouseEvent, ReactElement } from "react";
 import { ArrowRightIcon, BookOpenIcon } from "lucide-react";
 import { expect, fn, within } from "storybook/test";
+import { AnalyticsProvider } from "../../analytics/index.js";
 import { Button } from "../../Button";
 import { ButtonLink } from "../../ButtonLink";
+import { ClientRouterLink } from "../helpers";
 
 interface IAppLinkProps extends Omit<ComponentProps<"a">, "href"> {
   to: string;
@@ -12,6 +14,9 @@ interface IAppLinkProps extends Omit<ComponentProps<"a">, "href"> {
 function AppLink({ to, ...props }: IAppLinkProps): ReactElement {
   return <a href={to} data-router-link="" {...props} />;
 }
+
+const clientNavigate = fn();
+const trackLinkActivation = fn();
 
 const BUTTON_STYLE_PROPERTIES = [
   "height",
@@ -226,6 +231,47 @@ export const RouterLink: Story = {
     await userEvent.keyboard("{Enter}");
     await expect(routerNavigate).toHaveBeenCalledOnce();
     await expect(args.onClick).toHaveBeenCalledOnce();
+  },
+};
+
+export const RouterLinkAnalytics: Story = {
+  args: { onClick: fn() },
+  decorators: [
+    (Story) => (
+      <AnalyticsProvider enabled transport={{ track: trackLinkActivation }}>
+        <Story />
+      </AnalyticsProvider>
+    ),
+  ],
+  render: ({ href: _href, ...args }) => (
+    <div className="flex items-center gap-4">
+      <ButtonLink {...args} render={<ClientRouterLink to="/plans" onNavigate={clientNavigate} />}>
+        Plans
+      </ButtonLink>
+      <ButtonLink
+        {...args}
+        render={
+          <ClientRouterLink to="/blocked" onNavigate={clientNavigate} onClick={(event) => event.preventDefault()} />
+        }
+      >
+        Blocked
+      </ButtonLink>
+    </div>
+  ),
+  play: async ({ canvasElement, args, userEvent }) => {
+    clientNavigate.mockClear();
+    trackLinkActivation.mockClear();
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole("link", { name: "Plans" }));
+    await expect(args.onClick).toHaveBeenCalledOnce();
+    await expect(clientNavigate).toHaveBeenCalledWith("/plans");
+    await expect(trackLinkActivation).toHaveBeenCalledOnce();
+    await expect(trackLinkActivation).toHaveBeenCalledWith(
+      expect.objectContaining({ name: "ui.activate", component: "ButtonLink" }),
+    );
+    await userEvent.click(canvas.getByRole("link", { name: "Blocked" }));
+    await expect(clientNavigate).toHaveBeenCalledOnce();
+    await expect(trackLinkActivation).toHaveBeenCalledOnce();
   },
 };
 

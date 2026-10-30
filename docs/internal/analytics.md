@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-28 06:05
-last_modified: 2026-10-28 06:21
+last_modified: 2026-10-30 09:44
 status: current
 ---
 
@@ -32,7 +32,7 @@ Every event contains `schemaVersion: 1`, `name`, `component`, optional `id`, `sc
 | `ui.drop`           | Accepted drag/drop target callback.                                                                                                                                                                                                                                            |
 | `ui.impression`     | Explicit `AnalyticsImpression` observation only.                                                                                                                                                                                                                               |
 
-Consumer callbacks run first. Canceled callbacks and default-prevented native actions do not produce callback-based events. Deferred dispatch checks cancellation after composed handlers finish. Repeated events of the same name for one native event are deduplicated within a provider; the first eligible control owns the event. Different semantic events from one interaction remain distinct (for example, activating a trigger and requesting its dialog open).
+Consumer callbacks run first. Canceled callbacks and default-prevented native actions do not produce callback-based events. Deferred dispatch checks cancellation after composed handlers finish. Links rendered through a router element (`ButtonLink`, `BreadcrumbLink`, and `AppShell` navigation `render`) read cancellation when their own handler runs, because client routers prevent the default action after calling that handler in order to navigate without a document load; handlers on the rendered element still cancel. Repeated events of the same name for one native event are deduplicated within a provider; the first eligible control owns the event. Different semantic events from one interaction remain distinct (for example, activating a trigger and requesting its dialog open).
 
 Callbacks without upstream event metadata represent the upstream callback's semantics; they cannot prove physical user input. In particular, programmatic editor updates while focused may count as an edit, and calendar callbacks expose no common cancellation token. There is no claim that every callback is an accepted state transition.
 
