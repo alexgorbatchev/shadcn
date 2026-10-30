@@ -14,3 +14,6 @@ export type MenuItemProps = Menu.Item.Props & IMenuItemOptions;
 export type MenuSubTriggerProps = Menu.SubmenuTrigger.Props & IMenuInsetProps;
 export type MenuCheckboxItemProps = Menu.CheckboxItem.Props & IMenuInsetProps;
 export type MenuRadioItemProps = Menu.RadioItem.Props & IMenuInsetProps;
+export type MenuPopupProps = Menu.Popup.Props &
+  Pick<Menu.Positioner.Props, "align" | "alignOffset" | "side" | "sideOffset"> &
+  IDensityProps & { width?: "content" | "anchor" };

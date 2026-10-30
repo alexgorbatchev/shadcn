@@ -41,6 +41,7 @@ export default defineConfig({
       "react-dom/server",
       "@base-ui/react/button",
       "@base-ui/react/context-menu",
+      "@base-ui/react/menu",
       "@base-ui/react/tooltip",
       "@headless-tree/core",
       "@headless-tree/react",

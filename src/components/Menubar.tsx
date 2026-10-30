@@ -6,6 +6,7 @@ import type {
   MenuSubTriggerProps,
   MenuCheckboxItemProps,
   MenuRadioItemProps,
+  MenuPopupProps,
 } from "../menu/types.js";
 import type { IDensityProps } from "../density/types.js";
 import type { ComponentProps, ReactElement } from "react";
@@ -89,8 +90,6 @@ function MenubarTrigger<Payload>({ density, className, ...props }: MenubarTrigge
   );
 }
 
-type MenubarContentProps = ComponentProps<typeof DropdownMenuContent> & IDensityProps;
-
 function MenubarContent({
   density,
   className,
@@ -98,7 +97,7 @@ function MenubarContent({
   alignOffset = -4,
   sideOffset = 8,
   ...props
-}: MenubarContentProps): ReactElement {
+}: MenuPopupProps): ReactElement {
   return (
     <DropdownMenuContent
       density={density}
@@ -283,9 +282,7 @@ function MenubarSubTrigger({ density, className, inset, ...props }: MenuSubTrigg
   );
 }
 
-type MenubarSubContentProps = ComponentProps<typeof DropdownMenuSubContent> & IDensityProps;
-
-function MenubarSubContent({ density, className, ...props }: MenubarSubContentProps): ReactElement {
+function MenubarSubContent({ density, className, ...props }: MenuPopupProps): ReactElement {
   return (
     <DropdownMenuSubContent
       density={density}
