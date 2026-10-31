@@ -111,11 +111,13 @@ export const Hero: Story = {
     });
     await expect(args.onPointerMove).toHaveBeenCalled();
     const bounds = card.getBoundingClientRect();
-    // Without delays both moves dispatch before the next animation frame, so only the latest position is written.
-    await userEvent.setup({ delay: null }).pointer([
-      { target: card, coords: { clientX: bounds.left + 60, clientY: bounds.top + 20 } },
-      { target: card, coords: { clientX: bounds.left + 90, clientY: bounds.top + 24 } },
-    ]);
+    // Dispatch in one task: an awaited pointer helper can yield to the animation frame under load.
+    card.dispatchEvent(
+      new PointerEvent("pointermove", { bubbles: true, clientX: bounds.left + 60, clientY: bounds.top + 20 }),
+    );
+    card.dispatchEvent(
+      new PointerEvent("pointermove", { bubbles: true, clientX: bounds.left + 90, clientY: bounds.top + 24 }),
+    );
     await expect(card.style.getPropertyValue("--card-spotlight-x")).toBe("40px");
     await waitFor(() => {
       expect(card.style.getPropertyValue("--card-spotlight-x")).toBe("90px");
