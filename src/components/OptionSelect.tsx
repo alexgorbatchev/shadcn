@@ -27,6 +27,8 @@ type OptionSelectProps = IDensityProps &
     /** `full` fills a form field; `fit` sits inline in a toolbar. */
     width?: "fit" | "full";
     "aria-label"?: string;
+    /** IDs of elements describing the select trigger. */
+    "aria-describedby"?: string;
   };
 
 /** A styled single-value `Select` for the common case of a flat list of options. */
@@ -45,6 +47,7 @@ function OptionSelect({
   density,
   analytics,
   "aria-label": ariaLabel,
+  "aria-describedby": ariaDescribedBy,
 }: OptionSelectProps): ReactElement {
   return (
     <Select<string>
@@ -62,6 +65,7 @@ function OptionSelect({
       <SelectTrigger
         id={id}
         aria-label={ariaLabel}
+        aria-describedby={ariaDescribedBy}
         density={density}
         size={size}
         className={cn(width === "full" && "w-full")}

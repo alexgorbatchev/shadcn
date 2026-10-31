@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { expect, fn, userEvent, waitFor, within } from "storybook/test";
 import { Button } from "../../Button";
 import { OptionSelect } from "../../OptionSelect";
@@ -65,6 +65,26 @@ export const Disabled: Story = {
   args: { disabled: true },
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole("combobox", { name: "Runtime" })).toBeDisabled();
+  },
+};
+
+export const DescribedTrigger: Story = {
+  render: function DescribedTrigger(args) {
+    const descriptionId = useId();
+    return (
+      <>
+        <OptionSelect {...args} aria-describedby={descriptionId} />
+        <p id={descriptionId}>Choose the runtime used for this project.</p>
+      </>
+    );
+  },
+  async play({ canvasElement }) {
+    const trigger = within(canvasElement).getByRole("combobox", { name: "Runtime" });
+    await expect(trigger).toHaveAccessibleDescription("Choose the runtime used for this project.");
+    await userEvent.click(trigger);
+    await userEvent.click(await within(canvasElement.ownerDocument.body).findByRole("option", { name: "Node.js" }));
+    await expect(trigger).toHaveTextContent("Node.js");
+    await expect(trigger).toHaveAccessibleDescription("Choose the runtime used for this project.");
   },
 };
 

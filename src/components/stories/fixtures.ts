@@ -56,6 +56,7 @@ export { VirtualizedTranscript } from "./fixtures/VirtualizedTranscript";
 export { StreamingTranscript } from "./fixtures/StreamingTranscript";
 export { AnimatedTranscript } from "./fixtures/AnimatedTranscript";
 export { VirtualDataGridExample } from "./fixtures/VirtualDataGridExample";
+export { ResponsiveTablesExample } from "./fixtures/ResponsiveTablesExample";
 export { FilteredDataGridExample } from "./fixtures/FilteredDataGridExample";
 
 export const fixture_virtualRows: string[] = Array.from({ length: 1000 }, (_, index) => `Item ${index}`);

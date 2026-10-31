@@ -83,12 +83,14 @@ const alignmentClasses: Record<TableTextAlign, string> = {
   center: "text-center",
   end: "text-end",
 };
-type TableVisibility = "sm" | "lg" | "container-sm" | "container-md";
+/** Viewport breakpoints, or table-container breakpoints at 400, 480, and 640 pixels. */
+type TableVisibility = "sm" | "lg" | "container-sm" | "container-md" | "container-lg";
 const visibilityClasses: Record<TableVisibility, string> = {
   sm: "hidden sm:table-cell",
   lg: "hidden lg:table-cell",
   "container-sm": "hidden @min-[400px]/table:table-cell",
   "container-md": "hidden @min-[480px]/table:table-cell",
+  "container-lg": "hidden @min-[640px]/table:table-cell",
 };
 // Columns resolve visibility against the same table container as their cells, so a hidden column never keeps width.
 const columnVisibilityClasses: Record<TableVisibility, string> = {
@@ -96,6 +98,7 @@ const columnVisibilityClasses: Record<TableVisibility, string> = {
   lg: "hidden lg:table-column",
   "container-sm": "hidden @min-[400px]/table:table-column",
   "container-md": "hidden @min-[480px]/table:table-column",
+  "container-lg": "hidden @min-[640px]/table:table-column",
 };
 interface ITableCellOptions {
   truncate?: boolean;
