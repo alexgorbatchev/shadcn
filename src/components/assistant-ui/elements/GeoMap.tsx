@@ -16,6 +16,20 @@ export interface IGeoMapPlace {
   label: string;
   description?: string | undefined;
 }
+export interface IGeoMapViewport {
+  zoom: number;
+  north: number;
+  south: number;
+  east: number;
+  west: number;
+}
+export interface IGeoMapCircle {
+  id: string;
+  lat: number;
+  lng: number;
+  radiusMeters: number;
+  label: string;
+}
 export interface IGeoMapRoute {
   id: string;
   points: readonly (readonly [lat: number, lng: number])[];
@@ -24,6 +38,10 @@ export interface IGeoMapRoute {
 export interface IGeoMapProps extends Omit<ComponentProps<"div">, "children" | "onSelect" | "className" | "style"> {
   places: readonly IGeoMapPlace[];
   routes?: readonly IGeoMapRoute[] | undefined;
+  /** Geographic radius overlays, in meters; the initial view includes their full bounds. */
+  circles?: readonly IGeoMapCircle[] | undefined;
+  /** Reports the visible bounds after fitting, panning, or zooming, for viewport attribution. */
+  onViewportChange?: ((viewport: IGeoMapViewport) => void) | undefined;
   selectedId?: string | undefined;
   onSelect?: ((id: string) => void) | undefined;
   theme?: "light" | "dark" | "auto" | undefined;
@@ -44,6 +62,8 @@ const DEFAULT_ATTRIBUTION = "© OpenStreetMap contributors";
 export function GeoMap({
   places,
   routes,
+  circles,
+  onViewportChange,
   selectedId,
   onSelect,
   theme = "auto",
@@ -54,6 +74,8 @@ export function GeoMap({
   variant = "default",
   ...props
 }: IGeoMapProps): JSX.Element {
+  const viewportCallbackRef = useRef(onViewportChange);
+  viewportCallbackRef.current = onViewportChange;
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<LeafletMap | null>(null);
   const leafletRef = useRef<LeafletModule | null>(null);
@@ -76,12 +98,18 @@ export function GeoMap({
       signature: JSON.stringify([
         places.map((place) => [place.id, place.lat, place.lng, place.label, place.description]),
         routes?.map((route) => [route.id, route.points, route.label]) ?? [],
+        circles?.map((circle) => [circle.id, circle.lat, circle.lng, circle.radiusMeters, circle.label]) ?? [],
       ]),
+      validCircles:
+        circles?.filter(
+          (circle) =>
+            isCoordinate(circle.lat, circle.lng) && Number.isFinite(circle.radiusMeters) && circle.radiusMeters > 0,
+        ) ?? [],
       validPlaces,
       routePoints,
       validRoutes,
     };
-  }, [places, routes]);
+  }, [places, routes, circles]);
   const { signature: contentSignature, validPlaces } = mapContent;
   const mapContentRef = useRef(mapContent);
   mapContentRef.current = mapContent;
@@ -116,6 +144,17 @@ export function GeoMap({
       leafletRef.current = leaflet;
       map = leaflet.map(container, { keyboard: true });
       mapRef.current = map;
+      const observedMap = map;
+      map.on("moveend", () => {
+        const bounds = observedMap.getBounds();
+        viewportCallbackRef.current?.({
+          zoom: observedMap.getZoom(),
+          north: bounds.getNorth(),
+          south: bounds.getSouth(),
+          east: bounds.getEast(),
+          west: bounds.getWest(),
+        });
+      });
       leaflet.tileLayer(resolvedTileUrl).addTo(map);
       // Leaflet only tracks window resizes; a filled or resizable parent resizes the container on its own.
       const resizedMap = map;
@@ -150,20 +189,43 @@ export function GeoMap({
     const leaflet = leafletRef.current;
     const map = mapRef.current;
     if (!leaflet || !map || !mapReady) return;
-    const { routePoints, validPlaces, validRoutes } = mapContentRef.current;
+    const { routePoints, validPlaces, validRoutes, validCircles } = mapContentRef.current;
     const markers = markersRef.current;
     const layer = leaflet.layerGroup().addTo(map);
     const points: Coordinate[] = [
       ...validPlaces.map((place) => [place.lat, place.lng] satisfies Coordinate),
       ...routePoints,
     ];
+    const firstCircle = validCircles[0];
+    // Circle bounds use Leaflet projection, which needs an initialized view.
+    if (firstCircle) map.setView([firstCircle.lat, firstCircle.lng], 13, { animate: false });
+    for (const circle of validCircles) {
+      const overlay = leaflet
+        .circle([circle.lat, circle.lng], {
+          radius: circle.radiusMeters,
+          color: "var(--primary)",
+          fillColor: "var(--primary)",
+          fillOpacity: 0.12,
+          weight: 2,
+        })
+        .addTo(layer);
+      const label = document.createElement("span");
+      label.textContent = circle.label;
+      overlay.bindTooltip(label);
+      const path = overlay.getElement();
+      path?.setAttribute("role", "graphics-symbol");
+      path?.setAttribute("aria-label", circle.label);
+      path?.setAttribute("tabindex", "0");
+      const bounds = overlay.getBounds();
+      points.push([bounds.getSouth(), bounds.getWest()], [bounds.getNorth(), bounds.getEast()]);
+    }
     const [first] = points;
     if (points.length === 1 && first) {
-      map.setView(first, 13);
+      map.setView(first, 13, { animate: false });
     } else if (points.length > 1) {
-      map.fitBounds(leaflet.latLngBounds(points), { padding: [24, 24] });
+      map.fitBounds(leaflet.latLngBounds(points), { padding: [24, 24], animate: false });
     } else {
-      map.setView([0, 0], 2);
+      map.setView([0, 0], 2, { animate: false });
     }
     for (const route of validRoutes) {
       const polyline = leaflet

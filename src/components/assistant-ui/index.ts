@@ -146,6 +146,8 @@ export type { IFlowEdge } from "./elements/FlowGraph.js";
 export type { IFlowNode } from "./elements/FlowGraph.js";
 export type { IGalleryImage } from "./elements/ImageGallery.js";
 export type { IGenerationLoaderProps } from "./elements/GenerationLoader.js";
+export type { IGeoMapViewport } from "./elements/GeoMap.js";
+export type { IGeoMapCircle } from "./elements/GeoMap.js";
 export type { IGeoMapPlace } from "./elements/GeoMap.js";
 export type { IGeoMapProps } from "./elements/GeoMap.js";
 export type { IGeoMapRoute } from "./elements/GeoMap.js";

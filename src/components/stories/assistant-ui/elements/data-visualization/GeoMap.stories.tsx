@@ -53,6 +53,7 @@ const meta: Meta<typeof GeoMap> = {
       "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Crect width='256' height='256' fill='lightgray'/%3E%3C/svg%3E",
     attribution: "Deterministic map fixture",
     onSelect: fn(),
+    onViewportChange: fn(),
   },
 };
 export default meta;
@@ -199,5 +200,54 @@ export const ControlledSelection: Story = {
     await userEvent.click(canvas.getByRole("button", { name: "Select Paris externally" }));
     await expect(list.getByRole("button", { name: /^Paris/ })).toHaveAttribute("aria-current", "true");
     await waitFor(() => expect(mapPane.style.transform).not.toBe(initialTransform));
+  },
+};
+
+function ChangingRadiusMap(props: GeoMapHarnessProps): ReactElement {
+  const [radiusMeters, setRadiusMeters] = useState(1200);
+  return (
+    <>
+      <Button onClick={() => setRadiusMeters(4800)}>Expand radius</Button>
+      <Button onClick={() => setRadiusMeters(0)}>Clear radius</Button>
+      <GeoMap
+        {...props}
+        circles={[{ id: "area", lat: 51.5, lng: -0.12, radiusMeters, label: `${radiusMeters} meter radius` }]}
+      />
+    </>
+  );
+}
+
+export const Radius: Story = {
+  args: {
+    places: [{ id: "origin", lat: 51.5, lng: -0.12, label: "Origin" }],
+    routes: [],
+    showPlaces: false,
+    variant: "embedded",
+  },
+  render: (args) => <ChangingRadiusMap {...args} />,
+  play: async ({ args, canvasElement }) => {
+    const canvas = within(canvasElement);
+    const region = await waitForMap(canvasElement, "Map of 1 places");
+    await waitFor(() => expect(args.onViewportChange).toHaveBeenCalledWith(expect.objectContaining({ zoom: 13 })));
+    const circle = await canvas.findByRole("graphics-symbol", { name: "1200 meter radius" });
+    await waitFor(() => {
+      const mapBounds = region.getBoundingClientRect();
+      const circleBounds = circle.getBoundingClientRect();
+      expect(circleBounds.width).toBeGreaterThan(20);
+      expect(circleBounds.left).toBeGreaterThan(mapBounds.left);
+      expect(circleBounds.right).toBeLessThan(mapBounds.right);
+      expect(circleBounds.top).toBeGreaterThan(mapBounds.top);
+      expect(circleBounds.bottom).toBeLessThan(mapBounds.bottom);
+    });
+    await userEvent.click(within(region).getByRole("button", { name: "Zoom in" }));
+    await waitFor(() => expect(args.onViewportChange).toHaveBeenCalledWith(expect.objectContaining({ zoom: 14 })));
+    circle.focus();
+    await expect(await canvas.findByText("1200 meter radius")).toBeVisible();
+    await userEvent.click(canvas.getByRole("button", { name: "Expand radius" }));
+    await expect(await canvas.findByRole("graphics-symbol", { name: "4800 meter radius" })).toBeVisible();
+    await expect(canvas.queryByRole("graphics-symbol", { name: "1200 meter radius" })).not.toBeInTheDocument();
+    await userEvent.click(canvas.getByRole("button", { name: "Clear radius" }));
+    await waitFor(() => expect(canvas.queryByRole("graphics-symbol")).not.toBeInTheDocument());
+    await expect(canvas.getByTitle("Origin")).toBeVisible();
   },
 };
