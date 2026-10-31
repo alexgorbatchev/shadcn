@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-08 06:13
-last_modified: 2026-10-30 09:44
+last_modified: 2026-10-31 10:11
 status: current
 ---
 
@@ -63,9 +63,9 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - Keep optional font imports in `src/fonts.css`. Preserve shadcn source attribution in `THIRD_PARTY_NOTICES.md` when adding components.
 - Follow `src/components/Button.tsx` for primitive props, semantic utility classes, variants, and density overrides; follow `src/components/stories/actions/Button.stories.tsx` for typed metadata and interactive controls. Add public exports to the appropriate core or feature entry point and include each component family in the Storybook catalog.
 - Group Storybook by relocating story files under functional subdirectories of `src/components/stories/`; derive titles from the package name and story path, omitting `src/` and `stories/`. Keep runtime module locations, flat public exports, optional feature boundaries, and tree shaking independent of sidebar organization.
-- ThemeProvider owns the document palette. DensityProvider supplies both React context and CSS variables; portal content must resolve density through context.
+- ThemeProvider owns the document palette and design preset. Keep the default `devhost` preset and opt-in `shadcn` Neutral preset independent of light/dark/system mode and density. DensityProvider supplies both React context and CSS variables; portal content must resolve density through context.
 - A `PortalProvider` container applies to the outermost popup. Every portaled component attaches `usePortalNode` to its Base UI portal and provides that node to its content through `PortalProvider`, so nested popups render inside their parent's portal, where Base UI places them without a container and a modal popup counts them as inside it. Keep `@base-ui/utils` pinned to the version `@base-ui/react` requires.
-- Keep rectangular corners at 4px or less through the `--radius-*` tokens in `src/theme.css`; reserve `rounded-full` for circular and pill shapes such as avatars, radio indicators, slider thumbs, and scrollbar thumbs. Preserve framed floating surfaces, semantic palette tokens, and reduced-motion behavior. Avoid hardcoded palette classes and scale/bounce transitions.
+- Keep the default `devhost` preset's rectangular corners at 4px or less through the `--radius-*` tokens in `src/theme.css`; the `shadcn` preset uses its upstream radius scale. Reserve `rounded-full` for circular and pill shapes such as avatars, radio indicators, slider thumbs, and scrollbar thumbs. Preserve framed floating surfaces, semantic palette tokens, and reduced-motion behavior. Avoid hardcoded palette classes and scale/bounce transitions.
 - Drive pointer-following effects, such as the Card `hero` spotlight (`useCardSpotlight` with the `card-spotlight` theme utility), by writing CSS variables to the element once per animation frame; never store pointer positions in React state. While the pointer is inside, recompute on scroll, viewport resize, and element resize; browsers send no pointer events when content moves under a stationary pointer. Leave forced colors to the browser, which drops gradient backgrounds and restores the native border; never opt out with `forced-color-adjust`.
 
 ## Storybook and Validation

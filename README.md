@@ -198,10 +198,15 @@ An independent production Vite consumer installed from the archive verifies RTL 
 | `ThemeProvider.defaultTheme` | `"light" \| "dark" \| "system"` | `"system"`                      | Initial preference when storage has no saved value.                    |
 | `ThemeProvider.storageKey`   | `string`                        | `"shadcn-alexgorbatchev-theme"` | Local storage key for the preference.                                  |
 | `ThemeProvider.forcedTheme`  | `"light" \| "dark"`             | unset                           | Overrides the displayed palette without changing the saved preference. |
+| `ThemeProvider.preset`       | `"devhost" \| "shadcn"`         | `"devhost"`                     | Document-wide design preset, independent of color mode and density.    |
 | `DensityProvider.density`    | `"compact" \| "comfortable"`    | `"comfortable"`                 | Density for descendants and their portals.                             |
 | Component `density`          | `"compact" \| "comfortable"`    | inherited                       | Local override on styled components that expose the prop.              |
 
-`useTheme()` returns `theme`, `resolvedTheme`, and `setTheme`. Call `setTheme("light")`, `setTheme("dark")`, or `setTheme("system")` from a component inside the provider.
+`useTheme()` returns `theme`, `resolvedTheme`, `setTheme`, and `preset`. Call `setTheme("light")`, `setTheme("dark")`, or `setTheme("system")` from a component inside the provider.
+
+Use `<ThemeProvider preset="shadcn" defaultTheme="system">` for the [default shadcn Neutral palette](https://ui.shadcn.com/docs/theming), system sans-serif text, and its rounded corner scale. The default `devhost` preset uses the package's monospace design and sharp corners. Both presets support light, dark, and system modes, including portaled content. Code retains the monospace font. Density, component composition, and package-specific status colors remain independent of the preset.
+
+The preset is controlled by the prop; changing it updates the document without changing the saved color-mode preference. Persist that prop in your application if needed. Storybook exposes the same choice in its **Design** toolbar. For a page styled before React mounts, set `data-theme-preset="shadcn"` and `data-theme="light"` or `"dark"` on `<html>` to match the provider. The existing `theme.css` import and `@source` setup cover both presets.
 
 Override tokens after the theme imports. This example uses the existing success palette as the primary accent:
 

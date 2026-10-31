@@ -23,7 +23,7 @@ const meta: Meta<typeof ThemeProvider> = {
   render: () => <ThemeControlsExample />,
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ThemeProvider>;
 
 export const Interactive: Story = {
   play: async ({ canvasElement }) => {
@@ -62,6 +62,11 @@ export const ForcedDark: Story = {
     await expect(localStorage.getItem("shadcn-alexgorbatchev-preview")).toBe(JSON.stringify("light"));
     await userEvent.click(canvas.getByRole("button", { name: "System" }));
   },
+};
+
+export const Shadcn: Story = {
+  globals: { preset: "shadcn", theme: "system" },
+  play: Interactive.play,
 };
 export const ForcedLight: Story = {
   globals: { theme: "light" },

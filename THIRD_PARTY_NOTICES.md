@@ -14,6 +14,8 @@ Questionnaire adapts the official registry's fifteen styled parts around `@shadc
 
 ## shadcn/ui
 
+The `shadcn` design preset in `src/theme.css` adapts the default Neutral light/dark palette and radius scale from https://ui.shadcn.com/docs/theming, retrieved on 2026-10-31. It preserves the package's independent density and status tokens and uses document data attributes for selection. The upstream MIT notice below covers these tokens.
+
 Questionnaire's NativeChoiceKeyboard and ItemArrowNavigation Storybook interactions adapt the native choice-navigation and contextual horizontal-arrow browser tests from `packages/react/src/questionnaire/questionnaire.browser.test.tsx` at upstream commit `3d98900e9b73c45f035f8109e9d41ba6a51685e7` (https://github.com/shadcn-ui/ui). Local changes use this package's styled compositions, Storybook's play context and accessible queries, and assert unanswered-item guards, focus, selection and submitted answers. The upstream MIT notice below covers these adaptations.
 
 Sidebar adapts the official provider and styled parts, preserving custom render/ref contracts, keyboard toggling within each provider, consumer-owned persistence, and native mobile Sheet behavior. Local changes support density, cancelled toggle events, observation without controlled state, inert offcanvas panels, configured mobile widths, and centered icons with accessible collapsed labels. Separator uses Base UI's current orientation attributes, and Tooltip preserves native state callbacks.

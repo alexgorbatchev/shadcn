@@ -5,8 +5,20 @@ import "./preview.css";
 
 const preview: Preview = {
   tags: ["autodocs", "!test"],
-  initialGlobals: { theme: "dark", density: "comfortable" },
+  initialGlobals: { theme: "dark", density: "comfortable", preset: "devhost" },
   globalTypes: {
+    preset: {
+      description: "Design preset",
+      toolbar: {
+        title: "Design",
+        icon: "paintbrush",
+        dynamicTitle: true,
+        items: [
+          { value: "devhost", title: "Devhost" },
+          { value: "shadcn", title: "shadcn (Neutral)" },
+        ],
+      },
+    },
     theme: {
       description: "Color scheme",
       toolbar: {
@@ -47,6 +59,7 @@ const preview: Preview = {
   decorators: [
     (Story, context) => (
       <PreviewFrame
+        preset={context.globals.preset === "shadcn" ? "shadcn" : "devhost"}
         theme={context.globals.theme === "light" ? "light" : context.globals.theme === "system" ? "system" : "dark"}
         density={context.globals.density === "compact" ? "compact" : "comfortable"}
       >

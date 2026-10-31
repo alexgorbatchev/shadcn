@@ -171,7 +171,7 @@ export { ScrollGuard } from "./components/ScrollGuard.js";
 export type { IScrollGuardProps } from "./components/ScrollGuard.js";
 export type { IThemeProviderProps } from "./components/ThemeProvider.js";
 export { useTheme } from "./hooks/useTheme.js";
-export type { ThemeMode, ResolvedTheme, IThemeContextValue } from "./theme/types.js";
+export type { ThemeMode, ResolvedTheme, ThemePreset, IThemeContextValue } from "./theme/types.js";
 export { useComboboxAnchor } from "./hooks/useComboboxAnchor.js";
 export { cn } from "./utils/cn.js";
 export { Toggle, toggleVariants } from "./components/Toggle.js";
