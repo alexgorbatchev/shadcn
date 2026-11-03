@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, within, waitFor } from "storybook/test";
+import { isMacOS, isiOS } from "@tiptap/core";
 import { RichTextEditor, useEditor, StarterKit } from "../../editor";
 const meta: Meta<typeof RichTextEditor> = {
   title: "@alexgorbatchev/shadcn/components/forms/RichTextEditor",
@@ -23,10 +24,13 @@ export const Default: Story = {
     const c = within(canvasElement);
     await waitFor(() => expect(c.getByRole("textbox", { name: "Description" })).toBeVisible());
     const box = c.getByRole("textbox");
+    const selectAll = isMacOS() || isiOS() ? "{Meta>}a{/Meta}" : "{Control>}a{/Control}";
     await userEvent.click(box);
-    await userEvent.keyboard("{Control>}a{/Control}");
-    await userEvent.type(box, "Hello editor");
-    await userEvent.keyboard("{Control>}a{/Control}");
+    await userEvent.keyboard(selectAll);
+    await userEvent.keyboard("Hello editor");
+    await expect(box).toHaveTextContent(/^Hello editor$/);
+    await userEvent.keyboard(selectAll);
+    await expect(box.ownerDocument.getSelection()?.toString()).toBe("Hello editor");
     await userEvent.click(c.getByRole("button", { name: "Bold" }));
     await expect(c.getByRole("button", { name: "Bold" })).toHaveAttribute("aria-pressed", "true");
     await expect(box.querySelector("strong")).toHaveTextContent("Hello editor");
