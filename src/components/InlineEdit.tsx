@@ -1,7 +1,8 @@
 import { useAnalytics } from "../hooks/useAnalytics.js";
 import type { IAnalyticsProps } from "../analytics/types.js";
-import { useEffect, useRef, useState, type ReactElement, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState, type ReactElement, type ReactNode } from "react";
 import { Input } from "./Input.js";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./Tooltip.js";
 import type { IDensityProps } from "../density/types.js";
 
 interface IInlineEditProps extends IDensityProps, IAnalyticsProps {
@@ -16,7 +17,7 @@ interface IInlineEditProps extends IDensityProps, IAnalyticsProps {
   onCancel: () => void;
 }
 
-/** A mounted edit session. The consumer replaces its display with this field while editing. */
+/** A mounted edit session that inherits its text line's size; validation floats without moving adjacent content. */
 export function InlineEdit({
   analytics,
   label,
@@ -31,6 +32,8 @@ export function InlineEdit({
   onCancel,
 }: IInlineEditProps): ReactElement {
   const track = useAnalytics("InlineEdit", analytics);
+  const triggerId = useId();
+  const errorId = `${triggerId}-error`;
   const input = useRef<HTMLInputElement>(null);
   const isFinished = useRef(false);
   const shouldCancel = useRef(false);
@@ -61,45 +64,56 @@ export function InlineEdit({
   };
   return (
     <form
-      className="flex min-w-0 flex-col gap-1"
+      className="min-w-0"
       onSubmit={(event) => {
         event.preventDefault();
         void save();
       }}
     >
-      <Input
-        analytics={false}
-        ref={input}
-        density={density}
-        aria-label={label}
-        aria-invalid={Boolean(error)}
-        aria-description="Enter saves. Escape cancels."
-        value={value}
-        disabled={isDisabled || isSaving}
-        onChange={(event) => onValueChange(event.target.value)}
-        onBlur={() => {
-          if (shouldCancel.current && !isFinished.current) {
-            isFinished.current = true;
-            onCancel();
-          } else void save();
-        }}
-        onKeyDown={(event) => {
-          if (event.key === "Escape") {
-            event.preventDefault();
-            event.stopPropagation();
-            shouldCancel.current = true;
-            event.currentTarget.blur();
-          } else if (event.key === "Enter") {
-            event.preventDefault();
-            event.currentTarget.blur();
+      <Tooltip open={Boolean(error)} triggerId={triggerId}>
+        <TooltipTrigger
+          id={triggerId}
+          render={
+            <Input
+              analytics={false}
+              ref={input}
+              density={density}
+              className="h-[1lh] rounded-none border-0 px-0 py-0 text-[length:inherit] leading-[inherit]"
+              aria-label={label}
+              aria-invalid={Boolean(error)}
+              aria-errormessage={error ? errorId : undefined}
+              aria-description="Enter saves. Escape cancels."
+              value={value}
+              disabled={isDisabled || isSaving}
+              onChange={(event) => onValueChange(event.target.value)}
+              onBlur={() => {
+                if (shouldCancel.current && !isFinished.current) {
+                  isFinished.current = true;
+                  onCancel();
+                } else void save();
+              }}
+              onKeyDown={(event) => {
+                if (event.key === "Escape") {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  shouldCancel.current = true;
+                  event.currentTarget.blur();
+                } else if (event.key === "Enter") {
+                  event.preventDefault();
+                  event.currentTarget.blur();
+                }
+              }}
+            />
           }
-        }}
-      />
-      {error && (
-        <p role="alert" className="text-xs text-destructive">
-          {error}
-        </p>
-      )}
+        />
+        {error && (
+          <TooltipContent density={density} side="bottom" align="start">
+            <p id={errorId} role="alert" className="text-destructive">
+              {error}
+            </p>
+          </TooltipContent>
+        )}
+      </Tooltip>
     </form>
   );
 }
