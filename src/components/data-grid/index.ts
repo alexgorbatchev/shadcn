@@ -21,6 +21,8 @@ export type {
   IDataGridRangeFilter,
 } from "./DataGrid.js";
 export { DataGridColumnOptions } from "./DataGridColumnOptions.js";
+export { constrainDataGridColumnSizing } from "./constrainDataGridColumnSizing.js";
+export { fitDataGridColumnSizing } from "./fitDataGridColumnSizing.js";
 export { DataGridFilters } from "./DataGridFilters.js";
 export { DataGridFilterSummary } from "./DataGridFilterSummary.js";
 export { DataGridSelectHeader } from "./DataGridSelectHeader.js";

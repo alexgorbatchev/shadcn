@@ -55,6 +55,7 @@ export default defineConfig({
     attachmentsDir: ".tmp/native-browser-attachments",
     include: [
       "src/components/__tests__/*.test.tsx",
+      "src/components/data-grid/__tests__/*.test.ts",
       "src/utils/__tests__/*.test.ts",
       "src/components/assistant-ui/hooks/__tests__/*.test.ts",
       "src/components/assistant-ui/hooks/__tests__/*.test.tsx",

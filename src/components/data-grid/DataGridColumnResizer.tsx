@@ -1,6 +1,8 @@
 import { Subscribe, type CellData, type Header, type RowData } from "@tanstack/react-table";
-import type { KeyboardEvent, ReactElement } from "react";
+import { useContext, type KeyboardEvent, type ReactElement } from "react";
 import type { DataGridFeatures } from "./DataGrid.js";
+import { DataGridColumnFitContext } from "./DataGridColumnFitContext.js";
+import { getDataGridColumnFitMaximum } from "./getDataGridColumnFitMaximum.js";
 
 const KEYBOARD_STEP = 16;
 
@@ -19,16 +21,21 @@ export function DataGridColumnResizer<T extends RowData>({
 }: IDataGridColumnResizerProps<T>): ReactElement {
   const column = header.column;
   const table = column.table;
+  const fit = useContext(DataGridColumnFitContext);
   const minSize = column.columnDef.minSize ?? 0;
-  const maxSize = column.columnDef.maxSize ?? Number.MAX_SAFE_INTEGER;
+  const getMaxSize = (): number =>
+    fit
+      ? getDataGridColumnFitMaximum(table, column.id, fit.width)
+      : (column.columnDef.maxSize ?? Number.MAX_SAFE_INTEGER);
   const resize = header.getResizeHandler();
   const setSize = (size: number): void =>
-    table.setColumnSizing((sizes) => ({ ...sizes, [column.id]: Math.min(maxSize, Math.max(minSize, size)) }));
+    table.setColumnSizing((sizes) => ({ ...sizes, [column.id]: Math.min(getMaxSize(), Math.max(minSize, size)) }));
   const onKeyDown = (event: KeyboardEvent<HTMLDivElement>): void => {
     // In right-to-left grids the trailing edge sits on the left, so the left arrow widens the column.
     const growKey = table.options.columnResizeDirection === "rtl" ? "ArrowLeft" : "ArrowRight";
     const shrinkKey = growKey === "ArrowRight" ? "ArrowLeft" : "ArrowRight";
     const size = column.getSize();
+    const maxSize = getMaxSize();
     const next =
       event.key === growKey
         ? size + KEYBOARD_STEP
@@ -47,7 +54,9 @@ export function DataGridColumnResizer<T extends RowData>({
     // A string key re-renders only this handle, and only when its width or drag state changes.
     <Subscribe
       source={table.store}
-      selector={(state) => `${state.columnSizing[column.id]}:${state.columnResizing.isResizingColumn === column.id}`}
+      selector={(state) =>
+        `${state.columnSizing[column.id]}:${getMaxSize()}:${state.columnResizing.isResizingColumn === column.id}`
+      }
     >
       {() => (
         <div
@@ -56,7 +65,7 @@ export function DataGridColumnResizer<T extends RowData>({
           aria-label={`Resize ${label}`}
           aria-valuenow={column.getSize()}
           aria-valuemin={minSize}
-          aria-valuemax={maxSize < Number.MAX_SAFE_INTEGER ? maxSize : undefined}
+          aria-valuemax={getMaxSize() < Number.MAX_SAFE_INTEGER ? getMaxSize() : undefined}
           tabIndex={0}
           data-slot="data-grid-column-resizer"
           data-resizing={column.getIsResizing() || undefined}

@@ -33,7 +33,8 @@ import {
   type TableState,
 } from "@tanstack/react-table";
 import { ArrowDownIcon, ArrowUpIcon, ChevronsUpDownIcon } from "lucide-react";
-import { useId, type AriaAttributes, type ReactElement, type ReactNode } from "react";
+import { useContext, useId, type AriaAttributes, type ReactElement, type ReactNode } from "react";
+import { DataGridColumnFitContext } from "./DataGridColumnFitContext.js";
 import type { IDensityProps } from "../../density/types.js";
 import type { ILabelValue } from "../../options/types.js";
 import { Button } from "../Button.js";
@@ -170,22 +171,29 @@ function getAriaSort<T extends RowData>(column: DataGridColumn<T>): AriaAttribut
 interface IDataGridHeaderCellProps<T extends RowData> {
   header: Header<DataGridFeatures, T, CellData>;
   isResizable: boolean;
+  colSpan: number;
 }
 
-function DataGridHeaderCell<T extends RowData>({ header, isResizable }: IDataGridHeaderCellProps<T>): ReactElement {
+function DataGridHeaderCell<T extends RowData>({
+  header,
+  isResizable,
+  colSpan,
+}: IDataGridHeaderCellProps<T>): ReactElement {
   const contentId = useId();
+  const fit = useContext(DataGridColumnFitContext);
   const meta = header.column.columnDef.meta;
-  const hasResizer = isResizable && !meta?.fill && header.column.getCanResize();
+  const hasResizer =
+    isResizable && !meta?.fill && header.column.getCanResize() && (!fit || header.subHeaders.length === 0);
   return (
     <TableHead
       scope="col"
-      colSpan={header.colSpan}
+      colSpan={colSpan}
       aria-sort={getAriaSort(header.column)}
       // The resize handle's own label would otherwise become part of the column's name.
       aria-labelledby={hasResizer ? contentId : undefined}
       textAlign={meta?.textAlign}
       truncate={meta?.truncate}
-      visibleFrom={meta?.visibleFrom}
+      visibleFrom={fit ? undefined : meta?.visibleFrom}
       className={hasResizer ? "relative" : undefined}
     >
       {hasResizer ? (
@@ -211,13 +219,22 @@ function DataGridHeaderRows<T extends RowData>({
   table,
   isResizable = false,
 }: IDataGridHeaderRowsProps<T>): ReactElement {
+  const fit = useContext(DataGridColumnFitContext);
   return (
     <>
       {table.getHeaderGroups().map((group) => (
         <TableRow key={group.id}>
-          {group.headers.map((header) => (
-            <DataGridHeaderCell key={header.id} header={header} isResizable={isResizable} />
-          ))}
+          {group.headers.map((header) => {
+            const colSpan = fit
+              ? header
+                  .getLeafHeaders()
+                  .filter((leaf) => leaf.subHeaders.length === 0 && !fit.hiddenColumnIds.includes(leaf.column.id))
+                  .length
+              : header.colSpan;
+            return colSpan > 0 ? (
+              <DataGridHeaderCell key={header.id} header={header} isResizable={isResizable} colSpan={colSpan} />
+            ) : null;
+          })}
         </TableRow>
       ))}
     </>
@@ -230,21 +247,25 @@ interface IDataGridCellsProps<T extends RowData> {
 
 /** A row's visible cells, laid out by their column `meta`; render them inside a custom `TableRow`. */
 function DataGridCells<T extends RowData>({ row }: IDataGridCellsProps<T>): ReactElement {
+  const fit = useContext(DataGridColumnFitContext);
   return (
     <>
-      {row.getVisibleCells().map((cell) => {
-        const meta = cell.column.columnDef.meta;
-        return (
-          <TableCell
-            key={cell.id}
-            textAlign={meta?.textAlign}
-            truncate={meta?.truncate}
-            visibleFrom={meta?.visibleFrom}
-          >
-            <FlexRender cell={cell} />
-          </TableCell>
-        );
-      })}
+      {row
+        .getVisibleCells()
+        .filter((cell) => !fit?.hiddenColumnIds.includes(cell.column.id))
+        .map((cell) => {
+          const meta = cell.column.columnDef.meta;
+          return (
+            <TableCell
+              key={cell.id}
+              textAlign={meta?.textAlign}
+              truncate={meta?.truncate}
+              visibleFrom={fit ? undefined : meta?.visibleFrom}
+            >
+              <FlexRender cell={cell} />
+            </TableCell>
+          );
+        })}
     </>
   );
 }
@@ -255,20 +276,24 @@ interface IDataGridColumnsProps<T extends RowData> {
 
 /** Column widths for a fixed-layout grid; sizes resolve through the variables `useDataGridColumnSizes` writes. */
 function DataGridColumns<T extends RowData>({ table }: IDataGridColumnsProps<T>): ReactElement {
+  const fit = useContext(DataGridColumnFitContext);
   const variables = getDataGridColumnSizeVariables(table);
   return (
     <TableColumnGroup>
-      {table.getVisibleLeafColumns().map((column) => {
-        const meta = column.columnDef.meta;
-        const variable = variables.get(column.id);
-        return (
-          <TableColumn
-            key={column.id}
-            visibleFrom={meta?.visibleFrom}
-            width={meta?.fill ? undefined : `var(${variable}, ${column.getSize()}px)`}
-          />
-        );
-      })}
+      {table
+        .getVisibleLeafColumns()
+        .filter((column) => !fit?.hiddenColumnIds.includes(column.id))
+        .map((column) => {
+          const meta = column.columnDef.meta;
+          const variable = variables.get(column.id);
+          return (
+            <TableColumn
+              key={column.id}
+              visibleFrom={fit ? undefined : meta?.visibleFrom}
+              width={meta?.fill ? undefined : `var(${variable}, ${column.getSize()}px)`}
+            />
+          );
+        })}
     </TableColumnGroup>
   );
 }

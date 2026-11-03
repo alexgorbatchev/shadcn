@@ -136,3 +136,73 @@ export const NarrowContainer: Story = {
     await expect(region.scrollWidth).toBeLessThanOrEqual(region.clientWidth);
   },
 };
+
+export const FittedColumns: Story = {
+  render: () => <VirtualDataGridExample files={fixture_gridFiles} width={420} fitColumns />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const page = within(canvasElement.ownerDocument.body);
+    await userEvent.click(canvas.getByRole("button", { name: "Columns" }));
+    const choices = within(await page.findByRole("list", { name: "Columns" }));
+    await userEvent.click(choices.getByRole("checkbox", { name: "owner" }));
+    const name = canvas.getByRole("columnheader", { name: "Name" });
+    await waitFor(() => expect(name.getBoundingClientRect().width).toBeGreaterThanOrEqual(160));
+    await expect(canvas.queryByRole("columnheader", { name: "Size" })).not.toBeInTheDocument();
+    await expect(canvas.getByText("Hidden to fit: Size.", { exact: true })).toBeVisible();
+    await expect(choices.getByRole("checkbox", { name: "Size" })).toBeChecked();
+    await userEvent.click(canvas.getByRole("button", { name: "Name" }));
+    const handle = canvas.getByRole("separator", { name: "Resize Kind" });
+    handle.focus();
+    await userEvent.keyboard("{End}");
+    await expect(handle).toHaveAttribute("aria-valuemax", "130");
+    await expect(handle).toHaveAttribute("aria-valuenow", "130");
+    await expect(handle).toHaveFocus();
+    await expect(name.getBoundingClientRect().width).toBeGreaterThanOrEqual(160);
+    await userEvent.keyboard("{ArrowLeft}");
+    await expect(handle).toHaveAttribute("aria-valuenow", "114");
+    await userEvent.click(canvas.getByRole("button", { name: "Columns" }));
+    const reordered = within(await page.findByRole("list", { name: "Columns" }));
+    await userEvent.click(reordered.getByRole("button", { name: "Move Size earlier" }));
+    await userEvent.click(reordered.getByRole("button", { name: "Move Size earlier" }));
+    await expect(canvas.getByRole("columnheader", { name: "Size" })).toBeVisible();
+    await expect(canvas.queryByRole("columnheader", { name: "Owner" })).not.toBeInTheDocument();
+    await expect(canvas.getByText("Hidden to fit: owner.", { exact: true })).toBeVisible();
+    const grid = canvas.getByTestId("VirtualDataGrid");
+    const container = grid.parentElement;
+    if (!container) throw new Error("Grid example needs a width container");
+    container.style.width = "720px";
+    await waitFor(() => expect(canvas.queryByText("Hidden to fit: owner.", { exact: true })).not.toBeInTheDocument());
+    await expect(reordered.getByRole("checkbox", { name: "owner" })).toBeChecked();
+    await expect(canvas.getByRole("columnheader", { name: "Owner" })).toBeVisible();
+    await expect(canvas.getByRole("separator", { name: "Resize Kind" })).toHaveAttribute("aria-valuenow", "114");
+    container.style.width = "300px";
+    await waitFor(() => expect(name.getBoundingClientRect().width).toBeGreaterThanOrEqual(160));
+    const viewport = canvas.getByRole("region", { name: "Files" });
+    await expect(viewport.scrollWidth).toBeLessThanOrEqual(viewport.clientWidth);
+    await expect(canvas.getByRole("table").getBoundingClientRect().width).toBeLessThanOrEqual(viewport.clientWidth);
+  },
+};
+
+export const FittedColumnGroups: Story = {
+  render: () => <VirtualDataGridExample files={fixture_gridFiles} width={420} fitColumns grouped />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const details = canvas.getByRole("columnheader", { name: "Details" });
+    await expect(details).toHaveAttribute("colspan", "2");
+    await expect(canvas.queryByRole("separator", { name: "Resize Details" })).not.toBeInTheDocument();
+    const container = canvas.getByTestId("VirtualDataGrid").parentElement;
+    if (!container) throw new Error("Grid example needs a width container");
+    container.style.width = "300px";
+    await waitFor(() => expect(details).toHaveAttribute("colspan", "1"));
+    await expect(canvas.getByRole("columnheader", { name: "Kind" })).toBeVisible();
+    await expect(canvas.queryByRole("columnheader", { name: "Size" })).not.toBeInTheDocument();
+    container.style.width = "200px";
+    await waitFor(() => expect(canvas.queryByRole("columnheader", { name: "Details" })).not.toBeInTheDocument());
+    await expect(canvas.getByRole("columnheader", { name: "Identity" })).toHaveAttribute("colspan", "2");
+    await expect(
+      canvas.getByRole("columnheader", { name: "Name" }).getBoundingClientRect().width,
+    ).toBeGreaterThanOrEqual(160);
+    const viewport = canvas.getByRole("region", { name: "Files" });
+    await expect(canvas.getByRole("table").getBoundingClientRect().width).toBeLessThanOrEqual(viewport.clientWidth);
+  },
+};
