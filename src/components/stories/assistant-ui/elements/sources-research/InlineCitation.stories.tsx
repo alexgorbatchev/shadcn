@@ -10,7 +10,7 @@ const meta: Meta<typeof InlineCitation> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof InlineCitation>;
 export const Text: Story = {
   play: async ({ canvasElement }) => {
     const canvas = await within(canvasElement);

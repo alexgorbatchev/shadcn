@@ -64,7 +64,7 @@ export const NonMediaPlayer: Story = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof File>;
 export const Base64: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

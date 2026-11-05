@@ -16,7 +16,7 @@ const meta: Meta<typeof LinkPreview> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof LinkPreview>;
 export const Card: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

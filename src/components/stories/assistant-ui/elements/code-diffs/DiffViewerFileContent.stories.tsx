@@ -21,7 +21,7 @@ const meta: Meta<typeof DiffViewerFileContent> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof DiffViewerFileContent>;
 export const Collapsed: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

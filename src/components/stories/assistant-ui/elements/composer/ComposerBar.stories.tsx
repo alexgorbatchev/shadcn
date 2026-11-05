@@ -9,7 +9,7 @@ const meta: Meta<typeof ComposerBar> = {
   args: { children: <ComposerInput aria-label="Message" /> },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ComposerBar>;
 export const Default: Story = {
   play: async ({ canvasElement }) => {
     const input = within(canvasElement).getByRole("textbox", { name: "Message" });

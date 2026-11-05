@@ -10,7 +10,7 @@ const meta: Meta<typeof NumberTicker> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof NumberTicker>;
 export const Default: Story = {
   args: { value: 1234, label: "Tokens generated" },
   play: async ({ canvasElement }) => {

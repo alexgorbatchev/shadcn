@@ -11,7 +11,7 @@ const meta: Meta<typeof ComposerTriggerPopoverFixture> = {
   args: { mode: "directive", onSelect: fn() },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ComposerTriggerPopoverFixture>;
 export const InsertDirective: Story = {
   play: async ({ args, canvasElement, userEvent }) => {
     const canvas = within(canvasElement);

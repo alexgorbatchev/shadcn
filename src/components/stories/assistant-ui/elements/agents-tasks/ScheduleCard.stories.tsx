@@ -9,7 +9,7 @@ const meta: Meta<typeof ScheduleCard> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ScheduleCard>;
 export const Default: Story = {
   args: {
     name: "Review source",

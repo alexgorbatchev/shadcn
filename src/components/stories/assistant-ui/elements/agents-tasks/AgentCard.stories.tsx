@@ -18,7 +18,7 @@ const meta: Meta<typeof AgentCard> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof AgentCard>;
 export const Available: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);

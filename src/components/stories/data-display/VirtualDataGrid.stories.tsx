@@ -1,4 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { Meta, ReactRenderer } from "@storybook/react-vite";
+import type { StoryAnnotations } from "storybook/internal/types";
 import { useState, type ReactElement } from "react";
 import { expect, userEvent, waitFor, within } from "storybook/test";
 import { DataGridCells } from "../../data-grid";
@@ -22,13 +23,14 @@ function CustomRowsExample(): ReactElement {
   );
 }
 
-const meta: Meta = {
+type StoryArgs = Record<string, never>;
+const meta: Meta<StoryArgs> = {
   title: "@alexgorbatchev/shadcn/components/data-display/VirtualDataGrid",
   tags: ["autodocs", "test"],
   render: () => <VirtualDataGridExample files={fixture_gridFiles} />,
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryAnnotations<ReactRenderer, StoryArgs>;
 
 export const LargeCollection: Story = {
   play: async ({ canvasElement }) => {

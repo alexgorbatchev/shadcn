@@ -15,7 +15,7 @@ const meta: Meta<typeof DiffViewerHeader> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof DiffViewerHeader>;
 export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

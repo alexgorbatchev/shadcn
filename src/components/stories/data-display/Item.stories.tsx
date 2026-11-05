@@ -37,7 +37,7 @@ const meta: Meta<typeof Item> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Item>;
 export const Default: Story = {
   render: function Render(args) {
     const [saved, setSaved] = useState(false);

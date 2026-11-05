@@ -21,7 +21,7 @@ const meta: Meta<typeof TerminalAnsiFragment> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof TerminalAnsiFragment>;
 export const ForegroundContrast: Story = {
   play: async ({ canvasElement }) => {
     const text = within(canvasElement).getByText("Native ANSI text");

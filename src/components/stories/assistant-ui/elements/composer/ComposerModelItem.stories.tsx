@@ -8,7 +8,7 @@ const meta: Meta<typeof ComposerModelItem> = {
   args: { entry: { name: "Local reviewer", meta: "Fast" }, selected: false, onClick: fn() },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ComposerModelItem>;
 export const Available: Story = {
   play: async ({ args, canvasElement }) => {
     await userEvent.click(within(canvasElement).getByRole("button", { name: "Local reviewer Fast" }));

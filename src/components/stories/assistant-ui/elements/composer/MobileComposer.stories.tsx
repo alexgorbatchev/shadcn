@@ -21,7 +21,7 @@ const meta: Meta<typeof MobileComposer> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof MobileComposer>;
 
 export const Compose: Story = {
   render: function Render(args) {

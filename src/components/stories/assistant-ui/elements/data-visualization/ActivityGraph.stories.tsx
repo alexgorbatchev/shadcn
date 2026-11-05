@@ -17,7 +17,7 @@ const meta: Meta<typeof ActivityGraph> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ActivityGraph>;
 export const Active: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

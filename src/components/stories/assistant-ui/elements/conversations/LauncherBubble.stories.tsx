@@ -31,7 +31,7 @@ const meta: Meta<typeof LauncherBubble> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof LauncherBubble>;
 export const OpenAndPick: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);

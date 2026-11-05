@@ -8,7 +8,7 @@ const meta: Meta<typeof DiffViewerContent> = {
   args: { role: "region", "aria-label": "Diff contents", children: "line one\nline two" },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof DiffViewerContent>;
 export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

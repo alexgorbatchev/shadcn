@@ -7,7 +7,7 @@ const meta: Meta<typeof GeminiLogo> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof GeminiLogo>;
 export const Default: Story = {
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByTestId("GeminiLogo")).toBeVisible();

@@ -10,7 +10,7 @@ const meta: Meta<typeof PromptLibrary> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof PromptLibrary>;
 export const Default: Story = {
   args: {
     prompts: [{ id: "review", name: "Source review", body: "Review {{file}} for correctness", variables: ["file"] }],

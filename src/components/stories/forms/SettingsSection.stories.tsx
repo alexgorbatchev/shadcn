@@ -21,7 +21,7 @@ const meta: Meta<typeof SettingsSection> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof SettingsSection>;
 export const Default: Story = {
   play: async ({ canvasElement, userEvent, args }) => {
     const canvas = within(canvasElement);

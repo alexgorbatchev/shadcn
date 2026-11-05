@@ -9,7 +9,7 @@ const meta: Meta<typeof ComposerVoice> = {
   args: { recording: true, seconds: 7, audioLevels: fixture_composerAudioLevels },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ComposerVoice>;
 export const Recording: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);

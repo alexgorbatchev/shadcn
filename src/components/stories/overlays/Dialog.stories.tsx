@@ -52,7 +52,7 @@ const meta: Meta<typeof Dialog> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Dialog>;
 
 export const Fullscreen: Story = {
   render: (args) => (

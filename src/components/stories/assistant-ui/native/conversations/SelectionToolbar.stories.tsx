@@ -55,7 +55,7 @@ const meta: Meta<typeof SelectionToolbar> = {
   render: () => <SelectionFixture />,
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof SelectionToolbar>;
 export const QuoteSelection: Story = {
   play: async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);

@@ -15,7 +15,7 @@ const meta: Meta<typeof CostMeter> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof CostMeter>;
 export const Breakdown: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

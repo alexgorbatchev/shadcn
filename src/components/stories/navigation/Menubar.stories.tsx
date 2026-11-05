@@ -27,7 +27,7 @@ const meta: Meta<typeof Menubar> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Menubar>;
 const itemClassName = fn(() => "font-normal");
 const stateClassName = fn(() => "font-normal");
 export const Default: Story = {

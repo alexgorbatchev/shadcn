@@ -9,7 +9,7 @@ const meta: Meta<typeof ReasoningPanel> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ReasoningPanel>;
 export const Default: Story = {
   args: {
     steps: [{ title: "Inspect dependencies", body: "Read the package manifest before changing source." }],

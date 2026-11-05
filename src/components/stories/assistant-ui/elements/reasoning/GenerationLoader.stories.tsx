@@ -11,7 +11,7 @@ const meta: Meta<typeof GenerationLoader> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof GenerationLoader>;
 export const Dots: Story = {
   play: async ({ canvasElement }) => {
     const canvas = await within(canvasElement);

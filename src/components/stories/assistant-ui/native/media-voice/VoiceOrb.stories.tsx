@@ -14,7 +14,7 @@ const meta: Meta<typeof VoiceOrb> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof VoiceOrb>;
 export const Default: Story = {
   play: async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);

@@ -35,7 +35,7 @@ const meta: Meta<typeof Popover> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Popover>;
 
 export const Default: Story = {
   play: async ({ canvasElement, userEvent }) => {

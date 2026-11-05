@@ -10,7 +10,7 @@ const meta: Meta<typeof ShikiHighlighter> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ShikiHighlighter>;
 export const Default: Story = {
   args: { code: "const ready = true;", language: "typescript", streaming: true },
   play: async ({ canvasElement }) => {

@@ -63,7 +63,7 @@ const meta: Meta<typeof ButtonLink> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ButtonLink>;
 
 export const Default: Story = {
   play: async ({ canvasElement, args, userEvent }) => {

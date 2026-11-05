@@ -17,7 +17,7 @@ const meta: Meta<typeof AspectRatio> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof AspectRatio>;
 export const Widescreen: Story = {
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);

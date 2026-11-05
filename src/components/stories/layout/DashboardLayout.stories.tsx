@@ -59,7 +59,7 @@ const meta: Meta<typeof DashboardLayout> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof DashboardLayout>;
 export const Default: Story = {
   play: async ({ canvasElement, userEvent }) => {
     const c = within(canvasElement);

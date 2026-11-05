@@ -39,7 +39,7 @@ const meta: Meta<typeof ChatPanelComposer> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ChatPanelComposer>;
 export const Submit: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);

@@ -18,7 +18,7 @@ const meta: Meta<typeof ComposerToolbar> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ComposerToolbar>;
 const Default: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);

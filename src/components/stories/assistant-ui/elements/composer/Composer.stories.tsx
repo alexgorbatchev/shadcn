@@ -9,7 +9,7 @@ const meta: Meta<typeof Composer> = {
   render: () => <ComposerExample />,
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Composer>;
 export const Message: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

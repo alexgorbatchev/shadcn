@@ -17,7 +17,7 @@ const meta: Meta<typeof MessageActions> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof MessageActions>;
 export const Actions: Story = {
   render: function Render(args) {
     const [reaction, setReaction] = useState<Reaction>(args.reaction);

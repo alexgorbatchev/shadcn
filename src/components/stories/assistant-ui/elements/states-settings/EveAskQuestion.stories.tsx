@@ -25,7 +25,7 @@ const meta: Meta<typeof EveAskQuestion> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof EveAskQuestion>;
 export const Answered: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

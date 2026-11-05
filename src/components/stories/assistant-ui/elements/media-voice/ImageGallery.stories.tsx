@@ -23,7 +23,7 @@ const meta: Meta<typeof ImageGallery> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ImageGallery>;
 export const Navigation: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);

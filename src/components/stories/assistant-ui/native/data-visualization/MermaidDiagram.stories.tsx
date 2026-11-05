@@ -14,7 +14,7 @@ const meta: Meta<typeof MermaidDiagram> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof MermaidDiagram>;
 export const NativeMarkdownDiagram: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

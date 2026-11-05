@@ -151,7 +151,7 @@ const meta: Meta<typeof Sidebar> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Sidebar>;
 
 function WorkspaceLayout(args: LayoutProps): ReactElement {
   const [workspace, setWorkspace] = useState("Design workspace");

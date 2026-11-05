@@ -9,7 +9,7 @@ const meta: Meta<typeof ReasoningEffort> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ReasoningEffort>;
 export const Default: Story = {
   args: {
     levels: [

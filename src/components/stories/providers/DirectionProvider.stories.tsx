@@ -18,7 +18,7 @@ const meta: Meta<typeof DirectionProvider> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof DirectionProvider>;
 const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

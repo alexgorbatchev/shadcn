@@ -9,7 +9,7 @@ const meta: Meta<typeof TodoList> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof TodoList>;
 export const Default: Story = {
   args: {
     items: [

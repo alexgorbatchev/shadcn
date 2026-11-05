@@ -8,7 +8,7 @@ const meta: Meta<typeof DiffViewerFile> = {
   args: { role: "group", "aria-label": "Changed file", children: "review.ts" },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof DiffViewerFile>;
 export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

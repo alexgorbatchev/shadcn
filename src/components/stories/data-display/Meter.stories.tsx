@@ -26,7 +26,7 @@ const meta: Meta<typeof Meter> = {
   render: () => <StorageExample />,
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Meter>;
 export const Default: Story = {
   play: async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);

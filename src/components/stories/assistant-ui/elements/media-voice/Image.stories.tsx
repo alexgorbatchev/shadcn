@@ -20,7 +20,7 @@ const meta: Meta<typeof Image> = {
   args: { type: "image", image, filename: "preview.svg", status: { type: "complete" } },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Image>;
 export const Zoom: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

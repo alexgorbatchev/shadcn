@@ -19,7 +19,7 @@ const meta: Meta<typeof ReasoningTrigger> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ReasoningTrigger>;
 export const Default: Story = {
   args: {},
   play: async ({ canvasElement }) => {

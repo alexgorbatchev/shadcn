@@ -72,7 +72,7 @@ const meta: Meta<typeof PortalProvider> = {
   render: () => <ScopedPopover />,
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof PortalProvider>;
 export const PopoverContainer: Story = {
   play: async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);

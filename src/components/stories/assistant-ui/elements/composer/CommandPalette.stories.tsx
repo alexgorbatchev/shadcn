@@ -21,7 +21,7 @@ const meta: Meta<typeof CommandPalette> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof CommandPalette>;
 export const SearchAndRun: Story = {
   render: function Render(args) {
     const [query, setQuery] = useState(args.query);

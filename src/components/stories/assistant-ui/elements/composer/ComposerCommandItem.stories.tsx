@@ -9,7 +9,7 @@ const meta: Meta<typeof ComposerCommandItem> = {
   args: { command: fixture_composerCommand, active: false, onClick: fn() },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ComposerCommandItem>;
 export const Available: Story = {
   play: async ({ args, canvasElement }) => {
     await userEvent.click(within(canvasElement).getByRole("button", { name: "/review Review a change" }));

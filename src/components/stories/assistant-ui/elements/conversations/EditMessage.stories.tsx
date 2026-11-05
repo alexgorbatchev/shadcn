@@ -45,7 +45,7 @@ const meta: Meta<typeof EditMessage> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof EditMessage>;
 export const EditAndSave: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);

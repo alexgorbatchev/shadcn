@@ -15,7 +15,7 @@ const meta: Meta<typeof CheckpointHistory> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof CheckpointHistory>;
 export const Restore: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);

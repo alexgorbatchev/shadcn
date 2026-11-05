@@ -9,7 +9,7 @@ const meta: Meta<typeof ImageGeneration> = {
   args: { prompt: "A preview illustration", generating: false, image, onRegenerate: fn() },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ImageGeneration>;
 export const Generated: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);

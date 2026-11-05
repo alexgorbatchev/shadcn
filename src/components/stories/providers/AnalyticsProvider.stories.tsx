@@ -24,7 +24,7 @@ const meta: Meta<typeof AnalyticsProvider> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof AnalyticsProvider>;
 
 export const ConfigurableTransport: Story = {
   play: async ({ canvasElement, args }) => {

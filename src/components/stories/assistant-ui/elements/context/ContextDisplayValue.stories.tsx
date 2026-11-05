@@ -14,7 +14,7 @@ const meta: Meta<typeof ContextDisplayValue> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ContextDisplayValue>;
 export const Text: Story = {
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByText("7.5k / 10k")).toBeVisible();

@@ -38,7 +38,7 @@ const meta: Meta<typeof DragDropProvider> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof DragDropProvider>;
 const Default: Story = {
   render: () => <Example />,
   play: async ({ canvasElement }) => {

@@ -18,7 +18,7 @@ const meta: Meta<typeof ContextDisplayBar> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ContextDisplayBar>;
 export const RuntimeUsage: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

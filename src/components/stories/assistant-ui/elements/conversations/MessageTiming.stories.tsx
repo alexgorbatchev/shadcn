@@ -16,7 +16,7 @@ const meta: Meta<typeof MessageTiming> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof MessageTiming>;
 export const Streaming: Story = {
   play: async ({ canvasElement }) => {
     const canvas = await within(canvasElement);

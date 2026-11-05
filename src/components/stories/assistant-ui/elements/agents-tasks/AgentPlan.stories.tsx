@@ -15,7 +15,7 @@ const meta: Meta<typeof AgentPlan> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof AgentPlan>;
 export const InProgress: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

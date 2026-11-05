@@ -17,7 +17,7 @@ const meta: Meta<typeof ComposerMenu> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ComposerMenu>;
 export const Open: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);

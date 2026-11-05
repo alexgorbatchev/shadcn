@@ -17,7 +17,7 @@ const meta: Meta<typeof Progress> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Progress>;
 export const InProgress: Story = {
   play: async ({ canvasElement, args }) => {
     const progress = within(canvasElement).getByRole("progressbar", { name: "Upload progress" });

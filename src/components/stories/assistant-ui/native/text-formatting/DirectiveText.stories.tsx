@@ -15,7 +15,7 @@ const meta: Meta<typeof DirectiveText> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof DirectiveText>;
 export const Mentions: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

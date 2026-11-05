@@ -16,7 +16,7 @@ const meta: Meta<typeof McpConfigDialog> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof McpConfigDialog>;
 export const CancelForm: Story = {
   play: async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);

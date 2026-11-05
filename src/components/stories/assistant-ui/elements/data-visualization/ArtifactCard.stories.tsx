@@ -8,7 +8,7 @@ const meta: Meta<typeof ArtifactCard> = {
   args: { title: "Review report", meta: "Markdown · 4 KB", onClick: fn() },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ArtifactCard>;
 export const Open: Story = {
   play: async ({ args, canvasElement }) => {
     const button = within(canvasElement).getByRole("button", { name: /Review report/ });

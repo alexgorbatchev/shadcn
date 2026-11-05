@@ -12,7 +12,7 @@ const meta: Meta<typeof SyntaxHighlighter> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof SyntaxHighlighter>;
 export const Default: Story = {
   args: { code: "const ready = true;", language: "typescript" },
   play: async ({ canvasElement }) => {

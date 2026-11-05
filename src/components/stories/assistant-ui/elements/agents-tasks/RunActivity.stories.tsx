@@ -9,7 +9,7 @@ const meta: Meta<typeof RunActivity> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof RunActivity>;
 export const Default: Story = {
   args: {
     status: "complete",

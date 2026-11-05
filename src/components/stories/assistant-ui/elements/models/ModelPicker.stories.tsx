@@ -25,7 +25,7 @@ const meta: Meta<typeof ModelPicker> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ModelPicker>;
 
 export const Select: Story = {
   render: function Render(args) {

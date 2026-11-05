@@ -8,7 +8,7 @@ const meta: Meta<typeof ComposerModelTrigger> = {
   args: { model: "Local reviewer", open: false, onClick: fn() },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ComposerModelTrigger>;
 export const Closed: Story = {
   play: async ({ args, canvasElement }) => {
     const button = within(canvasElement).getByRole("button", { name: "Local reviewer" });

@@ -16,7 +16,7 @@ const meta: Meta<typeof ComparisonCard> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ComparisonCard>;
 export const Recommendation: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

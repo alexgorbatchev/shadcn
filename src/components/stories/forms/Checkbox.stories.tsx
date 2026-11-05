@@ -29,7 +29,7 @@ const meta: Meta<typeof Checkbox> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Checkbox>;
 
 export const Unchecked: Story = {
   play: async ({ canvasElement, userEvent, args }) => {

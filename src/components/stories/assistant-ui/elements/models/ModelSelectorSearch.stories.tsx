@@ -16,7 +16,7 @@ const meta: Meta<typeof ModelSelectorSearch> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ModelSelectorSearch>;
 const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

@@ -10,7 +10,7 @@ const meta: Meta<typeof PageMessage> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof PageMessage>;
 
 export const Default: Story = {
   args: {

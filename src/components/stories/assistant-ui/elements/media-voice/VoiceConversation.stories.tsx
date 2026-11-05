@@ -9,7 +9,7 @@ const meta: Meta<typeof VoiceConversation> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof VoiceConversation>;
 export const Default: Story = {
   args: {
     mode: "speaking",

@@ -16,7 +16,7 @@ const meta: Meta<typeof GuardrailNotice> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof GuardrailNotice>;
 export const Alternatives: Story = {
   play: async ({ canvasElement, args }) => {
     const canvas = await within(canvasElement);

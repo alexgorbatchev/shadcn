@@ -31,7 +31,7 @@ const meta: Meta<typeof MathBlock> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof MathBlock>;
 export const Complete: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

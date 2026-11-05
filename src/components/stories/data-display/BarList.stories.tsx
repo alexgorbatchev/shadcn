@@ -12,7 +12,7 @@ const meta: Meta<typeof BarList> = {
   args: { label: "Traffic sources", items, onItemSelect: fn() },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof BarList>;
 export const Default: Story = {
   play: async ({ canvasElement, userEvent, args }) => {
     const c = within(canvasElement);

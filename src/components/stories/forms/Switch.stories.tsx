@@ -29,7 +29,7 @@ const meta: Meta<typeof Switch> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Switch>;
 
 export const Unchecked: Story = {
   play: async ({ canvasElement, userEvent, args }) => {

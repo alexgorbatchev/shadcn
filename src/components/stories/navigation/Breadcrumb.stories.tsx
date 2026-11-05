@@ -38,7 +38,7 @@ const meta: Meta<typeof Breadcrumb> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Breadcrumb>;
 export const Default: Story = {
   play: async ({ canvasElement }) => {
     const navigation = within(within(canvasElement).getByRole("navigation", { name: "breadcrumb" }));

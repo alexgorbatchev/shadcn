@@ -23,7 +23,7 @@ const meta: Meta<typeof ReasoningFade> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ReasoningFade>;
 export const Default: Story = {
   args: {},
   play: async ({ canvasElement }) => {

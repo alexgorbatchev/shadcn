@@ -18,7 +18,7 @@ const meta: Meta<typeof DocumentReference> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof DocumentReference>;
 export const Jump: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);

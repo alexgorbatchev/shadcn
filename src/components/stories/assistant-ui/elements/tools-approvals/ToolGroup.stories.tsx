@@ -9,7 +9,7 @@ const meta: Meta<typeof ToolGroup> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ToolGroup>;
 export const Default: Story = {
   args: {
     label: "Workspace inspection",

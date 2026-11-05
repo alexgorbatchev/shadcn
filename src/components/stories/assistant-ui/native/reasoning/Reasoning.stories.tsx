@@ -25,7 +25,7 @@ const meta: Meta<typeof Reasoning.Root> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Reasoning.Root>;
 export const Disclosure: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

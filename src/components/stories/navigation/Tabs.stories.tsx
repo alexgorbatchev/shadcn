@@ -28,7 +28,7 @@ const meta: Meta<typeof Tabs> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Tabs>;
 
 export const Default: Story = {
   play: async ({ canvasElement, userEvent, args }) => {

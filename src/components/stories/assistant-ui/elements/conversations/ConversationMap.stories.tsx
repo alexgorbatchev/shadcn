@@ -25,7 +25,7 @@ const meta: Meta<typeof ConversationMap> = {
   ],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ConversationMap>;
 
 export const Navigate: Story = {
   play: async ({ args, canvasElement }) => {

@@ -9,7 +9,7 @@ const meta: Meta<typeof SourceGlyph> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof SourceGlyph>;
 export const Default: Story = {
   args: { domain: "example.com" },
   play: async ({ canvasElement }) => {

@@ -15,7 +15,7 @@ const meta: Meta<typeof AssistantModal> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof AssistantModal>;
 
 export const OpenAndDismiss: Story = {
   play: async ({ canvasElement, userEvent }) => {

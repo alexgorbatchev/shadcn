@@ -9,7 +9,7 @@ const meta: Meta<typeof DirectiveText> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof DirectiveText>;
 export const Plain: Story = {
   args: {
     text: "Review the component",

@@ -8,7 +8,7 @@ const meta: Meta<typeof DiffViewerFileBadge> = {
   args: { filename: "review.tsx" },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof DiffViewerFileBadge>;
 export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

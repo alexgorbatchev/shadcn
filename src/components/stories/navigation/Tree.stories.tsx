@@ -1,4 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { Meta, ReactRenderer } from "@storybook/react-vite";
+import type { StoryAnnotations } from "storybook/internal/types";
 import { expect, within, waitFor, fn } from "storybook/test";
 import { Tree, TreeItem, useTree, syncDataLoaderFeature, hotkeysCoreFeature, selectionFeature } from "../../tree";
 import { Button } from "../../Button";
@@ -142,13 +143,14 @@ function Example({ isComposed = false, isConstrained = false }: { isComposed?: b
     />
   );
 }
-const meta: Meta = {
+type StoryArgs = Record<string, never>;
+const meta: Meta<StoryArgs> = {
   title: "@alexgorbatchev/shadcn/components/navigation/Tree",
   tags: ["autodocs", "test"],
   render: () => <Example />,
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryAnnotations<ReactRenderer, StoryArgs>;
 export const LinkRows: Story = {
   render: () => <LinkExample />,
   play: async ({ canvasElement, userEvent }) => {

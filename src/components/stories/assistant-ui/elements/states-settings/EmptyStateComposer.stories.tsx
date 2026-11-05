@@ -10,7 +10,7 @@ const meta: Meta<typeof EmptyStateComposer> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof EmptyStateComposer>;
 export const Uncontrolled: Story = {
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);

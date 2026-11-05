@@ -40,7 +40,7 @@ const meta: Meta<typeof DensityProvider> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof DensityProvider>;
 
 export const Comfortable: Story = {
   play: async ({ canvasElement, args }) => {

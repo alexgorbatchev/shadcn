@@ -12,7 +12,7 @@ const meta: Meta<typeof MessageQueue> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof MessageQueue>;
 export const Queued: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);

@@ -10,7 +10,7 @@ const meta: Meta<typeof TaskTray> = {
   render: () => <TaskTrayFixture />,
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof TaskTray>;
 
 export const PaginationAndReopen: Story = {
   play: async ({ canvasElement }) => {

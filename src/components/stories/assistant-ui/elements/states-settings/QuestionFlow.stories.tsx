@@ -31,7 +31,7 @@ const meta: Meta<typeof QuestionFlow> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof QuestionFlow>;
 
 export const Complete: Story = {
   play: async ({ args, canvasElement }) => {

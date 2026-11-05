@@ -14,7 +14,7 @@ const meta: Meta<typeof EventForm> = {
   args: { label: "Edit event", initialValue, onSave: fn(), onCancel: fn() },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof EventForm>;
 export const Default: Story = {
   play: async ({ canvasElement, userEvent, args }) => {
     const c = within(canvasElement);

@@ -8,7 +8,7 @@ const meta: Meta<typeof JsonViewer> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof JsonViewer>;
 export const Object: Story = {
   args: { value: { track: "First light", playlists: ["Warm up"] } },
   play: async ({ canvasElement }) => {

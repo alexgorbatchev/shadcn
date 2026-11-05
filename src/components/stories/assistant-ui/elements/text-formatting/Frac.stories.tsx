@@ -8,7 +8,7 @@ const meta: Meta<typeof Frac> = {
   args: { over: "numerator", under: "denominator" },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Frac>;
 const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

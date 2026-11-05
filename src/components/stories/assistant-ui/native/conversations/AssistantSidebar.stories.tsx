@@ -17,7 +17,7 @@ const meta: Meta<typeof AssistantSidebar> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof AssistantSidebar>;
 
 export const PageAndChat: Story = {
   play: async ({ canvasElement, userEvent }) => {

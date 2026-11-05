@@ -16,7 +16,7 @@ const meta: Meta<typeof ModelSelectorFocusAnchor> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ModelSelectorFocusAnchor>;
 const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

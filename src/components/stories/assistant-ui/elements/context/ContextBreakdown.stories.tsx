@@ -16,7 +16,7 @@ const meta: Meta<typeof ContextBreakdown> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ContextBreakdown>;
 export const Used: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

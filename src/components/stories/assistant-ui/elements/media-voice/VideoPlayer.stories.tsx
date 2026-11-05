@@ -10,7 +10,7 @@ const meta: Meta<typeof VideoPlayer> = {
   args: { src: video, title: "Test pattern" },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof VideoPlayer>;
 export const NativePlayback: Story = {
   play: async ({ canvasElement }) => {
     const media = within(canvasElement).getByLabelText<HTMLVideoElement>("Test pattern");

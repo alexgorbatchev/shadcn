@@ -28,7 +28,7 @@ const meta: Meta<PersianCalendarStoryProps> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<PersianCalendarStoryProps>;
 
 export const Default: Story = {
   play: async ({ canvasElement }) => {

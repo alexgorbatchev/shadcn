@@ -24,7 +24,7 @@ const meta: Meta<typeof ThreadList> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ThreadList>;
 
 export const NewConversation: Story = {
   play: async ({ canvasElement, userEvent }) => {

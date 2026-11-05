@@ -28,7 +28,7 @@ const meta: Meta<typeof ConfidenceMarker> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ConfidenceMarker>;
 export const Grounded: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);

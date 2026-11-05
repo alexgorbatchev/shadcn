@@ -9,7 +9,7 @@ const meta: Meta<typeof ScoreBreakdown> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ScoreBreakdown>;
 export const Default: Story = {
   args: {
     verdict: "Ready for review",

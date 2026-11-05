@@ -10,7 +10,7 @@ const meta: Meta<typeof MermaidDiagram> = {
   args: { code: "graph LR\n  A[Read] --> B[Build]\n  B --> C[Verify]" },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof MermaidDiagram>;
 export const ExpandAndZoom: Story = {
   render: function Render(args) {
     const [container, setContainer] = useState<HTMLElement | null>(null);

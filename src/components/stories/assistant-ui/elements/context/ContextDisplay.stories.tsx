@@ -14,7 +14,7 @@ const meta: Meta<typeof ContextDisplay> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ContextDisplay>;
 const Default: Story = {
   play: async ({ canvasElement }) => {
     await userEvent.hover(within(canvasElement).getByRole("button", { name: "Context usage" }));

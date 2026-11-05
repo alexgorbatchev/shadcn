@@ -9,7 +9,7 @@ const meta: Meta<typeof RetrievalChunks> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof RetrievalChunks>;
 export const Default: Story = {
   args: {
     query: "workspace",

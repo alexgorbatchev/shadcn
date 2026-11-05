@@ -9,7 +9,7 @@ const meta: Meta<typeof ToolCall> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ToolCall>;
 export const Default: Story = {
   args: {
     label: "Read source",

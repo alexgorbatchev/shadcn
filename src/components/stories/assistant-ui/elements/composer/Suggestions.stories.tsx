@@ -9,7 +9,7 @@ const meta: Meta<typeof Suggestions> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Suggestions>;
 export const Default: Story = {
   args: { suggestions: ["Review the source", "Run the tests"], selectedSuggestion: null, cycle: 0, onSuggestion: fn() },
   play: async ({ canvasElement, args }) => {

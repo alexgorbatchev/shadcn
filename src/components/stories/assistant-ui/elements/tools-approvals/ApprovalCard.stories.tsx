@@ -19,7 +19,7 @@ const meta: Meta<typeof ApprovalCard> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ApprovalCard>;
 
 export const Request: Story = {
   play: async ({ args, canvasElement }) => {

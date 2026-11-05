@@ -15,7 +15,7 @@ const meta: Meta<typeof ModelSelectorContent> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ModelSelectorContent>;
 export const Unfiltered: Story = {
   play: async ({ canvasElement }) => {
     const trigger = within(canvasElement).getByRole("combobox", { name: "Choose model" });

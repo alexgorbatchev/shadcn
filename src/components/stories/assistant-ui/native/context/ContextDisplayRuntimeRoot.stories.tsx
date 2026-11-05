@@ -23,7 +23,7 @@ const meta: Meta<typeof ContextDisplayRuntimeRoot> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ContextDisplayRuntimeRoot>;
 const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

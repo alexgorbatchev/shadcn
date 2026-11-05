@@ -12,7 +12,7 @@ const meta: Meta<typeof Spinner> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Spinner>;
 export const Default: Story = {
   play: async ({ canvasElement }) => {
     const spinner = within(canvasElement).getByRole("status", { name: "Loading" });

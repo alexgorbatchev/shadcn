@@ -28,7 +28,7 @@ const meta: Meta<typeof ImageCrop> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ImageCrop>;
 export const Default: Story = {
   play: async ({ canvasElement, userEvent, args }) => {
     const c = within(canvasElement);

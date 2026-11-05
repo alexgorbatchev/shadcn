@@ -9,7 +9,7 @@ const meta: Meta<typeof SubagentList> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof SubagentList>;
 export const Default: Story = {
   args: {
     agents: [{ name: "Reviewer", model: "Review model" }],

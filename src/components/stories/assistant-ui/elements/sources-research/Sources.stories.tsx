@@ -9,7 +9,7 @@ const meta: Meta<typeof Sources> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Sources>;
 export const Default: Story = {
   args: {
     sources: [

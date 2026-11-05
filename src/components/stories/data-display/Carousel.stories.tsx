@@ -50,7 +50,7 @@ const meta: Meta<typeof Carousel> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Carousel>;
 
 export const Horizontal: Story = {
   play: async ({ canvasElement, args }) => {

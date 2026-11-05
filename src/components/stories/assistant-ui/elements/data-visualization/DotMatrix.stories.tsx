@@ -9,7 +9,7 @@ const meta: Meta<typeof DotMatrix> = {
   render: (args) => <DotMatrix {...args} />,
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof DotMatrix>;
 export const Loading: Story = {
   args: { state: "loading", label: "Agent working" },
   play: async ({ canvasElement }) => {

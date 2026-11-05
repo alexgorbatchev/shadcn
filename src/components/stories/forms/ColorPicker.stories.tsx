@@ -9,7 +9,7 @@ const meta: Meta<typeof ColorPicker> = {
   args: { label: "Accent", defaultValue: "#ff0000", onValueChange: fn() },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ColorPicker>;
 export const Default: Story = {
   play: async ({ canvasElement, userEvent, args }) => {
     const c = within(canvasElement);

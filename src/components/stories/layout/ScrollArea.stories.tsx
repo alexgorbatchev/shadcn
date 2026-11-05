@@ -14,7 +14,7 @@ const meta: Meta<ScrollAreaStoryProps> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<ScrollAreaStoryProps>;
 export const NativeScrollbars: Story = {
   tags: ["visual"],
   render: () => (

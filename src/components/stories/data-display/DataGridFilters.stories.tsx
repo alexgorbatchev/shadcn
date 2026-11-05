@@ -1,4 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { Meta, ReactRenderer } from "@storybook/react-vite";
+import type { StoryAnnotations } from "storybook/internal/types";
 import { expect, userEvent, waitFor, within } from "storybook/test";
 import { FilteredDataGridExample, fixture_gridRecordings } from "../fixtures";
 
@@ -9,13 +10,14 @@ function rowNames(canvasElement: HTMLElement): string[] {
     .map((row) => row.querySelector("td")?.textContent ?? "");
 }
 
-const meta: Meta = {
+type StoryArgs = Record<string, never>;
+const meta: Meta<StoryArgs> = {
   title: "@alexgorbatchev/shadcn/components/data-display/DataGridFilters",
   tags: ["autodocs", "test"],
   render: () => <FilteredDataGridExample recordings={fixture_gridRecordings} />,
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryAnnotations<ReactRenderer, StoryArgs>;
 
 export const Default: Story = {
   play: async ({ canvasElement }) => {

@@ -95,7 +95,7 @@ const meta: Meta<ComboboxStoryProps> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<ComboboxStoryProps>;
 
 export const Default: Story = {
   play: async ({ canvasElement, args }) => {

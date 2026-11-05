@@ -45,7 +45,7 @@ const meta: Meta<typeof Field> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Field>;
 
 export const Default: Story = {
   play: async ({ canvasElement, userEvent }) => {

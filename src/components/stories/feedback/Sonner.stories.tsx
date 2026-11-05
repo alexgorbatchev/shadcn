@@ -33,7 +33,7 @@ const meta: Meta<typeof Sonner> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Sonner>;
 
 export const Default: Story = {
   play: async ({ canvasElement }) => {

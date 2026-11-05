@@ -19,7 +19,7 @@ const meta: Meta<typeof FlowGraph> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof FlowGraph>;
 export const Workflow: Story = {
   play: async ({ canvasElement }) => {
     const nodes = within(within(canvasElement).getByRole("list", { name: "Workflow nodes" }));

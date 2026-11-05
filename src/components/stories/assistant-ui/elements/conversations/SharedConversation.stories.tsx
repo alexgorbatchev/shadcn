@@ -9,7 +9,7 @@ const meta: Meta<typeof SharedConversation> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof SharedConversation>;
 export const Default: Story = {
   args: {
     title: "Workspace review",

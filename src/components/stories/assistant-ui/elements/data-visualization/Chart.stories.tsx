@@ -8,7 +8,7 @@ const meta: Meta<typeof Chart> = {
   args: { label: "Requests", value: "132", delta: "+12%", points: [12, 18, 9, 32, 25, 40], visibleCount: 6 },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Chart>;
 export const Area: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

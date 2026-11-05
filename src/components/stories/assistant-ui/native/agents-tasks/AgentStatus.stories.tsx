@@ -31,7 +31,7 @@ const meta: Meta<typeof AgentStatus> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof AgentStatus>;
 export const Running: Story = {
   play: async ({ canvasElement }) => {
     await expect(await within(canvasElement).findByRole("status")).toHaveTextContent("Review the page");

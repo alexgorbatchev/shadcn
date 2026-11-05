@@ -8,7 +8,7 @@ const meta: Meta<typeof DraftRestore> = {
   args: { draft: "Review the keyboard interaction", savedAt: "09:30", onRestore: fn(), onDiscard: fn() },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof DraftRestore>;
 export const Restore: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);

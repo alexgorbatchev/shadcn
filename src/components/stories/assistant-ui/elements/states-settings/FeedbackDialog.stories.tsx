@@ -44,7 +44,7 @@ const meta: Meta<typeof FeedbackDialog> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof FeedbackDialog>;
 export const SelectAndSend: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);

@@ -17,7 +17,7 @@ const meta: Meta<typeof StatusTracker> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof StatusTracker>;
 export const Default: Story = {
   play: async ({ canvasElement, userEvent, args }) => {
     const c = within(canvasElement);

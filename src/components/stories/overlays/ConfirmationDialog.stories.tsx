@@ -28,7 +28,7 @@ const meta: Meta<typeof ConfirmationDialog> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ConfirmationDialog>;
 export const Confirm: Story = {
   play: async ({ canvasElement, userEvent, args }) => {
     const body = within(canvasElement.ownerDocument.body);

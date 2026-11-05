@@ -17,7 +17,7 @@ const meta: Meta<typeof HoverCard> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof HoverCard>;
 const contentClassName = fn(() => "font-normal");
 export const Default: Story = {
   render: (args) => (

@@ -8,7 +8,7 @@ const meta: Meta<typeof ContextDisplayRing> = {
   args: { modelContextWindow: 10000, usage: { totalTokens: 7500 } },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ContextDisplayRing>;
 const Default: Story = {
   play: async ({ canvasElement }) => {
     const trigger = within(canvasElement).getByRole("button", { name: "Context usage" });

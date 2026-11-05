@@ -46,7 +46,7 @@ const meta: Meta<typeof Attachment> = {
   render: (args) => <FileAttachment {...args} />,
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Attachment>;
 
 async function assertUploadMotion(title: HTMLElement): Promise<void> {
   const isReducedMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;

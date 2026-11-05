@@ -9,7 +9,7 @@ const meta: Meta<typeof PermissionGrant> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof PermissionGrant>;
 export const Default: Story = {
   args: {
     capability: "Read project files",

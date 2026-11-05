@@ -8,7 +8,7 @@ const meta: Meta<typeof ConnectionState> = {
   args: { phase: "dropped", onRetry: fn() },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ConnectionState>;
 export const Dropped: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);

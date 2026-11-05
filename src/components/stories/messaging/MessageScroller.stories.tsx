@@ -108,7 +108,7 @@ const meta: Meta<typeof MessageScroller> = {
   render: (args) => <Transcript density={args.density} />,
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof MessageScroller>;
 
 const animationUpdate = fn();
 const animationRef = fn((element: HTMLDivElement | null) => ({ opacity: element?.style.opacity }));

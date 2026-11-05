@@ -40,7 +40,7 @@ const meta: Meta<ContextMenuStoryProps> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<ContextMenuStoryProps>;
 const itemClassName = fn(() => "font-normal");
 
 type PhysicalSide = "top" | "left" | "right";

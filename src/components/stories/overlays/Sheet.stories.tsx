@@ -32,7 +32,7 @@ const meta: Meta<SheetStoryProps> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<SheetStoryProps>;
 export const Default: Story = {
   render: (args) => (
     <Sheet>

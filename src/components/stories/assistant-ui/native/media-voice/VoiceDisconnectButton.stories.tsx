@@ -15,7 +15,7 @@ const meta: Meta<typeof VoiceDisconnectButton> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof VoiceDisconnectButton>;
 export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

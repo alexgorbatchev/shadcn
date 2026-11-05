@@ -43,7 +43,7 @@ const meta: Meta<typeof ConversationSearch> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ConversationSearch>;
 export const Matches: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);

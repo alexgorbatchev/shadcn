@@ -104,7 +104,7 @@ export const AlignedColumns: StoryObj<typeof Table> = {
     await expect(getComputedStyle(canvas.getByRole("cell", { name: "First light" })).textAlign).toBe("start");
   },
 };
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Table>;
 export const Default: Story = {
   play: async ({ canvasElement }) => {
     const table = within(within(canvasElement).getByRole("table", { name: "Invoices" }));

@@ -18,7 +18,7 @@ const meta: Meta<typeof ThreadListSidebar> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ThreadListSidebar>;
 
 export const Navigation: Story = {
   play: async ({ canvasElement, userEvent }) => {

@@ -9,7 +9,7 @@ const meta: Meta<typeof ComposerPersonItem> = {
   args: { person: fixture_composerPerson, active: false, onClick: fn() },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ComposerPersonItem>;
 export const Agent: Story = {
   play: async ({ args, canvasElement }) => {
     await userEvent.click(within(canvasElement).getByRole("button", { name: "Reviewer agent" }));

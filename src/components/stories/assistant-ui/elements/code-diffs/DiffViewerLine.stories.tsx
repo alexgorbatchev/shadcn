@@ -8,7 +8,7 @@ const meta: Meta<typeof DiffViewerLine> = {
   args: { line: { type: "add", content: "added call()", newLineNumber: 7 } },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof DiffViewerLine>;
 export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

@@ -21,7 +21,7 @@ const meta: Meta<typeof CodeDiff> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof CodeDiff>;
 export const Changes: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

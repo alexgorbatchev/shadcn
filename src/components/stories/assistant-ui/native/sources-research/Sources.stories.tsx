@@ -10,7 +10,7 @@ const meta: Meta<typeof Source> = {
   args: { href: "https://example.com/reference", children: "Source reference" },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Source>;
 export const Outline: Story = {
   args: { variant: "outline" },
   play: async ({ canvasElement, userEvent }) => {

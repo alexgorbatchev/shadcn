@@ -8,7 +8,7 @@ const meta: Meta<typeof AuthForm> = {
   args: { onSubmit: fn() },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof AuthForm>;
 export const SignIn: Story = {
   play: async ({ canvasElement, userEvent, args }) => {
     const canvas = within(canvasElement);

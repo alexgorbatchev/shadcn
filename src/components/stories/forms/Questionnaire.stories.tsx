@@ -102,7 +102,7 @@ const meta: Meta<typeof Questionnaire> = {
   render: (args) => <Survey {...args} />,
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Questionnaire>;
 
 export const MultiStep: Story = {
   play: async ({ canvasElement, userEvent, args }) => {

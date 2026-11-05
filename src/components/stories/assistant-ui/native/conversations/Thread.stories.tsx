@@ -30,7 +30,7 @@ const meta: Meta<typeof Thread> = {
   args: { autoFocus: false },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Thread>;
 
 export const ConsumerControls: Story = {
   render: () => (

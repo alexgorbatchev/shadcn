@@ -34,7 +34,7 @@ const meta: Meta<typeof GenerativeUi> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof GenerativeUi>;
 export const NativeFormDensity: Story = {
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);

@@ -9,7 +9,7 @@ const meta: Meta<typeof ThinkingIndicator> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ThinkingIndicator>;
 export const Default: Story = {
   args: { label: "Reviewing source", elapsed: "2 seconds" },
   play: async ({ canvasElement }) => {

@@ -34,7 +34,7 @@ const meta: Meta<AvatarStoryProps> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<AvatarStoryProps>;
 export const Image: Story = {
   play: async ({ canvasElement }) => {
     const image = await within(canvasElement).findByRole("img", { name: "Alex" });

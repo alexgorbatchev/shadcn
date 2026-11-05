@@ -1,4 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { Meta, ReactRenderer } from "@storybook/react-vite";
+import type { StoryAnnotations } from "storybook/internal/types";
 import { expect, userEvent, waitFor, within } from "storybook/test";
 import { VirtualDataGridExample, fixture_gridFiles } from "../fixtures";
 
@@ -8,13 +9,14 @@ function headerNames(canvasElement: HTMLElement): string[] {
     .map((header) => header.textContent ?? "");
 }
 
-const meta: Meta = {
+type StoryArgs = Record<string, never>;
+const meta: Meta<StoryArgs> = {
   title: "@alexgorbatchev/shadcn/components/data-display/DataGridColumnOptions",
   tags: ["autodocs", "test"],
   render: () => <VirtualDataGridExample files={fixture_gridFiles} />,
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryAnnotations<ReactRenderer, StoryArgs>;
 
 export const Default: Story = {
   play: async ({ canvasElement }) => {

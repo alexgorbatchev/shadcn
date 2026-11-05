@@ -9,7 +9,7 @@ const meta: Meta<typeof ToolError> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ToolError>;
 export const Default: Story = {
   args: {
     name: "read_file",

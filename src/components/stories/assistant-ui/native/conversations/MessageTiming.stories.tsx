@@ -31,7 +31,7 @@ const meta: Meta<typeof MessageTiming> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof MessageTiming>;
 
 export const KeyboardDetails: Story = {
   play: async ({ canvasElement, userEvent }) => {

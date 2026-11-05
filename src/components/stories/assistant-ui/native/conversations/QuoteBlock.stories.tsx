@@ -9,7 +9,7 @@ const meta: Meta<typeof QuoteBlock> = {
   args: { text: "Selected content from the previous answer", messageId: "previous" },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof QuoteBlock>;
 export const QuotedText: Story = {
   play: async ({ canvasElement }) => {
     const quote = within(canvasElement).getByRole("blockquote");

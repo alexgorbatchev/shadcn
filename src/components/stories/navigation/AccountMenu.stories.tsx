@@ -8,7 +8,7 @@ const meta: Meta<typeof AccountMenu> = {
   args: { name: "Alex", email: "alex@example.com", onAction: fn() },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof AccountMenu>;
 export const Default: Story = {
   play: async ({ canvasElement, userEvent, args }) => {
     const canvas = within(canvasElement);

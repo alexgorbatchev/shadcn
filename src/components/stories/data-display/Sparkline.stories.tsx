@@ -8,7 +8,7 @@ const meta: Meta<typeof Sparkline> = {
   args: { label: "Weekly revenue", values: [4, 6, 3, 8, 10] },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Sparkline>;
 export const Line: Story = {
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole("img", { name: "Weekly revenue: 4, 6, 3, 8, 10" })).toBeVisible();

@@ -9,7 +9,7 @@ const meta: Meta<typeof TaskCard> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof TaskCard>;
 export const Default: Story = {
   args: {
     label: "Inspect the workspace",

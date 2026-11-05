@@ -16,7 +16,7 @@ const meta: Meta<typeof RecommendationCard> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof RecommendationCard>;
 export const Default: Story = {
   args: {
     state: "idle",

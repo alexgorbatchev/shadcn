@@ -21,7 +21,7 @@ const meta: Meta<typeof Slider> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Slider>;
 
 async function getSliderCanvas(canvasElement: HTMLElement): Promise<ReturnType<typeof within>> {
   const canvas = within(canvasElement);

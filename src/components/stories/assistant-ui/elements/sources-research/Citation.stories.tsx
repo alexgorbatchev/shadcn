@@ -24,7 +24,7 @@ const meta: Meta<typeof Citation> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Citation>;
 export const HoverToPreview: Story = {
   play: async ({ canvasElement, args }) => {
     const canvas = await within(canvasElement);

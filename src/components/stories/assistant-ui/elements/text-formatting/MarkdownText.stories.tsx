@@ -14,7 +14,7 @@ const meta: Meta<typeof MarkdownText> = {
   render: (args) => <NativeMarkdownFixture text={args.text ?? ""} components={args.components} />,
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof MarkdownText>;
 export const RichText: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

@@ -41,7 +41,7 @@ const meta: Meta<typeof InputGroup> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof InputGroup>;
 
 export const Search: Story = {
   play: async ({ canvasElement, userEvent }) => {

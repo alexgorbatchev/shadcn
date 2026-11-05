@@ -29,7 +29,7 @@ const meta: Meta<typeof DataTable> = {
   ],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof DataTable>;
 
 export const Sort: Story = {
   play: async ({ args, canvasElement }) => {

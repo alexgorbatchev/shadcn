@@ -25,7 +25,7 @@ const meta: Meta<typeof NavigationMenu> = {
   args: { delay: 0, closeDelay: 0, className: fn(() => "font-normal") },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof NavigationMenu>;
 export const Default: Story = {
   render: (args) => (
     <NavigationMenu {...args} aria-label="Main navigation">

@@ -9,7 +9,7 @@ const meta: Meta<typeof SpeakerIdentity> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof SpeakerIdentity>;
 export const Default: Story = {
   args: {
     turns: [{ id: "one", kind: "agent", name: "Reviewer", text: "The workspace is ready.", detail: "Source analysis" }],

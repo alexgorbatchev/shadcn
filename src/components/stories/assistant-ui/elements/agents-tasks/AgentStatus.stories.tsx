@@ -10,7 +10,7 @@ const meta: Meta<typeof AgentStatus> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof AgentStatus>;
 export const Working: Story = {
   play: async ({ canvasElement }) => {
     const canvas = await within(canvasElement);

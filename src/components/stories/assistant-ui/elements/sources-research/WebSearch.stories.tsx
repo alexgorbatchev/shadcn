@@ -9,7 +9,7 @@ const meta: Meta<typeof WebSearch> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof WebSearch>;
 export const Default: Story = {
   args: {
     query: "devhost documentation",

@@ -14,7 +14,7 @@ const meta: Meta<typeof GenerativeUi> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof GenerativeUi>;
 export const Markdown: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

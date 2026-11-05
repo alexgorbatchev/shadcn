@@ -9,7 +9,7 @@ const meta: Meta<typeof SettingsPanel> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof SettingsPanel>;
 export const Default: Story = {
   args: {
     model: "Fast",

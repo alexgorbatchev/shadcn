@@ -9,7 +9,7 @@ const meta: Meta<typeof StoppedRun> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof StoppedRun>;
 export const Default: Story = {
   args: { words: ["Inspecting", "the", "workspace"], reason: "Stopped by user", onContinue: fn(), onDiscard: fn() },
   play: async ({ canvasElement }) => {

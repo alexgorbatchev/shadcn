@@ -15,7 +15,7 @@ const meta: Meta<typeof ToolFallbackApproval> = {
   render: (args) => <ApprovalFixture approval={args.approval ?? { id: "decision", prompt: "Run deployment?" }} />,
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ToolFallbackApproval>;
 
 export const AllowDecision: Story = {
   play: async ({ canvasElement }) => {

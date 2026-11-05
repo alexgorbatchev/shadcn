@@ -22,7 +22,7 @@ const meta: Meta<typeof ToolGroupRoot> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ToolGroupRoot>;
 export const Disclosure: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);

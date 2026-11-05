@@ -57,7 +57,7 @@ const meta: Meta<typeof GeoMap> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof GeoMap>;
 export const Selection: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);

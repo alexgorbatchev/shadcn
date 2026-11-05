@@ -32,7 +32,7 @@ const meta: Meta<typeof SplitView> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof SplitView>;
 export const Persistent: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

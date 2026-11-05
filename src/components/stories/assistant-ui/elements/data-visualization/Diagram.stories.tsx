@@ -47,7 +47,7 @@ const meta: Meta<typeof Diagram> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Diagram>;
 export const Controls: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);

@@ -244,7 +244,7 @@ const meta: Meta<typeof DropdownMenu> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof DropdownMenu>;
 
 async function exerciseMenu(canvasElement: HTMLElement): Promise<void> {
   const canvas = within(canvasElement);

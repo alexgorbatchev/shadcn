@@ -7,7 +7,7 @@ const meta: Meta<typeof ClaudeLogo> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ClaudeLogo>;
 export const Default: Story = {
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByTestId("ClaudeLogo")).toBeVisible();

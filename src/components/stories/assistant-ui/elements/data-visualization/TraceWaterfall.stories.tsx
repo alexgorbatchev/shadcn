@@ -9,7 +9,7 @@ const meta: Meta<typeof TraceWaterfall> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof TraceWaterfall>;
 export const Default: Story = {
   args: {
     spans: [{ id: "one", name: "Read source", depth: 0, startMs: 0, durationMs: 100, status: "completed" }],

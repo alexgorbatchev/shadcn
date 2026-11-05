@@ -13,7 +13,7 @@ const meta: Meta<typeof ErrorState> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ErrorState>;
 export const Failed: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);

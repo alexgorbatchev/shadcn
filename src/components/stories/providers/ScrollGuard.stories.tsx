@@ -18,7 +18,7 @@ const meta: Meta<typeof ScrollGuard> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ScrollGuard>;
 
 const Default: Story = {
   render: () => (

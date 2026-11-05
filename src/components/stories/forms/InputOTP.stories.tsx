@@ -1,4 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { Meta, ReactRenderer } from "@storybook/react-vite";
+import type { StoryAnnotations } from "storybook/internal/types";
 import type { ComponentProps } from "react";
 import { useId, useRef, useState } from "react";
 import { z } from "zod";
@@ -34,7 +35,7 @@ const meta: Meta<InputOTPStoryProps> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryAnnotations<ReactRenderer, InputOTPStoryProps>;
 const otpFormSchema = z.string().length(6, "Enter all six digits.");
 
 export const Default: Story = {

@@ -7,7 +7,7 @@ const meta: Meta<typeof OpenAILogo> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof OpenAILogo>;
 export const Default: Story = {
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByTestId("OpenAILogo")).toBeVisible();

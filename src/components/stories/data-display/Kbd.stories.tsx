@@ -12,7 +12,7 @@ const meta: Meta<typeof Kbd> = {
   args: { children: "Esc" },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Kbd>;
 export const Single: Story = {
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByText("Esc").tagName).toBe("KBD");

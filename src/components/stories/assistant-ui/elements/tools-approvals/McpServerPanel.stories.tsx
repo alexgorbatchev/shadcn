@@ -19,7 +19,7 @@ const meta: Meta<typeof McpServerPanel> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof McpServerPanel>;
 
 export const BrowseAndAuthorize: Story = {
   render: function Render(args) {

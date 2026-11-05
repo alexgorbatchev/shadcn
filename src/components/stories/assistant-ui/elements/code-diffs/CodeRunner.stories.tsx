@@ -8,7 +8,7 @@ const meta: Meta<typeof CodeRunner> = {
   args: { language: "javascript", code: "console.log(2 + 2)", state: "idle", output: [], onRun: fn() },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof CodeRunner>;
 export const Run: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);

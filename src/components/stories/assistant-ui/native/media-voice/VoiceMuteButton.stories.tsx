@@ -15,7 +15,7 @@ const meta: Meta<typeof VoiceMuteButton> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof VoiceMuteButton>;
 export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

@@ -8,7 +8,7 @@ const meta: Meta<typeof OptionText> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof OptionText>;
 
 export const Label: Story = {
   args: { option: { id: "compact", label: "Compact" } },

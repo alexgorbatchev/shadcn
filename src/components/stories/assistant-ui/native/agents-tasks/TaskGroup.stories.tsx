@@ -9,7 +9,7 @@ const meta: Meta<typeof TaskGroup> = {
   render: () => <NativeTaskFixture group />,
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof TaskGroup>;
 export const Paginated: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

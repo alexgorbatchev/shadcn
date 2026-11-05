@@ -18,7 +18,7 @@ const meta: Meta<typeof EmptyStateSuggestions> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof EmptyStateSuggestions>;
 export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = await within(canvasElement);

@@ -42,7 +42,7 @@ const meta: Meta<typeof RadioGroup> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof RadioGroup>;
 
 export const Default: Story = {
   play: async ({ canvasElement, userEvent, args }) => {

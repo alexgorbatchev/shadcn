@@ -28,7 +28,7 @@ const meta: Meta<typeof Drawer> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Drawer>;
 export const Default: Story = {
   render: (args) => (
     <Drawer {...args}>

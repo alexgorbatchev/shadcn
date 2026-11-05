@@ -22,7 +22,7 @@ const meta: Meta<typeof Marker> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Marker>;
 
 export const Shimmer: Story = {
   render: function Render() {

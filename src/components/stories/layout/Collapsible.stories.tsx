@@ -21,7 +21,7 @@ const meta: Meta<typeof Collapsible> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Collapsible>;
 export const Closed: Story = {
   play: async ({ canvasElement, args }) => {
     const canvas = within(canvasElement);

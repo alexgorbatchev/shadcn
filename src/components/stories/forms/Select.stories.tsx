@@ -68,7 +68,7 @@ const meta: Meta<SelectStoryProps> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<SelectStoryProps>;
 
 export const Default: Story = {
   play: async ({ canvasElement, userEvent, args }) => {

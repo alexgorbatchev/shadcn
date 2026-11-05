@@ -10,7 +10,7 @@ const meta: Meta<typeof TaskCard> = {
   render: () => <NativeTaskFixture />,
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof TaskCard>;
 export const Completed: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

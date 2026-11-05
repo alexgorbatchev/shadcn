@@ -9,7 +9,7 @@ const meta: Meta<typeof Onboarding> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Onboarding>;
 export const Default: Story = {
   args: {
     steps: [{ title: "Connect a workspace", body: "Choose a folder to begin.", example: "devhost run" }],

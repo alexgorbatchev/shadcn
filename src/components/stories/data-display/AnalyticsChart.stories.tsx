@@ -22,7 +22,7 @@ const meta: Meta<typeof AnalyticsChart> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof AnalyticsChart>;
 export const Default: Story = {
   play: async ({ canvasElement, userEvent }) => {
     const c = within(canvasElement);

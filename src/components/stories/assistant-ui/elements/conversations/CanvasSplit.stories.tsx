@@ -31,7 +31,7 @@ const meta: Meta<typeof CanvasSplitHeader> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof CanvasSplitHeader>;
 export const Actions: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);

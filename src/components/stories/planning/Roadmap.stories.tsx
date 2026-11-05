@@ -1,4 +1,5 @@
-import type { Meta, StoryObj } from "@storybook/react-vite";
+import type { Meta, ReactRenderer } from "@storybook/react-vite";
+import type { StoryAnnotations } from "storybook/internal/types";
 import { expect, fn, within } from "storybook/test";
 import { useState } from "react";
 import { Roadmap, type RoadmapItem } from "../../gantt";
@@ -30,13 +31,14 @@ function Example() {
     />
   );
 }
-const meta: Meta = {
+type StoryArgs = Record<string, never>;
+const meta: Meta<StoryArgs> = {
   title: "@alexgorbatchev/shadcn/components/planning/Roadmap",
   tags: ["autodocs", "test"],
   render: () => <Example />,
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryAnnotations<ReactRenderer, StoryArgs>;
 export const Default: Story = {
   play: async ({ canvasElement, userEvent }) => {
     const c = within(canvasElement);

@@ -11,7 +11,7 @@ const meta: Meta<typeof NumberRollPart> = {
   render: (args) => <NumberRollPartScene {...args} />,
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof NumberRollPart>;
 const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

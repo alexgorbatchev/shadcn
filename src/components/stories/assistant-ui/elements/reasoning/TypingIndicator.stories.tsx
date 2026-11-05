@@ -9,7 +9,7 @@ const meta: Meta<typeof TypingIndicator> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof TypingIndicator>;
 export const Default: Story = {
   args: { variant: "bare" },
   play: async ({ canvasElement }) => {

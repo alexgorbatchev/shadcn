@@ -25,7 +25,7 @@ const meta: Meta<typeof Toast> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Toast>;
 
 export const InheritedDirection: Story = {
   render: () => (

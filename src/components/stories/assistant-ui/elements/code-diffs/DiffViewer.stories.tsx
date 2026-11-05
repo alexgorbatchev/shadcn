@@ -25,7 +25,7 @@ const meta: Meta<typeof DiffViewer> = {
   args: { oldFile: { name: "before.ts", content: previous }, newFile: { name: "after.ts", content: next } },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof DiffViewer>;
 export const Unified: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

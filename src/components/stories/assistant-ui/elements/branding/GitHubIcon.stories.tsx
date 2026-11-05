@@ -8,7 +8,7 @@ const meta: Meta<typeof GitHubIcon> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof GitHubIcon>;
 export const Default: Story = {
   play: async ({ canvasElement }) => {
     await waitFor(() => expect(within(canvasElement).getByTestId("GitHubIcon")).toBeVisible());

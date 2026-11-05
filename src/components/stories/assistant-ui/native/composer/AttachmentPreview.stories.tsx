@@ -10,7 +10,7 @@ const meta: Meta<typeof UserMessageAttachments> = {
   render: () => <MessageAttachmentFixture />,
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof UserMessageAttachments>;
 
 export const ImagePreview: Story = {
   play: async ({ canvasElement, userEvent }) => {

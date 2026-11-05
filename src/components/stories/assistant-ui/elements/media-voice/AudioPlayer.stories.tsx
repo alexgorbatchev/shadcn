@@ -11,7 +11,7 @@ const meta: Meta<typeof AudioPlayer> = {
   args: { src: audio, title: "Narration" },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof AudioPlayer>;
 export const Playback: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

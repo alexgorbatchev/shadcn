@@ -10,7 +10,7 @@ const meta: Meta<typeof DataGridSelectHeader> = {
   render: () => <SelectionControls selectChildren={false} />,
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof DataGridSelectHeader>;
 
 const Default: Story = {
   play: async ({ canvasElement, userEvent }) => {

@@ -19,7 +19,7 @@ const meta: Meta<typeof OptionList> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof OptionList>;
 
 export const Single: Story = {
   play: async ({ args, canvasElement }) => {

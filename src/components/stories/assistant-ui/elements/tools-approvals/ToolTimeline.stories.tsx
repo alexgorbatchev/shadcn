@@ -10,7 +10,7 @@ const meta: Meta<typeof ToolTimeline> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ToolTimeline>;
 export const Default: Story = {
   args: {
     steps: [{ id: "one", verb: "Read", chip: "package.json", icon: FileTextIcon }],

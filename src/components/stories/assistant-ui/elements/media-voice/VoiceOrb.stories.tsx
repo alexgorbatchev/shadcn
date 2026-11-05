@@ -9,7 +9,7 @@ const meta: Meta<typeof VoiceOrb> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof VoiceOrb>;
 export const Default: Story = {
   args: { state: "idle", volume: 0, variant: "default" },
   play: async ({ canvasElement }) => {

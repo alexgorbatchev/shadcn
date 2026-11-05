@@ -18,7 +18,7 @@ const meta: Meta<typeof Skeleton> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Skeleton>;
 
 export const Text: Story = {
   play: async ({ canvasElement }) => {

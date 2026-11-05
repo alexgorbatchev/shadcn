@@ -16,7 +16,7 @@ const meta: Meta<typeof ContextDisplayTrigger> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ContextDisplayTrigger>;
 export const Keyboard: Story = {
   play: async ({ canvasElement }) => {
     await userEvent.tab();

@@ -17,7 +17,7 @@ const meta: Meta<typeof LayoutGuard> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof LayoutGuard>;
 
 const Default: Story = {
   render: () => (

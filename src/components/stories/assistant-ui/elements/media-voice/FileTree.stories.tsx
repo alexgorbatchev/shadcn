@@ -18,7 +18,7 @@ const meta: Meta<typeof FileTree> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof FileTree>;
 
 export const Changes: Story = {
   play: async ({ canvasElement }) => {

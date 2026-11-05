@@ -14,7 +14,7 @@ const meta: Meta<typeof ModelSelector> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ModelSelector>;
 export const Keyboard: Story = {
   play: async ({ args, canvasElement }) => {
     await userEvent.tab();

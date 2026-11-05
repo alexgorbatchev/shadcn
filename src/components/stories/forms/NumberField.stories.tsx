@@ -32,7 +32,7 @@ const meta: Meta<typeof NumberField> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof NumberField>;
 export const Default: Story = {
   play: async ({ canvasElement, userEvent, args }) => {
     const canvas = within(canvasElement);

@@ -9,7 +9,7 @@ const meta: Meta<typeof ComposerAttachmentChip> = {
   args: { attachment: fixture_composerAttachment, onRemove: fn() },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ComposerAttachmentChip>;
 export const Ready: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);

@@ -39,7 +39,7 @@ const meta: Meta<typeof ActionsMenu> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ActionsMenu>;
 
 function RegisteredTreeExample(): ReactElement {
   const tree = useTree<string>({

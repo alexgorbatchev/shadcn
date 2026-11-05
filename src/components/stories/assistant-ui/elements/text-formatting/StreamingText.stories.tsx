@@ -9,7 +9,7 @@ const meta: Meta<typeof StreamingText> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof StreamingText>;
 export const Default: Story = {
   args: { segments: [{ text: "Inspect the workspace" }], count: 3, streaming: false },
   play: async ({ canvasElement }) => {

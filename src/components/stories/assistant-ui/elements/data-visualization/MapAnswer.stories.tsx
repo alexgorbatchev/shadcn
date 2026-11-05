@@ -16,7 +16,7 @@ const meta: Meta<typeof MapAnswer> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof MapAnswer>;
 export const SelectPin: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);

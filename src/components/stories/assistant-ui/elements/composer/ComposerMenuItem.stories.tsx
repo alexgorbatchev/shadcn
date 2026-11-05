@@ -8,7 +8,7 @@ const meta: Meta<typeof ComposerMenuItem> = {
   args: { children: "Review the change", active: false, onClick: fn() },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ComposerMenuItem>;
 export const Available: Story = {
   play: async ({ args, canvasElement }) => {
     const button = within(canvasElement).getByRole("button", { name: "Review the change" });

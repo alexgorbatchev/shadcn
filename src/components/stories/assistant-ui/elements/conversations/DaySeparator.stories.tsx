@@ -7,7 +7,7 @@ const meta: Meta<typeof DaySeparator> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof DaySeparator>;
 export const Conversation: Story = {
   args: {
     messages: [

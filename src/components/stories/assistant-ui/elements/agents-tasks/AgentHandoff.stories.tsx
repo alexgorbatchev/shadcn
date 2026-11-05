@@ -16,7 +16,7 @@ const meta: Meta<typeof AgentHandoff> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof AgentHandoff>;
 export const Transferring: Story = {
   play: async ({ canvasElement }) => {
     const canvas = await within(canvasElement);

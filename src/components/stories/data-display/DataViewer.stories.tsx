@@ -9,7 +9,7 @@ const meta: Meta<typeof DataViewer> = {
   args: { label: "Result" },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof DataViewer>;
 
 /** Reads each term with the definition that follows it. */
 function pairs(view: HTMLElement): string[][] {

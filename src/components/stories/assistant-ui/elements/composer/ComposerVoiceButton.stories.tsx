@@ -8,7 +8,7 @@ const meta: Meta<typeof ComposerVoiceButton> = {
   args: { active: false, onClick: fn() },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ComposerVoiceButton>;
 export const Start: Story = {
   play: async ({ args, canvasElement }) => {
     await userEvent.click(within(canvasElement).getByRole("button", { name: "Start voice input" }));

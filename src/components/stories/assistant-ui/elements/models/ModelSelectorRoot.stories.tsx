@@ -26,7 +26,7 @@ const meta: Meta<typeof ModelSelectorRoot> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ModelSelectorRoot>;
 export const Select: Story = {
   play: async ({ args, canvasElement }) => {
     await userEvent.click(within(canvasElement).getByRole("combobox", { name: "Choose model" }));

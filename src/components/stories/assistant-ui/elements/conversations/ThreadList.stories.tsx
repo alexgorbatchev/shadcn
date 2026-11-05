@@ -9,7 +9,7 @@ const meta: Meta<typeof ThreadList> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ThreadList>;
 export const Default: Story = {
   args: {
     threads: [

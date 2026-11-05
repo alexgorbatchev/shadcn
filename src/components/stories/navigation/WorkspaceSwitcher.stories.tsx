@@ -14,7 +14,7 @@ const meta: Meta<typeof WorkspaceSwitcher> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof WorkspaceSwitcher>;
 export const Default: Story = {
   play: async ({ canvasElement, userEvent, args }) => {
     const canvas = within(canvasElement);

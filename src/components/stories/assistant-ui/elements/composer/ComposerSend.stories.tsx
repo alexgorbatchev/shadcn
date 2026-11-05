@@ -8,7 +8,7 @@ const meta: Meta<typeof ComposerSend> = {
   args: { streaming: false, idle: false, onClick: fn() },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ComposerSend>;
 export const Ready: Story = {
   play: async ({ args, canvasElement }) => {
     await userEvent.click(within(canvasElement).getByRole("button", { name: "Send message" }));

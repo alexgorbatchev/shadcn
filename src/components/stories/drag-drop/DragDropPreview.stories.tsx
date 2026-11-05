@@ -8,7 +8,7 @@ const meta: Meta<typeof DragDropPreview> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof DragDropPreview>;
 
 export const Single: Story = {
   args: { labels: ["First light"] },

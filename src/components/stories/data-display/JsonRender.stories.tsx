@@ -28,7 +28,7 @@ const meta: Meta<typeof JsonExample> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof JsonExample>;
 
 export const Form: Story = {
   args: {

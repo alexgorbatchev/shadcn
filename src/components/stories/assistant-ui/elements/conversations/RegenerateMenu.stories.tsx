@@ -10,7 +10,7 @@ const meta: Meta<typeof RegenerateMenu> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof RegenerateMenu>;
 export const Default: Story = {
   args: {
     options: [

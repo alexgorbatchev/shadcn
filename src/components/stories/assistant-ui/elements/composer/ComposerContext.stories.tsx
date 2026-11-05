@@ -9,7 +9,7 @@ const meta: Meta<typeof ComposerContext> = {
   args: { usage: fixture_composerUsage },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ComposerContext>;
 export const Usage: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

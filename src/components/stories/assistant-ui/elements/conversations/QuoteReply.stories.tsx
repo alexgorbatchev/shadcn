@@ -9,7 +9,7 @@ const meta: Meta<typeof QuoteReply> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof QuoteReply>;
 export const Default: Story = {
   args: {
     before: "The ",

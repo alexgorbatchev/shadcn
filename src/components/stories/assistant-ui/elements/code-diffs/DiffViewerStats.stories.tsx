@@ -8,7 +8,7 @@ const meta: Meta<typeof DiffViewerStats> = {
   args: { additions: 3, deletions: 2 },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof DiffViewerStats>;
 export const Default: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

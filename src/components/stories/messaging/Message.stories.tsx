@@ -47,7 +47,7 @@ const meta: Meta<typeof Message> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Message>;
 
 export const FileReply: Story = {
   render: function Render(args) {

@@ -9,7 +9,7 @@ const meta: Meta<typeof QuotaBanner> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof QuotaBanner>;
 export const Default: Story = {
   args: {
     used: 98,

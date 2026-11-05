@@ -9,7 +9,7 @@ const meta: Meta<typeof ReadAloud> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ReadAloud>;
 export const Default: Story = {
   args: {
     words: ["Hello", "workspace"],

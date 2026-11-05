@@ -14,7 +14,7 @@ const meta: Meta<typeof ModelSelectorTrigger> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ModelSelectorTrigger>;
 export const Outline: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

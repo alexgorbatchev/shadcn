@@ -35,7 +35,7 @@ const meta: Meta<CalendarStoryProps> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<CalendarStoryProps>;
 
 export const Default: Story = {
   play: async ({ canvasElement }) => {

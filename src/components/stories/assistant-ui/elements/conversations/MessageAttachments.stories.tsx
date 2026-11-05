@@ -16,7 +16,7 @@ const meta: Meta<typeof MessageAttachments> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof MessageAttachments>;
 export const Open: Story = {
   play: async ({ args, canvasElement }) => {
     const canvas = within(canvasElement);

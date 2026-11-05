@@ -16,7 +16,7 @@ const meta: Meta<typeof ComputerUse> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ComputerUse>;
 export const ActiveStep: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);

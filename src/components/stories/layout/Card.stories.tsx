@@ -52,7 +52,7 @@ const meta: Meta<typeof Card> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Card>;
 type CardSpacingStyle = CSSProperties & { "--card-spacing": string };
 
 export const Default: Story = {

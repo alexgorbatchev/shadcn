@@ -20,7 +20,7 @@ const meta: Meta<typeof Pagination> = {
   argTypes: { density: { control: "select", options: ["compact", "comfortable"] } },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Pagination>;
 
 export const Default: Story = {
   render: function Render(args) {

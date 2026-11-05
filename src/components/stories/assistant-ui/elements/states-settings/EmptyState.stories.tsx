@@ -23,7 +23,7 @@ const meta: Meta<typeof EmptyState> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof EmptyState>;
 export const Suggestions: Story = {
   play: async ({ canvasElement }) => {
     const canvas = await within(canvasElement);

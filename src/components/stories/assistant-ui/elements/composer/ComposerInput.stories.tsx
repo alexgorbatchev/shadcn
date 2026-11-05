@@ -9,7 +9,7 @@ const meta: Meta<typeof ComposerInput> = {
   args: { "aria-label": "Message", onSubmit: fn() },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ComposerInput>;
 export const Submit: Story = {
   play: async ({ args, canvasElement }) => {
     const input = within(canvasElement).getByRole("textbox", { name: "Message" });

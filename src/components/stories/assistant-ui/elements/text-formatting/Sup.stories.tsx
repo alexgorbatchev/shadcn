@@ -8,7 +8,7 @@ const meta: Meta<typeof Sup> = {
   args: { children: "2" },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Sup>;
 const Default: Story = {
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole("superscript")).toHaveTextContent("2");

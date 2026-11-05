@@ -18,7 +18,7 @@ const meta: Meta<typeof RichTextEditor> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof RichTextEditor>;
 export const Default: Story = {
   play: async ({ canvasElement, userEvent }) => {
     const c = within(canvasElement);

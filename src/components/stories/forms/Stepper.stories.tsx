@@ -25,7 +25,7 @@ const meta: Meta<typeof Stepper> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Stepper>;
 export const Default: Story = {
   play: async ({ canvasElement, userEvent, args }) => {
     const canvas = within(canvasElement);

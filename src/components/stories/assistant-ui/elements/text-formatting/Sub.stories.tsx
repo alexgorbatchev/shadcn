@@ -8,7 +8,7 @@ const meta: Meta<typeof Sub> = {
   args: { children: "i" },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Sub>;
 const Default: Story = {
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).getByRole("subscript")).toHaveTextContent("i");

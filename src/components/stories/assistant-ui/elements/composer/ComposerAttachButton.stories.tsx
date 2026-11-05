@@ -8,7 +8,7 @@ const meta: Meta<typeof ComposerAttachButton> = {
   args: { onClick: fn() },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ComposerAttachButton>;
 export const Available: Story = {
   play: async ({ args, canvasElement }) => {
     await userEvent.click(within(canvasElement).getByRole("button", { name: "Add attachment" }));

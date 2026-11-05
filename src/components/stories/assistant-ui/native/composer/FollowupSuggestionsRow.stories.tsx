@@ -17,7 +17,7 @@ const meta: Meta<typeof ThreadFollowupSuggestions> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ThreadFollowupSuggestions>;
 export const SendSuggestion: Story = {
   play: async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);

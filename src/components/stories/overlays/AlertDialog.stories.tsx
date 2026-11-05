@@ -32,7 +32,7 @@ const meta: Meta<typeof AlertDialog> = {
   render: (args) => <DeleteConfirmationExample {...args} />,
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof AlertDialog>;
 export const Default: Story = {
   play: async ({ canvasElement, userEvent, args }) => {
     const trigger = within(canvasElement).getByRole("button", { name: "Delete project" });

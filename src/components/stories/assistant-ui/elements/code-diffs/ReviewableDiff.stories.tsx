@@ -9,7 +9,7 @@ const meta: Meta<typeof ReviewableDiff> = {
   tags: ["autodocs", "test"],
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ReviewableDiff>;
 export const Default: Story = {
   args: {
     filename: "src/workspace.ts",

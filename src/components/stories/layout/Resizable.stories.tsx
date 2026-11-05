@@ -27,7 +27,7 @@ const meta: Meta<typeof Resizable> = {
   ),
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof Resizable>;
 
 export const Horizontal: Story = {
   play: async ({ canvasElement, args }) => {

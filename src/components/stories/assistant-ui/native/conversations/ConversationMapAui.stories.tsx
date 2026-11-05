@@ -10,7 +10,7 @@ const meta: Meta<typeof ConversationMapAui> = {
   render: (args) => <ConversationMapFixture {...args} />,
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ConversationMapAui>;
 
 export const ScrollConversation: Story = {
   play: async ({ canvasElement, userEvent }) => {

@@ -8,7 +8,7 @@ const meta: Meta<typeof ShareMeter> = {
   args: { label: "Context used", percentage: 45, valueText: "450 of 1,000 tokens" },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof ShareMeter>;
 export const Partial: Story = {
   play: async ({ canvasElement }) => {
     const meter = within(canvasElement).getByRole("meter", { name: "Context used" });
