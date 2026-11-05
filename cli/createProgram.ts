@@ -15,6 +15,7 @@ type ProgramOptions = {
 type StartOptions = { port: number };
 
 export function createProgram(options: ProgramOptions): Command {
+  const width = Number.isFinite(options.width) && options.width >= 1 ? Math.floor(options.width) : 100;
   const program = new Command("shadcn-prototype")
     .description("Create and preview editable React mockups.")
     .version(manifest.version)
@@ -22,31 +23,59 @@ export function createProgram(options: ProgramOptions): Command {
     .showHelpAfterError();
   program.configureOutput({ writeOut: options.writeOut, writeErr: options.writeErr });
   program.configureHelp({
+    helpWidth: width,
+    minWidthToWrap: 1,
+    displayWidth: Bun.stringWidth,
     formatHelp(command: Command, helper: Help) {
-      const lines = [`Usage: ${helper.commandUsage(command)}`, "", command.description(), "", "Options:"];
-      for (const option of helper.visibleOptions(command)) lines.push(`  ${option.flags}  ${option.description}`);
+      const wrap = (text: string) => (options.isAgent ? text : helper.boxWrap(text, width));
+      const formatItem = (term: string, description: string, prefix = "  ", continuation = "  ") => {
+        const prefixWidth = helper.displayWidth(prefix);
+        const descriptionColumn = Math.max(prefixWidth + 2, Math.min(45, Math.floor(width / 2)));
+        // Commander adds two cells of indentation and two between the term and description.
+        const termWidth = descriptionColumn - 4;
+        const connect = (line: string) => continuation + line.slice(continuation.length);
+        if (prefixWidth + helper.displayWidth(term) + 2 > descriptionColumn) {
+          const wrappedTerm = helper
+            .boxWrap(term, Math.max(1, width - prefixWidth))
+            .split("\n")
+            .map((line, index) => `${index === 0 ? prefix : continuation}${line}`)
+            .join("\n");
+          if (!description) return wrappedTerm;
+          const wrappedDescription = helper.formatItem("", termWidth, description, helper).split("\n").map(connect);
+          return [wrappedTerm, ...wrappedDescription].join("\n");
+        }
+        return helper
+          .formatItem(`${prefix.slice(2)}${term}`, termWidth, description, helper)
+          .split("\n")
+          .map((line, index) => (index === 0 ? line : connect(line)))
+          .join("\n");
+      };
+      const lines = [wrap(`Usage: ${helper.commandUsage(command)}`), "", wrap(command.description()), "", "Options:"];
+      for (const option of helper.visibleOptions(command)) {
+        lines.push(
+          options.isAgent ? `  ${option.flags}  ${option.description}` : formatItem(option.flags, option.description),
+        );
+      }
       const visit = (parent: Command, prefix: string) => {
         const commands = helper.visibleCommands(parent);
         for (const [index, child] of commands.entries()) {
           const isLast = index === commands.length - 1;
           const marker = options.isAgent ? "- " : isLast ? "╰─ " : "├─ ";
-          const name = `${prefix}${marker}${helper.subcommandTerm(child)}`;
-          lines.push(options.isAgent ? `${name}: ${child.description()}` : `${name.padEnd(44)} ${child.description()}`);
-          visit(child, `${prefix}${options.isAgent ? "  " : isLast ? "   " : "│  "}`);
+          const term = helper.subcommandTerm(child);
+          const continuation = `${prefix}${options.isAgent ? "  " : isLast ? "   " : "│  "}`;
+          lines.push(
+            options.isAgent
+              ? `${prefix}${marker}${term}: ${child.description()}`
+              : formatItem(term, child.description(), `${prefix}${marker}`, continuation),
+          );
+          visit(child, continuation);
         }
       };
       if (command.commands.length) {
         lines.push("", "Commands:");
         visit(command, "  ");
       }
-      const body =
-        lines
-          .map((line) =>
-            !options.isAgent && line.length > options.width
-              ? `${line.slice(0, Math.max(0, options.width - 3))}...`
-              : line,
-          )
-          .join("\n") + "\n";
+      const body = lines.join("\n") + "\n";
       return options.isAgent
         ? "ALERT: Agents must read `AGENT=1 shadcn-prototype skill` before using this tool.\n" + body
         : body;

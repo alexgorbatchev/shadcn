@@ -57,14 +57,130 @@ test.each([[], ["workspace"], ["workspace", "create"], ["workspace", "start"], [
   },
 );
 
-test("human help fits the requested width and includes nested commands", async () => {
-  const { program, output } = capture(false, 60);
+function helpContent(text: string): string {
+  return text
+    .replace(/^[ │├╰─]+/gm, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+test.each([1, 20, 40, 60, 80, 100])("human help preserves complete text at width %s", async (width) => {
+  const narrow = capture(false, width);
+  const wide = capture(false, 1000);
+  await expect(narrow.program.parseAsync(["--help"], { from: "user" })).rejects.toMatchObject({ exitCode: 0 });
+  await expect(wide.program.parseAsync(["--help"], { from: "user" })).rejects.toMatchObject({ exitCode: 0 });
+  expect(helpContent(narrow.output.join(""))).toBe(helpContent(wide.output.join("")));
+});
+
+test.each([40, 60, 80, 100])("human help fits terminal cells at width %s", async (width) => {
+  const { program, output } = capture(false, width);
   await expect(program.parseAsync(["--help"], { from: "user" })).rejects.toMatchObject({ exitCode: 0 });
-  const lines = output.join("").trimEnd().split("\n");
-  expect(lines.every((line) => line.length <= 60)).toBe(true);
-  expect(lines.some((line) => line.includes("create <directory>"))).toBe(true);
-  expect(lines.some((line) => line.includes("start [options] [directory]"))).toBe(true);
-  expect(lines.some((line) => line.includes("help [command]"))).toBe(true);
+  for (const line of output.join("").split("\n")) expect(Bun.stringWidth(line)).toBeLessThanOrEqual(width);
+});
+
+test("narrow human help aligns descriptions and connects nested tree continuations", async () => {
+  const { program, output } = capture(false, 40);
+  await expect(program.parseAsync(["--help"], { from: "user" })).rejects.toMatchObject({ exitCode: 0 });
+  expect(output.join("")).toMatchInlineSnapshot(`
+    "Usage: shadcn-prototype [options]
+    [command]
+
+    Create and preview editable React
+    mockups.
+
+    Options:
+      -V, --version     output the version
+                        number
+      -h, --help        display help for
+                        command
+
+    Commands:
+      ├─ skill          Show the agent skill
+      │                 installation
+      │                 instructions.
+      ├─ workspace      Manage local
+      │                 prototype
+      │                 workspaces.
+      │  ├─ create <directory>
+      │  │              Create a workspace
+      │  │              with three runnable
+      │  │              recipes.
+      │  ├─ start [options] [directory]
+      │  │              Preview a workspace
+      │  │              with live updates.
+      │  ├─ build [directory]
+      │  │              Build a workspace
+      │  │              for static hosting.
+      │  ╰─ help [command]
+      │                 display help for
+      │                 command
+      ╰─ help [command]
+                        display help for
+                        command
+    "
+  `);
+});
+
+test.each([[], ["workspace"], ["workspace", "create"], ["workspace", "start"], ["workspace", "build"], ["skill"]])(
+  "narrow human help preserves usage, options and descriptions for %j",
+  async (...args) => {
+    const narrow = capture(false, 40);
+    const wide = capture(false, 1000);
+    await expect(narrow.program.parseAsync([...args, "--help"], { from: "user" })).rejects.toMatchObject({
+      exitCode: 0,
+    });
+    await expect(wide.program.parseAsync([...args, "--help"], { from: "user" })).rejects.toMatchObject({ exitCode: 0 });
+    expect(helpContent(narrow.output.join(""))).toBe(helpContent(wide.output.join("")));
+    for (const line of narrow.output.join("").split("\n")) expect(Bun.stringWidth(line)).toBeLessThanOrEqual(40);
+  },
+);
+
+test("human help preserves an indivisible term even when it exceeds the terminal width", async () => {
+  const { program, output } = capture(false, 20);
+  program.command("a-very-long-command-without-whitespace");
+  await expect(program.parseAsync(["--help"], { from: "user" })).rejects.toMatchObject({ exitCode: 0 });
+  expect(
+    output
+      .join("")
+      .split("\n")
+      .find((line) => line.startsWith("  ├─ a-very")),
+  ).toBe("  ├─ a-very-long-command-without-whitespace");
+});
+
+test.each([0, -1, Number.NaN, Number.POSITIVE_INFINITY])("unknown human width %s uses the default", async (width) => {
+  const unknown = capture(false, width);
+  const fallback = capture(false);
+  await expect(unknown.program.parseAsync(["--help"], { from: "user" })).rejects.toMatchObject({ exitCode: 0 });
+  await expect(fallback.program.parseAsync(["--help"], { from: "user" })).rejects.toMatchObject({ exitCode: 0 });
+  expect(unknown.output.join("")).toBe(fallback.output.join(""));
+});
+
+test.each([[], ["workspace"], ["workspace", "create"], ["workspace", "start"], ["workspace", "build"], ["skill"]])(
+  "agent help remains byte-identical at every width for %j",
+  async (...args) => {
+    const baseline = capture(true);
+    await expect(baseline.program.parseAsync([...args, "--help"], { from: "user" })).rejects.toMatchObject({
+      exitCode: 0,
+    });
+    for (const width of [1, 20, 40, 60, 100, 0, Number.NaN]) {
+      const { program, output } = capture(true, width);
+      await expect(program.parseAsync([...args, "--help"], { from: "user" })).rejects.toMatchObject({ exitCode: 0 });
+      expect(output.join("")).toBe(baseline.output.join(""));
+    }
+  },
+);
+
+test("human help preserves wide, combining and styled Unicode text within terminal cells", async () => {
+  const narrow = capture(false, 40);
+  const wide = capture(false, 1000);
+  for (const { program } of [narrow, wide]) {
+    program.description("預覽 音樂 🎧 cafe\u0301 彩色 預覽 音樂 🎧 cafe\u0301 彩色 預覽 音樂");
+    program.option("--展示 <名称>", "\u001b[32m音樂\u001b[0m 🎧 cafe\u0301 預覽 彩色 音樂 🎧 cafe\u0301 預覽 彩色");
+    program.command("展示 <名称>").description("音樂 🎧 cafe\u0301 預覽 彩色 音樂 🎧 cafe\u0301 預覽 彩色");
+    await expect(program.parseAsync(["--help"], { from: "user" })).rejects.toMatchObject({ exitCode: 0 });
+  }
+  expect(helpContent(narrow.output.join(""))).toBe(helpContent(wide.output.join("")));
+  for (const line of narrow.output.join("").split("\n")) expect(Bun.stringWidth(line)).toBeLessThanOrEqual(40);
 });
 
 test("raw version remains unadorned", async () => {

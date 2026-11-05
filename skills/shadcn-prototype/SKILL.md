@@ -4,7 +4,7 @@ description: Use when creating, running, editing, or building local React protot
 author: alexgorbatchev
 metadata:
   created_on: 2026-10-27 07:10
-  last_modified: 2026-10-27 07:24
+  last_modified: 2026-11-04 23:46
   status: current
 ---
 
@@ -31,7 +31,7 @@ Use the published `@alexgorbatchev/shadcn` package's `shadcn-prototype` executab
 - `build` with optional `[directory]`: directory defaults to `.`. Runs the workspace's installed Vite production build, writing `dist/`. Build does not typecheck; `just check` does both.
 - `help [command]`: Commander-generated help; use `help workspace` for the subtree or append `-h, --help` to any command.
 - Root `-V, --version`: prints the package version alone.
-- `-h, --help`: available on every command. Human output uses a command tree and truncates to terminal width; agent output uses untruncated bullets.
+- `-h, --help`: available on every command. Human output wraps at terminal cell width, with aligned descriptions and connected command-tree branches; text is never truncated. An indivisible word wider than the available space stays intact. Agent output uses unwrapped bullets and is identical at every width.
 
 Set `AGENT=1`, `AGENT=true`, or `AGENT=yes` for agent output and an agent-skill alert at the beginning of help. Other values select human mode. `COLUMNS` supplies the human help width when stdout has no terminal width; fallback is 100. Paths in output fold the home directory to `~`. Normal output goes to stdout; errors go to stderr. Help/version succeed with exit 0, argument errors and local failures exit 1, and preview/build commands propagate their child exit status.
 
