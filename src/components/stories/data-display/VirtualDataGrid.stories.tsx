@@ -183,6 +183,33 @@ export const FittedColumns: Story = {
   },
 };
 
+export const PreferredFillWidth: Story = {
+  render: () => <VirtualDataGridExample files={fixture_gridFiles} width={420} fitColumns preferredFillSize={240} />,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const page = within(canvasElement.ownerDocument.body);
+    const name = canvas.getByRole("columnheader", { name: "Name" });
+    await waitFor(() => expect(name.getBoundingClientRect().width).toBeGreaterThanOrEqual(240));
+    await expect(canvas.getByText("Hidden to fit: Size.", { exact: true })).toBeVisible();
+    await userEvent.click(canvas.getByRole("button", { name: "Columns" }));
+    const choices = within(await page.findByRole("list", { name: "Columns" }));
+    await expect(choices.getByRole("checkbox", { name: "Size" })).toBeChecked();
+    await userEvent.click(choices.getByRole("button", { name: "Move Size earlier" }));
+    await userEvent.click(choices.getByRole("button", { name: "Move Size earlier" }));
+    await expect(canvas.getByRole("columnheader", { name: "Size" })).toBeVisible();
+    await expect(canvas.queryByRole("columnheader", { name: "Kind" })).not.toBeInTheDocument();
+    await expect(name.getBoundingClientRect().width).toBeGreaterThanOrEqual(240);
+    const container = canvas.getByTestId("VirtualDataGrid").parentElement;
+    if (!container) throw new Error("Grid example needs a width container");
+    container.style.width = "220px";
+    await waitFor(() => expect(name.getBoundingClientRect().width).toBe(180));
+    container.style.width = "520px";
+    await waitFor(() => expect(canvas.getByRole("columnheader", { name: "Kind" })).toBeVisible());
+    await expect(canvas.getByRole("columnheader", { name: "Size" })).toBeVisible();
+    await expect(name.getBoundingClientRect().width).toBeGreaterThanOrEqual(240);
+  },
+};
+
 export const FittedColumnGroups: Story = {
   render: () => <VirtualDataGridExample files={fixture_gridFiles} width={420} fitColumns grouped />,
   play: async ({ canvasElement }) => {

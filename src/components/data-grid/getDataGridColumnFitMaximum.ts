@@ -1,7 +1,6 @@
 import type { RowData, Table } from "@tanstack/react-table";
 import type { DataGridFeatures } from "./DataGrid.js";
 import { getDataGridColumnFit } from "./getDataGridColumnFit.js";
-import { getDataGridFillPreferredSize } from "./getDataGridFillPreferredSize.js";
 
 /** Required columns reclaim optional space; optional columns keep fitted neighbours and the fill preference. */
 export function getDataGridColumnFitMaximum<T extends RowData>(
@@ -15,7 +14,7 @@ export function getDataGridColumnFitMaximum<T extends RowData>(
   const occupied = table.getVisibleLeafColumns().reduce((sum, other) => {
     if (other.id === columnId) return sum;
     if (other.columnDef.meta?.fill) {
-      return sum + (isRequired ? (other.columnDef.minSize ?? 20) : getDataGridFillPreferredSize(other.columnDef));
+      return sum + (isRequired ? (other.columnDef.minSize ?? 20) : other.getSize());
     }
     if ((isRequired && other.getCanHide()) || hidden.includes(other.id)) return sum;
     return sum + other.getSize();

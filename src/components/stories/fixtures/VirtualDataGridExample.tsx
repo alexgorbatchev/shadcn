@@ -5,7 +5,7 @@ import {
   type ColumnSizingState,
 } from "@tanstack/react-table";
 import { useCreateAtom } from "@tanstack/react-store";
-import { useRef, type ReactElement, type ReactNode } from "react";
+import { useMemo, useRef, type ReactElement, type ReactNode } from "react";
 import { Checkbox } from "../../Checkbox";
 import {
   DataGridColumnHeader,
@@ -74,10 +74,6 @@ const columns = helper.columns([
   }),
 ]);
 const initialVisibility: ColumnVisibilityState = { owner: false };
-const groupedColumns = helper.columns([
-  helper.group({ id: "identity", header: "Identity", columns: columns.slice(0, 2) }),
-  helper.group({ id: "details", header: "Details", columns: columns.slice(2) }),
-]);
 
 interface IVirtualDataGridExampleProps {
   files: GridFile[];
@@ -86,6 +82,7 @@ interface IVirtualDataGridExampleProps {
   fitColumns?: boolean;
   grouped?: boolean;
   requiredKind?: boolean;
+  preferredFillSize?: number;
   hasSizeColumn?: boolean;
   retainedRowIds?: readonly string[];
   renderRow?: (row: DataGridRow<GridFile>, props: IVirtualTableRowProps) => ReactNode;
@@ -97,6 +94,7 @@ export function VirtualDataGridExample({
   fitColumns = false,
   grouped = false,
   requiredKind = false,
+  preferredFillSize,
   hasSizeColumn = true,
   retainedRowIds,
   renderRow,
@@ -104,17 +102,26 @@ export function VirtualDataGridExample({
   const fitWidth = useRef(0);
   const preferredSizing = useRef<ColumnSizingState>({});
   const columnSizing = useCreateAtom<ColumnSizingState>({});
+  const configuredColumns = useMemo(() => {
+    const leaves = columns
+      .filter((column) => hasSizeColumn || column.id !== "size")
+      .map((column) => {
+        if (column.meta?.fill && preferredFillSize !== undefined) return { ...column, size: preferredFillSize };
+        if (column.id === "kind" && requiredKind) return { ...column, enableHiding: false };
+        return column;
+      });
+    return grouped
+      ? helper.columns([
+          helper.group({ id: "identity", header: "Identity", columns: leaves.slice(0, 2) }),
+          helper.group({ id: "details", header: "Details", columns: leaves.slice(2) }),
+        ])
+      : leaves;
+  }, [grouped, hasSizeColumn, preferredFillSize, requiredKind]);
   // Leaving sizing out of the selector keeps resizing from rendering the grid again.
   const table = useTable(
     {
       features: dataGridFeatures,
-      columns: grouped
-        ? groupedColumns
-        : requiredKind
-          ? columns.map((column) => (column.id === "kind" ? { ...column, enableHiding: false } : column))
-          : hasSizeColumn
-            ? columns
-            : columns.filter((column) => column.id !== "size"),
+      columns: configuredColumns,
       data: files,
       getRowId: (file) => file.id,
       initialState: { columnVisibility: initialVisibility },

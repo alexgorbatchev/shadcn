@@ -69,6 +69,19 @@ test("optional columns leave the fill column its preferred width until only requ
   expect(fitDataGridColumnSizing(table, { kind: 240 }, 400)).toEqual({ kind: 200 });
 });
 
+test("fitting and optional resizing honor controlled fill preferences and native sizing limits", () => {
+  const table = createFitTable(false, 240);
+  const sizing = { title: 300 };
+  table.setColumnSizing(sizing);
+  expect(getDataGridColumnFit(table, 500)).toEqual(["size"]);
+  expect(getDataGridColumnFitMaximum(table, "kind", 500)).toBe(160);
+  expect(table.atoms.columnSizing.get()).toBe(sizing);
+  table.setColumnSizing({ title: 120 });
+  expect(table.getColumn("title")?.getSize()).toBe(160);
+  expect(getDataGridColumnFit(table, 420)).toEqual([]);
+  expect(getDataGridColumnFitMaximum(table, "kind", 420)).toBe(140);
+});
+
 test("required columns can reclaim space from optional columns revealed by shrinking", () => {
   const table = createFitTable(true);
   table.setColumnSizing({ kind: 240 });
@@ -80,6 +93,38 @@ test("required columns can reclaim space from optional columns revealed by shrin
   expect(restored).toEqual({ kind: 240 });
   table.setColumnSizing(restored);
   expect(getDataGridColumnFit(table, 440)).toEqual(["size"]);
+});
+
+test("preferred fill fitting preserves sizing and follows the optional column order", () => {
+  const table = createFitTable(false, 240);
+  const sizing = table.atoms.columnSizing.get();
+  expect(getDataGridColumnFit(table, 500)).toEqual([]);
+  expect(getDataGridColumnFit(table, 420)).toEqual(["size"]);
+  expect(getDataGridColumnFit(table, 300)).toEqual(["kind", "size"]);
+  expect(getDataGridColumnFit(table, 220)).toEqual(["kind", "size"]);
+  expect(table.atoms.columnSizing.get()).toBe(sizing);
+  expect(table.getColumn("title")?.getSize()).toBe(240);
+  expect(getDataGridColumnFitMaximum(table, "kind", 420)).toBe(140);
+  table.setColumnSizing({ kind: 140 });
+  expect(getDataGridColumnFit(table, 420)).toEqual(["size"]);
+  table.setColumnOrder(["select", "title", "size", "kind"]);
+  expect(getDataGridColumnFit(table, 420)).toEqual(["kind"]);
+});
+
+test("required resizing can reclaim fill space below its preference when no optional columns fit", () => {
+  const table = createFitTable(true, 240);
+  const preferred = { kind: 240 };
+  table.setColumnSizing(fitDataGridColumnSizing(table, preferred, 300));
+  expect(table.getColumn("kind")?.getSize()).toBe(100);
+  expect(getDataGridColumnFit(table, 300)).toEqual(["size"]);
+  expect(getDataGridColumnFitMaximum(table, "kind", 300)).toBe(100);
+  const smaller = constrainDataGridColumnSizing(table, { kind: 80 }, 300, preferred);
+  table.setColumnSizing(fitDataGridColumnSizing(table, smaller, 300));
+  expect(getDataGridColumnFitMaximum(table, "kind", 300)).toBe(100);
+  expect(constrainDataGridColumnSizing(table, { kind: 100 }, 300, smaller)).toEqual({ kind: 100 });
+  table.setColumnSizing(fitDataGridColumnSizing(table, preferred, 720));
+  expect(table.getColumn("kind")?.getSize()).toBe(240);
+  expect(getDataGridColumnFit(table, 720)).toEqual([]);
 });
 
 test("optional resizing preserves its own handle and neighbours while reserving preferred fill space", () => {
