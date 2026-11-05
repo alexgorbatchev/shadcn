@@ -9,7 +9,8 @@ import type { DataGridFeatures } from "./DataGrid.js";
 import { getDataGridColumnFitMaximum } from "./getDataGridColumnFitMaximum.js";
 
 /**
- * Apply a user resize without displacing another fitted column or collapsing a fill column. Use in the table's
+ * Apply a user resize while preserving fill space. Required columns may displace optional columns; optional
+ * columns preserve fitted neighbours and the fill preference. Use in the table's
  * `onColumnSizingChange`, passing the width reported by `VirtualDataGrid.onFitWidthChange`, then store the result in
  * preferred sizes. Then pass those preferences through `fitDataGridColumnSizing` into the table's sizing atom.
  * Container changes never call this helper or rewrite preferred sizes.

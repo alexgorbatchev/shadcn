@@ -21,7 +21,8 @@ interface IVirtualDataGridProps<T extends RowData, TSelected> {
   estimateRowHeight?: number;
   overscan?: number;
   /**
-   * Reserve one fill column's `minSize` and hide optional columns that do not fit, in their chosen order. Replaces
+   * Reserve one fill column's preferred `size` and hide optional columns that do not fit, in their chosen order.
+   * The fill column may shrink toward `minSize` when only required columns remain. Replaces
    * `meta.visibleFrom` breakpoints; saved visibility and widths are unchanged. Use exactly one fill column, and
    * ensure required columns' minima plus its minimum fit the smallest supported container. Only leaf headers resize.
    * Pair with `fitDataGridColumnSizing` and `constrainDataGridColumnSizing` to preserve preferred widths separately

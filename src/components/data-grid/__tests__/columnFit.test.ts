@@ -7,7 +7,7 @@ import { getDataGridColumnFit } from "../getDataGridColumnFit.js";
 import { getDataGridColumnFitMaximum } from "../getDataGridColumnFitMaximum.js";
 import { fitDataGridColumnSizing } from "../fitDataGridColumnSizing.js";
 
-function createFitTable(requiredKind = false) {
+function createFitTable(requiredKind = false, fillSize?: number) {
   const helper = createColumnHelper<DataGridFeatures, { title: string }>();
   const features = { ...dataGridFeatures, coreReactivityFeature: storeReactivityBindings() };
   return constructTable({
@@ -15,7 +15,7 @@ function createFitTable(requiredKind = false) {
     data: [{ title: "A track" }],
     columns: helper.columns([
       helper.display({ id: "select", size: 40, enableHiding: false, enableResizing: false }),
-      helper.accessor("title", { minSize: 160, enableHiding: false, meta: { fill: true } }),
+      helper.accessor("title", { size: fillSize, minSize: 160, enableHiding: false, meta: { fill: true } }),
       helper.display({ id: "kind", size: 100, minSize: 60, maxSize: 240, enableHiding: !requiredKind }),
       helper.display({ id: "owner", size: 90, minSize: 40, maxSize: 300 }),
       helper.display({ id: "size", size: 80, minSize: 40, maxSize: 160 }),
@@ -57,6 +57,43 @@ test("resize ceilings preserve fitted neighbours and respect declared maxima", (
   expect(getDataGridColumnFit(table, 420)).toEqual(["size"]);
   expect(getDataGridColumnFitMaximum(table, "kind", 420)).toBe(130);
   expect(getDataGridColumnFitMaximum(table, "kind", 900)).toBe(240);
+});
+
+test("optional columns leave the fill column its preferred width until only required columns remain", () => {
+  const table = createFitTable(true, 240);
+  expect(getDataGridColumnFit(table, 420)).toEqual(["size"]);
+  expect(getDataGridColumnFit(table, 460)).toEqual([]);
+  table.setColumnSizing({ kind: 240 });
+  expect(getDataGridColumnFit(table, 440)).toEqual(["size"]);
+  expect(fitDataGridColumnSizing(table, { kind: 240 }, 440)).toEqual({ kind: 240 });
+  expect(fitDataGridColumnSizing(table, { kind: 240 }, 400)).toEqual({ kind: 200 });
+});
+
+test("required columns can reclaim space from optional columns revealed by shrinking", () => {
+  const table = createFitTable(true);
+  table.setColumnSizing({ kind: 240 });
+  expect(getDataGridColumnFit(table, 440)).toEqual(["size"]);
+  const smaller = constrainDataGridColumnSizing(table, { kind: 128 }, 440, { kind: 240 });
+  table.setColumnSizing(smaller);
+  expect(getDataGridColumnFit(table, 440)).toEqual([]);
+  const restored = constrainDataGridColumnSizing(table, { kind: 240 }, 440, smaller);
+  expect(restored).toEqual({ kind: 240 });
+  table.setColumnSizing(restored);
+  expect(getDataGridColumnFit(table, 440)).toEqual(["size"]);
+});
+
+test("optional resizing preserves its own handle and neighbours while reserving preferred fill space", () => {
+  const table = createFitTable(false, 240);
+  const next = constrainDataGridColumnSizing(table, { kind: 240 }, 420, {});
+  expect(next).toEqual({ kind: 140 });
+  table.setColumnSizing(next);
+  expect(getDataGridColumnFit(table, 420)).toEqual(["size"]);
+  expect(getDataGridColumnFitMaximum(table, "kind", 420)).toBe(140);
+  table.setColumnSizing({ kind: 100 });
+  const wider = constrainDataGridColumnSizing(table, { kind: 240 }, 500, { kind: 100 });
+  expect(wider).toEqual({ kind: 140 });
+  table.setColumnSizing(wider);
+  expect(getDataGridColumnFit(table, 500)).toEqual([]);
 });
 
 test("controlled resize proposals clamp only the changed visible fixed column", () => {

@@ -112,3 +112,32 @@ test("fitted pointer resizing stops at the available width without losing its ha
     .poll(() => screen.getByRole("table").element().getBoundingClientRect().width)
     .toBeLessThanOrEqual(viewport.clientWidth);
 });
+
+test("a required column can grow again after shrinking reveals an optional neighbour", async () => {
+  const screen = await render(<VirtualDataGridExample files={fixture_gridFiles} width={720} fitColumns requiredKind />);
+  const handle = screen.getByRole("separator", { name: "Resize Kind" });
+  handle.element().focus();
+  await userEvent.keyboard("{End}");
+  await expect.element(handle).toHaveAttribute("aria-valuenow", "240");
+  const grid = screen.getByTestId("VirtualDataGrid").element();
+  const container = grid.parentElement!;
+  container.style.width = "440px";
+  await expect.element(screen.getByRole("columnheader", { name: "Size" })).not.toBeInTheDocument();
+  await userEvent.keyboard("{Home}");
+  await expect.element(handle).toHaveAttribute("aria-valuenow", "60");
+  await expect.element(screen.getByRole("columnheader", { name: "Size" })).toBeVisible();
+  await userEvent.keyboard("{End}");
+  await expect.element(handle).toHaveAttribute("aria-valuenow", "240");
+  await expect.element(screen.getByRole("columnheader", { name: "Size" })).not.toBeInTheDocument();
+  await userEvent.keyboard("{Home}");
+  await expect.element(screen.getByRole("columnheader", { name: "Size" })).toBeVisible();
+  await commands.nativeScrub('[aria-label="Resize Kind"]', 300);
+  await expect.element(handle).toHaveAttribute("aria-valuenow", "240");
+  await expect.element(handle).not.toHaveAttribute("data-resizing");
+  await expect.element(screen.getByRole("columnheader", { name: "Size" })).not.toBeInTheDocument();
+  await expect
+    .poll(() => screen.getByRole("columnheader", { name: "Name" }).element().getBoundingClientRect().width)
+    .toBeGreaterThanOrEqual(160);
+  const viewport = screen.getByRole("region", { name: "Files" }).element();
+  await expect.poll(() => viewport.scrollWidth).toBeLessThanOrEqual(viewport.clientWidth);
+});
