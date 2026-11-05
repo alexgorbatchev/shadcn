@@ -1,3 +1,4 @@
+import { createTestDirectory } from "../createTestDirectory";
 import { expect, test } from "bun:test";
 import { mkdir, rm } from "node:fs/promises";
 import { runConsumerCommand } from "./helpers.js";
@@ -9,7 +10,7 @@ interface ICoverageRecord {
 }
 
 test("coverage retains an uncovered module when Vite warms another module during its transform", async () => {
-  const root = `${process.cwd()}/.tmp/coverage-race/${crypto.randomUUID()}`;
+  const root = await createTestDirectory("coverage-race");
   await mkdir(root, { recursive: true });
   try {
     await Promise.all([

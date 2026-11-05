@@ -1,10 +1,11 @@
+import { createTestDirectory } from "../../scripts/createTestDirectory";
 import { afterAll, expect, test } from "bun:test";
 import { mkdir, rm, symlink } from "node:fs/promises";
 import { resolve } from "node:path";
 import { createWorkspace } from "../createWorkspace";
 import { runWorkspace } from "../runWorkspace";
 
-const root = resolve(".tmp/prototype-unit", crypto.randomUUID());
+const root = await createTestDirectory("prototype-unit");
 afterAll(async () => {
   await rm(root, { recursive: true, force: true });
 });

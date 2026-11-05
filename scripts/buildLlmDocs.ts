@@ -81,7 +81,7 @@ export async function buildLlmDocs(rootDirectory: string): Promise<number> {
   const indexContent = `${index.join("\n")}\n`;
   await Promise.all([
     Bun.write(resolve(rootDirectory, "llms.txt"), indexContent),
-    Bun.write(resolve(rootDirectory, ".tmp/llm-docs-public/llms.txt"), indexContent),
+    Bun.write(resolve(rootDirectory, ".cache/llm-docs-public/llms.txt"), indexContent),
     Bun.write(`${outputDirectory}/setup.md`, setup),
     ...docs.map((doc) => Bun.write(`${outputDirectory}/${doc.path}`, doc.content)),
   ]);

@@ -1,4 +1,15 @@
-import { expect } from "bun:test";
+import { runTestCommand } from "../runTestCommand";
+import { afterAll, afterEach } from "bun:test";
+
+const commands = new Map<AbortController, ReturnType<typeof runTestCommand>>();
+
+async function stopCommands(): Promise<void> {
+  for (const controller of commands.keys()) controller.abort();
+  await Promise.allSettled(commands.values());
+}
+
+afterEach(stopCommands);
+afterAll(stopCommands);
 
 type PackageExport = string | Record<string, string>;
 
@@ -7,14 +18,14 @@ export function getPackageExportTargets(exports: Record<string, PackageExport>):
 }
 
 export async function runConsumerCommand(command: string[], cwd: string): Promise<string> {
-  const child = Bun.spawn(command, { cwd, stdout: "pipe", stderr: "pipe" });
-  const [stdout, stderr, exitCode] = await Promise.all([
-    new Response(child.stdout).text(),
-    new Response(child.stderr).text(),
-    child.exited,
-  ]);
-  expect(exitCode, stdout + stderr).toBe(0);
-  return stdout;
+  const controller = new AbortController();
+  const running = runTestCommand(command, { cwd, cancelSignal: controller.signal });
+  commands.set(controller, running);
+  try {
+    return (await running).stdout;
+  } finally {
+    commands.delete(controller);
+  }
 }
 
 interface IInstalledPackageDependencies {

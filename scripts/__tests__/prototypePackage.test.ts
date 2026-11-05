@@ -1,12 +1,12 @@
+import { createTestDirectory } from "../createTestDirectory";
 import type { Subprocess } from "bun";
 import { afterAll, beforeAll, expect, test } from "bun:test";
 import { cp, mkdir, rm } from "node:fs/promises";
-import { resolve } from "node:path";
 import { chromium, type Browser, type Page } from "playwright";
 import manifest from "../../package.json";
 import { runConsumerCommand } from "./helpers";
 
-const root = resolve(".tmp/prototype-consumer", crypto.randomUUID());
+const root = await createTestDirectory("prototype-consumer");
 const workspace = `${root}/workspace`;
 let browser: Browser;
 let page: Page;
@@ -140,7 +140,6 @@ test("packed recipes run, edit data, reset, and use an actual mobile viewport", 
   await canvas.locator('html[data-theme="light"]').waitFor();
   await choose(page, "Density", "Compact");
   await canvas.locator('[data-density="compact"]').first().waitFor();
-  await page.screenshot({ path: resolve(".tmp/prototype-validation/workbench.png") });
   expect(errors).toEqual([]);
 }, 60_000);
 

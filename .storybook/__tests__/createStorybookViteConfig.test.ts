@@ -1,3 +1,4 @@
+import { createTestDirectory } from "../../scripts/createTestDirectory";
 import { expect, test } from "bun:test";
 import { mkdir, rm } from "node:fs/promises";
 import { pathToFileURL } from "node:url";
@@ -8,7 +9,7 @@ import { runConsumerCommand } from "../../scripts/__tests__/helpers.js";
 test.each(["node", process.execPath])(
   "Storybook loads concurrent TypeScript configs without deprecations under %s",
   async (runtime) => {
-    const root = `${process.cwd()}/.tmp/storybook-loader/${crypto.randomUUID()}`;
+    const root = await createTestDirectory("storybook-loader");
     await mkdir(root, { recursive: true });
     try {
       await Promise.all([
@@ -32,7 +33,7 @@ test.each(["node", process.execPath])(
 );
 
 test("the React build handles client directives and forwards unrelated bundler warnings", async () => {
-  const root = `${process.cwd()}/.tmp/storybook-directives/${crypto.randomUUID()}`;
+  const root = await createTestDirectory("storybook-directives");
   await mkdir(root, { recursive: true });
   try {
     await Promise.all([
@@ -67,7 +68,7 @@ test("the React build handles client directives and forwards unrelated bundler w
 });
 
 test("Node-loaded Storybook configuration builds package source aliases", async () => {
-  const root = `${process.cwd()}/.tmp/storybook-alias/${crypto.randomUUID()}`;
+  const root = await createTestDirectory("storybook-alias");
   await mkdir(root, { recursive: true });
   try {
     await Bun.write(`${root}/main.ts`, 'import { cn } from "@/utils/cn"; export const value = cn("p-2", "p-3");\n');
@@ -95,7 +96,7 @@ test("Node-loaded Storybook configuration builds package source aliases", async 
 });
 
 test("the production build rejects oversized transferred JavaScript", async () => {
-  const root = `${process.cwd()}/.tmp/storybook-budget/${crypto.randomUUID()}`;
+  const root = await createTestDirectory("storybook-budget");
   await mkdir(root, { recursive: true });
   try {
     const payload = Array.from({ length: 12 }, () =>

@@ -539,3 +539,39 @@ function Consumer() {
 }
 createRoot(document.getElementById("root")).render(<Consumer />);
 `;
+export const fixture_testArtifactWriter: string = `
+import { tmpdir } from "node:os";
+await Bun.write(tmpdir() + "/extraction/package.txt", "packed package");
+await Bun.write(process.env.npm_config_logs_dir + "/debug.log", "npm diagnostic");
+await Bun.write(process.env.NODE_COMPILE_CACHE + "/compiled.cache", "node cache");
+console.log("written");
+process.exitCode = Number(process.argv.at(-1));
+`;
+
+export const fixture_testProcessTree: string = `
+import { tmpdir } from "node:os";
+const [role, readyUrl, evidence] = process.argv.slice(-3);
+const child = role === "parent" ? Bun.spawn([process.execPath, import.meta.path, "child", readyUrl, evidence], {
+  stdout: "inherit", stderr: "inherit",
+}) : undefined;
+const timer = setInterval(() => {}, 1000);
+process.once("SIGTERM", async () => {
+  await Bun.write(evidence + "/" + role, "terminated");
+  await child?.exited;
+  clearInterval(timer);
+});
+await Bun.write(tmpdir() + "/" + role, "temporary");
+await fetch(readyUrl, {method: "POST", body: JSON.stringify({role, pid: process.pid, scratch: process.env.SHADCN_TEST_ROOT})});
+`;
+
+export const fixture_testSuiteWaiter: string = `
+import { test } from "bun:test";
+test("wait for runner cancellation", async () => {
+  await Bun.write(process.env.TMPDIR + "/extracted/package.txt", "temporary");
+  await fetch(process.env.FIXTURE_READY_URL, {
+    method: "POST",
+    body: JSON.stringify({role: "test", pid: process.pid, scratch: process.env.SHADCN_TEST_ROOT}),
+  });
+  await new Promise(() => setInterval(() => {}, 1000));
+}, 60000);
+`;

@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-08 06:13
-last_modified: 2026-10-31 10:11
+last_modified: 2026-11-05 00:14
 status: current
 ---
 
@@ -43,7 +43,7 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - Keep the single repository `bun.lock` in sync with manifest changes. Package verification and `just check` require npm and Playwright Chromium. On a fresh Linux host, run `bun x --bun playwright install --with-deps chromium` before validation; installing dependencies alone does not install the browser. Each release job installs its own browser because GitHub jobs have separate filesystems.
 - For routed preview prerequisites and hostname configuration, see [README.md](./README.md#devhost-preview). The direct Storybook preview needs no devhost service.
 - `llms.txt`, `dist/`, `llms/`, `storybook-static/`, `.cache/`, and `.tmp/` are generated or transient outputs. Edit their source files and regenerate them; keep those outputs untracked.
-- Package and Storybook builds regenerate LLM documentation. The README starts with an agent alert directing consumers to read `node_modules/@alexgorbatchev/shadcn/llms.txt`. Storybook and npm archives expose root `llms.txt` with linked pages under `llms/`; `.tmp/llm-docs-public/` stages the index for Storybook's static-directory API. Direct Storybook CLI invocations need `just llm-docs` first; the documented preview commands generate it automatically.
+- Package and Storybook builds regenerate LLM documentation. The README starts with an agent alert directing consumers to read `node_modules/@alexgorbatchev/shadcn/llms.txt`. Storybook and npm archives expose root `llms.txt` with linked pages under `llms/`; `.cache/llm-docs-public/` stages the index for Storybook's static-directory API. Direct Storybook CLI invocations need `just llm-docs` first; the documented preview commands generate it automatically.
 - `just check` is the local validation entrypoint, including a browser smoke check of the built standalone preview. `.github/workflows/storybook-pages.yml` validates and deploys static Storybook when a GitHub Release is published or a published release tag is manually dispatched for retry; see [Pages setup](./docs/internal/storybook-pages.md). It does not run on branch pushes or pull requests.
 
 ## Contracts
@@ -90,6 +90,7 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - Scope Storybook Vitest runs with CLI file filters; the addon ignores Vitest's `test.include`. Match reduced-motion selector specificity to state-dependent animation rules and validate using native browser preference emulation.
 - Preserve Base UI function-valued `className` and `style` props by evaluating them with native primitive state. Passing those functions to `cn` silently discards the callback.
 - Validate package changes in a separate Bun React consumer installed from the packed archive; repository aliases can hide package export, CSS scanning, and font asset failures.
+- Prototype, package, and preview validation commands and the static Storybook build own disposable directories under `.tmp/`. Use `createTestDirectory` for fixtures and `runTestCommand` for subprocesses so temporary files, Node compile caches, and npm logs stay within the run's scope. Disable the Node compile cache at the validation entrypoint so runner imports cannot populate an inherited cache before isolation starts. Await subprocess termination before disposing its directory, including failure, timeout, and cancellation. Keep required coverage data until its reporter finishes; preserve shared download caches and unrelated scratch entries.
 
 ## Boundaries
 

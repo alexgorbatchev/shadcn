@@ -1,3 +1,4 @@
+import { createTestDirectory } from "../createTestDirectory";
 import { afterAll, beforeAll, expect, test } from "bun:test";
 import assert from "node:assert/strict";
 import { mkdir, rm } from "node:fs/promises";
@@ -6,7 +7,7 @@ import manifest from "../../package.json";
 import { fixture_corePeers, fixture_eventCalendarBrowserSource } from "./fixtures";
 import { runConsumerCommand } from "./helpers";
 
-const consumerRoot = `${process.cwd()}/.tmp/calendar-consumer/${Date.now()}`;
+const consumerRoot = await createTestDirectory("calendar-consumer");
 let browser: Browser;
 beforeAll(async () => {
   await mkdir(consumerRoot, { recursive: true });

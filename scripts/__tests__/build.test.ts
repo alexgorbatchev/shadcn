@@ -1,3 +1,4 @@
+import { createTestDirectory } from "../createTestDirectory";
 import { afterAll, beforeAll, expect, test } from "bun:test";
 import assert from "node:assert/strict";
 import { mkdir, rm } from "node:fs/promises";
@@ -18,7 +19,7 @@ import {
   fixture_featureTypePaths,
 } from "./fixtures";
 
-const consumerRoot = `${process.cwd()}/.tmp/optional-consumers/${Date.now()}`;
+const consumerRoot = await createTestDirectory("optional-consumers");
 const dependencyVersions: Record<string, string> = manifest.devDependencies;
 let consumerArchive: string;
 
@@ -227,7 +228,7 @@ test.each([
 ])(
   "built declarations compile in a strict %s consumer",
   async (resolution, module) => {
-    const consumerPath = `.tmp/package-types/${resolution}`;
+    const consumerPath = `${consumerRoot}/package-types/${resolution}`;
     await mkdir(consumerPath, { recursive: true });
     await Bun.write(`${consumerPath}/consumer.tsx`, fixture_packageTypeConsumerSource);
     await Bun.write(

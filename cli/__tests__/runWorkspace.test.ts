@@ -1,10 +1,11 @@
+import { createTestDirectory } from "../../scripts/createTestDirectory";
 import { afterAll, expect, test } from "bun:test";
 import { mkdir, rm } from "node:fs/promises";
 import { resolve } from "node:path";
 import { createProgram } from "../createProgram";
 import { runWorkspace } from "../runWorkspace";
 
-const root = resolve(".tmp/prototype-process", crypto.randomUUID());
+const root = await createTestDirectory("prototype-process");
 afterAll(async () => {
   process.exitCode = 0;
   await rm(root, { recursive: true, force: true });

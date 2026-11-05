@@ -1,3 +1,4 @@
+import { createTestDirectory } from "../createTestDirectory";
 import { afterEach, expect, test } from "bun:test";
 import { mkdir, rm } from "node:fs/promises";
 import { buildLlmDocs } from "../buildLlmDocs";
@@ -9,7 +10,7 @@ afterEach(async () => {
 });
 
 async function createProject(): Promise<string> {
-  const root = `${process.cwd()}/.tmp/llm-docs-tests/${crypto.randomUUID()}`;
+  const root = await createTestDirectory("llm-docs-tests");
   roots.push(root);
   await mkdir(root, { recursive: true });
   await Promise.all([
@@ -70,7 +71,7 @@ test("generates linked docs with public aliases, optional entrypoints, metadata,
   expect(await Bun.file(`${root}/llms.txt`).text()).toBe(
     "# @test/ui\n\n> Test controls.\n\nGenerated from the public package exports and Storybook sources.\n\n## Guide\n\n- [Setup and usage](./llms/setup.md)\n\n## actions\n\n- [Button](./llms/components/actions/Button.md): It's a control with {braces}.\n\n## charts\n\n- [Button](./llms/components/charts/Button.md)\n",
   );
-  expect(await Bun.file(`${root}/.tmp/llm-docs-public/llms.txt`).text()).toBe(
+  expect(await Bun.file(`${root}/.cache/llm-docs-public/llms.txt`).text()).toBe(
     await Bun.file(`${root}/llms.txt`).text(),
   );
   expect(await Bun.file(`${root}/llms/llms.txt`).exists()).toBe(false);

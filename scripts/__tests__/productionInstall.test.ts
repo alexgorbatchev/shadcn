@@ -1,9 +1,10 @@
+import { createTestDirectory } from "../createTestDirectory";
 import { afterAll, beforeAll, expect, test } from "bun:test";
 import { mkdir, readdir, rm } from "node:fs/promises";
 import manifest from "../../package.json";
 import { runConsumerCommand } from "./helpers";
 
-const consumerRoot = `${process.cwd()}/.tmp/production-install/${Date.now()}`;
+const consumerRoot = await createTestDirectory("production-install");
 
 async function installedPackages(directory: string): Promise<string[]> {
   const entries = await readdir(directory, { withFileTypes: true });

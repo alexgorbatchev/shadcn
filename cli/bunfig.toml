@@ -1,5 +1,4 @@
 [test]
 coverage = true
 coverageThreshold = { lines = 0.9, functions = 0.9 }
-coverageReporter = ["text", "lcov"]
-coverageDir = ".tmp/prototype-cli-coverage"
+coverageReporter = ["text"]
