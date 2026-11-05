@@ -37,7 +37,7 @@ const meta: Meta<typeof FormDialog> = {
   },
 };
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Story = StoryObj<typeof FormDialog>;
 
 export const Submit: Story = {
   play: async ({ canvasElement, userEvent, args }) => {
