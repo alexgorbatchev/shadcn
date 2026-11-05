@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-08 06:13
-last_modified: 2026-11-05 00:14
+last_modified: 2026-11-05 01:53
 status: current
 ---
 
@@ -40,7 +40,7 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - Run commands from this standalone repository, not from the sibling devhost checkout. Use Bun 1.4.2 as declared in `package.json`; `just` is required for the validation and packaging recipes.
 - Unused-code analysis uses the native ts-unused Node CLI with the default Node heap, validated with Node 24 and 26. Keep the Node runtime; do not force the analyzer through Bun. Package mode and all default rules remain enabled, including native Storybook handling.
 - TypeScript 7 (`@typescript/native`) owns the `tsc` command. `typescript` aliases `@typescript/typescript6`, which supplies the TypeScript 6 compiler API for build scripts, Storybook docgen, and ts-unused, and exposes the TypeScript 6 CLI as `tsc6`. Call `node_modules/typescript/bin/tsc6` when a check needs TypeScript 6; `node_modules/typescript/bin/tsc` does not exist.
-- Keep the single repository `bun.lock` in sync with manifest changes. Package verification and `just check` require npm and Playwright Chromium. On a fresh Linux host, run `bun x --bun playwright install --with-deps chromium` before validation; installing dependencies alone does not install the browser. Each release job installs its own browser because GitHub jobs have separate filesystems.
+- Keep the single repository `bun.lock` in sync with manifest changes. Package verification and `just check` require npm and Playwright Chromium. For release qualification and archive inspection, use the exact npm version through the commands in [the release procedure](./docs/internal/npm-releases.md); ambient npm versions can produce different archive contents. On a fresh Linux host, run `bun x --bun playwright install --with-deps chromium` before validation; installing dependencies alone does not install the browser. Each release job installs its own browser because GitHub jobs have separate filesystems.
 - For routed preview prerequisites and hostname configuration, see [README.md](./README.md#devhost-preview). The direct Storybook preview needs no devhost service.
 - `llms.txt`, `dist/`, `llms/`, `storybook-static/`, `.cache/`, and `.tmp/` are generated or transient outputs. Edit their source files and regenerate them; keep those outputs untracked.
 - Package and Storybook builds regenerate LLM documentation. The README starts with an agent alert directing consumers to read `node_modules/@alexgorbatchev/shadcn/llms.txt`. Storybook and npm archives expose root `llms.txt` with linked pages under `llms/`; `.cache/llm-docs-public/` stages the index for Storybook's static-directory API. Direct Storybook CLI invocations need `just llm-docs` first; the documented preview commands generate it automatically.
