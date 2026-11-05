@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-14 06:43
-last_modified: 2026-11-03 07:00
+last_modified: 2026-11-05 04:24
 status: current
 ---
 
@@ -32,6 +32,6 @@ Missing baselines fail CI. Update mode is never used by CI, so an unexpected cha
 
 ## Automation
 
-`.github/workflows/visual-regression.yml` checks pull requests and pushes to `main`. The npm release workflow calls the same workflow and requires it to pass before publishing. The workflow generates the LLM documentation assets before starting the Storybook test server. Failed runs upload `visual-regression-failures` artifacts for 14 days. These checks do not publish Storybook or npm packages; publishing remains restricted to published GitHub Releases.
+`.github/workflows/visual-regression.yml` checks pull requests and pushes to `main`. Before installing Chromium, it runs `bun run typecheck` and `bun run lint`, including formatting and native Node 24 unused-code analysis with the default heap. The npm release workflow calls the same workflow and requires it to pass before publishing. The workflow generates the LLM documentation assets before starting the Storybook test server. Failed runs upload `visual-regression-failures` artifacts for 14 days. These checks do not publish Storybook or npm packages; publishing remains restricted to published GitHub Releases.
 
 Visual checks complement the existing browser, package rendering, contrast, and coverage suites. They are separate from `just check` and do not establish full catalog visual coverage.
