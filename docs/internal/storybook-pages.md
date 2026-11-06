@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-12 16:20
-last_modified: 2026-10-22 18:34
+last_modified: 2026-11-06 03:32
 status: current
 ---
 
@@ -15,22 +15,22 @@ For repository maintainers, `.github/workflows/storybook-pages.yml` publishes th
 3. Configure the `github-pages` environment's deployment protection rules to allow release tags. A rule allowing only the default branch prevents release-tag deployments. Apply any required reviewers there. Manual retries use a tag ref as well, preserving tag-only deployment protection.
 4. Publish a GitHub Release whose tagged commit contains the workflow, or manually dispatch a published release tag for retry. Draft releases, branch pushes, and tag pushes alone do not deploy. Published prereleases also deploy.
 
-The workflow checks out the release tag, verifies that it identifies a published release matching the package version, installs the Bun version declared in `package.json` with the frozen lockfile and Playwright Chromium with its system dependencies, checks types and lint/formatting, verifies package rendering, and builds Storybook. Only a successful build can deploy the uploaded `storybook-static/` artifact through GitHub's Pages actions.
+The workflow checks out the release tag and verifies that it identifies a published release matching the package version. Its build job uses `mcr.microsoft.com/playwright:v1.64.1-noble` with preinstalled browsers and system dependencies, Node 24, Just 1.58.0, and the Bun version declared in `package.json`. It restores cached Bun dependency downloads, installs the frozen lockfile, then runs `just typecheck`, `just lint`, `just test-package`, and `just build-storybook`. Only a successful build can deploy the uploaded `storybook-static/` artifact through GitHub's Pages actions.
 
 ## Retry a published release
 
-When the published release tag already contains the required workflow, dispatch that tag:
+When the published release tag already contains the required workflow, dispatch that tag. Replace `vX.Y.Z` below with the actual release tag:
 
 ```sh
-gh workflow run storybook-pages.yml --ref v0.0.20 -f release_tag=v0.0.20
+gh workflow run storybook-pages.yml --ref vX.Y.Z -f release_tag=vX.Y.Z
 ```
 
-If the published release tag lacks a workflow repair, merge and validate that repair on `main`, then create a separate CI tag for the retry:
+If the published release tag lacks a workflow repair, merge and validate that repair on `main`, then create a separate CI tag for the retry. First verify that the source tag supplies every task entrypoint used by the repaired workflow. Tags predating the native Just recipes cannot use the current workflow; they need a compatible workflow revision.
 
 ```sh
-git tag -a ci-storybook-v0.0.20-retry main -m "Retry Storybook workflow for v0.0.20"
-git push origin refs/tags/ci-storybook-v0.0.20-retry
-gh workflow run storybook-pages.yml --ref ci-storybook-v0.0.20-retry -f release_tag=v0.0.20
+git tag -a ci-storybook-vX.Y.Z-retry main -m "Retry Storybook workflow for vX.Y.Z"
+git push origin refs/tags/ci-storybook-vX.Y.Z-retry
+gh workflow run storybook-pages.yml --ref ci-storybook-vX.Y.Z-retry -f release_tag=vX.Y.Z
 ```
 
 The workflow definition comes from the dispatch ref; the catalog source comes from the `release_tag` input. The published-release and version checks reject draft, missing, or mismatched releases. Rerunning an old failed run uses its original workflow definition. Keep the published package tag unchanged and retain the CI tag as the workflow revision used for recovery.

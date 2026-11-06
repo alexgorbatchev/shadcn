@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-09 11:00
-last_modified: 2026-10-21 20:05
+last_modified: 2026-11-06 03:25
 status: current
 ---
 
@@ -11,7 +11,7 @@ For contributors checking the component catalog, Storybook runs axe-core's `colo
 ## Run the catalog
 
 ```sh
-bun run test:contrast
+just test-contrast
 ```
 
 The command uses headless Chromium through the existing Storybook Vitest addon, with native reduced-motion preference to measure settled content. It runs all stories tagged `test` in light and dark themes, each at comfortable and compact density. Story-specific globals and component density overrides still apply. No running preview server is required. Each configuration runs its stories across parallel browser pages, then runs InputGroup and Table alone in a `-clipboard` project because they use Chromium's shared native clipboard. A single page retains renderer memory from every story file it runs, so routing the whole catalog through one page crashes it near Chromium's per-renderer limit. Each project has its own dependency cache. The regular and reduced-motion interaction suites retain their existing browser preferences.
@@ -19,11 +19,11 @@ The command uses headless Chromium through the existing Storybook Vitest addon, 
 For a focused run:
 
 ```sh
-bun run test:contrast src/components/stories/actions/Button.stories.tsx
-bun run test:contrast --project contrast-light-compact src/components/stories/overlays/Drawer.stories.tsx
+just test-contrast src/components/stories/actions/Button.stories.tsx
+just test-contrast --project contrast-light-compact src/components/stories/overlays/Drawer.stories.tsx
 ```
 
-The regular `bun run test` also checks contrast using the preview's default globals. `just check` checks types, formatting, package rendering, and the static Storybook build; run `test:contrast` separately for the complete contrast matrix.
+The regular `just test-stories` suite, included in `just test`, also checks contrast using the preview's default globals. `just check` checks types, formatting, package rendering, and the static Storybook build; run `just test-contrast` separately for the complete contrast matrix.
 
 ## Inspect results in Storybook
 
@@ -42,5 +42,5 @@ The scan includes the story document's body, including portal content. It runs a
 The browser tests in `.storybook/__tests__/preview.test.tsx` exercise the configured scan with readable Button text and intentionally insufficient portal text. Run them with:
 
 ```sh
-bun run test:native .storybook/__tests__/preview.test.tsx
+just test-native .storybook/__tests__/preview.test.tsx
 ```

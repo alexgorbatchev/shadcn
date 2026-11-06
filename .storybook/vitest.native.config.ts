@@ -54,7 +54,7 @@ export default defineConfig({
     name: "native-browser",
     attachmentsDir: ".tmp/native-browser-attachments",
     include: [
-      "src/components/__tests__/*.test.tsx",
+      "src/components/__tests__/!(Carousel).test.tsx",
       "src/components/data-grid/__tests__/*.test.ts",
       "src/utils/__tests__/*.test.ts",
       "src/components/assistant-ui/hooks/__tests__/*.test.ts",
@@ -78,7 +78,7 @@ export default defineConfig({
       },
       provider: playwright(),
       instances: [
-        { browser: "chromium", exclude: ["src/components/__tests__/Carousel.test.tsx"] },
+        { browser: "chromium" },
         {
           browser: "chromium",
           name: "native-reduced-motion",

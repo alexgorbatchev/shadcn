@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-20 23:00
-last_modified: 2026-10-30 09:44
+last_modified: 2026-11-06 03:25
 status: current
 ---
 
@@ -72,7 +72,7 @@ When updating a registry item, compare its fetched source and exports with the r
 
 Use the root `just fix` and `just check` gates. Browser interactions, native browser tests, contrast, reduced motion, packed consumer rendering, and the 90% coverage gate remain separate required evidence; a successful package build alone does not establish them. Regression tests must fail when their corresponding behavior change is temporarily removed. Keep temporary logs and archives under `.tmp/`, and serialize browser runs when coordinating source mutations.
 
-`bun run test:coverage` combines the Storybook projects with the native browser, hook, and utility projects. It uses Istanbul so the native WebKit checks participate alongside Chromium; the V8 provider cannot measure WebKit. All four global thresholds remain 90%. Package tests install the real archive with the pinned Bun version, validate each public export's packed artifact, and build consumers with only their required optional peers.
+`just test-coverage` combines the Storybook projects with the native browser, hook, and utility projects. It uses Istanbul so the native WebKit checks participate alongside Chromium; the V8 provider cannot measure WebKit. All four global thresholds remain 90%. Package tests install the real archive with the pinned Bun version, validate each public export's packed artifact, and build consumers with only their required optional peers.
 
 The source inventory describes mappings, not a validation-completion claim. Report any failing or unrun gate explicitly.
 

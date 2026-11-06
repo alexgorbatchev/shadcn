@@ -1054,26 +1054,6 @@
     "access": "public",
     "registry": "https://registry.npmjs.org/"
   },
-  "scripts": {
-    "test": "vitest run --config .storybook/vitest.config.ts && bun run test:native && bun run test:package",
-    "test:package": "NODE_DISABLE_COMPILE_CACHE=1 bun scripts/runTestSuite.ts package",
-    "test:preview": "NODE_DISABLE_COMPILE_CACHE=1 bun scripts/runTestSuite.ts preview",
-    "test:prototype": "NODE_DISABLE_COMPILE_CACHE=1 bun scripts/runTestSuite.ts prototype",
-    "test:cli": "NODE_DISABLE_COMPILE_CACHE=1 bun scripts/runTestSuite.ts cli",
-    "test:native": "vitest run --config .storybook/vitest.native.config.ts",
-    "test:coverage": "vitest run --config .storybook/vitest.coverage.config.ts --coverage",
-    "test:contrast": "vitest run --config .storybook/vitest.contrast.config.ts",
-    "build": "bun scripts/build.ts",
-    "typecheck": "tsc --noEmit",
-    "lint": "oxlint --deny-warnings src .storybook scripts cli templates/prototype/src templates/prototype/vite.config.ts && oxfmt --check . && bun run lint:unused",
-    "lint:unused": "ts-unused check tsconfig.json",
-    "storybook": "bun scripts/buildLlmDocs.ts && storybook dev --host 127.0.0.1 -p 6006 --no-open",
-    "build-storybook": "NODE_DISABLE_COMPILE_CACHE=1 bun scripts/runTestSuite.ts storybook",
-    "prepack": "bun run build",
-    "test:reduced-motion": "vitest run --config .storybook/vitest.reduced-motion.config.ts",
-    "test:visual": "vitest run --config .storybook/vitest.visual.config.ts Button.stories.tsx Badge.stories.tsx Card.stories.tsx Input.stories.tsx ScrollArea.stories.tsx",
-    "test:visual:update": "bun run test:visual --update"
-  },
   "devDependencies": {
     "@assistant-ui/ai-sdk": "0.0.14",
     "@assistant-ui/generative-ui": "0.0.6",

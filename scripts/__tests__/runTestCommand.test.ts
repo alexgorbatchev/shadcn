@@ -1,10 +1,9 @@
 import { expect, test } from "bun:test";
 import { execa } from "execa";
 import assert from "node:assert/strict";
-import { cp, mkdir, mkdtempDisposable, readdir, stat } from "node:fs/promises";
+import { mkdir, mkdtempDisposable, readdir, stat } from "node:fs/promises";
 import { basename, resolve } from "node:path";
 import { runTestCommand } from "../runTestCommand";
-import manifest from "../../package.json";
 import { fixture_testArtifactWriter, fixture_testProcessTree, fixture_testSuiteWaiter } from "./fixtures";
 
 interface IProcessReceipt {
@@ -109,39 +108,48 @@ test("package managers pack and install without changing caller temp or npm logs
   await expect(stat(output.stdout.trim())).rejects.toMatchObject({ code: "ENOENT" });
 });
 
-test("declared validation command keeps bootstrap modules out of an inherited compile cache", async () => {
-  await using directory = await mkdtempDisposable(resolve(".tmp/validation-bootstrap-"));
-  await mkdir(`${directory.path}/caller-cache`);
-  await mkdir(`${directory.path}/scripts`);
-  await cp("scripts/runTestSuite.ts", `${directory.path}/scripts/runTestSuite.ts`);
-  await cp("scripts/runTestCommand.ts", `${directory.path}/scripts/runTestCommand.ts`);
-  await Bun.write(
-    `${directory.path}/package.json`,
-    JSON.stringify({ scripts: { test: manifest.scripts["test:cli"] } }),
-  );
-  await Bun.write(`${directory.path}/cli/bunfig.toml`, "[test]\n");
-  await Bun.write(
-    `${directory.path}/cli/pass.test.ts`,
-    'import {expect,test} from "bun:test"; test("fixture",()=>expect(2+2).toBe(4));',
-  );
-  await Bun.write(`${directory.path}/scratch/unowned.txt`, "preserve");
-  const result = await execa(process.execPath, ["run", "test"], {
-    cwd: directory.path,
-    env: {
-      NODE_COMPILE_CACHE: `${directory.path}/caller-cache`,
-      NODE_DISABLE_COMPILE_CACHE: undefined,
-      SHADCN_TEST_ROOT: `${directory.path}/scratch`,
-    },
-    killDescendants: true,
-    timeout: 5000,
-  });
-  expect(result.exitCode).toBe(0);
-  expect(await readdir(`${directory.path}/caller-cache`)).toEqual([]);
-  expect(await readdir(`${directory.path}/scratch`)).toEqual(["unowned.txt"]);
-}, 10_000);
+test.each([
+  ["pass", 4, 0],
+  ["fail", 5, 1],
+] as const)(
+  "Just validation preserves failure and bootstrap cleanup (%s)",
+  async (outcome, expected, exitCode) => {
+    await using directory = await mkdtempDisposable(resolve(".tmp/validation-bootstrap-"));
+    await mkdir(`${directory.path}/caller-cache`);
+    await mkdir(`${directory.path}/scripts`);
+    await mkdir(`${directory.path}/cli`);
+    await Bun.write(`${directory.path}/justfile`, Bun.file("justfile"));
+    await Bun.write(`${directory.path}/cli/justfile`, Bun.file("cli/justfile"));
+    await Bun.write(`${directory.path}/scripts/runValidation.ts`, Bun.file("scripts/runValidation.ts"));
+    await Bun.write(`${directory.path}/scripts/runTestCommand.ts`, Bun.file("scripts/runTestCommand.ts"));
+    await Bun.write(`${directory.path}/package.json`, JSON.stringify({ private: true }));
+    await Bun.write(`${directory.path}/cli/bunfig.toml`, "[test]\n");
+    await Bun.write(
+      `${directory.path}/cli/pass.test.ts`,
+      `import {expect,test} from "bun:test"; test("Just fixture",async()=>{await Bun.write("receipt.txt",${JSON.stringify(outcome)});expect(2+2).toBe(${expected});});`,
+    );
+    await Bun.write(`${directory.path}/scratch/unowned.txt`, "preserve");
+    const result = await execa("just", ["prototype", "test", "--test-name-pattern", "Just fixture"], {
+      cwd: directory.path,
+      env: {
+        NODE_COMPILE_CACHE: `${directory.path}/caller-cache`,
+        NODE_DISABLE_COMPILE_CACHE: undefined,
+        SHADCN_TEST_ROOT: `${directory.path}/scratch`,
+      },
+      killDescendants: true,
+      reject: false,
+      timeout: 5000,
+    });
+    expect(result.exitCode).toBe(exitCode);
+    expect(await Bun.file(`${directory.path}/receipt.txt`).text()).toBe(outcome);
+    expect(await readdir(`${directory.path}/caller-cache`)).toEqual([]);
+    expect(await readdir(`${directory.path}/scratch`)).toEqual(["unowned.txt"]);
+  },
+  10_000,
+);
 
 test.each(["SIGINT", "SIGTERM"])(
-  "suite runner waits for cleanup after %s",
+  "validation runner waits for cleanup after %s",
   async (signal) => {
     await using directory = await mkdtempDisposable(resolve(".tmp/validation-suite-"));
     await Bun.write(`${directory.path}/cli/bunfig.toml`, "[test]\n");
@@ -156,12 +164,16 @@ test.each(["SIGINT", "SIGTERM"])(
         return new Response("ready");
       },
     });
-    const runner = execa(process.execPath, [resolve("scripts/runTestSuite.ts"), "cli"], {
-      cwd: directory.path,
-      env: { SHADCN_TEST_ROOT: `${directory.path}/scratch`, FIXTURE_READY_URL: server.url.href },
-      timeout: 5000,
-      killDescendants: true,
-    });
+    const runner = execa(
+      process.execPath,
+      [resolve("scripts/runValidation.ts"), process.execPath, "test", "--config=./cli/bunfig.toml", "cli"],
+      {
+        cwd: directory.path,
+        env: { SHADCN_TEST_ROOT: `${directory.path}/scratch`, FIXTURE_READY_URL: server.url.href },
+        timeout: 5000,
+        killDescendants: true,
+      },
+    );
     const result = runner.catch((error: unknown) => error);
     try {
       const receipt = await Promise.race([ready.promise, result.then(() => undefined)]);

@@ -1,11 +1,12 @@
 set working-directory := ".."
+set positional-arguments
 
 [default]
 run *args:
-    bun cli/main.ts {{args}}
+    bun cli/main.ts "$@"
 
 run-ai *args:
-    AGENT=1 bun cli/main.ts {{args}}
+    AGENT=1 bun cli/main.ts "$@"
 
-test:
-    bun run test:cli
+test *args:
+    NODE_DISABLE_COMPILE_CACHE=1 bun scripts/runValidation.ts bun test --config=./cli/bunfig.toml --coverage cli "$@"

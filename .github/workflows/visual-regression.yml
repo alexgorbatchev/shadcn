@@ -22,6 +22,12 @@ jobs:
   visual:
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.1-noble
+      options: --init --ipc=host
+    defaults:
+      run:
+        shell: bash
     steps:
       - name: Check out source
         uses: actions/checkout@v7
@@ -29,26 +35,34 @@ jobs:
           ref: ${{ inputs.ref || github.sha }}
           persist-credentials: false
       - name: Set up Bun
+        id: bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version-file: package.json
-      - name: Install dependencies
-        run: bun install --frozen-lockfile
+      - name: Cache Bun package downloads
+        uses: actions/cache@v5
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-${{ runner.arch }}-bun-${{ steps.bun.outputs.bun-version }}-${{ hashFiles('bun.lock') }}
+      - name: Set up Just
+        uses: extractions/setup-just@v4
+        with:
+          just-version: "1.58.0"
       - name: Set up Node
         uses: actions/setup-node@v7
         with:
           node-version: "24"
           package-manager-cache: false
+      - name: Install dependencies
+        run: just install-dependencies
       - name: Check types
-        run: bun run typecheck
+        run: just typecheck
       - name: Check lint and formatting
-        run: bun run lint
-      - name: Install Chromium
-        run: bun x --bun playwright install --with-deps chromium
-      - name: Generate Storybook documentation assets
-        run: bun scripts/buildLlmDocs.ts
+        run: just lint
+      - name: Register Playwright browsers
+        run: just install-browsers
       - name: Compare screenshots
-        run: bun run test:visual
+        run: just test-visual
       - name: Upload visual failure images
         if: failure()
         uses: actions/upload-artifact@v7

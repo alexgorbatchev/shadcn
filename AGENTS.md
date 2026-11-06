@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-08 06:13
-last_modified: 2026-11-06 02:58
+last_modified: 2026-11-06 03:25
 status: current
 ---
 
@@ -10,22 +10,24 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 
 ## Commands
 
-- Setup: `just setup` (locked dependencies, Chromium, devhost check)
+- Setup: `just setup` (locked dependencies, Chromium and WebKit, devhost check)
 - Preview: `just storybook` (loopback port 6006, no automatic browser launch)
 - Snapshot gallery: `just snapshots` (saved baselines, grouped by component, with virtual scrolling)
 - Devhost preview: `just run` (loads `.env.local`, then runs `devhost start`)
 - Format: `just fix`
-- Validate: `just check` (typecheck, lint/format check, declarations/package build, development/production package rendering, static Storybook build)
-- Package verification: `bun run test:package` (builds and installs the archive in isolated consumers; checks declarations and development/production rendering)
-- Browser interactions: `bun run test` (Storybook stories tagged `test` in headless Chromium, then native browser checks and package-render tests)
-- Text contrast: `bun run test:contrast` (all tested stories in Chromium across light/dark themes and comfortable/compact density; violations fail)
-- Visual regression: `bun run test:visual` (selected stories across themes, densities, desktop and mobile widths); review intentional baseline updates with `bun run test:visual:update` on Ubuntu 24.04
-- Native browser checks: `bun run test:native` (Chromium checks including Carousel with reduced motion; Drawer also runs in Linux WebKit)
-- Reduced-motion interactions: `bun run test:reduced-motion` (full Storybook catalog with native reduced-motion preference)
-- Coverage gate: `bun run test:coverage` (Storybook and native browser, hook, and utility tests; 90% statements, branches, functions, and lines across runtime source)
+- Validate: `just check` (typecheck, lint/format check, prototype coverage, declarations/package build, development/production package rendering, static Storybook build and preview smoke checks, snapshot gallery build)
+- Ordinary test suites: `just test` (prototype, Storybook interactions, native browser, package rendering, and built-preview checks; specialized coverage, contrast, reduced-motion, and visual suites remain separate)
+- Package verification: `just test-package` (builds and installs the archive in isolated consumers; checks declarations and development/production rendering)
+- Browser interactions: `just test-stories` (Storybook stories tagged `test` in headless Chromium; accepts file filters and Vitest options)
+- Text contrast: `just test-contrast` (all tested stories in Chromium across light/dark themes and comfortable/compact density; violations fail)
+- Visual regression: `just test-visual` (selected stories across themes, densities, desktop and mobile widths); review intentional baseline updates with `just test-visual-update` on Ubuntu 24.04
+- Native browser checks: `just test-native` (Chromium checks including Carousel with reduced motion; Drawer also runs in Linux WebKit)
+- Reduced-motion interactions: `just test-reduced-motion` (full Storybook catalog with native reduced-motion preference)
+- Coverage gate: `just test-coverage` (Storybook and native browser, hook, and utility tests; 90% statements, branches, functions, and lines across runtime source)
 - Build package: `just build`
 - Generate LLM documentation: `just llm-docs` (writes root `llms.txt`, setup instructions, and Storybook reference pages under `llms/`)
-- Inspect a local archive: `just pack` (npm writes to `.tmp/packs/`; release publication uses `npm publish` directly)
+- Inspect a local archive: `just pack` (builds, then npm writes to `.tmp/packs/`)
+- Publish: `just publish` (builds, then invokes `npm publish` directly; accepts npm options, including `--dry-run`; use the release workflow for publication)
 
 ## Prototype Runner
 
@@ -33,14 +35,14 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - Store the template ignore file as `gitignore` and write it as `.gitignore` when creating a workspace; npm excludes a template named `.gitignore` from the archive.
 - Repository template tests resolve the core package and theme to source through TypeScript paths and `prototypeSourceAliases`; they must run before `dist/` exists. Installed-archive consumer tests use the public package exports without those aliases.
 - Keep `skills/shadcn-prototype/SKILL.md` synchronized in the same change as any CLI command, argument, option, default, environment, output, or side-effect change.
-- Run `just prototype test` for CLI behavior. `bun run test:prototype` enforces CLI line/function and browser template coverage; `just check` includes it and the installed-package prototype consumer test.
+- Run `just prototype test` for CLI behavior. `just test-prototype` enforces CLI line/function and browser template coverage; `just check` includes it and the installed-package prototype consumer test.
 
 ## Development Setup
 
 - Run commands from this standalone repository, not from the sibling devhost checkout. Use Bun 1.4.2 as declared in `package.json`; `just` is required for the validation and packaging recipes.
 - Unused-code analysis uses the native ts-unused Node CLI with the default Node heap, validated with Node 24 and 26. Keep the Node runtime; do not force the analyzer through Bun. Package mode and all default rules remain enabled, including native Storybook handling.
 - TypeScript 7 (`@typescript/native`) owns the `tsc` command. `typescript` aliases `@typescript/typescript6`, which supplies the TypeScript 6 compiler API for build scripts, Storybook docgen, and ts-unused, and exposes the TypeScript 6 CLI as `tsc6`. Call `node_modules/typescript/bin/tsc6` when a check needs TypeScript 6; `node_modules/typescript/bin/tsc` does not exist.
-- Keep the single repository `bun.lock` in sync with manifest changes. Package verification and `just check` require npm and Playwright Chromium. For release qualification and archive inspection, use the exact npm version through the commands in [the release procedure](./docs/internal/npm-releases.md); ambient npm versions can produce different archive contents. On a fresh Linux host, run `bun x --bun playwright install --with-deps chromium` before validation; installing dependencies alone does not install the browser. Each release job installs its own browser because GitHub jobs have separate filesystems.
+- Keep the single repository `bun.lock` in sync with manifest changes. Package verification and `just check` require npm and Playwright Chromium; the full native suite also requires WebKit. For release qualification and archive inspection, use the exact npm version through the commands in [the release procedure](./docs/internal/npm-releases.md); ambient npm versions can produce different archive contents. `just setup` installs both browser binaries. On a fresh Linux host, install their system dependencies with `bun run playwright install-deps chromium webkit`, or install binaries and system dependencies together with `bun run playwright install --with-deps chromium webkit`. CI jobs use the matching `mcr.microsoft.com/playwright:v1.64.1-noble` image with preinstalled browsers and system dependencies.
 - For routed preview prerequisites and hostname configuration, see [README.md](./README.md#devhost-preview). The direct Storybook preview needs no devhost service.
 - `llms.txt`, `dist/`, `llms/`, `storybook-static/`, `.cache/`, and `.tmp/` are generated or transient outputs. Edit their source files and regenerate them; keep those outputs untracked.
 - Package and Storybook builds regenerate LLM documentation. The README starts with an agent alert directing consumers to read `node_modules/@alexgorbatchev/shadcn/llms.txt`. Storybook and npm archives expose root `llms.txt` with linked pages under `llms/`; `.cache/llm-docs-public/` stages the index for Storybook's static-directory API. Direct Storybook CLI invocations need `just llm-docs` first; the documented preview commands generate it automatically.
@@ -76,13 +78,13 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - Keep shared Caddy listeners in the `[caddy]` table of the devhost `config.toml`, with `bindHost = "0.0.0.0"` (the default) and `http = true` for the external devbox gateway. Never add Caddy settings to this repository's manifest; current devhost rejects them. Storybook and the snapshot gallery remain on IPv4 loopback. Preserve shared proxy settings when changing this repository's services.
 - Merge `__VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS` into both Storybook `core.allowedHosts` and Vite `server.allowedHosts`. Vite configuration alone does not allow the Storybook manager's Host/Origin checks.
 - Use typed `Meta` and `StoryObj`, meaningful variants and states, and accessible names for controls.
-- Bind new story types to the component, `type Story = StoryObj<typeof Component>`, while keeping `const meta: Meta<typeof Component>`. `StoryObj<typeof meta>` over DOM-element props adds about 85,000 entries per story file to the single TypeScript 6 identity cache that `ts-unused` uses; the catalog is close to its roughly 16.7 million entry cap, and overflowing it crashes `lint:unused` with `Map maximum size exceeded`.
+- Bind new story types to the component, `type Story = StoryObj<typeof Component>`, while keeping `const meta: Meta<typeof Component>`. `StoryObj<typeof meta>` over DOM-element props adds about 85,000 entries per story file to the single TypeScript 6 identity cache that `ts-unused` uses; the catalog is close to its roughly 16.7 million entry cap, and overflowing it crashes `just unused` with `Map maximum size exceeded`.
 - Use isolated iframe documentation for default-open overlays; inline examples can interfere through their document-wide portals.
 - Scope TypeScript docgen to component source; preview infrastructure and stories are not public component APIs.
 - Keep Vite dependency caches and development asset URL prefixes isolated by the actual Storybook port, with a separate production-build cache. Concurrent servers sharing optimized files can mix React instances and fail hooks in Docs; immutable browser caches can retain imports into an older server's cache. After a port changes, reload an already-open preview so it uses the current server's module graph.
 - Keep development responses `no-store`. `createPreviewAssetBasePlugin` also prefixes Storybook's root-relative bootstrap scripts; Vite's `base` alone leaves those URLs shared across ports, allowing the external gateway to cache a stale module graph. Reload open Docs after dependency optimization changes as well as port changes; an already-loaded React module can differ from the renderer's new dependency graph.
 - Storybook Docs has an independent theme. Keep `ThemedDocsContainer` connected to theme globals and the shared preview preference through Storybook's native Docs theme API; validate Docs backgrounds as well as story canvases.
-- Use the Storybook Vitest addon with Playwright Chromium for browser interactions. Enable new tested stories with `test`; stories carrying `!test` are excluded. Install browser binaries with `bun x --bun playwright install chromium webkit` when needed; WebKit also needs Playwright's system dependencies on Linux. Native Drawer checks run both engines; Linux WebKit does not exercise the iOS-only touch-callout CSS feature. `just check` verifies compilation and builds; run the browser and coverage commands separately and report exclusions and coverage failures.
+- Use the Storybook Vitest addon with Playwright Chromium for browser interactions. Enable new tested stories with `test`; stories carrying `!test` are excluded. Run `just install-browsers` when browser binaries are missing; Linux also needs the system dependencies described under Development Setup. Native Drawer checks run both engines; Linux WebKit does not exercise the iOS-only touch-callout CSS feature. `just check` verifies compilation, builds, and focused validation; run `just test` for the ordinary suites and `just test-coverage` for runtime coverage, and report exclusions and coverage failures.
 - Adopt external components with this package's styling and contracts. Reuse suitable public upstream behavioral tests and write local behavioral stories or native browser tests for uncovered behavior; upstream smoke tests do not establish interaction coverage.
 - For runtime behavior changes, update corresponding behavioral stories or tests and require 90% code coverage, excluding `scripts/`. The coverage command measures runtime source, excluding story/test infrastructure and type-only files; a passing build does not establish coverage.
 - Reproduce the regression before fixing it, verify the corrected behavior, then temporarily disable only the fix and confirm the regression test fails. Test interactions and rendered behavior rather than static class strings, token values, or raw configuration objects.

@@ -275,7 +275,7 @@ The npm package includes the same index at `llms.txt` in its root and its linked
 | Conversations            | Attachment, Bubble, Marker, Message, MessageScroller                                                                                                                                          |
 | App configuration        | DensityProvider, DirectionProvider, ThemeProvider                                                                                                                                             |
 
-Use the composed parts exported from the package root, such as `DialogTrigger`, `DialogContent`, and `DialogTitle`. Storybook provides working compositions, variants, disabled states, and action callbacks. The local preview starts with `bun run storybook` and binds to `127.0.0.1:6006`.
+Use the composed parts exported from the package root, such as `DialogTrigger`, `DialogContent`, and `DialogTitle`. Storybook provides working compositions, variants, disabled states, and action callbacks. The local preview starts with `just storybook` and binds to `127.0.0.1:6006`.
 
 Set `wrap` on `ItemTitle` to keep complete titles visible in narrow items, including long names without spaces. The default title presentation remains unchanged.
 

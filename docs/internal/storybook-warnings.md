@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-21 16:03
-last_modified: 2026-10-22 21:06
+last_modified: 2026-11-06 03:25
 status: current
 ---
 
@@ -15,7 +15,7 @@ The native ThreadList's Cancel Rename interaction exercises focused-input teardo
 Run all rename, search, archive, and delete scenarios:
 
 ```sh
-bun run vitest run --config .storybook/vitest.config.ts --project storybook src/components/stories/assistant-ui/native/conversations/ThreadList.stories.tsx
+just test-stories --project storybook src/components/stories/assistant-ui/native/conversations/ThreadList.stories.tsx
 ```
 
 The focused regression is `--testNamePattern 'Cancel Rename'`. Removing the blur-path fix makes that test fail with React's unawaited synchronous `act` warning. This reproduces in a single story; it differs from [Storybook's separate multi-file act-environment issue](https://github.com/storybookjs/storybook/pull/34999).
@@ -47,7 +47,7 @@ Storybook resolves its project root through `import.meta.dirname`, which Node an
 Build with Node deprecations treated as errors:
 
 ```sh
-NODE_OPTIONS=--throw-deprecation bun run build-storybook
+NODE_OPTIONS=--throw-deprecation just build-storybook
 ```
 
 The preview intentionally includes substantial upstream tools and lazily imported grammars. The largest emitted JavaScript module is approximately 1.53 MB raw. Merely moving these modules between chunks does not shrink them. The configuration retains automatic splitting and all supported features.
@@ -76,7 +76,7 @@ Rolldown's [plugin timing diagnostic](https://rolldown.rs/reference/InputOptions
 bun test ./.storybook/__tests__/createStorybookViteConfig.test.ts
 just fix
 just check
-bun run test:coverage
+just test-coverage
 ```
 
 The toolchain tests exercise concurrent TypeScript config loading under Node and Bun, real alias resolution, React directive handling, unrelated warning forwarding, and production size enforcement. Each corresponding regression fails when its fix is temporarily removed. `just check` includes these tests in package verification and opens the standalone production preview in Chromium.

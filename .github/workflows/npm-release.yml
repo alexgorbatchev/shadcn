@@ -30,6 +30,12 @@ jobs:
   publish:
     needs: visual
     runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.64.1-noble
+      options: --init --ipc=host
+    defaults:
+      run:
+        shell: bash
     permissions:
       contents: read
       id-token: write
@@ -40,21 +46,33 @@ jobs:
           ref: ${{ inputs.release_tag || github.event.release.tag_name }}
           persist-credentials: false
       - name: Set up Bun
+        id: bun
         uses: oven-sh/setup-bun@v2
         with:
           bun-version-file: package.json
+      - name: Cache Bun package downloads
+        uses: actions/cache@v5
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-${{ runner.arch }}-bun-${{ steps.bun.outputs.bun-version }}-${{ hashFiles('bun.lock') }}
+      - name: Set up Just
+        uses: extractions/setup-just@v4
+        with:
+          just-version: "1.58.0"
       - name: Verify the published GitHub Release
+        uses: actions/github-script@v8
         env:
-          GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ inputs.release_tag || github.event.release.tag_name }}
           RELEASE_PRERELEASE: ${{ inputs.prerelease || github.event.release.prerelease || false }}
-        run: |
-          gh release view "$RELEASE_TAG" --json isDraft,isPrerelease | bun -e '
-            const release = await Bun.stdin.json();
-            if (release.isDraft || String(release.isPrerelease) !== Bun.env.RELEASE_PRERELEASE) {
+        with:
+          script: |
+            const { data: release } = await github.rest.repos.getReleaseByTag({
+              ...context.repo,
+              tag: process.env.RELEASE_TAG,
+            });
+            if (release.draft || String(release.prerelease) !== process.env.RELEASE_PRERELEASE) {
               throw new Error("A published release with matching prerelease status is required");
             }
-          '
       - name: Validate release version
         env:
           RELEASE_TAG: ${{ inputs.release_tag || github.event.release.tag_name }}
@@ -70,7 +88,7 @@ jobs:
             }
           '
       - name: Install dependencies
-        run: bun install --frozen-lockfile
+        run: just install-dependencies
       - name: Set up npm
         uses: actions/setup-node@v7
         with:
@@ -79,17 +97,17 @@ jobs:
           package-manager-cache: false
       - name: Install the maintained npm client
         run: npm install --global npm@12.2.0
-      - name: Install Chromium for package verification
-        run: bun x --bun playwright install --with-deps chromium
+      - name: Register Playwright browsers
+        run: just install-browsers
       - name: Check types
-        run: bun run typecheck
+        run: just typecheck
       - name: Check lint and formatting
-        run: bun run lint
+        run: just lint
       - name: Verify prototype runner and recipes
-        run: bun run test:prototype
+        run: just test-prototype
       - name: Verify package rendering
-        run: bun run test:package
+        run: just test-package
       - name: Publish package with trusted publishing
         env:
           NPM_DIST_TAG: ${{ (inputs.prerelease || github.event.release.prerelease) && 'next' || 'latest' }}
-        run: npm publish --access public --tag "$NPM_DIST_TAG" --provenance --loglevel verbose
+        run: just publish --access public --tag "$NPM_DIST_TAG" --provenance --loglevel verbose
