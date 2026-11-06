@@ -30,9 +30,10 @@ check:
 fix:
     bun x --bun oxfmt --write .
 
-# Install the locked development dependencies
+# Install the locked development dependencies and Chromium
 setup:
     bun install --frozen-lockfile
+    bun run playwright install chromium
     devhost --version
 
 # Start the devhost Storybook preview

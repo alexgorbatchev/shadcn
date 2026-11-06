@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-08 06:13
-last_modified: 2026-11-05 01:53
+last_modified: 2026-11-06 02:58
 status: current
 ---
 
@@ -10,7 +10,7 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 
 ## Commands
 
-- Setup: `just setup` (locked dependencies, devhost check,)
+- Setup: `just setup` (locked dependencies, Chromium, devhost check)
 - Preview: `just storybook` (loopback port 6006, no automatic browser launch)
 - Snapshot gallery: `just snapshots` (saved baselines, grouped by component, with virtual scrolling)
 - Devhost preview: `just run` (loads `.env.local`, then runs `devhost start`)
