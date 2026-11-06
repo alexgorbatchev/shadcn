@@ -12,5 +12,20 @@ export default defineConfig({
     fs: { allow: [`${import.meta.dirname}/../..`] },
     headers: { "Cache-Control": "no-store" },
   },
-  build: { outDir: "../../.tmp/snapshot-gallery", emptyOutDir: true },
+  build: {
+    outDir: "../../.tmp/snapshot-gallery",
+    emptyOutDir: true,
+    rolldownOptions: {
+      output: {
+        codeSplitting: {
+          groups: [
+            {
+              name: "react-runtime",
+              test: /[\\/]node_modules[\\/](?:react|react-dom|scheduler)(?:[\\/]|$)/,
+            },
+          ],
+        },
+      },
+    },
+  },
 });
