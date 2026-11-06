@@ -32,6 +32,10 @@ jobs:
         with:
           ref: ${{ inputs.release_tag || github.event.release.tag_name }}
           persist-credentials: false
+      - name: Install unzip for Bun setup
+        run: |
+          apt-get update
+          apt-get install --yes --no-install-recommends unzip
       - name: Set up Bun
         id: bun
         uses: oven-sh/setup-bun@v2
