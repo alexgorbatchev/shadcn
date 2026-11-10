@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-08 06:13
-last_modified: 2026-11-06 03:25
+last_modified: 2026-11-10 14:33
 status: current
 ---
 
@@ -49,6 +49,8 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - `just check` is the local validation entrypoint, including a browser smoke check of the built standalone preview. `.github/workflows/storybook-pages.yml` validates and deploys static Storybook when a GitHub Release is published or a published release tag is manually dispatched for retry; see [Pages setup](./docs/internal/storybook-pages.md). It does not run on branch pushes or pull requests.
 
 ## Contracts
+
+- Bun patches `@base-ui/react@1.9.0` with the maintained [deferred-focus guard](https://github.com/mui/base-ui/pull/6015) in both ESM and CommonJS. Preserve this patch and the native focus regressions when updating dependencies; this fix does not require npm publication. Base UI remains an external peer in package builds, so consumers need the same patch; the repository patch qualifies local development and tests.
 
 - Use Base UI primitives and official shadcn Base UI compositions. Prefer maintained libraries for behavior; preserve native accessibility and state contracts.
 - Scrolling must be intentional. Mark non-scrolling cards, panels, dialogs, modals, and floating surfaces with `data-scroll="none"`; put scrolling content in a nested `ScrollArea` or an explicit native scroll viewport. Preserve the generic development-only `ScrollGuard` checks, including portal discovery, and keep them disabled in consuming production builds.
