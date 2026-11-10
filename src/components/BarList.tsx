@@ -26,8 +26,15 @@ function BarList({
       <ul className="grid gap-3">
         {items.map((item) => (
           <li key={item.id}>
-            <Meter min={0} max={max} value={item.value} aria-label={item.label} format={{ maximumFractionDigits: 2 }}>
-              <div className="mb-1 flex items-center justify-between gap-3 text-sm">
+            <Meter
+              min={0}
+              max={max}
+              value={item.value}
+              aria-label={item.label}
+              format={{ maximumFractionDigits: 2 }}
+              className="gap-y-1"
+            >
+              <div className="flex w-full items-center justify-between gap-3 text-sm">
                 <MeterLabel>
                   {onItemSelect ? (
                     <Button type="button" variant="link" className="h-auto p-0" onClick={() => onItemSelect(item)}>

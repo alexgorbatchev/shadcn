@@ -29,6 +29,22 @@ export const ReadOnly: Story = {
     await expect(c.queryByRole("button")).not.toBeInTheDocument();
   },
 };
+// Each label row sits just above its bar, with the value at the bar's end.
+export const Layout: Story = {
+  args: { onItemSelect: undefined },
+  play: async ({ canvasElement }) => {
+    const meter = within(canvasElement).getByRole("meter", { name: "Direct" });
+    const row = meter.firstElementChild;
+    const track = meter.querySelector("[data-slot='meter-track']");
+    if (!(row instanceof HTMLElement) || !(track instanceof HTMLElement)) {
+      throw new Error("BarList item is missing its label row or track");
+    }
+    const rowBox = row.getBoundingClientRect();
+    const trackBox = track.getBoundingClientRect();
+    await expect(trackBox.top - rowBox.bottom).toBeLessThanOrEqual(4);
+    await expect(Math.abs(rowBox.right - trackBox.right)).toBeLessThanOrEqual(1);
+  },
+};
 export const Empty: Story = {
   args: { items: [] },
   play: async ({ canvasElement }) => {
