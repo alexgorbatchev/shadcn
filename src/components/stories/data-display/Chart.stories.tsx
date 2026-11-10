@@ -152,6 +152,36 @@ export const Responsive: Story = {
   },
 };
 
+export const FixedHeight: Story = {
+  args: { className: undefined, height: 192 },
+  render: function Render(args) {
+    const [isWide, setWide] = useState(false);
+    return (
+      <>
+        <Button onClick={() => setWide(!isWide)}>Resize chart</Button>
+        <div className={isWide ? "w-96" : "w-64"}>
+          <ChartContainer {...args}>
+            <BarChart accessibilityLayer data={data}>
+              <Bar dataKey="desktop" fill="var(--color-desktop)" isAnimationActive={false} />
+            </BarChart>
+          </ChartContainer>
+        </div>
+      </>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const container = canvas.getByRole("application").closest<HTMLElement>("[data-slot=chart]");
+    await expect(container).not.toBeNull();
+    await waitFor(() => expect(container?.getBoundingClientRect().width).toBe(256));
+    await expect(container?.getBoundingClientRect().height).toBe(192);
+    await userEvent.click(canvas.getByRole("button", { name: "Resize chart" }));
+    await waitFor(() => expect(container?.getBoundingClientRect().width).toBe(384));
+    await expect(container?.getBoundingClientRect().height).toBe(192);
+    await waitFor(() => expect(canvas.getByRole("application").getBoundingClientRect().height).toBe(192));
+  },
+};
+
 export const ResponsiveGrid: Story = {
   render: (args) => (
     <div className="grid w-64">

@@ -26,6 +26,8 @@ export type ChartProps = ComponentProps<"div"> &
     config: ChartConfig;
     children: ComponentProps<typeof ResponsiveContainer>["children"];
     initialDimension?: ComponentProps<typeof ResponsiveContainer>["initialDimension"];
+    /** A fixed height, such as `192` or `"12rem"`; the chart then fills the available width instead of keeping 16:9. */
+    height?: CSSProperties["height"];
   };
 export type ChartStyleProps = { id: string; config: ChartConfig };
 export type ChartIndicatorStyle = CSSProperties & { "--color-bg"?: string; "--color-border"?: string };
