@@ -190,3 +190,22 @@ test("a required column can grow again after shrinking reveals an optional neigh
   const viewport = screen.getByRole("region", { name: "Files" }).element();
   await expect.poll(() => viewport.scrollWidth).toBeLessThanOrEqual(viewport.clientWidth);
 });
+
+test("column headers stay pinned and interactive while virtual rows scroll", async () => {
+  const screen = await render(<VirtualDataGridExample files={fixture_gridFiles} width={720} />);
+  const viewport = screen.getByRole("region", { name: "Files" }).element();
+  const header = screen.getByRole("columnheader", { name: "Name" }).element();
+  for (const scrollTop of [1200, viewport.scrollHeight]) {
+    viewport.scrollTo({ top: scrollTop });
+    await expect.poll(() => viewport.scrollTop).toBeGreaterThan(1000);
+    await expect
+      .poll(() => Math.abs(header.getBoundingClientRect().top - viewport.getBoundingClientRect().top))
+      .toBeLessThan(2);
+    const bounds = header.getBoundingClientRect();
+    expect(
+      header.contains(document.elementFromPoint(bounds.left + bounds.width / 2, bounds.top + bounds.height / 2)),
+    ).toBe(true);
+  }
+  await screen.getByRole("button", { name: "Name", exact: true }).click();
+  await expect.element(screen.getByRole("columnheader", { name: "Name" })).toHaveAttribute("aria-sort", "ascending");
+});

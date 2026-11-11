@@ -4,9 +4,17 @@ import type { ComponentProps, ReactElement } from "react";
 import { cn } from "../utils/cn.js";
 import type { TextAlign } from "../typography/types.js";
 
-type TableProps = ComponentProps<"table"> & IDensityProps & { layout?: "auto" | "fixed" };
+type TableProps = ComponentProps<"table"> &
+  IDensityProps & { layout?: "auto" | "fixed"; scrollContainer?: "self" | "parent" };
 
-function Table({ density, className, dir, layout = "auto", ...props }: TableProps): ReactElement {
+function Table({
+  density,
+  className,
+  dir,
+  layout = "auto",
+  scrollContainer = "self",
+  ...props
+}: TableProps): ReactElement {
   return (
     <div
       data-density={density}
@@ -14,7 +22,11 @@ function Table({ density, className, dir, layout = "auto", ...props }: TableProp
       dir={dir}
       className={cn(
         "@container/table relative min-w-0 w-full",
-        layout === "fixed" ? "overflow-x-hidden" : "overflow-x-auto",
+        scrollContainer === "parent"
+          ? "overflow-visible"
+          : layout === "fixed"
+            ? "overflow-x-hidden"
+            : "overflow-x-auto",
       )}
     >
       <table
@@ -27,11 +39,16 @@ function Table({ density, className, dir, layout = "auto", ...props }: TableProp
   );
 }
 
-type TableHeaderProps = ComponentProps<"thead"> & IDensityProps;
+type TableHeaderProps = ComponentProps<"thead"> & IDensityProps & { sticky?: boolean };
 
-function TableHeader({ density, className, ...props }: TableHeaderProps): ReactElement {
+function TableHeader({ density, className, sticky = false, ...props }: TableHeaderProps): ReactElement {
   return (
-    <thead data-density={density} data-slot="table-header" className={cn("[&_tr]:border-b", className)} {...props} />
+    <thead
+      data-density={density}
+      data-slot="table-header"
+      className={cn("[&_tr]:border-b", sticky && "sticky top-0 z-10 bg-background", className)}
+      {...props}
+    />
   );
 }
 

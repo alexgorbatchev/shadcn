@@ -88,9 +88,9 @@ export function VirtualTable<T>({
       }}
     >
       {/* Spacer rows hold only one cell, so they never add grid columns that hidden responsive cells leave empty. */}
-      <Table layout={layout} aria-label={label} aria-rowcount={items.length + 1}>
+      <Table scrollContainer="parent" layout={layout} aria-label={label} aria-rowcount={items.length + 1}>
         {columns}
-        <TableHeader>{header}</TableHeader>
+        <TableHeader sticky>{header}</TableHeader>
         <TableBody>
           {rows.map((row, index) => (
             <Fragment key={row.key}>
