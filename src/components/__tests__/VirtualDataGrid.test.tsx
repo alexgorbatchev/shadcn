@@ -195,6 +195,8 @@ test("column headers stay pinned and interactive while virtual rows scroll", asy
   const screen = await render(<VirtualDataGridExample files={fixture_gridFiles} width={720} />);
   const viewport = screen.getByRole("region", { name: "Files" }).element();
   const header = screen.getByRole("columnheader", { name: "Name" }).element();
+  const headerGroup = header.closest("thead")!;
+  expect(headerGroup.getBoundingClientRect().height).toBe(header.getBoundingClientRect().height);
   for (const scrollTop of [1200, viewport.scrollHeight]) {
     viewport.scrollTo({ top: scrollTop });
     await expect.poll(() => viewport.scrollTop).toBeGreaterThan(1000);
