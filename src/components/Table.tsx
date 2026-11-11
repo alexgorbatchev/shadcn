@@ -46,7 +46,12 @@ function TableHeader({ density, className, sticky = false, ...props }: TableHead
     <thead
       data-density={density}
       data-slot="table-header"
-      className={cn("[&_tr]:border-b", sticky && "sticky top-0 z-10 bg-background", className)}
+      className={cn(
+        "[&_tr]:border-b",
+        sticky &&
+          "sticky top-0 z-10 bg-background after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:border-b after:border-border",
+        className,
+      )}
       {...props}
     />
   );
