@@ -1,5 +1,5 @@
 import { createTestDirectory } from "../createTestDirectory";
-import { afterAll, beforeAll, expect, test } from "bun:test";
+import { afterAll, afterEach, beforeAll, expect, test } from "bun:test";
 import assert from "node:assert/strict";
 import { mkdir, rm } from "node:fs/promises";
 import manifest from "../../package.json";
@@ -22,6 +22,13 @@ import {
 const consumerRoot = await createTestDirectory("optional-consumers");
 const dependencyVersions: Record<string, string> = manifest.devDependencies;
 let consumerArchive: string;
+let completedConsumer: string | undefined;
+
+afterEach(async () => {
+  if (!completedConsumer) return;
+  await rm(completedConsumer, { recursive: true, force: true });
+  completedConsumer = undefined;
+}, 30_000);
 
 beforeAll(async () => {
   await mkdir(consumerRoot, { recursive: true });
@@ -109,6 +116,8 @@ test.each(fixture_featureConsumers)(
   "packed %s consumer builds and renders with only its required peers",
   async (name, peers, source, expected) => {
     const cwd = `${consumerRoot}/${name}`;
+    // The following font-asset test still consumes the fonts installation.
+    if (name !== "fonts") completedConsumer = cwd;
     await mkdir(cwd, { recursive: true });
     await Bun.write(
       `${cwd}/package.json`,
