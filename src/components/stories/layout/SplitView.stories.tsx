@@ -168,11 +168,18 @@ export const ToggleTrailingSidebar: Story = {
     const canvas = within(canvasElement);
     const field = canvas.getByRole("textbox", { name: "Draft answer" });
     await userEvent.type(field, "Keep this unsaved answer");
+    const sidebar = canvas.getByRole("complementary", { name: "Navigation" });
+    const initial = sidebar.getBoundingClientRect().width;
+    canvas.getByRole("separator", { name: "Resize navigation" }).focus();
+    await userEvent.keyboard("{ArrowLeft}");
+    await waitFor(() => expect(sidebar.getBoundingClientRect().width).toBeGreaterThan(initial));
+    const resized = sidebar.getBoundingClientRect().width;
     await userEvent.click(canvas.getByRole("button", { name: "Toggle discussion" }));
     await expect(canvas.queryByRole("heading", { name: "Discussion" })).not.toBeInTheDocument();
     await expect(canvas.getByRole("textbox", { name: "Draft answer" })).toBe(field);
     await userEvent.click(canvas.getByRole("button", { name: "Toggle discussion" }));
     await expect(canvas.getByRole("heading", { name: "Discussion" })).toBeVisible();
     await expect(field).toHaveValue("Keep this unsaved answer");
+    await waitFor(() => expect(sidebar.getBoundingClientRect().width).toBeCloseTo(resized, 0));
   },
 };

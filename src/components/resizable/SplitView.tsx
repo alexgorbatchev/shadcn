@@ -114,7 +114,7 @@ export function SplitView({
       panelRef={sidebarRef}
       collapsible
       collapsedSize={0}
-      defaultSize={sidebarOpen ? defaultSidebarSize : 0}
+      defaultSize={defaultSidebarSize}
       minSize={200}
       maxSize="50%"
     >
