@@ -39,6 +39,7 @@ export function InlineEdit({
   const shouldCancel = useRef(false);
   const [isSaving, setSaving] = useState(false);
   const [error, setError] = useState<ReactNode>(null);
+  const [isErrorOpen, setErrorOpen] = useState(false);
   useEffect(() => {
     input.current?.focus();
     if (shouldSelectOnMount) input.current?.select();
@@ -52,12 +53,14 @@ export function InlineEdit({
     }
     setSaving(true);
     setError("");
+    setErrorOpen(false);
     try {
       await onCommit(value);
       track({ name: "ui.commit" });
     } catch (error) {
       isFinished.current = false;
       setError(renderError ? renderError(error) : "Could not save this edit.");
+      setErrorOpen(true);
     } finally {
       setSaving(false);
     }
@@ -70,7 +73,12 @@ export function InlineEdit({
         void save();
       }}
     >
-      <Tooltip open={Boolean(error)} triggerId={triggerId}>
+      <Tooltip
+        open={Boolean(error) && isErrorOpen}
+        onOpenChange={setErrorOpen}
+        disableHoverablePopup
+        triggerId={triggerId}
+      >
         <TooltipTrigger
           id={triggerId}
           render={
@@ -107,13 +115,22 @@ export function InlineEdit({
           }
         />
         {error && (
-          <TooltipContent density={density} side="bottom" align="start">
-            <p id={errorId} role="alert" className="text-destructive">
-              {error}
-            </p>
+          <TooltipContent
+            density={density}
+            side="bottom"
+            align="start"
+            data-testid="InlineEdit--error-popup"
+            aria-hidden
+          >
+            <p className="text-destructive">{error}</p>
           </TooltipContent>
         )}
       </Tooltip>
+      {error && (
+        <p id={errorId} role="alert" className="sr-only">
+          {error}
+        </p>
+      )}
     </form>
   );
 }

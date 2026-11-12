@@ -47,6 +47,26 @@ export const FailedSave: Story = {
     await expect(canvasElement.ownerDocument.body).not.toHaveTextContent("Private storage diagnostic");
   },
 };
+export const DismissedValidation: Story = {
+  args: {
+    onCommit: async () => {
+      throw new Error("Private storage diagnostic");
+    },
+  },
+  play: async ({ canvasElement, userEvent }) => {
+    const page = within(canvasElement.ownerDocument.body);
+    const input = within(canvasElement).getByRole("textbox", { name: "Playlist title" });
+    await userEvent.keyboard("{Enter}");
+    await expect(await page.findByRole("alert")).toHaveTextContent("Could not save this edit.");
+    await userEvent.hover(input);
+    await expect(await page.findByTestId("InlineEdit--error-popup")).toBeVisible();
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() => expect(page.queryByTestId("InlineEdit--error-popup")).not.toBeInTheDocument());
+    await expect(input).toHaveAccessibleErrorMessage("Could not save this edit.");
+    await expect(input).toHaveValue("New playlist");
+    await expect(input).toHaveAttribute("aria-invalid", "true");
+  },
+};
 export const UnchangedEnter: Story = {
   args: { hasChanges: false },
   play: async ({ userEvent, args }) => {
