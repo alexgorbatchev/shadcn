@@ -59,7 +59,7 @@ export const DismissedValidation: Story = {
     await userEvent.keyboard("{Enter}");
     await expect(await page.findByRole("alert")).toHaveTextContent("Could not save this edit.");
     await userEvent.hover(input);
-    await expect(await page.findByTestId("InlineEdit--error-popup")).toBeVisible();
+    await waitFor(() => expect(page.getByTestId("InlineEdit--error-popup")).toBeVisible());
     await userEvent.keyboard("{Escape}");
     await waitFor(() => expect(page.queryByTestId("InlineEdit--error-popup")).not.toBeInTheDocument());
     await expect(input).toHaveAccessibleErrorMessage("Could not save this edit.");
