@@ -55,6 +55,8 @@ jobs:
         with:
           node-version: "24"
           package-manager-cache: false
+      - name: Install the maintained npm client
+        run: npm install --global npm@12.2.0
       - name: Verify the published release and package version
         uses: actions/github-script@v8
         env:
