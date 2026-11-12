@@ -1,6 +1,6 @@
-import type { ReactElement, ReactNode } from "react";
+import { useEffect, type ReactElement, type ReactNode } from "react";
 import { cn } from "../../utils/cn.js";
-import { useDefaultLayout, type LayoutStorage } from "react-resizable-panels";
+import { useDefaultLayout, usePanelRef, type LayoutStorage } from "react-resizable-panels";
 import { Resizable, ResizablePanel, ResizableHandle } from "./Resizable.js";
 import { Separator } from "../Separator.js";
 import { useMediaQuery } from "../../hooks/useMediaQuery.js";
@@ -9,6 +9,8 @@ interface ISplitViewProps {
   sidebar: ReactNode;
   children: ReactNode;
   storageKey: string;
+  sidebarPosition?: "start" | "end";
+  sidebarOpen?: boolean;
   storage?: LayoutStorage;
   sidebarLabel: string;
   contentLabel: string;
@@ -50,6 +52,8 @@ export function SplitView({
   sidebar,
   children,
   storageKey,
+  sidebarPosition = "start",
+  sidebarOpen = true,
   storage = layoutStorage,
   sidebarLabel,
   contentLabel,
@@ -62,59 +66,71 @@ export function SplitView({
   const isFill = layoutMode === "fill";
   const isWide = useMediaQuery("(min-width: 1024px)");
   const layout = useDefaultLayout({ id: storageKey, storage, onlySaveAfterUserInteractions: true });
+  const sidebarRef = usePanelRef();
+  useEffect(() => {
+    if (!isWide) return;
+    if (sidebarOpen) sidebarRef.current?.expand();
+    else sidebarRef.current?.collapse();
+  }, [isWide, sidebarOpen, sidebarRef]);
+  const sidebarContent = (
+    <aside
+      hidden={!sidebarOpen}
+      aria-label={sidebarLabel}
+      className={cn(
+        "min-w-0 bg-card",
+        isWide && "h-full",
+        sidebarPadding === "panel" && "p-4",
+        isFill && "min-h-0 overflow-y-auto",
+        !isWide && isFill && "max-h-[35%] shrink-0",
+      )}
+    >
+      {sidebar}
+    </aside>
+  );
+  const content = (
+    <section
+      aria-label={contentLabel}
+      className={cn(
+        "min-w-0 bg-card",
+        isWide && "h-full",
+        contentPadding === "panel" && "p-4",
+        isFill && "flex min-h-0 flex-1 flex-col overflow-hidden",
+      )}
+    >
+      {children}
+    </section>
+  );
   if (!isWide)
     return (
       <div className={cn("flex min-w-0 flex-col bg-card", isFill && "h-full min-h-0 overflow-hidden")}>
-        <aside
-          aria-label={sidebarLabel}
-          className={cn(
-            "min-w-0",
-            sidebarPadding === "panel" && "p-4",
-            isFill && "max-h-[35%] shrink-0 overflow-y-auto",
-          )}
-        >
-          {sidebar}
-        </aside>
-        <Separator thickness="strong" />
-        <section
-          aria-label={contentLabel}
-          className={cn(
-            "min-w-0",
-            contentPadding === "panel" && "p-4",
-            isFill && "flex min-h-0 flex-1 flex-col overflow-hidden",
-          )}
-        >
-          {children}
-        </section>
+        {sidebarPosition === "start" ? sidebarContent : content}
+        <Separator thickness="strong" hidden={!sidebarOpen} />
+        {sidebarPosition === "start" ? content : sidebarContent}
       </div>
     );
+  const sidebarPanel = (
+    <ResizablePanel
+      id="sidebar"
+      panelRef={sidebarRef}
+      collapsible
+      collapsedSize={0}
+      defaultSize={sidebarOpen ? defaultSidebarSize : 0}
+      minSize={200}
+      maxSize="50%"
+    >
+      {sidebarContent}
+    </ResizablePanel>
+  );
+  const contentPanel = (
+    <ResizablePanel id="content" minSize="35%">
+      {content}
+    </ResizablePanel>
+  );
   return (
     <Resizable orientation="horizontal" defaultLayout={layout.defaultLayout} onLayoutChanged={layout.onLayoutChanged}>
-      <ResizablePanel id="sidebar" defaultSize={defaultSidebarSize} minSize={200} maxSize="50%">
-        <aside
-          aria-label={sidebarLabel}
-          className={cn(
-            "h-full min-w-0 bg-card",
-            sidebarPadding === "panel" && "p-4",
-            isFill && "min-h-0 overflow-y-auto",
-          )}
-        >
-          {sidebar}
-        </aside>
-      </ResizablePanel>
-      <ResizableHandle thickness="strong" aria-label={resizeLabel} />
-      <ResizablePanel id="content" minSize="35%">
-        <section
-          aria-label={contentLabel}
-          className={cn(
-            "h-full min-w-0 bg-card",
-            contentPadding === "panel" && "p-4",
-            isFill && "flex min-h-0 flex-col overflow-hidden",
-          )}
-        >
-          {children}
-        </section>
-      </ResizablePanel>
+      {sidebarPosition === "start" ? sidebarPanel : contentPanel}
+      <ResizableHandle thickness="strong" disabled={!sidebarOpen} aria-label={resizeLabel} />
+      {sidebarPosition === "start" ? contentPanel : sidebarPanel}
     </Resizable>
   );
 }

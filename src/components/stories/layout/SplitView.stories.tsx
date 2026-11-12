@@ -127,3 +127,52 @@ export const Fill: Story = {
     await expect(content.getBoundingClientRect().height).toBeLessThanOrEqual(400);
   },
 };
+
+export const TrailingSidebar: Story = {
+  args: { sidebarPosition: "end" },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const sidebar = canvas.getByRole("complementary", { name: "Navigation" });
+    const content = canvas.getByRole("region", { name: "Content" });
+    await expect(sidebar.getBoundingClientRect().left).toBeGreaterThan(content.getBoundingClientRect().left);
+    const handle = canvas.getByRole("separator", { name: "Resize navigation" });
+    const before = sidebar.getBoundingClientRect().width;
+    handle.focus();
+    await userEvent.keyboard("{ArrowLeft}");
+    await waitFor(() => expect(sidebar.getBoundingClientRect().width).toBeGreaterThan(before));
+    const changed = sidebar.getBoundingClientRect().width;
+    await userEvent.click(canvas.getByRole("button", { name: "Hide panels" }));
+    await userEvent.click(canvas.getByRole("button", { name: "Show panels" }));
+    await waitFor(() =>
+      expect(canvas.getByRole("complementary", { name: "Navigation" }).getBoundingClientRect().width).toBeCloseTo(
+        changed,
+        0,
+      ),
+    );
+  },
+};
+
+export const ToggleTrailingSidebar: Story = {
+  render: function Example(args) {
+    const [open, setOpen] = useState(true);
+    return (
+      <div className="h-96 w-[900px]">
+        <SplitView {...args} sidebarPosition="end" sidebarOpen={open} layout="fill" sidebar={<h2>Discussion</h2>}>
+          <Button onClick={() => setOpen(!open)}>Toggle discussion</Button>
+          <input aria-label="Draft answer" defaultValue="" />
+        </SplitView>
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const field = canvas.getByRole("textbox", { name: "Draft answer" });
+    await userEvent.type(field, "Keep this unsaved answer");
+    await userEvent.click(canvas.getByRole("button", { name: "Toggle discussion" }));
+    await expect(canvas.queryByRole("heading", { name: "Discussion" })).not.toBeInTheDocument();
+    await expect(canvas.getByRole("textbox", { name: "Draft answer" })).toBe(field);
+    await userEvent.click(canvas.getByRole("button", { name: "Toggle discussion" }));
+    await expect(canvas.getByRole("heading", { name: "Discussion" })).toBeVisible();
+    await expect(field).toHaveValue("Keep this unsaved answer");
+  },
+};
