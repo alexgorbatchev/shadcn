@@ -80,6 +80,7 @@ interface IVirtualDataGridExampleProps {
   /** Fixed grid width in pixels, for responsive column checks. */
   width?: number;
   fitColumns?: boolean;
+  height?: "auto" | "fill";
   grouped?: boolean;
   requiredKind?: boolean;
   preferredFillSize?: number;
@@ -92,6 +93,7 @@ export function VirtualDataGridExample({
   files,
   width,
   fitColumns = false,
+  height = "auto",
   grouped = false,
   requiredKind = false,
   preferredFillSize,
@@ -146,8 +148,8 @@ export function VirtualDataGridExample({
     }),
   );
   return (
-    <div className="grid gap-3" style={{ width }}>
-      <div className="flex justify-end">
+    <div className={height === "fill" ? "flex h-full min-h-0 flex-col gap-3" : "grid gap-3"} style={{ width }}>
+      <div className="flex shrink-0 justify-end">
         <DataGridColumnOptions table={table} />
       </div>
       <VirtualDataGrid
@@ -159,6 +161,7 @@ export function VirtualDataGridExample({
         }}
         label="Files"
         maxHeight={300}
+        height={height}
         estimateRowHeight={40}
         retainedRowIds={retainedRowIds}
         renderRow={renderRow}

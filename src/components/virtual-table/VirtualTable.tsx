@@ -26,6 +26,8 @@ interface IVirtualTableProps<T> {
   columns?: ReactNode;
   label: string;
   maxHeight?: number | string;
+  /** Fill a bounded parent instead of using maxHeight. */
+  height?: "auto" | "fill";
   estimateRowHeight?: number;
   overscan?: number;
   retainedKeys?: readonly Key[];
@@ -40,6 +42,7 @@ export function VirtualTable<T>({
   columns,
   label,
   maxHeight = "65vh",
+  height = "auto",
   estimateRowHeight = 80,
   overscan = 5,
   retainedKeys,
@@ -79,8 +82,12 @@ export function VirtualTable<T>({
       role="region"
       aria-label={label}
       tabIndex={0}
-      className="min-w-0 overflow-auto overscroll-contain"
-      style={{ maxHeight }}
+      className={
+        height === "fill"
+          ? "h-full min-h-0 min-w-0 flex-1 overflow-auto overscroll-contain"
+          : "min-w-0 overflow-auto overscroll-contain"
+      }
+      style={height === "fill" ? undefined : { maxHeight }}
       onFocusCapture={(event) => {
         const row = event.target.closest<HTMLTableRowElement>("tr[data-index]");
         const item = items[Number(row?.dataset.index)];

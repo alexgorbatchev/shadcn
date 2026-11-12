@@ -235,3 +235,27 @@ export const FittedColumnGroups: Story = {
     await expect(canvas.getByRole("table").getBoundingClientRect().width).toBeLessThanOrEqual(viewport.clientWidth);
   },
 };
+
+export const Fill: Story = {
+  render: () => (
+    <div style={{ height: 400 }}>
+      <VirtualDataGridExample files={fixture_gridFiles} height="fill" width={300} fitColumns />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const viewport = canvas.getByRole("region", { name: "Files" });
+    await expect(canvas.getByText("Hidden to fit: Size.")).toBeVisible();
+    await expect(viewport.clientHeight).toBeGreaterThan(200);
+    await expect(viewport.clientHeight).toBeLessThan(400);
+    await expect(canvas.getByText("Hidden to fit: Size.").getBoundingClientRect().bottom).toBeLessThanOrEqual(
+      viewport.getBoundingClientRect().top,
+    );
+    viewport.scrollTo({ top: viewport.scrollHeight });
+    await waitFor(() => expect(canvas.getByText("File 999")).toBeVisible());
+    await expect(canvas.getByRole("columnheader", { name: "Name" }).getBoundingClientRect().top).toBeCloseTo(
+      viewport.getBoundingClientRect().top,
+      0,
+    );
+  },
+};

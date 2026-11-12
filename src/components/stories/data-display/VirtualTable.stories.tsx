@@ -110,3 +110,23 @@ export const ResponsiveColumns: Story = {
     await expectNoWindowErrors(errors);
   },
 };
+
+export const Fill: Story = {
+  args: { height: "fill", maxHeight: 100 },
+  render: (args) => (
+    <div style={{ height: 400 }}>
+      <VirtualTable {...args} />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const viewport = canvas.getByRole("region", { name: "Items" });
+    await expect(viewport.clientHeight).toBe(400);
+    viewport.scrollTo({ top: viewport.scrollHeight });
+    await waitFor(() => expect(canvas.getByRole("button", { name: "Item 999" })).toBeVisible());
+    await expect(canvas.getByRole("columnheader", { name: "Name" }).getBoundingClientRect().top).toBeCloseTo(
+      viewport.getBoundingClientRect().top,
+      0,
+    );
+  },
+};

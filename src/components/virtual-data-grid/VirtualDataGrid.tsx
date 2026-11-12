@@ -18,6 +18,8 @@ interface IVirtualDataGridProps<T extends RowData, TSelected> {
   table: DataGridTable<T, TSelected>;
   label: string;
   maxHeight?: number | string;
+  /** Fill a bounded parent instead of using maxHeight. */
+  height?: "auto" | "fill";
   estimateRowHeight?: number;
   overscan?: number;
   /**
@@ -58,6 +60,7 @@ export function VirtualDataGrid<T extends RowData, TSelected>({
   table,
   label,
   maxHeight,
+  height = "auto",
   estimateRowHeight,
   overscan,
   fitColumns = false,
@@ -73,10 +76,14 @@ export function VirtualDataGrid<T extends RowData, TSelected>({
     .filter((column) => fit?.hiddenColumnIds.includes(column.id))
     .map(getDataGridColumnLabel);
   return (
-    <div ref={scope} data-testid="VirtualDataGrid" className="min-w-0">
+    <div
+      ref={scope}
+      data-testid="VirtualDataGrid"
+      className={height === "fill" ? "flex h-full min-h-0 min-w-0 flex-col" : "min-w-0"}
+    >
       <DataGridColumnFitContext value={fit}>
         {hiddenLabels.length > 0 && (
-          <div className="mb-2 text-xs text-muted-foreground">
+          <div className="mb-2 shrink-0 text-xs text-muted-foreground">
             <p>Hidden to fit: {hiddenLabels.join(", ")}.</p>
             <p>Widen the table or choose fewer columns. Move a column earlier to prioritize it.</p>
           </div>
@@ -86,6 +93,7 @@ export function VirtualDataGrid<T extends RowData, TSelected>({
           getItemKey={(row) => row.id}
           label={label}
           maxHeight={maxHeight}
+          height={height}
           estimateRowHeight={estimateRowHeight}
           overscan={overscan}
           retainedKeys={retainedRowIds}

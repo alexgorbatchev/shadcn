@@ -211,3 +211,25 @@ test("column headers stay pinned and interactive while virtual rows scroll", asy
   await screen.getByRole("button", { name: "Name", exact: true }).click();
   await expect.element(screen.getByRole("columnheader", { name: "Name" })).toHaveAttribute("aria-sort", "ascending");
 });
+
+test("fill grid consumes remaining space and keeps headers visible while scrolling", async () => {
+  const screen = await render(
+    <div style={{ height: 400 }}>
+      <VirtualDataGridExample files={fixture_gridFiles} width={720} height="fill" />
+    </div>,
+  );
+  const viewport = screen.getByRole("region", { name: "Files" }).element();
+  await expect.poll(() => viewport.clientHeight).toBeGreaterThan(300);
+  expect(viewport.clientHeight).toBeLessThan(400);
+  expect(viewport.scrollHeight).toBeGreaterThan(viewport.clientHeight);
+  viewport.scrollTop = viewport.scrollHeight;
+  await expect.poll(() => viewport.scrollTop).toBeGreaterThan(0);
+  await expect
+    .poll(() =>
+      Math.abs(
+        screen.getByRole("columnheader", { name: "Name" }).element().getBoundingClientRect().top -
+          viewport.getBoundingClientRect().top,
+      ),
+    )
+    .toBeLessThanOrEqual(1);
+});

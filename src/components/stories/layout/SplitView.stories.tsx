@@ -105,3 +105,25 @@ export const ExternalStorage: Story = {
     await expect(localStorage.getItem("react-resizable-panels:external-layout")).toBeNull();
   },
 };
+
+export const Fill: Story = {
+  args: { layout: "fill", sidebarPadding: "none", contentPadding: "none" },
+  render: (args) => (
+    <div style={{ height: 400 }}>
+      <SplitView {...args} sidebar={<div style={{ height: 800 }}>Scrollable navigation</div>}>
+        <h2>Bounded content</h2>
+      </SplitView>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const sidebar = canvas.getByRole("complementary", { name: "Navigation" });
+    const content = canvas.getByRole("region", { name: "Content" });
+    await expect(getComputedStyle(sidebar).paddingTop).toBe("0px");
+    await expect(getComputedStyle(content).paddingTop).toBe("0px");
+    await expect(sidebar.scrollHeight).toBeGreaterThan(sidebar.clientHeight);
+    sidebar.scrollTop = 300;
+    await expect(sidebar.scrollTop).toBeGreaterThan(0);
+    await expect(content.getBoundingClientRect().height).toBeLessThanOrEqual(400);
+  },
+};
