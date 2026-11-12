@@ -21,7 +21,7 @@ export const JsonInput = ({ props, bindings, emit }: BaseComponentProps<JsonProp
   );
 
   return (
-    <div className="space-y-2">
+    <div className="w-full space-y-2">
       {props.label && <Label htmlFor={id}>{props.label}</Label>}
       <Input
         id={id}

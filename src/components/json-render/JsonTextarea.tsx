@@ -21,7 +21,7 @@ export const JsonTextarea = ({ props, bindings }: BaseComponentProps<JsonProps<"
   );
 
   return (
-    <div className="space-y-2">
+    <div className="w-full space-y-2">
       {props.label && <Label htmlFor={id}>{props.label}</Label>}
       <Textarea
         id={id}

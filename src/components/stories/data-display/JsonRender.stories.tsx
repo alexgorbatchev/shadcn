@@ -588,3 +588,27 @@ export const InitialSelections: Story = {
     await expect(canvas.getByRole("button", { name: "Delete" })).toBeDisabled();
   },
 };
+
+export const FullWidthTextFields: Story = {
+  args: {
+    spec: {
+      root: "fields",
+      elements: {
+        fields: { type: "Stack", props: { align: "start" }, children: ["name", "notes"] },
+        name: { type: "Input", props: { label: "Full width name" } },
+        notes: { type: "Textarea", props: { label: "Full width notes" } },
+      },
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const name = canvas.getByRole("textbox", { name: "Full width name" });
+    const notes = canvas.getByRole("textbox", { name: "Full width notes" });
+    const stack = name.parentElement?.parentElement;
+    await expect(stack).not.toBeNull();
+    await expect(name.getBoundingClientRect().width).toBeCloseTo(stack?.getBoundingClientRect().width ?? 0, 0);
+    await expect(notes.getBoundingClientRect().width).toBeCloseTo(stack?.getBoundingClientRect().width ?? 0, 0);
+    await userEvent.type(notes, "Still editable");
+    await expect(notes).toHaveValue("Still editable");
+  },
+};
