@@ -19,6 +19,7 @@ const meta: Meta<typeof ToggleGroup> = {
     variant: { control: "select", options: ["default", "outline"] },
     orientation: { control: "select", options: ["horizontal", "vertical"] },
     spacing: { control: "number" },
+    layout: { control: "select", options: ["content", "fill"] },
   },
   render: (args) => (
     <ToggleGroup {...args}>
@@ -163,6 +164,57 @@ export const JoinedOutline: Story = {
     await expect(Number.parseFloat(getComputedStyle(last).borderStartEndRadius)).toBeGreaterThan(0);
     await userEvent.click(middle);
     await expect(middle).toHaveAttribute("aria-pressed", "true");
+  },
+};
+export const Fill: Story = {
+  args: { layout: "fill", spacing: 0, variant: "outline", size: "sm" },
+  decorators: [
+    (Story) => (
+      <div style={{ width: 360, maxWidth: "100%" }}>
+        <Story />
+      </div>
+    ),
+  ],
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const first = canvas.getByRole("button", { name: "Bold" });
+    const next = canvas.getByRole("button", { name: "Italic" });
+    const last = canvas.getByRole("button", { name: "Underline" });
+    const group = first.closest<HTMLElement>('[data-slot="toggle-group"]')!;
+    await expect(group.getBoundingClientRect().width).toBeCloseTo(
+      group.parentElement!.getBoundingClientRect().width,
+      1,
+    );
+    await expect(
+      Math.abs(first.getBoundingClientRect().width - last.getBoundingClientRect().width),
+    ).toBeLessThanOrEqual(1);
+    await expect(first.getBoundingClientRect().right).toBeCloseTo(next.getBoundingClientRect().left, 1);
+    await expect(last.getBoundingClientRect().right).toBeCloseTo(group.getBoundingClientRect().right, 1);
+    await userEvent.click(next);
+    await expect(next).toHaveAttribute("aria-pressed", "true");
+    await userEvent.keyboard("{ArrowLeft}");
+    await expect(first).toHaveFocus();
+  },
+};
+export const FillVertical: Story = {
+  ...Fill,
+  args: { ...Fill.args, orientation: "vertical" },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const first = canvas.getByRole("button", { name: "Bold" });
+    const next = canvas.getByRole("button", { name: "Italic" });
+    const last = canvas.getByRole("button", { name: "Underline" });
+    const group = first.closest<HTMLElement>('[data-slot="toggle-group"]')!;
+    await expect(group.getBoundingClientRect().width).toBeCloseTo(
+      group.parentElement!.getBoundingClientRect().width,
+      1,
+    );
+    await expect(first.getBoundingClientRect().width).toBeCloseTo(group.getBoundingClientRect().width, 1);
+    await expect(first.getBoundingClientRect().height).toBeCloseTo(last.getBoundingClientRect().height, 1);
+    await expect(first.getBoundingClientRect().bottom).toBeCloseTo(next.getBoundingClientRect().top, 1);
+    await userEvent.click(first);
+    await userEvent.keyboard("{ArrowDown}");
+    await expect(next).toHaveFocus();
   },
 };
 export const Vertical: Story = {

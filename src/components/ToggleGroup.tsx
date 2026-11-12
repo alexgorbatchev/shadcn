@@ -28,6 +28,8 @@ type RequiredToggleGroupSelection = {
 
 interface IToggleGroupLayout {
   spacing?: number;
+  /** Fill the parent width and distribute horizontal items equally. */
+  layout?: "content" | "fill";
 }
 
 export function ToggleGroup({
@@ -37,6 +39,7 @@ export function ToggleGroup({
   variant,
   size,
   spacing = 2,
+  layout = "content",
   orientation = "horizontal",
   children,
   style,
@@ -57,6 +60,7 @@ export function ToggleGroup({
       data-variant={variant}
       data-size={size}
       data-spacing={spacing}
+      data-layout={layout}
       orientation={orientation}
       style={(state) => ({
         gap: `calc(var(--spacing) * ${spacing})`,
@@ -65,6 +69,7 @@ export function ToggleGroup({
       className={(state) =>
         cn(
           "group/toggle-group flex w-fit flex-row items-center rounded-sm data-[orientation=vertical]:flex-col data-[orientation=vertical]:items-stretch",
+          layout === "fill" && "w-full",
           typeof className === "function" ? className(state) : className,
         )
       }
@@ -77,7 +82,7 @@ export function ToggleGroup({
         trackedOnValueChange(value, details);
       }}
     >
-      <ToggleGroupContext.Provider value={{ variant, size, spacing }}>{children}</ToggleGroupContext.Provider>
+      <ToggleGroupContext.Provider value={{ variant, size, spacing, layout }}>{children}</ToggleGroupContext.Provider>
     </ToggleGroupPrimitive>
   );
 }
@@ -101,6 +106,7 @@ export function ToggleGroupItem({
         cn(
           "shrink-0 group-data-[spacing=0]/toggle-group:rounded-none focus:relative focus:z-10 group-data-[orientation=horizontal]/toggle-group:data-[spacing=0]:first:rounded-s-sm group-data-[orientation=vertical]/toggle-group:data-[spacing=0]:first:rounded-t-sm group-data-[orientation=horizontal]/toggle-group:data-[spacing=0]:last:rounded-e-sm group-data-[orientation=vertical]/toggle-group:data-[spacing=0]:last:rounded-b-sm group-data-[orientation=horizontal]/toggle-group:data-[spacing=0]:data-[variant=outline]:border-s-0 group-data-[orientation=vertical]/toggle-group:data-[spacing=0]:data-[variant=outline]:border-t-0 group-data-[orientation=horizontal]/toggle-group:data-[spacing=0]:data-[variant=outline]:first:border-s group-data-[orientation=vertical]/toggle-group:data-[spacing=0]:data-[variant=outline]:first:border-t",
           toggleVariants({ variant: context.variant ?? variant, size: context.size ?? size }),
+          context.layout === "fill" && "min-w-0 group-data-[orientation=horizontal]/toggle-group:flex-1",
           typeof className === "function" ? className(state) : className,
         )
       }

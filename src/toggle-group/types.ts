@@ -3,4 +3,5 @@ import type { toggleVariants } from "../components/Toggle.js";
 
 export interface IToggleGroupContext extends VariantProps<typeof toggleVariants> {
   spacing: number;
+  layout?: "content" | "fill";
 }
