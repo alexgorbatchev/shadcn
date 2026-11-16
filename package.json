@@ -1012,6 +1012,10 @@
       "types": "./dist/components/image-crop/index.d.ts",
       "import": "./dist/components/image-crop/index.js"
     },
+    "./image-viewer": {
+      "types": "./dist/components/image-viewer/index.d.ts",
+      "import": "./dist/components/image-viewer/index.js"
+    },
     "./editor": {
       "types": "./dist/components/editor/index.d.ts",
       "import": "./dist/components/editor/index.js"
