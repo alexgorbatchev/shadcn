@@ -1,6 +1,7 @@
-import { assert, beforeEach, expect, test } from "vitest";
+import { assert, beforeEach, expect, onTestFinished, test, vi } from "vitest";
 import { commands, page } from "vitest/browser";
 import { render } from "vitest-browser-react";
+import { observeScrollGuards } from "../../../utils/observeScrollGuards";
 import { Dialog, DialogContent, DialogTitle } from "../../Dialog";
 import { ImageComparison } from "../ImageComparison";
 import { createSvgImageUrl, type Rgba } from "./helpers";
@@ -96,3 +97,26 @@ test("the toolbar sits beside a wide fullscreen comparison and below a narrow on
   expect(toolbar.getBoundingClientRect().left).toBe(stage.getBoundingClientRect().left);
   await expect.element(screen.getByRole("group", { name: "Mode" })).toBeVisible();
 });
+
+test.each(["toggle", "swipe", "side-by-side"] as const)(
+  "%s mode keeps every non-scrolling surface stationary at both zoom levels",
+  async (mode) => {
+    const report = vi.fn<(error: Error) => void>();
+    onTestFinished(observeScrollGuards(document, report));
+    const screen = await render(
+      <div className="h-120 w-160">
+        <ImageComparison before={before} after={after} defaultMode={mode} defaultShowDifferences />
+      </div>,
+    );
+    await expect
+      .element(screen.getByRole("switch", { name: "Highlight differences" }))
+      .toHaveAccessibleDescription("1 changed region");
+    await screen.getByRole("button", { name: "Original size" }).click();
+    await expect
+      .poll(() => document.querySelector("[data-slot=image-viewport]")?.getAttribute("data-zoom"))
+      .toBe("original");
+    await new Promise(requestAnimationFrame);
+    await new Promise(requestAnimationFrame);
+    expect(report).not.toHaveBeenCalled();
+  },
+);
