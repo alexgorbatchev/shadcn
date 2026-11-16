@@ -114,7 +114,6 @@ export function ImageComparisonToolbar({
           variant="outline"
           size="sm"
           spacing={0}
-          layout="fill"
         >
           <ToggleGroupItem value="toggle">Toggle</ToggleGroupItem>
           <ToggleGroupItem value="swipe">Swipe</ToggleGroupItem>
@@ -130,7 +129,6 @@ export function ImageComparisonToolbar({
           variant="outline"
           size="sm"
           spacing={0}
-          layout="fill"
           disabled={mode !== "side-by-side"}
         >
           <ToggleGroupItem value="horizontal">
@@ -144,7 +142,7 @@ export function ImageComparisonToolbar({
         </ToggleGroup>
       </ToolbarSection>
       <ToolbarSection title="Zoom" titleId={`${id}-zoom`}>
-        <ImageZoomToggle zoom={zoom} onZoomChange={onZoomChange} layout="fill" />
+        <ImageZoomToggle zoom={zoom} onZoomChange={onZoomChange} />
       </ToolbarSection>
       <Button
         variant="outline"
@@ -180,7 +178,10 @@ export function ImageComparisonToolbar({
           <FieldLabel htmlFor={`${id}-differences`}>Highlight differences</FieldLabel>
           {showDifferences && differences.status === "ready" && (
             <FieldDescription data-slot="image-comparison-legend" className="flex items-center gap-1.5">
-              <span aria-hidden="true" className="size-3 shrink-0 rounded-xs border-2 border-warning bg-warning/15" />
+              <span
+                aria-hidden="true"
+                className="mx-[3px] size-2.5 shrink-0 rounded-xs bg-warning/10 ring-1 ring-background outline-2 outline-offset-1 outline-warning"
+              />
               Changed region
             </FieldDescription>
           )}

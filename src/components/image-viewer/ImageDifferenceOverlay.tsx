@@ -17,7 +17,8 @@ export function ImageDifferenceOverlay({ diff }: IImageDifferenceOverlayProps): 
         <div
           key={`${region.x}:${region.y}:${region.width}:${region.height}`}
           data-slot="image-difference-region"
-          className="absolute rounded-xs border-2 border-warning bg-warning/15 ring-1 ring-background"
+          // A two-tone stroke outside the changed pixels stays readable over light and dark screenshots.
+          className="absolute rounded-xs bg-warning/10 shadow-[0_0_0_4px_var(--background)] ring-1 ring-background outline-2 outline-offset-1 outline-warning"
           style={{
             left: toPercent(region.x, diff.width),
             top: toPercent(region.y, diff.height),
