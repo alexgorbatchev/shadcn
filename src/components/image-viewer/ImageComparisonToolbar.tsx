@@ -90,6 +90,7 @@ export function ImageComparisonToolbar({
 }: IImageComparisonToolbarProps): ReactElement {
   const id = useId();
   const isUnavailable = differences.status === "unavailable";
+  const releasePeek = (): void => onPeekChange(false);
   const sizeMismatch =
     beforeSize && afterSize && (beforeSize.width !== afterSize.width || beforeSize.height !== afterSize.height)
       ? `Sizes differ: ${beforeLabel} ${formatSize(beforeSize)}, ${afterLabel} ${formatSize(afterSize)}. ` +
@@ -153,16 +154,16 @@ export function ImageComparisonToolbar({
         onPointerDown={(event) => {
           if (event.button === 0) onPeekChange(true);
         }}
-        onPointerUp={() => onPeekChange(false)}
-        onPointerLeave={() => onPeekChange(false)}
-        onPointerCancel={() => onPeekChange(false)}
+        onPointerUp={releasePeek}
+        onPointerLeave={releasePeek}
+        onPointerCancel={releasePeek}
         onKeyDown={(event) => {
           if (isPeekKey(event)) onPeekChange(true);
         }}
         onKeyUp={(event) => {
-          if (isPeekKey(event)) onPeekChange(false);
+          if (isPeekKey(event)) releasePeek();
         }}
-        onBlur={() => onPeekChange(false)}
+        onBlur={releasePeek}
         onContextMenu={(event) => event.preventDefault()}
       >
         Hold to show before

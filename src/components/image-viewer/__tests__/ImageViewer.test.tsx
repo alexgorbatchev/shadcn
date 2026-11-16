@@ -29,3 +29,22 @@ test("keyboard users scroll an original-size image after focusing the viewer", a
   await expect.poll(() => viewport.element().scrollTop).toBeGreaterThan(top);
   await expect.poll(() => viewport.element().scrollLeft).toBeGreaterThan(left);
 });
+
+test("a new source replaces the previous image at its own natural size", async () => {
+  await page.viewport(1000, 700);
+  const narrow = createSvgImageUrl(300, 120, [241, 245, 249, 255]);
+  const screen = await render(
+    <div className="h-80 w-96">
+      <ImageViewer src={screenshot} alt="Dashboard capture" defaultZoom="original" />
+    </div>,
+  );
+  const image = screen.getByRole("img", { name: "Dashboard capture" });
+  await expect.poll(() => image.element().getBoundingClientRect().width).toBe(1600);
+  await screen.rerender(
+    <div className="h-80 w-96">
+      <ImageViewer src={narrow} alt="Dashboard capture" defaultZoom="original" />
+    </div>,
+  );
+  await expect.poll(() => image.element().getBoundingClientRect().width).toBe(300);
+  expect(image.element().getBoundingClientRect().height).toBe(120);
+});

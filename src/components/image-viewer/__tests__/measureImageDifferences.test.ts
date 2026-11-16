@@ -1,4 +1,4 @@
-import { expect, test } from "vitest";
+import { expect, onTestFinished, test, vi } from "vitest";
 import { describeImageReadError, getImageReadFailure, measureImageDifferences } from "../measureImageDifferences";
 import { createSvgImageUrl, loadCrossOriginImage, loadImage, recordLongTasks, type Rgba } from "./helpers";
 
@@ -101,4 +101,19 @@ test("other failures are described generically", () => {
   expect(describeImageReadError(new DOMException("Denied", "NotAllowedError"))).toBe(
     "Pixels cannot be read in this browser.",
   );
+});
+
+test("browsers without scheduler.yield yield through macrotasks", async () => {
+  vi.stubGlobal("scheduler", undefined);
+  onTestFinished(() => {
+    vi.unstubAllGlobals();
+  });
+  const before = await loadImage(
+    createSvgImageUrl(64, 100, WHITE, [{ rect: { x: 8, y: 40, width: 16, height: 16 }, color: BLUE }]),
+  );
+  const after = await loadImage(
+    createSvgImageUrl(64, 100, WHITE, [{ rect: { x: 8, y: 40, width: 16, height: 16 }, color: RED }]),
+  );
+  const diff = await measureImageDifferences(before, after, { sliceBudget: 0 });
+  expect(diff.regions).toEqual([{ x: 8, y: 40, width: 16, height: 16, changedPixels: 256 }]);
 });
