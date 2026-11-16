@@ -122,32 +122,36 @@ test.each(["toggle", "swipe", "side-by-side"] as const)(
 );
 
 test("changing the pair cancels a pending comparison, which runs again when the pair returns", async () => {
-  const change = { x: 1800, y: 1100, width: 320, height: 120 };
-  const largeBefore = {
-    src: createSvgImageUrl(2560, 1440, WHITE, [{ rect: change, color: [37, 99, 235, 255] }]),
-    alt: "Before capture",
-  };
-  const largeAfter = {
-    src: createSvgImageUrl(2560, 1440, WHITE, [{ rect: change, color: [220, 38, 38, 255] }]),
-    alt: "After capture",
-  };
+  // Hold the comparison at its first yield so the pair provably changes while it is pending.
+  const gate = Promise.withResolvers<void>();
+  let yields = 0;
+  vi.stubGlobal("scheduler", {
+    yield: () => {
+      yields++;
+      return gate.promise;
+    },
+  });
+  onTestFinished(() => {
+    vi.unstubAllGlobals();
+  });
   const screen = await render(
     <div className="h-120 w-160">
-      <ImageComparison before={largeBefore} after={largeAfter} defaultShowDifferences />
+      <ImageComparison before={before} after={after} defaultShowDifferences />
     </div>,
   );
   const highlight = screen.getByRole("switch", { name: "Highlight differences" });
-  const status = screen.getByRole("status");
-  await expect.poll(() => status.element().textContent, { interval: 1 }).toBe("Comparing pixels…");
+  await expect.poll(() => yields).toBe(1);
+  await expect.element(highlight).toHaveAccessibleDescription("Comparing pixels…");
   await screen.rerender(
     <div className="h-120 w-160">
       <ImageComparison before={after} after={after} defaultShowDifferences />
     </div>,
   );
+  gate.resolve();
   await expect.element(highlight).toHaveAccessibleDescription("No visible differences");
   await screen.rerender(
     <div className="h-120 w-160">
-      <ImageComparison before={largeBefore} after={largeAfter} defaultShowDifferences />
+      <ImageComparison before={before} after={after} defaultShowDifferences />
     </div>,
   );
   await expect.element(highlight).toHaveAccessibleDescription("1 changed region");
