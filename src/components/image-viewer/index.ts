@@ -7,8 +7,6 @@ export type { IImageComparisonProps } from "./ImageComparison.js";
 export { computeImageDiff } from "./computeImageDiff.js";
 export { getNormalizedImagePoint } from "./getNormalizedImagePoint.js";
 export type {
-  IClientBox,
-  IClientPoint,
   IImageComparisonSource,
   IImageDiff,
   IImageDiffOptions,

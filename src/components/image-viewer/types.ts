@@ -1,3 +1,5 @@
+import type { StackDirection } from "../../layout/types.js";
+
 /** `fit` scales the image down to the viewport; `original` shows it at its natural size in CSS pixels. */
 export type ImageZoom = "fit" | "original";
 
@@ -5,7 +7,7 @@ export type ImageZoom = "fit" | "original";
 export type ImageComparisonMode = "toggle" | "swipe" | "side-by-side";
 
 /** Side-by-side pane arrangement: `horizontal` places panes left and right, `vertical` top and bottom. */
-export type ImageComparisonOrientation = "horizontal" | "vertical";
+export type ImageComparisonOrientation = StackDirection;
 
 export interface IImageSize {
   width: number;
@@ -21,20 +23,6 @@ export interface IImageRect extends IImageSize {
 export interface INormalizedImagePoint {
   x: number;
   y: number;
-}
-
-/** Viewport coordinates, such as a pointer event's `clientX` and `clientY`. */
-export interface IClientPoint {
-  clientX: number;
-  clientY: number;
-}
-
-/** The rendered box to normalize against, such as `element.getBoundingClientRect()`. */
-export interface IClientBox {
-  left: number;
-  top: number;
-  width: number;
-  height: number;
 }
 
 export interface IImageStageSize extends IImageSize {
