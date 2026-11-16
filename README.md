@@ -71,6 +71,7 @@ Import shared controls and providers from `@alexgorbatchev/shadcn`. Import the f
 | `/file-upload`       | FileUpload selection and validation                                  | `bun add react-dropzone@^20.1.4`                                                                    |
 | `/color-picker`      | ColorPicker                                                          | `bun add react-colorful@^5.8.1`                                                                     |
 | `/image-crop`        | ImageCrop and native export helpers                                  | `bun add react-image-crop@^11.1.2`                                                                  |
+| `/image-viewer`      | ImageViewer, ImageZoomToggle, ImageComparison, and image helpers     | Existing core peers                                                                                 |
 | `/tree`              | Tree, native hooks and features                                      | `bun add @headless-tree/core@^1.8.0 @headless-tree/react@^1.8.0`; patched runtimes are bundled      |
 | `/editor`            | RichTextEditor, native Tiptap hooks and StarterKit                   | `bun add @tiptap/core@^3.32.0 @tiptap/react@^3.32.0 @tiptap/pm@^3.32.0 @tiptap/starter-kit@^3.32.0` |
 | `/event-calendar`    | EventCalendar, EventForm and native calendar APIs                    | `bun add date-fns@^4.4.0`; TypeScript: `bun add -d @types/react-big-calendar@^1.16.3`               |
@@ -269,7 +270,7 @@ The npm package includes the same index at `llms.txt` in its root and its linked
 | Forms and selections     | AuthForm, Calendar, Checkbox, Combobox, Command, EmailCodeAuthForm, Field, Input, InputGroup, InputOTP, Label, OptionSelect, Questionnaire, RadioGroup, Select, Slider, Switch, Textarea      |
 | Structure and navigation | Accordion, AspectRatio, Avatar, Breadcrumb, Card, Carousel, Chart, Collapsible, Empty, Item, Kbd, Menubar, NavigationMenu, Pagination, Resizable, ScrollArea, Separator, Sidebar, Table, Tabs |
 | Layout and typography    | AppShell, Container, Grid, GridItem, Heading, PageHeader, PageIntro, Stack, Text                                                                                                              |
-| Data display             | WeatherForecast, WeatherSummary                                                                                                                                                               |
+| Data display             | ImageComparison, ImageViewer, WeatherForecast, WeatherSummary                                                                                                                                 |
 | Overlays                 | AlertDialog, ContextMenu, Dialog, Drawer, DropdownMenu, HoverCard, Popover, Sheet, Tooltip                                                                                                    |
 | Loading                  | Progress, Skeleton, Spinner                                                                                                                                                                   |
 | Conversations            | Attachment, Bubble, Marker, Message, MessageScroller                                                                                                                                          |
@@ -476,6 +477,60 @@ Embedded actions, links, menus, editable fields, and media controls retain their
 `ResizableHandle thickness="strong"` and `Separator thickness="strong"` use 2px dividers; their default thickness is 1px.
 
 `TableHead` and `TableCell` accept `textAlign="start"`, `"center"`, or `"end"` to align labels and numeric columns consistently in either text direction.
+
+# Image viewing and comparison
+
+Import `ImageViewer`, `ImageZoomToggle`, and `ImageComparison` from `@alexgorbatchev/shadcn/image-viewer`. Both viewers fill the container they are given, such as a `DialogContent size="fullscreen"` body, and use only the core peers.
+
+```tsx
+import { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@alexgorbatchev/shadcn";
+import {
+  ImageViewer,
+  ImageZoomToggle,
+  getNormalizedImagePoint,
+  type INormalizedImagePoint,
+  type ImageZoom,
+} from "@alexgorbatchev/shadcn/image-viewer";
+
+function Screenshot({ src, onPick }: { src: string; onPick: (point: INormalizedImagePoint) => void }) {
+  const [zoom, setZoom] = useState<ImageZoom>("fit");
+  return (
+    <Dialog defaultOpen>
+      <DialogContent size="fullscreen">
+        <DialogHeader>
+          <DialogTitle>Checkout page</DialogTitle>
+          <ImageZoomToggle zoom={zoom} onZoomChange={setZoom} />
+        </DialogHeader>
+        <ImageViewer
+          src={src}
+          alt="Checkout page"
+          zoom={zoom}
+          onZoomChange={setZoom}
+          overlay={
+            <div
+              className="absolute inset-0 cursor-crosshair"
+              onPointerDown={(event) =>
+                onPick(getNormalizedImagePoint(event, event.currentTarget.getBoundingClientRect()))
+              }
+            />
+          }
+        />
+      </DialogContent>
+    </Dialog>
+  );
+}
+```
+
+`ImageViewer` zoom is `"fit"` or `"original"`, controlled with `zoom` and `onZoomChange` or uncontrolled with `defaultZoom` (default `"fit"`). Fit scales the image down proportionally to fit both viewport dimensions, centered and without scrollbars, and never upscales it. Original shows the natural size in CSS pixels, centered on any axis where it is smaller than the viewport and scrolling on any axis where it is larger; switching zoom keeps the viewed center. The viewport is a focusable native scroll region named by `label` (default `alt`) for keyboard scrolling. Place `ImageZoomToggle` in a header or toolbar, or set `showZoomControl` for a built-in toggle above the image; its "Fit to screen" and "Original size" options report their state with `aria-pressed`.
+
+`overlay` renders inside a box sized and positioned exactly over the rendered image at every zoom level, so children positioned in percentages stay aligned with the image. `imageRef` and `overlayRef` expose the rendered image box; `getNormalizedImagePoint(point, box)` maps viewport coordinates, such as a pointer event, to 0–1 image coordinates within that box and clamps points outside it. Multiply by the image's `naturalWidth` and `naturalHeight` for pixel coordinates. A failed load shows "Image could not be loaded." and sets `data-status="error"` on the viewer root.
+
+`ImageComparison` compares `before` and `after` sources (`{ src, alt, crossOrigin? }`) labelled by `beforeLabel` and `afterLabel` (default "Before" and "After"). `mode` is `"toggle"` (default), `"swipe"`, or `"side-by-side"`; `orientation` is `"horizontal"` (panes left and right, default) or `"vertical"` (top and bottom); `zoom` is shared by every mode; `showDifferences` defaults to false. Each is controlled with its value and `on*Change` callback or uncontrolled with its `default*` prop. Toggle shows the after image while "Hold to show before" shows the before image as long as a pointer, Space, or Enter is held, returning on release, pointer leave, cancel, or blur. Swipe stacks both images behind a divider that is a native slider (0–100; arrows ±1, Page Up/Page Down ±10, Home/End) whose handle drags with pointer capture; the rest of the image keeps native panning. Side-by-side panes scroll in sync at original size. When the image sizes differ, the before image is drawn inside the after image box with `contain` scaling, and the toolbar reports both sizes.
+
+"Highlight differences" draws both images at the after image's natural size and compares premultiplied channels against a threshold. Changed pixels are aggregated into 16px cells and connected regions, outlined with the warning token over the after image (toggle and swipe) or both panes (side-by-side), and summarized as "3 changed regions" or "No visible differences". The comparison runs in time-boxed slices that yield to the browser and is cached per image pair for the component's lifetime. When pixels cannot be read, such as a cross-origin image served without CORS or an image that failed to decode, the switch is disabled and the reason is shown. Pass `crossOrigin: "anonymous"` only when the image server sends CORS headers. `computeImageDiff(before, after, options)` exposes the same pure comparison for equally sized `ImageData`.
+
+The toolbar holds the mode, orientation (enabled for side-by-side), zoom, hold-to-show-before (enabled for toggle), and highlight controls with the legend and status. It sits beside a comparison at least 48rem wide and wraps below narrower ones; `showToolbar={false}` hides it, leaving consumers to control the props themselves.
 
 # Drag and drop
 

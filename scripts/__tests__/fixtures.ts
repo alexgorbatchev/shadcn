@@ -238,6 +238,8 @@ export const fixture_featureTypeExports: Record<string, string> = {
   "file-upload": "FileUpload, type FileUploadProps",
   "color-picker": "ColorPicker, type ColorPickerProps",
   "image-crop": "ImageCrop, cropToCanvas, type Crop",
+  "image-viewer":
+    "ImageViewer, ImageComparison, ImageZoomToggle, computeImageDiff, getNormalizedImagePoint, type ImageZoom, type IImageDiff",
   editor: "RichTextEditor, useEditor, StarterKit, type Editor",
   tree: "Tree, useTree, type TreeConfig",
   "data-grid":
@@ -297,6 +299,29 @@ export const fixture_featureConsumers: ReadonlyArray<readonly [string, readonly 
     ["react-image-crop"],
     'import { renderToString } from "react-dom/server"; import { ImageCrop } from "@alexgorbatchev/shadcn/image-crop"; const markup=renderToString(<ImageCrop crop={{unit:"px",x:10,y:10,width:30,height:30}} onChange={()=>{}}><img src="data:," alt="Crop source"/></ImageCrop>); console.log(markup.includes("Crop source") && markup.includes("ReactCrop"));',
     "true",
+  ],
+  [
+    "image-viewer",
+    [],
+    `
+    import { renderToString } from "react-dom/server";
+    import { ImageComparison, ImageViewer, computeImageDiff } from "@alexgorbatchev/shadcn/image-viewer";
+    const viewer = renderToString(<ImageViewer src="data:," alt="Screenshot" showZoomControl />);
+    const comparison = renderToString(
+      <ImageComparison before={{ src: "data:,", alt: "Before shot" }} after={{ src: "data:,", alt: "After shot" }} />,
+    );
+    const diff = computeImageDiff(
+      { width: 1, height: 1, data: [0, 0, 0, 255] },
+      { width: 1, height: 1, data: [255, 255, 255, 255] },
+      { minChangedPixels: 1 },
+    );
+    console.log(JSON.stringify({
+      viewer: viewer.includes('aria-label="Screenshot"') && viewer.includes("Original size"),
+      comparison: comparison.includes("Hold to show before") && comparison.includes('alt="After shot"'),
+      regions: diff.regions.length,
+    }));
+    `,
+    JSON.stringify({ viewer: true, comparison: true, regions: 1 }),
   ],
   [
     "editor",
