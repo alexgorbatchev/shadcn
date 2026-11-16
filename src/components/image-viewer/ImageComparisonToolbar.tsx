@@ -40,7 +40,8 @@ interface IToolbarSectionProps {
 function ToolbarSection({ title, titleId, children }: IToolbarSectionProps): ReactElement {
   return (
     <div data-slot="image-comparison-toolbar-section" className="flex min-w-0 flex-col gap-1.5">
-      <span id={titleId} className="text-xs font-medium text-muted-foreground">
+      {/* The options name themselves; a narrow bar drops the visible titles to save height. */}
+      <span id={titleId} className="sr-only text-xs font-medium text-muted-foreground @3xl:not-sr-only">
         {title}
       </span>
       {children}

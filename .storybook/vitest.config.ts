@@ -91,6 +91,9 @@ export default defineConfig({
       "@base-ui/react/toggle-group",
       "@base-ui/react/tooltip",
       "@base-ui/react/use-render",
+      "@base-ui/utils/useControlled",
+      "@base-ui/utils/useIsoLayoutEffect",
+      "@base-ui/utils/useMergedRefs",
     ],
   },
   test: {

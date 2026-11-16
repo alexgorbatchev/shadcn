@@ -11,7 +11,7 @@ import {
 } from "../../image-viewer";
 import { Button } from "../../Button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../../Dialog";
-import { fixture_brokenImage, fixture_largeScreenshot, fixture_smallScreenshot } from "./fixtures/screenshots";
+import { fixture_brokenImage, fixture_largeScreenshot, fixture_smallScreenshot } from "../fixtures";
 
 const LARGE_SIZE = { width: 1600, height: 1000 };
 
@@ -22,9 +22,7 @@ async function findRenderedImage(canvasElement: HTMLElement, name: string): Prom
 }
 
 async function expectFitted(image: HTMLElement, aspectRatio: number): Promise<void> {
-  const viewport = image.closest<HTMLElement>("[data-slot=image-viewport]");
-  await expect(viewport).not.toBeNull();
-  if (!viewport) return;
+  const viewport = image.closest<HTMLElement>("[data-slot=image-viewport]")!;
   await waitFor(() => {
     const bounds = image.getBoundingClientRect();
     const frame = viewport.getBoundingClientRect();
@@ -40,9 +38,7 @@ async function expectFitted(image: HTMLElement, aspectRatio: number): Promise<vo
 }
 
 async function expectOriginalCentered(image: HTMLElement): Promise<void> {
-  const viewport = image.closest<HTMLElement>("[data-slot=image-viewport]");
-  await expect(viewport).not.toBeNull();
-  if (!viewport) return;
+  const viewport = image.closest<HTMLElement>("[data-slot=image-viewport]")!;
   await waitFor(() => {
     const bounds = image.getBoundingClientRect();
     expect(bounds.width).toBe(LARGE_SIZE.width);
