@@ -461,7 +461,10 @@ export const fixture_featureConsumers: ReadonlyArray<readonly [string, readonly 
     import { Resizable, ResizablePanel, ResizableHandle, SplitView } from "@alexgorbatchev/shadcn/resizable";
     const markup = renderToString(jsxs(Resizable, { children: [jsx(ResizablePanel, { children: "Left" }),
       jsx(ResizableHandle, {}), jsx(ResizablePanel, { children: "Right" })] }));
-    console.log(JSON.stringify(markup.includes("Left") && markup.includes("Right") && typeof SplitView === "function"));
+    const split = renderToString(jsx(SplitView, { storageKey: "consumer", sidebarLabel: "Navigation",
+      contentLabel: "Content", resizeLabel: "Resize navigation", sidebar: "Server navigation", children: "Server content" }));
+    console.log(JSON.stringify(markup.includes("Left") && markup.includes("Right") &&
+      split.includes("Server navigation") && split.includes("Server content")));
   `,
     "true",
   ],

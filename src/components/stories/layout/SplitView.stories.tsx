@@ -3,6 +3,9 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, userEvent, waitFor, within } from "storybook/test";
 import { SplitView } from "../../resizable/SplitView";
 import { Button } from "../../Button";
+import { Field, FieldGroup, FieldLabel } from "../../Field";
+import { Input } from "../../Input";
+import { Switch } from "../../Switch";
 
 const meta: Meta<typeof SplitView> = {
   title: "@alexgorbatchev/shadcn/components/layout/SplitView",
@@ -181,5 +184,55 @@ export const ToggleTrailingSidebar: Story = {
     await expect(canvas.getByRole("heading", { name: "Discussion" })).toBeVisible();
     await expect(field).toHaveValue("Keep this unsaved answer");
     await waitFor(() => expect(sidebar.getBoundingClientRect().width).toBeCloseTo(resized, 0));
+  },
+};
+
+export const StatefulPanels: Story = {
+  render: function Example(args) {
+    const key = useId();
+    return (
+      <div className="w-[900px] max-w-full">
+        <SplitView
+          {...args}
+          storageKey={key}
+          sidebar={
+            <FieldGroup>
+              <Field>
+                <FieldLabel htmlFor={`${key}-filter`}>Filter pages</FieldLabel>
+                <Input id={`${key}-filter`} />
+              </Field>
+              <Field orientation="horizontal">
+                <Switch id={`${key}-archived`} />
+                <FieldLabel htmlFor={`${key}-archived`}>Show archived</FieldLabel>
+              </Field>
+            </FieldGroup>
+          }
+        >
+          <FieldGroup>
+            <Field>
+              <FieldLabel htmlFor={`${key}-answer`}>Draft answer</FieldLabel>
+              <Input id={`${key}-answer`} />
+            </Field>
+            <Field orientation="horizontal">
+              <Switch id={`${key}-notify`} />
+              <FieldLabel htmlFor={`${key}-notify`}>Notify me</FieldLabel>
+            </Field>
+          </FieldGroup>
+        </SplitView>
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const sidebar = within(canvas.getByRole("complementary", { name: "Navigation" }));
+    const content = within(canvas.getByRole("region", { name: "Content" }));
+    await userEvent.type(sidebar.getByRole("textbox", { name: "Filter pages" }), "Roadmap");
+    await userEvent.click(sidebar.getByRole("switch", { name: "Show archived" }));
+    await userEvent.type(content.getByRole("textbox", { name: "Draft answer" }), "Keep this answer");
+    await userEvent.click(content.getByRole("switch", { name: "Notify me" }));
+    await expect(sidebar.getByRole("textbox", { name: "Filter pages" })).toHaveValue("Roadmap");
+    await expect(sidebar.getByRole("switch", { name: "Show archived" })).toBeChecked();
+    await expect(content.getByRole("textbox", { name: "Draft answer" })).toHaveValue("Keep this answer");
+    await expect(content.getByRole("switch", { name: "Notify me" })).toBeChecked();
   },
 };
