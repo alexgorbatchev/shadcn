@@ -5,6 +5,7 @@ llms/
 storybook-static/
 .tmp/
 .cache/
+.state/
 .codegraph/
 .pi-subagents/
 .workspaces/
