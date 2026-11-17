@@ -81,6 +81,8 @@ export { Textarea } from "./components/Textarea.js";
 export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "./components/Tooltip.js";
 export { Label } from "./components/Label.js";
 export { RadioGroup, RadioGroupItem } from "./components/RadioGroup.js";
+export { OptionCardGroup, OptionCard } from "./components/OptionCardGroup.js";
+export type { OptionCardGroupProps, OptionCardProps } from "./components/OptionCardGroup.js";
 export {
   Card,
   CardHeader,
