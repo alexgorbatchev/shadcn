@@ -400,3 +400,61 @@ export const EditableRows: Story = {
     await expect(canvas.getByRole("treeitem", { name: "Renamed" })).toBeVisible();
   },
 };
+
+const completedItems = new Set(["readme", "input"]);
+
+function DimmedExample() {
+  const tree = useTree<Item>({
+    rootItemId: "root",
+    getItemName: (item) => item.getItemData().name,
+    isItemFolder: (item) => Boolean(item.getItemData().children),
+    dataLoader: {
+      getItem: (id) => {
+        const item = items[id];
+        if (!item) throw new Error("Unknown tree item");
+        return item;
+      },
+      getChildren: (id) => items[id]?.children ?? [],
+    },
+    initialState: { expandedItems: ["src"] },
+    features: [syncDataLoaderFeature, hotkeysCoreFeature, selectionFeature],
+  });
+  return (
+    <Tree
+      tree={tree}
+      label="Review queue"
+      variant="sidebar"
+      renderItem={(item) => (
+        <TreeItem
+          item={item}
+          isDimmed={completedItems.has(item.getId())}
+          endEnhancer={completedItems.has(item.getId()) ? <span>Done</span> : null}
+        />
+      )}
+    />
+  );
+}
+
+export const DimmedRows: Story = {
+  render: () => <DimmedExample />,
+  play: async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+    const readme = canvas.getByRole("treeitem", { name: "README.md" });
+    const source = canvas.getByRole("treeitem", { name: "Source" });
+    await expect(readme).toHaveAttribute("data-dimmed");
+    await expect(source).not.toHaveAttribute("data-dimmed");
+    await expect(getComputedStyle(readme).opacity).toBe("0.7");
+    await expect(getComputedStyle(canvas.getByRole("treeitem", { name: "Input.tsx" })).opacity).toBe("0.7");
+    await expect(getComputedStyle(source).opacity).toBe("1");
+    await userEvent.click(canvas.getByRole("treeitem", { name: "Button.tsx" }));
+    await userEvent.keyboard("{ArrowDown}");
+    await waitFor(() => expect(canvas.getByRole("treeitem", { name: "Input.tsx" })).toHaveFocus());
+    await expect(getComputedStyle(canvas.getByRole("treeitem", { name: "Input.tsx" })).opacity).toBe("1");
+    await userEvent.keyboard("{Enter}");
+    await expect(canvas.getByRole("treeitem", { name: "Input.tsx" })).toHaveAttribute("aria-selected", "true");
+    await userEvent.keyboard("{ArrowDown}");
+    await waitFor(() => expect(readme).toHaveFocus());
+    await expect(getComputedStyle(canvas.getByRole("treeitem", { name: "Input.tsx" })).opacity).toBe("0.7");
+    await expect(getComputedStyle(readme).opacity).toBe("1");
+  },
+};

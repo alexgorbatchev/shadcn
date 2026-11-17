@@ -16,6 +16,7 @@ type TreeItemState = {
   selected: boolean;
   expanded: boolean;
   dropTarget: boolean;
+  dimmed: boolean;
   density: IDensityProps["density"];
 };
 type TreeItemProps<T> = useRender.ComponentProps<"div", TreeItemState> &
@@ -27,6 +28,8 @@ type TreeItemProps<T> = useRender.ComponentProps<"div", TreeItemState> &
     expandOn?: "click" | "doubleClick" | "disclosure";
     isEditing?: boolean;
     isDropTarget?: boolean;
+    /** Fades a settled row, such as completed work, to 70% opacity; hover and keyboard focus restore full opacity. */
+    isDimmed?: boolean;
     /** The registered native link owns row focus; disclosure and actions remain siblings. */
     linkProps?: useRender.ComponentProps<"a", TreeItemState>;
     /** Domain-controlled drag feedback; omitted rows have no tooltip wrapper. */
@@ -51,6 +54,7 @@ export function TreeItem<T>({
   expandOn = "click",
   isEditing = false,
   isDropTarget = false,
+  isDimmed = false,
   linkProps,
   dropHint,
   density,
@@ -74,6 +78,7 @@ export function TreeItem<T>({
     selected: isSelected,
     expanded: isExpanded,
     dropTarget: isInsideTarget || isDropTarget,
+    dimmed: isDimmed,
     density,
   };
   const toggle = (): void => {
@@ -165,6 +170,7 @@ export function TreeItem<T>({
         className: cn(
           "relative flex min-h-control min-w-0 cursor-default items-center gap-2 rounded-sm py-1 pr-2 text-sm outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring",
           (isSelected || isDropTarget || isInsideTarget) && "bg-accent text-accent-foreground",
+          isDimmed && "opacity-70 focus-within:opacity-100 hover:opacity-100",
         ),
         children: (
           <>
