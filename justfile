@@ -99,8 +99,8 @@ setup: install-dependencies install-browsers
 
 # Start the devhost Storybook preview; flags such as --local pass through to devhost start
 run *args: llm-docs
-    devhost start "$@"
+    devhost start --detach "$@"
 
 # Browse saved visual regression baselines through devhost; flags pass through to devhost start
 snapshots *args:
-    devhost start "$@" snapshots
+    devhost start --detach "$@" snapshots

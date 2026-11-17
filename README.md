@@ -586,7 +586,7 @@ From this repository, start the configured Storybook service:
 just run
 ```
 
-`just run` passes its arguments to `devhost start`; `just run --local` keeps local routing on a machine enrolled in remote previews.
+`just run` starts the preview in the background and passes its arguments to `devhost start --detach`; `just run --local` keeps local routing on a machine enrolled in remote previews.
 
 Open the hostname printed by devhost over HTTPS. The manifest allocates a port automatically and serves Storybook through the shared devhost HTTPS proxy. For local routing, the hostname must resolve to the machine running devhost; `.localhost` names need no DNS setup. The managed Caddy instance must be running (`devhost caddy start`).
 
