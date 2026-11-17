@@ -726,3 +726,47 @@ export const Complex: Story = {
   },
 };
 export const RightToLeftComplex: Story = { ...Complex, decorators: RightToLeft.decorators };
+
+export const DisabledReasons: Story = {
+  render: function Render() {
+    const [action, setAction] = useState("None");
+    return (
+      <>
+        <DropdownMenu>
+          <DropdownMenuTrigger render={<Button variant="outline" />}>Track actions</DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuGroup>
+              <DropdownMenuItem onClick={() => setAction("Edit")}>
+                <FileIcon />
+                Edit track info…
+              </DropdownMenuItem>
+              <DropdownMenuItem disabledReason="One track only" onClick={() => setAction("Move")}>
+                <SaveIcon />
+                Move audio file…
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setAction("Analyze")}>Analyze…</DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <output aria-label="Menu action">{action}</output>
+      </>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole("button", { name: "Track actions" }));
+    const menu = within(await within(canvasElement.ownerDocument.body).findByRole("menu"));
+    const move = menu.getByRole("menuitem", { name: /Move audio file/ });
+    await expect(move).toHaveAttribute("aria-disabled", "true");
+    await expect(move).toHaveAccessibleDescription("One track only");
+    await waitFor(() => expect(menu.getByText("One track only")).toBeVisible());
+    await userEvent.keyboard("{ArrowDown}");
+    await expect(menu.getByRole("menuitem", { name: /Edit track info/ })).toHaveFocus();
+    await userEvent.keyboard("{ArrowDown}");
+    await expect(move).toHaveFocus();
+    await userEvent.keyboard("{Enter}");
+    await expect(canvas.getByLabelText("Menu action")).toHaveTextContent("None");
+    await userEvent.keyboard("{ArrowDown}{Enter}");
+    await expect(canvas.getByLabelText("Menu action")).toHaveTextContent("Analyze");
+  },
+};

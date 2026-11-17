@@ -7,6 +7,11 @@ interface IMenuInsetProps extends IDensityProps {
 
 interface IMenuItemOptions extends IMenuInsetProps {
   variant?: "default" | "destructive";
+  /**
+   * Disables the item while keeping it reachable with the arrow keys, and shows why as visible secondary text that
+   * the item references through `aria-describedby`.
+   */
+  disabledReason?: string;
 }
 
 export type MenuLabelProps = Menu.GroupLabel.Props & IMenuInsetProps;

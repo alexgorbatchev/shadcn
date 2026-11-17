@@ -454,3 +454,90 @@ export const Payload: Story = {
   },
 };
 export const RightToLeftPayload: Story = { ...Payload, decorators: RightToLeft.decorators };
+
+export const DisabledReasons: Story = {
+  args: { loop: false },
+  render: function Render(args) {
+    const [action, setAction] = useState("None");
+    const [announced, setAnnounced] = useState("");
+    return (
+      <div className="w-80 border border-border">
+        <Command {...args} label="Search commands">
+          <CommandInput placeholder="Search commands" aria-label="Search commands" />
+          <CommandList label="Commands">
+            <CommandEmpty>No results found.</CommandEmpty>
+            <CommandGroup heading="Commands for 2 tracks">
+              <CommandItem value="analyze" onSelect={setAction}>
+                Analyze…
+              </CommandItem>
+              <CommandItem
+                value="move"
+                keywords={["relocate"]}
+                disabledReason="One track only"
+                onSelect={setAction}
+                onDisabledSelect={() => setAnnounced("One track only")}
+              >
+                Move audio file…<CommandShortcut>M</CommandShortcut>
+              </CommandItem>
+              <CommandItem value="delete" disabled>
+                Delete workspace
+              </CommandItem>
+              <CommandItem value="tags" onSelect={setAction}>
+                Tags…
+              </CommandItem>
+            </CommandGroup>
+          </CommandList>
+        </Command>
+        <output aria-label="Executed command">{action}</output>
+        <output aria-label="Announced reason">{announced}</output>
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const move = canvas.getByRole("option", { name: /Move audio file/ });
+    await expect(move).toHaveAttribute("aria-disabled", "true");
+    await expect(move).toHaveAccessibleDescription("One track only");
+    await expect(canvas.getByText("One track only")).toBeVisible();
+    await userEvent.click(canvas.getByRole("combobox", { name: "Search commands" }));
+    await expect(canvas.getByRole("option", { name: "Analyze…" })).toHaveAttribute("aria-selected", "true");
+    await userEvent.keyboard("{ArrowDown}");
+    await expect(move).toHaveAttribute("aria-selected", "true");
+    await userEvent.keyboard("{Enter}");
+    await expect(canvas.getByLabelText("Executed command")).toHaveTextContent("None");
+    await expect(canvas.getByLabelText("Announced reason")).toHaveTextContent("One track only");
+    // Disabled items without a reason stay skipped.
+    await userEvent.keyboard("{ArrowDown}");
+    await expect(canvas.getByRole("option", { name: "Tags…" })).toHaveAttribute("aria-selected", "true");
+    await userEvent.keyboard("{ArrowDown}");
+    await expect(canvas.getByRole("option", { name: "Tags…" })).toHaveAttribute("aria-selected", "true");
+    await userEvent.keyboard("{Home}");
+    await expect(canvas.getByRole("option", { name: "Analyze…" })).toHaveAttribute("aria-selected", "true");
+    await userEvent.keyboard("{End}{ArrowUp}");
+    await expect(move).toHaveAttribute("aria-selected", "true");
+    await userEvent.keyboard("{ArrowUp}{ArrowUp}");
+    await expect(canvas.getByRole("option", { name: "Analyze…" })).toHaveAttribute("aria-selected", "true");
+    await userEvent.keyboard("{Enter}");
+    await expect(canvas.getByLabelText("Executed command")).toHaveTextContent("analyze");
+    await userEvent.click(move);
+    await expect(canvas.getByLabelText("Executed command")).toHaveTextContent("analyze");
+    await userEvent.type(canvas.getByRole("combobox", { name: "Search commands" }), "relocate");
+    await waitFor(() => expect(canvas.getAllByRole("option")).toHaveLength(1));
+    await userEvent.keyboard("{ArrowDown}");
+    await expect(canvas.getByRole("option", { name: /Move audio file/ })).toHaveAttribute("aria-selected", "true");
+  },
+};
+
+export const LoopingDisabledReasons: Story = {
+  ...DisabledReasons,
+  args: { loop: true },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole("combobox", { name: "Search commands" }));
+    await userEvent.keyboard("{ArrowUp}");
+    await expect(canvas.getByRole("option", { name: "Tags…" })).toHaveAttribute("aria-selected", "true");
+    await userEvent.keyboard("{ArrowDown}");
+    await expect(canvas.getByRole("option", { name: "Analyze…" })).toHaveAttribute("aria-selected", "true");
+    await userEvent.keyboard("{Alt>}{ArrowDown}{/Alt}");
+  },
+};
