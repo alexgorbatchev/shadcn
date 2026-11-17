@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-24 07:59
-last_modified: 2026-11-06 05:50
+last_modified: 2026-11-17 12:22
 status: current
 ---
 
@@ -8,9 +8,9 @@ status: current
 
 The gallery shows all PNG baselines under `src/components/stories/**/__screenshots__/` on one page. Component headers show source paths relative to the Git root; when no matching component filename exists, the header shows the story path. Each thumbnail includes its snapshot filename and opens the original PNG in a new tab.
 
-Run `just run` to start Storybook and the `snapshots` devhost service. The gallery host is `shadcn-snapshots` followed by `SHADCN_DEV_HOST_SUFFIX`, defaulting to `https://shadcn-snapshots.localhost`. The existing untracked `.env.local` suffix applies to both services.
+Run `just run` to start Storybook and the `snapshots` devhost service. The gallery's bare host label is `shadcn-snapshots`, served at `https://shadcn-snapshots.localhost` by default; devhost's machine configuration supplies the domain for both services.
 
-To start only the gallery through the same environment setup:
+To start only the gallery (pass `--local` to keep local routing on a machine enrolled in remote previews):
 
 ```sh
 just snapshots

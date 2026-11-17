@@ -3,7 +3,6 @@ mod prototype "cli/justfile"
 set dotenv-filename := ".env.local"
 set positional-arguments
 
-export SHADCN_DEV_HOST_SUFFIX := env("SHADCN_DEV_HOST_SUFFIX", ".localhost")
 export NODE_DISABLE_COMPILE_CACHE := "1"
 
 default:
@@ -98,10 +97,10 @@ install-browsers:
 setup: install-dependencies install-browsers
     devhost --version
 
-# Start the devhost Storybook preview
-run: llm-docs
-    devhost start
+# Start the devhost Storybook preview; flags such as --local pass through to devhost start
+run *args: llm-docs
+    devhost start "$@"
 
-# Browse saved visual regression baselines through devhost
-snapshots:
-    devhost start snapshots
+# Browse saved visual regression baselines through devhost; flags pass through to devhost start
+snapshots *args:
+    devhost start "$@" snapshots

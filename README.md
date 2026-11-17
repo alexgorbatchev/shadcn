@@ -578,7 +578,7 @@ The preview shows compact individual badges, up to five labels followed by `+N m
 
 # Devhost Preview
 
-The routed preview serves Storybook at `shadcn.localhost` through devhost. To use a different hostname, copy [.env.example](./.env.example) to `.env.local` and set `SHADCN_DEV_HOST_SUFFIX`; the Storybook host becomes `shadcn` followed by that suffix. Exported environment variables take precedence over `.env.local`, which stays untracked.
+The routed preview serves Storybook at `shadcn.localhost` through devhost v0.0.14 or newer. The manifest names its services with the bare host labels `shadcn` and `shadcn-snapshots`, and devhost's machine configuration supplies the domain: a custom `domainSuffix` changes the hostname, and a machine enrolled in [remote previews](https://alexgorbatchev.github.io/devhost/stacks/remote-previews/) serves the preview through its relay.
 
 From this repository, start the configured Storybook service:
 
@@ -586,9 +586,9 @@ From this repository, start the configured Storybook service:
 just run
 ```
 
-`just run` loads `.env.local`, applies the `.localhost` default, and runs `devhost start`. Running `devhost start` directly requires `SHADCN_DEV_HOST_SUFFIX` in the environment; devhost rejects the manifest when it is undefined.
+`just run` passes its arguments to `devhost start`; `just run --local` keeps local routing on a machine enrolled in remote previews.
 
-Open the hostname printed by devhost over HTTPS. The manifest allocates a port automatically and serves Storybook through the shared devhost HTTPS proxy. The hostname must resolve to the machine running devhost, and the managed Caddy instance must be running (`devhost caddy start`).
+Open the hostname printed by devhost over HTTPS. The manifest allocates a port automatically and serves Storybook through the shared devhost HTTPS proxy. For local routing, the hostname must resolve to the machine running devhost; `.localhost` names need no DNS setup. The managed Caddy instance must be running (`devhost caddy start`).
 
 Storybook binds to IPv4 loopback and allows the configured hostname in both Storybook and Vite. Caddy listens on all interfaces and serves HTTP as well as HTTPS, so the external devbox gateway can reach it. The direct `just storybook` preview remains available on `127.0.0.1:6006`.
 

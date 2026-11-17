@@ -1,6 +1,6 @@
 ---
 created_on: 2026-10-08 06:13
-last_modified: 2026-11-10 14:33
+last_modified: 2026-11-17 13:21
 status: current
 ---
 
@@ -13,7 +13,7 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 - Setup: `just setup` (locked dependencies, Chromium and WebKit, devhost check)
 - Preview: `just storybook` (loopback port 6006, no automatic browser launch)
 - Snapshot gallery: `just snapshots` (saved baselines, grouped by component, with virtual scrolling)
-- Devhost preview: `just run` (loads `.env.local`, then runs `devhost start`)
+- Devhost preview: `just run [devhost start flags...]` (requires devhost v0.0.14 or newer; loads `.env.local`, then runs `devhost start` with the given flags, such as `--local`)
 - Format: `just fix`
 - Validate: `just check` (typecheck, lint/format check, prototype coverage, declarations/package build, development/production package rendering, static Storybook build and preview smoke checks, snapshot gallery build)
 - Ordinary test suites: `just test` (prototype, Storybook interactions, native browser, package rendering, and built-preview checks; specialized coverage, contrast, reduced-motion, and visual suites remain separate)
@@ -74,7 +74,7 @@ Standalone Bun/TypeScript React component package with a local Storybook preview
 
 ## Storybook and Validation
 
-- Keep private hostnames in untracked `.env.local`. `devhost.toml` derives the Storybook and snapshot gallery hosts from `SHADCN_DEV_HOST_SUFFIX`, which the justfile defaults to `.localhost`; document new variables in `.env.example`.
+- Keep private hostnames out of the repository. `devhost.toml` names the Storybook and snapshot gallery services with the bare host labels `shadcn` and `shadcn-snapshots`; devhost's machine configuration supplies the domain (`.localhost` by default, or the relay suffix on a machine enrolled in remote previews), and `--local` keeps local routing. Document each `.env.local` variable in a tracked `.env.example`.
 - Share previews as devhost HTTPS URLs on the configured Storybook host, started with `just run`. Never give IP addresses or loopback ports as preview links.
 - Preserve automatic port allocation in `devhost.toml`. Its explicit shell expands injected `PORT`; `--exact-port` prevents Storybook from silently choosing a different port.
 - Keep shared Caddy listeners in the `[caddy]` table of the devhost `config.toml`, with `bindHost = "0.0.0.0"` (the default) and `http = true` for the external devbox gateway. Never add Caddy settings to this repository's manifest; current devhost rejects them. Storybook and the snapshot gallery remain on IPv4 loopback. Preserve shared proxy settings when changing this repository's services.
