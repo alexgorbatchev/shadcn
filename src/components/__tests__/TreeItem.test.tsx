@@ -47,6 +47,8 @@ function rowOpacity(name: string): string {
 
 test("dimmed rows return to full opacity while hovered or focused", async () => {
   await render(<ReviewTree />);
+  // Earlier tests can leave the pointer anywhere; start it on the undimmed row so Notes is at rest.
+  await userEvent.hover(page.getByRole("treeitem", { name: "Plan" }));
   await expect.poll(() => rowOpacity("Notes")).toBe("0.7");
   await expect.poll(() => rowOpacity("Plan")).toBe("1");
   await userEvent.hover(page.getByRole("treeitem", { name: "Notes" }));
