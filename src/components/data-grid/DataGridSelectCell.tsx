@@ -8,6 +8,11 @@ interface DataGridSelectCellProps<T extends RowData> extends IDensityProps, IDat
   row: DataGridRow<T>;
   /** Names this row's selection control, such as "Select project Atlas". */
   label: string;
+  /**
+   * Whether the checkbox takes a tab stop. Turn it off when the row itself is the keyboard target and selects with
+   * its own keys, so each row costs one tab stop.
+   */
+  focusable?: boolean;
 }
 
 /** Uses the row's native selection rules, including disabled and partially selected parent rows. */
@@ -16,6 +21,7 @@ export function DataGridSelectCell<T extends RowData>({
   table,
   label,
   density,
+  focusable = true,
 }: DataGridSelectCellProps<T>): ReactElement {
   return (
     <Subscribe source={table.atoms.rowSelection}>
@@ -23,6 +29,7 @@ export function DataGridSelectCell<T extends RowData>({
         <Checkbox
           aria-label={label}
           density={density}
+          {...(focusable ? {} : { tabIndex: -1 })}
           checked={row.getIsSelected()}
           indeterminate={row.getIsSomeSelected()}
           disabled={!row.getCanSelect()}

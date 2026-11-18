@@ -40,3 +40,17 @@ const Default: Story = {
   },
 };
 export { Default as DataGridSelectCell };
+export const OutsideTabOrder: Story = {
+  render: () => <SelectionControls focusable={false} />,
+  play: async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+    const child = canvas.getByRole("checkbox", { name: "Select Child" });
+    await expect(child).toHaveAttribute("tabindex", "-1");
+    canvas.getByRole("checkbox", { name: "Select all filtered rows" }).focus();
+    await userEvent.tab();
+    // Every row checkbox is skipped, so the first control after them takes focus.
+    await expect(canvas.getByRole("button", { name: "Filter disabled" })).toHaveFocus();
+    await userEvent.click(child);
+    await expect(child).toBeChecked();
+  },
+};

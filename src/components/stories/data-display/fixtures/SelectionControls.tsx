@@ -37,7 +37,13 @@ const SelectionCell = memo(function SelectionCell(props: DataGridSelectCellProps
 });
 
 /** The owner deliberately omits selection/filter subscriptions; each public control must observe its own state. */
-export function SelectionControls({ selectChildren = true }: { selectChildren?: boolean }) {
+export function SelectionControls({
+  selectChildren = true,
+  focusable = true,
+}: {
+  selectChildren?: boolean;
+  focusable?: boolean;
+}) {
   const [isReplacement, setReplacement] = useState(false);
   const [isEnabled, setEnabled] = useState(true);
   const table = useTable(
@@ -56,7 +62,13 @@ export function SelectionControls({ selectChildren = true }: { selectChildren?: 
     <div className="flex flex-wrap items-center gap-3">
       <SelectionHeader table={table} />
       {table.getCoreRowModel().flatRows.map((row) => (
-        <SelectionCell table={table} key={row.id} row={row} label={`Select ${row.original.name}`} />
+        <SelectionCell
+          table={table}
+          key={row.id}
+          row={row}
+          label={`Select ${row.original.name}`}
+          focusable={focusable}
+        />
       ))}
       <Button onClick={() => table.getColumn("name")?.setFilterValue("Disabled")}>Filter disabled</Button>
       <Button onClick={() => table.setColumnFilters([])}>Clear filter</Button>
