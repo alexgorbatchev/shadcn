@@ -1,7 +1,15 @@
 import type { Meta, ReactRenderer } from "@storybook/react-vite";
 import type { StoryAnnotations } from "storybook/internal/types";
 import { expect, within, waitFor, fn } from "storybook/test";
-import { Tree, TreeItem, useTree, syncDataLoaderFeature, hotkeysCoreFeature, selectionFeature } from "../../tree";
+import {
+  Tree,
+  TreeItem,
+  TreeItemAction,
+  useTree,
+  syncDataLoaderFeature,
+  hotkeysCoreFeature,
+  selectionFeature,
+} from "../../tree";
 import { Button } from "../../Button";
 import {
   ContextMenu,
@@ -109,25 +117,23 @@ function Example({ isComposed = false, isConstrained = false }: { isComposed?: b
                     <TreeItem
                       item={item}
                       expandOn={isConstrained ? "disclosure" : "doubleClick"}
-                      endEnhancer={
-                        isConstrained ? (
-                          <>
-                            <span>1234</span>
-                            <Button
-                              size="icon-xs"
-                              variant="ghost"
-                              aria-label={`Actions for ${item.getItemName()}`}
-                              onClick={action}
-                            >
-                              …
-                            </Button>
-                          </>
-                        ) : (
-                          <Button size="sm" variant="ghost" onClick={action}>
-                            Actions for {item.getItemName()}
-                          </Button>
-                        )
-                      }
+                      {...(isConstrained
+                        ? {
+                            description: "1234",
+                            descriptionLabel: "1234 files",
+                            actions: (
+                              <TreeItemAction aria-label={`Actions for ${item.getItemName()}`} onClick={action}>
+                                …
+                              </TreeItemAction>
+                            ),
+                          }
+                        : {
+                            endEnhancer: (
+                              <Button size="sm" variant="ghost" onClick={action}>
+                                Actions for {item.getItemName()}
+                              </Button>
+                            ),
+                          })}
                     />
                   }
                 />
@@ -186,7 +192,7 @@ export const LinkRows: Story = {
     ).toHaveLength(1);
     await userEvent.keyboard("{ArrowLeft}");
     await waitFor(() => expect(source).toHaveFocus());
-    await userEvent.click(canvas.getByRole("button", { name: "Collapse Source" }));
+    await userEvent.click(canvas.getByLabelText("Collapse Source"));
     await expect(source).toHaveAttribute("aria-expanded", "false");
     await expect(navigate).toHaveBeenCalledTimes(3);
     await userEvent.click(canvas.getByRole("button", { name: "Inspect Source" }));
@@ -237,7 +243,10 @@ export const ConstrainedRows: Story = {
     const tree = canvas.getByRole("tree", { name: "Project files" });
     const row = canvas.getByRole("treeitem", { name: "Source with a very long descriptive name" });
     const count = within(row).getByText("1234", { exact: true });
-    const actions = within(row).getByRole("button", { name: "Actions for Source with a very long descriptive name" });
+    // The count describes the row instead of joining its name, and the row action is a pointer target, not a Tab stop.
+    await expect(row).toHaveAccessibleDescription("1234 files");
+    const actions = within(row).getByLabelText("Actions for Source with a very long descriptive name");
+    await expect(actions).toHaveAttribute("tabindex", "-1");
     await expect(
       canvas.getByText("Source with a very long descriptive name", { exact: true }).getBoundingClientRect().left,
     ).toBe(
@@ -247,7 +256,7 @@ export const ConstrainedRows: Story = {
     await expect(actions.getBoundingClientRect().right).toBeLessThanOrEqual(tree.getBoundingClientRect().right);
     await userEvent.click(row);
     await expect(row).toHaveAttribute("aria-expanded", "false");
-    const disclosure = within(row).getByRole("button", { name: "Expand Source with a very long descriptive name" });
+    const disclosure = within(row).getByLabelText("Expand Source with a very long descriptive name");
     await expect(getComputedStyle(disclosure).backgroundColor).toBe("rgba(0, 0, 0, 0)");
     await userEvent.hover(disclosure);
     await waitFor(() => expect(disclosure.getAnimations()).toHaveLength(0));
@@ -258,9 +267,7 @@ export const ConstrainedRows: Story = {
     await expect(getComputedStyle(disclosure).backgroundColor).toBe("rgba(0, 0, 0, 0)");
     await expect(row).toHaveAttribute("aria-expanded", "true");
     await expect(canvas.getByRole("treeitem", { name: "Button.tsx with a very long descriptive name" })).toBeVisible();
-    await userEvent.click(
-      within(row).getByRole("button", { name: "Collapse Source with a very long descriptive name" }),
-    );
+    await userEvent.click(within(row).getByLabelText("Collapse Source with a very long descriptive name"));
     await expect(row).toHaveAttribute("aria-expanded", "false");
   },
 };

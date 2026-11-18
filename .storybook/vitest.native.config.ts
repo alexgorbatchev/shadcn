@@ -58,6 +58,7 @@ export default defineConfig({
       "@headless-tree/react",
       "@base-ui/react/use-render",
       "@base-ui/react/merge-props",
+      "axe-core",
     ],
   },
   plugins: [react(), tailwindcss()],

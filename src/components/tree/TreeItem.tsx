@@ -4,12 +4,13 @@ import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
 import type { ItemInstance, SelectionDataRef } from "@headless-tree/core";
 import { ChevronRightIcon, FileIcon, FolderIcon, FolderOpenIcon } from "lucide-react";
-import type { KeyboardEvent, MouseEvent, ReactElement, ReactNode } from "react";
+import type { ComponentProps, FocusEvent, KeyboardEvent, MouseEvent, ReactElement, ReactNode } from "react";
 import type { IDensityProps } from "../../density/types.js";
 import { cn } from "../../utils/cn.js";
 import { Button } from "../Button.js";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../Tooltip.js";
-import { useId } from "react";
+import { use, useId } from "react";
+import { TreeTabStopContext } from "./TreeTabStopContext.js";
 
 type TreeItemState = {
   slot: "tree-item";
@@ -34,7 +35,30 @@ type TreeItemProps<T> = useRender.ComponentProps<"div", TreeItemState> &
     linkProps?: useRender.ComponentProps<"a", TreeItemState>;
     /** Domain-controlled drag feedback; omitted rows have no tooltip wrapper. */
     dropHint?: { content: ReactNode; open: boolean; side?: "top" | "right" | "bottom" | "left" };
+    /**
+     * Secondary text at the row's end, such as a count. It is the item's accessible description, never part of its
+     * name, so names stay stable for typeahead, drag announcements and tests.
+     */
+    description?: ReactNode;
+    /** Spoken description when the visible `description` is terse, such as "12 tracks" for "12". */
+    descriptionLabel?: string;
+    /**
+     * Pointer shortcuts at the row's end, such as a ⋯ menu trigger, each rendered as a `TreeItemAction`. A tree is one
+     * Tab stop whose items carry their own keys (arrows, Enter, Shift+F10 and the Menu key), so actions stay out of the
+     * Tab order and the accessibility tree, and the tree owns only tree items.
+     */
+    actions?: ReactNode;
   };
+
+type TreeItemActionProps = ComponentProps<typeof Button>;
+
+/**
+ * A row's pointer shortcut for a command its item also offers through keys. It is never a Tab stop, including when a
+ * menu trigger renders it, so the tree keeps one Tab stop.
+ */
+export function TreeItemAction({ variant = "ghost", size = "icon-xs", ...props }: TreeItemActionProps): ReactElement {
+  return <Button variant={variant} size={size} {...props} tabIndex={-1} />;
+}
 
 function isRowControl(event: MouseEvent<HTMLDivElement>): boolean {
   return (
@@ -44,13 +68,19 @@ function isRowControl(event: MouseEvent<HTMLDivElement>): boolean {
   );
 }
 
-/** Registered tree row; compose menus with render and place counts/actions in endEnhancer. */
+/**
+ * Registered tree row; compose menus with render, put counts in `description` and pointer shortcuts in `actions`.
+ * `endEnhancer` holds controls that must stay keyboard reachable on their own.
+ */
 export function TreeItem<T>({
   analytics,
   item,
   children,
   startEnhancer,
   endEnhancer,
+  description,
+  descriptionLabel,
+  actions,
   expandOn = "click",
   isEditing = false,
   isDropTarget = false,
@@ -62,7 +92,19 @@ export function TreeItem<T>({
   ref,
   ...props
 }: TreeItemProps<T>): ReactElement {
-  const nativeProps = item.getProps();
+  const tabStop = use(TreeTabStopContext);
+  const descriptionId = useId();
+  const hasDescription = (description !== undefined && description !== null) || Boolean(descriptionLabel);
+  const registered = item.getProps();
+  const nativeProps: typeof registered = {
+    ...registered,
+    // One Tab stop per tree, even while a collapsed ancestor or a filter hides the focused item.
+    ...(tabStop === undefined ? {} : { tabIndex: item.getId() === tabStop ? 0 : -1 }),
+    // The name is the visible label (Label in Name): icons, the disclosure, the description and actions are hidden
+    // from it. An endEnhancer's text and an editor sit inside the row, so those rows keep the item name as a label.
+    "aria-label": endEnhancer || isEditing ? registered["aria-label"] : undefined,
+    "aria-describedby": hasDescription ? descriptionId : undefined,
+  };
   const hintId = useId();
   const activate = useAnalyticsCallback<[MouseEvent<HTMLElement>]>(
     "TreeItem",
@@ -131,6 +173,11 @@ export function TreeItem<T>({
       {
         ...(linkProps && !isEditing ? {} : nativeProps),
         ref: undefined,
+        // Tab lands on the tab stop, which then becomes the focused item that the arrow keys move from.
+        onFocus: (event: FocusEvent<HTMLDivElement>) => {
+          if (event.target === event.currentTarget && item.getTree().getState().focusedItem !== item.getId())
+            item.setFocused();
+        },
         onKeyDown: (event: KeyboardEvent<HTMLDivElement>) => {
           if (
             event.target !== event.currentTarget ||
@@ -175,11 +222,15 @@ export function TreeItem<T>({
         children: (
           <>
             {item.isFolder() && expandOn === "disclosure" ? (
+              // A pointer target only: the item states aria-expanded and toggles with the arrow keys, so the button stays
+              // out of the Tab order and the accessibility tree, and a click leaves focus where it was.
               <Button
                 variant="plain"
                 size="icon-xs"
+                tabIndex={-1}
+                aria-hidden="true"
                 aria-label={`${isExpanded ? "Collapse" : "Expand"} ${item.getItemName()}`}
-                aria-expanded={isExpanded}
+                onMouseDown={(event) => event.preventDefault()}
                 onClick={(event) => {
                   event.stopPropagation();
                   toggle();
@@ -203,6 +254,37 @@ export function TreeItem<T>({
                 onKeyDown={(event) => event.stopPropagation()}
               >
                 {endEnhancer}
+              </div>
+            )}
+            {(hasDescription || actions) && (
+              <div className="flex shrink-0 items-center gap-1 text-xs tabular-nums">
+                {/* Hidden from the item's content; `aria-describedby` still reads a hidden element it names. */}
+                {description !== undefined && description !== null && (
+                  <span
+                    aria-hidden="true"
+                    id={descriptionLabel ? undefined : descriptionId}
+                    data-slot="tree-item-description"
+                  >
+                    {description}
+                  </span>
+                )}
+                {descriptionLabel && (
+                  <span id={descriptionId} hidden>
+                    {descriptionLabel}
+                  </span>
+                )}
+                {actions && (
+                  <div
+                    aria-hidden="true"
+                    data-slot="tree-item-actions"
+                    className="flex items-center gap-1"
+                    onClick={(event) => event.stopPropagation()}
+                    onDoubleClick={(event) => event.stopPropagation()}
+                    onKeyDown={(event) => event.stopPropagation()}
+                  >
+                    {actions}
+                  </div>
+                )}
               </div>
             )}
           </>
