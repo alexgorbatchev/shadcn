@@ -333,3 +333,52 @@ export const NarrowTakeover: Story = {
     await expect(field).toHaveValue("Keep this");
   },
 };
+
+/** A dock closed while its workspace was still narrow opens at its default width once there is room. */
+export const DockOpensAtDefaultWidth: Story = {
+  render: function Example(args) {
+    const key = useId();
+    const [open, setOpen] = useState(false);
+    const [isWideFrame, setWideFrame] = useState(false);
+    return (
+      <div className="flex flex-col gap-2">
+        <div className="flex gap-2">
+          <Button onClick={() => setWideFrame(true)}>Widen workspace</Button>
+          <Button onClick={() => setOpen(!open)}>{open ? "Close dock" : "Open dock"}</Button>
+        </div>
+        <div className={isWideFrame ? "h-80 w-[1000px]" : "h-80 w-[300px]"}>
+          <SplitView
+            {...args}
+            storageKey={key}
+            sidebarLabel="Dock"
+            resizeLabel="Resize dock"
+            sidebarPosition="end"
+            sidebarOpen={open}
+            defaultSidebarSize={400}
+            minSidebarSize={320}
+            maxSidebarSize="60%"
+            layout="fill"
+            sidebar={<h2>Review</h2>}
+          >
+            <p>Workspace</p>
+          </SplitView>
+        </div>
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole("button", { name: "Widen workspace" }));
+    await userEvent.click(canvas.getByRole("button", { name: "Open dock" }));
+    const dock = canvas.getByRole("complementary", { name: "Dock" });
+    await waitFor(() => expect(dock.getBoundingClientRect().width).toBeCloseTo(400, -1));
+    // A width the person chose comes back when the dock opens again.
+    canvas.getByRole("separator", { name: "Resize dock" }).focus();
+    await userEvent.keyboard("{ArrowLeft}");
+    await waitFor(() => expect(dock.getBoundingClientRect().width).toBeGreaterThan(420));
+    const chosen = dock.getBoundingClientRect().width;
+    await userEvent.click(canvas.getByRole("button", { name: "Close dock" }));
+    await userEvent.click(canvas.getByRole("button", { name: "Open dock" }));
+    await waitFor(() => expect(dock.getBoundingClientRect().width).toBeCloseTo(chosen, 0));
+  },
+};

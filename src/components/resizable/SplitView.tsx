@@ -137,10 +137,30 @@ export function SplitView({
   );
   const [slots] = useState(createSlots);
   const portalSlots = isHydrated ? slots : null;
+  // The width an open sidebar returns to: the one it had when it last closed, else the saved layout's, else the
+  // default. Expanding a panel that collapsed while its group was still narrow would restore a clamped size instead.
+  const storedSize = layout.defaultLayout?.sidebar;
+  const openSize = useRef<number | string>(
+    storedSize !== undefined && storedSize > 0 ? `${storedSize}%` : defaultSidebarSize,
+  );
+  // Only a sidebar that was shown open records its width; one closed from the start keeps the default.
+  const wasShownOpen = useRef(false);
+  const pendingOpenSize = useRef<number | string | null>(null);
   useEffect(() => {
-    if (!isWide) return;
-    if (sidebarOpen) sidebarRef.current?.expand();
-    else sidebarRef.current?.collapse();
+    const panel = sidebarRef.current;
+    if (!isWide || !panel) return;
+    if (sidebarOpen) {
+      // A collapsed panel ignores resize(), so the open width is applied once expand() has given it a size.
+      if (panel.isCollapsed()) {
+        pendingOpenSize.current = openSize.current;
+        panel.expand();
+      }
+      wasShownOpen.current = true;
+      return;
+    }
+    if (wasShownOpen.current && !panel.isCollapsed()) openSize.current = `${panel.getSize().asPercentage}%`;
+    wasShownOpen.current = false;
+    panel.collapse();
   }, [isWide, sidebarOpen, sidebarRef]);
   // The width before Expand, which turning it off restores.
   const unexpandedSize = useRef<number | null>(null);
@@ -191,9 +211,17 @@ export function SplitView({
     <ResizablePanel
       id="sidebar"
       panelRef={sidebarRef}
-      // Only closing collapses it; resizing an open sidebar stops at its minimum instead of snapping shut.
-      collapsible={!sidebarOpen}
+      collapsible
       collapsedSize={0}
+      // Only closing collapses it; resizing an open sidebar past its minimum returns it to the minimum.
+      onResize={(size) => {
+        if (!sidebarOpen) return;
+        const pending = pendingOpenSize.current;
+        if (pending !== null && size.inPixels > 0) {
+          pendingOpenSize.current = null;
+          sidebarRef.current?.resize(pending);
+        } else if (pending === null && size.inPixels === 0) sidebarRef.current?.resize(minSidebarSize);
+      }}
       defaultSize={defaultSidebarSize}
       minSize={minSidebarSize}
       maxSize={maxSidebarSize}
