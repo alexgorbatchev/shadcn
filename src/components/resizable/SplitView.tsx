@@ -1,4 +1,12 @@
-import { useCallback, useEffect, useState, useSyncExternalStore, type ReactElement, type ReactNode } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type ReactElement,
+  type ReactNode,
+} from "react";
 import { createPortal } from "react-dom";
 import { cn } from "../../utils/cn.js";
 import { useDefaultLayout, usePanelRef, type LayoutStorage } from "react-resizable-panels";
@@ -22,6 +30,19 @@ interface ISplitViewProps {
   contentPadding?: "none" | "panel";
   /** Fill a bounded parent; mobile navigation scrolls within at most 35% of its height. */
   layout?: "content" | "fill";
+  /** The sidebar's smallest width beside the content: pixels as a number, or a percentage such as "20%". */
+  minSidebarSize?: number | string;
+  /** The sidebar's largest width beside the content: pixels as a number, or a percentage such as "60%". */
+  maxSidebarSize?: number | string;
+  /** The media query above which the panes sit side by side. */
+  wideQuery?: string;
+  /**
+   * Below `wideQuery`: "stack" places the panes one above the other; "takeover" shows an open sidebar in the content's
+   * place, with the content hidden but still mounted, as a narrow window's inspector or review does.
+   */
+  narrowLayout?: "stack" | "takeover";
+  /** Widens the sidebar to `maxSidebarSize`; turning it off restores the width it had before. */
+  sidebarExpanded?: boolean;
 }
 
 interface ISplitViewSlots {
@@ -79,8 +100,9 @@ function SlotHost({ slot }: ISlotHostProps): ReactElement {
 }
 
 /**
- * Pairs a resizable sidebar with its content above 1024px and stacks them below it. The sidebar and content render
- * into slots that move between the two layouts, so their state survives resizing across the breakpoint.
+ * Pairs a resizable sidebar with its content above `wideQuery` (1024px by default) and stacks them below it, or lets an
+ * open sidebar take over the content's place. The sidebar and content render into slots that move between the
+ * layouts, so their state survives resizing across the breakpoint and opening or closing the sidebar.
  */
 export function SplitView({
   sidebar,
@@ -96,9 +118,15 @@ export function SplitView({
   sidebarPadding = "panel",
   contentPadding = "panel",
   layout: layoutMode = "content",
+  minSidebarSize = 200,
+  maxSidebarSize = "50%",
+  wideQuery = "(min-width: 1024px)",
+  narrowLayout = "stack",
+  sidebarExpanded = false,
 }: ISplitViewProps): ReactElement {
   const isFill = layoutMode === "fill";
-  const isWide = useMediaQuery("(min-width: 1024px)");
+  const isWide = useMediaQuery(wideQuery);
+  const isTakeover = !isWide && narrowLayout === "takeover" && sidebarOpen;
   const layout = useDefaultLayout({ id: storageKey, storage, onlySaveAfterUserInteractions: true });
   const sidebarRef = usePanelRef();
   // Server rendering and hydration render the panels in place; the browser then moves them into stable slots.
@@ -114,6 +142,19 @@ export function SplitView({
     if (sidebarOpen) sidebarRef.current?.expand();
     else sidebarRef.current?.collapse();
   }, [isWide, sidebarOpen, sidebarRef]);
+  // The width before Expand, which turning it off restores.
+  const unexpandedSize = useRef<number | null>(null);
+  useEffect(() => {
+    const panel = sidebarRef.current;
+    if (!isWide || !sidebarOpen || !panel) return;
+    if (sidebarExpanded) {
+      unexpandedSize.current ??= panel.getSize().inPixels;
+      panel.resize(maxSidebarSize);
+    } else if (unexpandedSize.current !== null) {
+      panel.resize(unexpandedSize.current);
+      unexpandedSize.current = null;
+    }
+  }, [isWide, sidebarOpen, sidebarExpanded, maxSidebarSize, sidebarRef]);
   const sidebarContent = (
     <aside
       hidden={!sidebarOpen}
@@ -123,7 +164,8 @@ export function SplitView({
         isWide && "h-full",
         sidebarPadding === "panel" && "p-4",
         isFill && "min-h-0 overflow-y-auto",
-        !isWide && isFill && "max-h-[35%] shrink-0",
+        !isWide && isFill && !isTakeover && "max-h-[35%] shrink-0",
+        isTakeover && isFill && "flex-1",
       )}
     >
       {sidebar}
@@ -132,6 +174,7 @@ export function SplitView({
   const content = (
     <section
       aria-label={contentLabel}
+      hidden={isTakeover}
       className={cn(
         "min-w-0 bg-card",
         isWide && "h-full",
@@ -148,11 +191,12 @@ export function SplitView({
     <ResizablePanel
       id="sidebar"
       panelRef={sidebarRef}
-      collapsible
+      // Only closing collapses it; resizing an open sidebar stops at its minimum instead of snapping shut.
+      collapsible={!sidebarOpen}
       collapsedSize={0}
       defaultSize={defaultSidebarSize}
-      minSize={200}
-      maxSize="50%"
+      minSize={minSidebarSize}
+      maxSize={maxSidebarSize}
     >
       {sidebarSlot}
     </ResizablePanel>
@@ -165,13 +209,19 @@ export function SplitView({
   const frame = isWide ? (
     <Resizable orientation="horizontal" defaultLayout={layout.defaultLayout} onLayoutChanged={layout.onLayoutChanged}>
       {sidebarPosition === "start" ? sidebarPanel : contentPanel}
-      <ResizableHandle thickness="strong" disabled={!sidebarOpen} aria-label={resizeLabel} />
+      {/* A closed sidebar leaves no divider behind; the handle stays laid out, which the panel group's map requires. */}
+      <ResizableHandle
+        thickness="strong"
+        disabled={!sidebarOpen}
+        aria-label={resizeLabel}
+        className={cn(!sidebarOpen && "invisible w-0")}
+      />
       {sidebarPosition === "start" ? contentPanel : sidebarPanel}
     </Resizable>
   ) : (
     <div className={cn("flex min-w-0 flex-col bg-card", isFill && "h-full min-h-0 overflow-hidden")}>
       {sidebarPosition === "start" ? sidebarSlot : contentSlot}
-      <Separator thickness="strong" hidden={!sidebarOpen} />
+      <Separator thickness="strong" hidden={!sidebarOpen || isTakeover} />
       {sidebarPosition === "start" ? contentSlot : sidebarSlot}
     </div>
   );

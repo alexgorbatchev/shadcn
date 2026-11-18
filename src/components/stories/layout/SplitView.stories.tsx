@@ -236,3 +236,100 @@ export const StatefulPanels: Story = {
     await expect(content.getByRole("switch", { name: "Notify me" })).toBeChecked();
   },
 };
+
+/** A trailing dock: no divider while closed, bounded widths, and Expand to its maximum and back. */
+export const Dock: Story = {
+  render: function Example(args) {
+    const key = useId();
+    const [open, setOpen] = useState(false);
+    const [expanded, setExpanded] = useState(false);
+    return (
+      <div className="flex h-96 w-[1000px] flex-col gap-2">
+        <div className="flex gap-2">
+          <Button onClick={() => setOpen(!open)}>{open ? "Close dock" : "Open dock"}</Button>
+          <Button onClick={() => setExpanded(!expanded)}>{expanded ? "Restore width" : "Expand"}</Button>
+        </div>
+        <SplitView
+          {...args}
+          storageKey={key}
+          sidebarLabel="Dock"
+          resizeLabel="Resize dock"
+          sidebarPosition="end"
+          sidebarOpen={open}
+          sidebarExpanded={expanded}
+          defaultSidebarSize={400}
+          minSidebarSize={320}
+          maxSidebarSize="60%"
+          layout="fill"
+          sidebar={<h2>Review</h2>}
+        >
+          <input aria-label="Draft answer" defaultValue="" />
+        </SplitView>
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const content = canvas.getByRole("region", { name: "Content" });
+    const group = (): number => content.parentElement?.closest("[data-group]")?.getBoundingClientRect().width ?? 0;
+    // Closed, the dock leaves no divider behind and the content keeps the whole width.
+    await expect(canvas.queryByRole("separator", { name: "Resize dock" })).toBeNull();
+    await userEvent.type(canvas.getByRole("textbox", { name: "Draft answer" }), "Keep this");
+    await userEvent.click(canvas.getByRole("button", { name: "Open dock" }));
+    const dock = canvas.getByRole("complementary", { name: "Dock" });
+    await waitFor(() => expect(dock.getBoundingClientRect().width).toBeCloseTo(400, -1));
+    const handle = canvas.getByRole("separator", { name: "Resize dock" });
+    await expect(handle).toBeVisible();
+    // It never narrows below its minimum.
+    handle.focus();
+    await userEvent.keyboard("{ArrowRight}{ArrowRight}{ArrowRight}{ArrowRight}");
+    await waitFor(() => expect(dock.getBoundingClientRect().width).toBeGreaterThanOrEqual(319));
+    await expect(dock.getBoundingClientRect().width).toBeLessThan(330);
+    // Expand widens it to its maximum, and turning Expand off restores the width it had.
+    await userEvent.click(canvas.getByRole("button", { name: "Expand" }));
+    await waitFor(() => expect(dock.getBoundingClientRect().width / group()).toBeCloseTo(0.6, 1));
+    await userEvent.click(canvas.getByRole("button", { name: "Restore width" }));
+    await waitFor(() => expect(dock.getBoundingClientRect().width).toBeLessThan(330));
+    await userEvent.click(canvas.getByRole("button", { name: "Close dock" }));
+    await waitFor(() => expect(canvas.queryByRole("separator", { name: "Resize dock" })).toBeNull());
+    await expect(canvas.getByRole("textbox", { name: "Draft answer" })).toHaveValue("Keep this");
+  },
+};
+
+/** Below the breakpoint, an open dock takes over the content's place, which stays mounted with its draft. */
+export const NarrowTakeover: Story = {
+  render: function Example(args) {
+    const [open, setOpen] = useState(false);
+    return (
+      <div className="flex h-96 w-[600px] flex-col gap-2">
+        <Button onClick={() => setOpen(!open)}>{open ? "Back to content" : "Open dock"}</Button>
+        <SplitView
+          {...args}
+          sidebarLabel="Dock"
+          resizeLabel="Resize dock"
+          sidebarPosition="end"
+          sidebarOpen={open}
+          wideQuery="(min-width: 100000px)"
+          narrowLayout="takeover"
+          layout="fill"
+          sidebar={<h2>Review</h2>}
+        >
+          <input aria-label="Draft answer" defaultValue="" />
+        </SplitView>
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const field = canvas.getByRole("textbox", { name: "Draft answer" });
+    await userEvent.type(field, "Keep this");
+    await userEvent.click(canvas.getByRole("button", { name: "Open dock" }));
+    const dock = canvas.getByRole("complementary", { name: "Dock" });
+    await expect(dock).toBeVisible();
+    await expect(canvas.queryByRole("region", { name: "Content" })).toBeNull();
+    await expect(canvas.queryByRole("separator")).toBeNull();
+    await userEvent.click(canvas.getByRole("button", { name: "Back to content" }));
+    await expect(canvas.getByRole("textbox", { name: "Draft answer" })).toBe(field);
+    await expect(field).toHaveValue("Keep this");
+  },
+};
