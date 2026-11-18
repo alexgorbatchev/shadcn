@@ -259,3 +259,125 @@ export const Fill: Story = {
     );
   },
 };
+
+function rowOf(canvasElement: HTMLElement, name: string): HTMLElement {
+  const row = within(canvasElement).getByText(name, { exact: true }).closest("tr");
+  if (!row) throw new Error(`Row ${name} is missing`);
+  return row;
+}
+
+// Mod is ⌘ on macOS, where Ctrl+click opens the context menu instead of clicking.
+const MOD = navigator.platform.startsWith("Mac") ? "Meta" : "Control";
+
+function selectedNames(canvasElement: HTMLElement): string[] {
+  return [...canvasElement.querySelectorAll('tr[aria-selected="true"]')].map(
+    (row) => row.querySelector("td:nth-child(2)")?.textContent ?? "",
+  );
+}
+
+export const RowCursorPointer: Story = {
+  render: () => <VirtualDataGridExample files={fixture_gridFiles} cursor={{}} />,
+  play: async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+    await canvas.findByText("File 0");
+    await expect(canvas.getByRole("grid", { name: "Files" })).toHaveAttribute("aria-multiselectable", "true");
+    // A click selects one row and sets the anchor; Shift+click selects the displayed range from it.
+    await userEvent.click(rowOf(canvasElement, "File 2"));
+    await expect(selectedNames(canvasElement)).toEqual(["File 2"]);
+    await expect(rowOf(canvasElement, "File 2")).toHaveFocus();
+    await userEvent.keyboard("{Shift>}");
+    await userEvent.click(rowOf(canvasElement, "File 5"));
+    await userEvent.keyboard("{/Shift}");
+    await expect(selectedNames(canvasElement)).toEqual(["File 2", "File 3", "File 4", "File 5"]);
+    // Mod+click toggles one row and moves the anchor; Mod+Shift+click adds a range from it.
+    await userEvent.keyboard(`{${MOD}>}`);
+    await userEvent.click(rowOf(canvasElement, "File 3"));
+    await userEvent.keyboard(`{/${MOD}}`);
+    await expect(selectedNames(canvasElement)).toEqual(["File 2", "File 4", "File 5"]);
+    await userEvent.keyboard(`{${MOD}>}{Shift>}`);
+    await userEvent.click(rowOf(canvasElement, "File 7"));
+    await userEvent.keyboard(`{/Shift}{/${MOD}}`);
+    await expect(selectedNames(canvasElement)).toEqual(["File 2", "File 3", "File 4", "File 5", "File 6", "File 7"]);
+    // A row's own controls keep their clicks.
+    await userEvent.click(canvas.getByRole("checkbox", { name: "Select File 9" }));
+    await expect(selectedNames(canvasElement)).toContain("File 9");
+    await expect(selectedNames(canvasElement)).toContain("File 2");
+    await userEvent.click(rowOf(canvasElement, "File 1"));
+    await expect(selectedNames(canvasElement)).toEqual(["File 1"]);
+  },
+};
+
+export const RowCursorKeyboard: Story = {
+  render: () => <VirtualDataGridExample files={fixture_gridFiles} cursor={{}} />,
+  play: async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+    await canvas.findByText("File 0");
+    // The rows are one tab stop after the header's own controls: Tab reaches the first row, and the next Tab leaves.
+    canvas.getByRole("checkbox", { name: "Select all files" }).focus();
+    for (let step = 0; step < 10 && document.activeElement?.tagName !== "TR"; step++) await userEvent.tab();
+    await expect(rowOf(canvasElement, "File 0")).toHaveFocus();
+    await expect(selectedNames(canvasElement)).toEqual([]);
+    // While at most one row is selected, ↓ moves the selection with the cursor.
+    await userEvent.keyboard("{ArrowDown}");
+    await expect(rowOf(canvasElement, "File 1")).toHaveFocus();
+    await expect(selectedNames(canvasElement)).toEqual(["File 1"]);
+    await userEvent.keyboard("{ArrowDown}");
+    await expect(selectedNames(canvasElement)).toEqual(["File 2"]);
+    // Shift+↓ extends from the anchor; once two rows are selected, ↓ moves only the cursor.
+    await userEvent.keyboard("{Shift>}{ArrowDown}{ArrowDown}{/Shift}");
+    await expect(selectedNames(canvasElement)).toEqual(["File 2", "File 3", "File 4"]);
+    await userEvent.keyboard("{ArrowDown}");
+    await expect(rowOf(canvasElement, "File 5")).toHaveFocus();
+    await expect(canvas.getByRole("status", { name: "Cursor" })).toHaveTextContent("file-5");
+    await expect(selectedNames(canvasElement)).toEqual(["File 2", "File 3", "File 4"]);
+    // Shift+Space toggles the cursor row; Mod+↑ moves the cursor alone.
+    await userEvent.keyboard("{Shift>} {/Shift}");
+    await expect(selectedNames(canvasElement)).toEqual(["File 2", "File 3", "File 4", "File 5"]);
+    await userEvent.keyboard(`{${MOD}>}{ArrowUp}{/${MOD}}`);
+    await expect(rowOf(canvasElement, "File 4")).toHaveFocus();
+    await expect(selectedNames(canvasElement)).toHaveLength(4);
+    // End reaches a row far outside the rendered window and keeps it focused and in view.
+    await userEvent.keyboard("{End}");
+    const last = await waitFor(() => rowOf(canvasElement, "File 999"));
+    await expect(last).toHaveFocus();
+    const viewport = canvas.getByRole("region", { name: "Files" }).getBoundingClientRect();
+    await waitFor(() => expect(last.getBoundingClientRect().bottom).toBeLessThanOrEqual(viewport.bottom + 1));
+    await userEvent.keyboard("{Home}");
+    await waitFor(() => expect(rowOf(canvasElement, "File 0")).toHaveFocus());
+    await userEvent.keyboard(`{${MOD}>}a{/${MOD}}`);
+    await expect(canvasElement.querySelectorAll('tr[aria-selected="false"]')).toHaveLength(0);
+    await userEvent.tab();
+    await expect(canvas.getByRole("button", { name: "After grid" })).toHaveFocus();
+  },
+};
+
+export const RowCursorOwnedSelection: Story = {
+  render: function Example() {
+    const [gestures, setGestures] = useState<string[]>([]);
+    return (
+      <div className="grid gap-3">
+        <p role="status" aria-label="Gestures">
+          {gestures.join(" ")}
+        </p>
+        <VirtualDataGridExample
+          files={fixture_gridFiles}
+          cursor={{
+            keyboard: false,
+            onSelectionChange: (change) =>
+              setGestures((current) => [...current, `${change.gesture}:${change.rowIds.join(",")}`]),
+          }}
+        />
+      </div>
+    );
+  },
+  play: async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+    await canvas.findByText("File 0");
+    // A consumer that owns the selection hears each gesture and decides; its own keymap runs the keys.
+    await userEvent.click(rowOf(canvasElement, "File 1"));
+    await expect(canvas.getByRole("status", { name: "Gestures" })).toHaveTextContent("select:file-1");
+    await userEvent.keyboard("{ArrowDown}");
+    await expect(rowOf(canvasElement, "File 1")).toHaveFocus();
+    await expect(selectedNames(canvasElement)).toEqual([]);
+  },
+};

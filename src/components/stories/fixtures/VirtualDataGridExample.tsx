@@ -16,7 +16,12 @@ import {
   type DataGridFeatures,
   type DataGridRow,
 } from "../../data-grid";
-import { VirtualDataGrid, type IVirtualTableRowProps } from "../../virtual-data-grid";
+import {
+  VirtualDataGrid,
+  useDataGridRowCursor,
+  type IDataGridRowCursorOptions,
+  type IVirtualDataGridRowProps,
+} from "../../virtual-data-grid";
 import type { GridFile } from "./types";
 
 const helper = createColumnHelper<DataGridFeatures, GridFile>();
@@ -86,7 +91,9 @@ interface IVirtualDataGridExampleProps {
   preferredFillSize?: number;
   hasSizeColumn?: boolean;
   retainedRowIds?: readonly string[];
-  renderRow?: (row: DataGridRow<GridFile>, props: IVirtualTableRowProps) => ReactNode;
+  renderRow?: (row: DataGridRow<GridFile>, props: IVirtualDataGridRowProps) => ReactNode;
+  /** Gives the grid a row cursor with these options. */
+  cursor?: IDataGridRowCursorOptions;
 }
 
 export function VirtualDataGridExample({
@@ -100,7 +107,9 @@ export function VirtualDataGridExample({
   hasSizeColumn = true,
   retainedRowIds,
   renderRow,
+  cursor,
 }: IVirtualDataGridExampleProps): ReactElement {
+  const hasCursor = cursor !== undefined;
   const fitWidth = useRef(0);
   const preferredSizing = useRef<ColumnSizingState>({});
   const columnSizing = useCreateAtom<ColumnSizingState>({});
@@ -110,6 +119,19 @@ export function VirtualDataGridExample({
       .map((column) => {
         if (column.meta?.fill && preferredFillSize !== undefined) return { ...column, size: preferredFillSize };
         if (column.id === "kind" && requiredKind) return { ...column, enableHiding: false };
+        // With a row cursor each row is its own keyboard target, so its checkbox leaves the tab order.
+        if (column.id === "select" && hasCursor)
+          return {
+            ...column,
+            cell: ({ row }: { row: DataGridRow<GridFile> }) => (
+              <Checkbox
+                aria-label={`Select ${row.original.name}`}
+                tabIndex={-1}
+                checked={row.getIsSelected()}
+                onCheckedChange={(checked) => row.toggleSelected(checked)}
+              />
+            ),
+          };
         return column;
       });
     return grouped
@@ -118,7 +140,7 @@ export function VirtualDataGridExample({
           helper.group({ id: "details", header: "Details", columns: leaves.slice(2) }),
         ])
       : leaves;
-  }, [grouped, hasSizeColumn, preferredFillSize, requiredKind]);
+  }, [grouped, hasSizeColumn, preferredFillSize, requiredKind, hasCursor]);
   // Leaving sizing out of the selector keeps resizing from rendering the grid again.
   const table = useTable(
     {
@@ -147,11 +169,17 @@ export function VirtualDataGridExample({
       sorting,
     }),
   );
+  const rowCursor = useDataGridRowCursor(table, cursor);
   return (
     <div className={height === "fill" ? "flex h-full min-h-0 flex-col gap-3" : "grid gap-3"} style={{ width }}>
       <div className="flex shrink-0 justify-end">
         <DataGridColumnOptions table={table} />
       </div>
+      {cursor && (
+        <p role="status" aria-label="Cursor">
+          {rowCursor.cursorRowId ?? "none"}
+        </p>
+      )}
       <VirtualDataGrid
         table={table}
         fitColumns={fitColumns}
@@ -164,8 +192,10 @@ export function VirtualDataGridExample({
         height={height}
         estimateRowHeight={40}
         retainedRowIds={retainedRowIds}
+        rowCursor={cursor ? rowCursor : undefined}
         renderRow={renderRow}
       />
+      {cursor && <button type="button">After grid</button>}
     </div>
   );
 }

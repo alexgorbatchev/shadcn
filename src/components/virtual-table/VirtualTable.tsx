@@ -32,6 +32,11 @@ interface IVirtualTableProps<T> {
   overscan?: number;
   retainedKeys?: readonly Key[];
   layout?: ComponentProps<typeof Table>["layout"];
+  /**
+   * Rows are the keyboard targets of a multi-select grid, as `VirtualDataGrid`'s row cursor makes them: the table
+   * becomes a `grid` and the scroll region leaves the tab order, so the grid is one tab stop.
+   */
+  isRowGrid?: boolean;
 }
 
 export function VirtualTable<T>({
@@ -47,6 +52,7 @@ export function VirtualTable<T>({
   overscan = 5,
   retainedKeys,
   layout = "fixed",
+  isRowGrid = false,
 }: IVirtualTableProps<T>): ReactElement {
   const viewport = useRef<HTMLDivElement>(null);
   const [focusedKey, setFocusedKey] = useState<Key>();
@@ -81,7 +87,7 @@ export function VirtualTable<T>({
       data-testid="VirtualTable"
       role="region"
       aria-label={label}
-      tabIndex={0}
+      tabIndex={isRowGrid ? -1 : 0}
       className={
         height === "fill"
           ? "h-full min-h-0 min-w-0 flex-1 overflow-auto overscroll-contain"
@@ -95,7 +101,13 @@ export function VirtualTable<T>({
       }}
     >
       {/* Spacer rows hold only one cell, so they never add grid columns that hidden responsive cells leave empty. */}
-      <Table scrollContainer="parent" layout={layout} aria-label={label} aria-rowcount={items.length + 1}>
+      <Table
+        scrollContainer="parent"
+        layout={layout}
+        aria-label={label}
+        aria-rowcount={items.length + 1}
+        {...(isRowGrid && { role: "grid", "aria-multiselectable": true })}
+      >
         {columns}
         <TableHeader sticky>{header}</TableHeader>
         <TableBody>
