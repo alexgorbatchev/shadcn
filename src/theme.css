@@ -86,6 +86,7 @@
     --ag-text: 14px;
     --ag-heading: 18px;
     --ag-leading: 1.65;
+    --ag-cell-leading: calc(1.25 / 0.875);
     --ag-control-h: 28px;
     --ag-control-x: 10px;
     --ag-control-gap: 6px;
@@ -304,6 +305,7 @@
     --ag-text: 14px;
     --ag-heading: 18px;
     --ag-leading: 1.65;
+    --ag-cell-leading: calc(1.25 / 0.875);
     --ag-control-h: 28px;
     --ag-control-x: 10px;
     --ag-control-gap: 6px;
@@ -321,6 +323,7 @@
     --ag-text: 12px;
     --ag-heading: 13px;
     --ag-leading: 1.35;
+    --ag-cell-leading: calc(16 / 12);
     --ag-control-h: 20px;
     --ag-control-x: 6px;
     --ag-control-gap: 4px;

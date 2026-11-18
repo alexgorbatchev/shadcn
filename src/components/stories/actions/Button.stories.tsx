@@ -375,6 +375,20 @@ export const Inline: Story = {
     );
   },
 };
+export const InlineInheritsLine: Story = {
+  args: { variant: "link", size: "inline", align: "start", children: "Track title" },
+  render: (args) => (
+    <p style={{ lineHeight: "16px" }}>
+      <Button {...args} />
+    </p>
+  ),
+  play: async ({ canvasElement }) => {
+    const button = within(canvasElement).getByRole("button", { name: "Track title" });
+    // An inline button sits in its line of text, so a dense row's line height is its own.
+    await expect(getComputedStyle(button).lineHeight).toBe("16px");
+    await expect(button.getBoundingClientRect().height).toBe(16);
+  },
+};
 export const EndAligned: Story = {
   args: { align: "end", className: "w-64", children: "End aligned" },
   play: async ({ canvasElement }) => {

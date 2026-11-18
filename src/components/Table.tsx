@@ -142,7 +142,7 @@ function TableHead({
       data-density={density}
       data-slot="table-head"
       className={cn(
-        "h-control-lg px-control-x align-middle font-medium whitespace-nowrap text-foreground [&:has([role=checkbox])]:pe-0",
+        "h-control-lg px-control-x align-middle leading-(--ag-cell-leading) font-medium whitespace-nowrap text-foreground [&:has([role=checkbox])]:pe-0",
         alignmentClasses[textAlign],
         truncate && "truncate",
         visibleFrom && visibilityClasses[visibleFrom],
@@ -168,7 +168,7 @@ function TableCell({
       data-density={density}
       data-slot="table-cell"
       className={cn(
-        "px-control-x py-control-gap align-middle whitespace-nowrap [&:has([role=checkbox])]:pe-0",
+        "px-control-x py-control-gap align-middle leading-(--ag-cell-leading) whitespace-nowrap [&:has([role=checkbox])]:pe-0",
         textAlign && alignmentClasses[textAlign],
         truncate && "truncate",
         visibleFrom && visibilityClasses[visibleFrom],

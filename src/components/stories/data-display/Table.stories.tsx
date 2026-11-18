@@ -113,7 +113,24 @@ export const Default: Story = {
     await expect(table.getByRole("row", { name: "Total $250.00" })).toBeVisible();
   },
 };
-export const Compact: Story = { ...Default, args: { density: "compact" } };
+export const Compact: Story = {
+  ...Default,
+  args: { density: "compact" },
+  play: async (context) => {
+    await Default.play?.(context);
+    const cell = within(context.canvasElement).getByRole("cell", { name: "INV-001" });
+    // Compact rows are one 16-pixel line, so dense lists stay a whole number of pixels tall.
+    await expect(getComputedStyle(cell).lineHeight).toBe("16px");
+  },
+};
+export const ComfortableLines: Story = {
+  ...Default,
+  play: async (context) => {
+    await Default.play?.(context);
+    const cell = within(context.canvasElement).getByRole("cell", { name: "INV-001" });
+    await expect(Number.parseFloat(getComputedStyle(cell).lineHeight)).toBeCloseTo(12 * (1.25 / 0.875), 1);
+  },
+};
 
 export const RightToLeft: Story = {
   args: { dir: "rtl" },
