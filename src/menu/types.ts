@@ -12,6 +12,11 @@ interface IMenuItemOptions extends IMenuInsetProps {
    * the item references through `aria-describedby`.
    */
   disabledReason?: string;
+  /**
+   * Runs once for each Enter, Space or click on an item disabled by `disabledReason`, so the consumer can announce the
+   * reason. The item still does nothing and the menu stays open; held keys do not repeat it.
+   */
+  onDisabledSelect?: () => void;
 }
 
 export type MenuLabelProps = Menu.GroupLabel.Props & IMenuInsetProps;

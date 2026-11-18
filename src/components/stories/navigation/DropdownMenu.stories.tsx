@@ -17,7 +17,7 @@ import {
 } from "../../DropdownMenu";
 import { Button } from "../../Button";
 import { DirectionProvider } from "../../DirectionProvider";
-import { expect, fn, userEvent, waitFor, within } from "storybook/test";
+import { expect, fireEvent, fn, userEvent, waitFor, within } from "storybook/test";
 import { useState, type ReactElement } from "react";
 import {
   BellIcon,
@@ -730,6 +730,7 @@ export const RightToLeftComplex: Story = { ...Complex, decorators: RightToLeft.d
 export const DisabledReasons: Story = {
   render: function Render() {
     const [action, setAction] = useState("None");
+    const [announcements, setAnnouncements] = useState<string[]>([]);
     return (
       <>
         <DropdownMenu>
@@ -740,7 +741,11 @@ export const DisabledReasons: Story = {
                 <FileIcon />
                 Edit track info…
               </DropdownMenuItem>
-              <DropdownMenuItem disabledReason="One track only" onClick={() => setAction("Move")}>
+              <DropdownMenuItem
+                disabledReason="One track only"
+                onClick={() => setAction("Move")}
+                onDisabledSelect={() => setAnnouncements((current) => [...current, "One track only"])}
+              >
                 <SaveIcon />
                 Move audio file…
               </DropdownMenuItem>
@@ -749,11 +754,13 @@ export const DisabledReasons: Story = {
           </DropdownMenuContent>
         </DropdownMenu>
         <output aria-label="Menu action">{action}</output>
+        <output aria-label="Announcements">{announcements.join(" | ")}</output>
       </>
     );
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
+    const announcements = canvas.getByLabelText("Announcements");
     await userEvent.click(canvas.getByRole("button", { name: "Track actions" }));
     const menu = within(await within(canvasElement.ownerDocument.body).findByRole("menu"));
     const move = menu.getByRole("menuitem", { name: /Move audio file/ });
@@ -764,9 +771,21 @@ export const DisabledReasons: Story = {
     await expect(menu.getByRole("menuitem", { name: /Edit track info/ })).toHaveFocus();
     await userEvent.keyboard("{ArrowDown}");
     await expect(move).toHaveFocus();
+    // Enter, Space or a click on the disabled item reports the attempt once and runs nothing; the menu stays open.
     await userEvent.keyboard("{Enter}");
     await expect(canvas.getByLabelText("Menu action")).toHaveTextContent("None");
+    await expect(announcements).toHaveTextContent(/^One track only$/);
+    await userEvent.keyboard("[Space]");
+    await expect(announcements).toHaveTextContent(/^One track only \| One track only$/);
+    await userEvent.click(move);
+    await expect(announcements).toHaveTextContent(/^One track only \| One track only \| One track only$/);
+    await expect(move).toBeVisible();
+    await expect(canvas.getByLabelText("Menu action")).toHaveTextContent("None");
+    // Auto-repeat of a held Enter reports nothing more.
+    fireEvent.keyDown(move, { key: "Enter", repeat: true });
+    await expect(announcements.textContent?.split(" | ")).toHaveLength(3);
     await userEvent.keyboard("{ArrowDown}{Enter}");
     await expect(canvas.getByLabelText("Menu action")).toHaveTextContent("Analyze");
+    await expect(announcements.textContent?.split(" | ")).toHaveLength(3);
   },
 };
