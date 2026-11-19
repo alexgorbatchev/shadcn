@@ -505,3 +505,21 @@ export const Inset: Story = {
     await waitFor(() => expect(dialog).not.toBeInTheDocument());
   },
 };
+
+/** Under reduced motion the drawer appears without sliding: every transition is instant or a fade of at most 150 ms. */
+export const MotionPreference: Story = {
+  ...Default,
+  play: async ({ canvasElement }) => {
+    await userEvent.click(within(canvasElement).getByRole("button", { name: "Open details" }));
+    const dialog = await within(canvasElement.ownerDocument.body).findByRole("dialog", { name: "Project details" });
+    await waitFor(() => expect(dialog).toBeVisible());
+    const longest = Math.max(
+      ...getComputedStyle(dialog)
+        .transitionDuration.split(",")
+        .map((value) => parseFloat(value) * (value.trim().endsWith("ms") ? 1 : 1000)),
+    );
+    await expect(longest <= 150).toBe(window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() => expect(dialog).not.toBeInTheDocument());
+  },
+};

@@ -84,7 +84,7 @@ export const ExternalStorage: Story = {
             <h2>Content</h2>
           </SplitView>
         )}
-        <Button onClick={() => setVisible(values.has("react-resizable-panels:external-layout"))}>
+        <Button onClick={() => setVisible(values.has("split-view:external-layout:sidebar-px"))}>
           Restore saved panels
         </Button>
         <p role="status">{isSaved ? "Layout saved" : "No saved layout"}</p>
@@ -103,9 +103,11 @@ export const ExternalStorage: Story = {
     await userEvent.click(canvas.getByRole("button", { name: "Hide panels" }));
     await userEvent.click(canvas.getByRole("button", { name: "Restore saved panels" }));
     await waitFor(() =>
-      expect(canvas.getByRole("separator", { name: "Resize navigation" })).toHaveAttribute("aria-valuenow", changed),
+      expect(
+        Number(canvas.getByRole("separator", { name: "Resize navigation" }).getAttribute("aria-valuenow")),
+      ).toBeCloseTo(Number(changed), 1),
     );
-    await expect(localStorage.getItem("react-resizable-panels:external-layout")).toBeNull();
+    await expect(localStorage.getItem("split-view:external-layout:sidebar-px")).toBeNull();
   },
 };
 
@@ -425,5 +427,117 @@ export const DockOpensAtDefaultWidth: Story = {
     await userEvent.click(canvas.getByRole("button", { name: "Close dock" }));
     await userEvent.click(canvas.getByRole("button", { name: "Open dock" }));
     await waitFor(() => expect(dock.getBoundingClientRect().width).toBeCloseTo(chosen, 0));
+  },
+};
+
+/** The transition durations of an open overlay: under reduced motion it appears at once or fades within 150 ms. */
+function getLongestTransition(element: HTMLElement): number {
+  return Math.max(
+    ...getComputedStyle(element)
+      .transitionDuration.split(",")
+      .map((value) => parseFloat(value) * (value.trim().endsWith("ms") ? 1 : 1000)),
+  );
+}
+
+/** On a phone, navigation opens as a modal full-height panel from its own edge, with a Close button and a swipe. */
+export const NarrowSheet: Story = {
+  render: function Example(args) {
+    const [open, setOpen] = useState(false);
+    return (
+      <div className="flex w-[600px] flex-col gap-2">
+        <Button onClick={() => setOpen(true)}>Pages</Button>
+        <SplitView
+          {...args}
+          sidebarLabel="Pages"
+          sidebarOpen={open}
+          onSidebarOpenChange={setOpen}
+          wideQuery="(min-width: 100000px)"
+          narrowLayout="sheet"
+          layout="fill"
+          sidebar={
+            <nav aria-label="Projects and pages">
+              <button type="button" onClick={() => setOpen(false)}>
+                Brand questionnaire
+              </button>
+            </nav>
+          }
+        >
+          <h2>Incident review</h2>
+        </SplitView>
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(canvasElement.ownerDocument.body);
+    const opener = canvas.getByRole("button", { name: "Pages" });
+    await expect(canvas.getByRole("heading", { name: "Incident review" })).toBeVisible();
+    await userEvent.click(opener);
+    const dialog = await body.findByRole("dialog", { name: "Pages" });
+    await waitFor(() => expect(dialog).toBeVisible());
+    await expect(getLongestTransition(dialog) <= 150).toBe(
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    );
+    await userEvent.click(within(dialog).getByRole("button", { name: "Close" }));
+    await waitFor(() => expect(body.queryByRole("dialog")).not.toBeInTheDocument());
+    await expect(opener).toHaveFocus();
+    await userEvent.click(opener);
+    await userEvent.click(await body.findByRole("button", { name: "Brand questionnaire" }));
+    await waitFor(() => expect(body.queryByRole("dialog")).not.toBeInTheDocument());
+  },
+};
+
+/** On a phone, comments open as a modal bottom drawer at 85% height that a consumer raises to full height. */
+export const NarrowDrawer: Story = {
+  render: function Example(args) {
+    const [open, setOpen] = useState(false);
+    const [expanded, setExpanded] = useState(false);
+    return (
+      <div className="flex w-[600px] flex-col gap-2">
+        <Button onClick={() => setOpen(true)}>Comments</Button>
+        <SplitView
+          {...args}
+          sidebarLabel="Comments"
+          sidebarPosition="end"
+          sidebarOpen={open}
+          sidebarExpanded={expanded}
+          onSidebarOpenChange={setOpen}
+          wideQuery="(min-width: 100000px)"
+          narrowLayout="drawer"
+          layout="fill"
+          sidebar={
+            <div className="flex gap-2 p-panel">
+              <Button variant="outline" onClick={() => setExpanded(!expanded)}>
+                {expanded ? "Collapse" : "Full height"}
+              </Button>
+              <Button variant="outline" onClick={() => setOpen(false)}>
+                Close comments
+              </Button>
+            </div>
+          }
+        >
+          <h2>Incident review</h2>
+        </SplitView>
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(canvasElement.ownerDocument.body);
+    const view = canvasElement.ownerDocument.defaultView!;
+    const opener = canvas.getByRole("button", { name: "Comments" });
+    await userEvent.click(opener);
+    const dialog = await body.findByRole("dialog", { name: "Comments" });
+    await waitFor(() =>
+      expect(Math.abs(dialog.getBoundingClientRect().height - view.innerHeight * 0.85)).toBeLessThanOrEqual(1),
+    );
+    await expect(getLongestTransition(dialog) <= 150).toBe(view.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    await userEvent.click(within(dialog).getByRole("button", { name: "Full height" }));
+    await waitFor(() =>
+      expect(Math.abs(dialog.getBoundingClientRect().height - view.innerHeight)).toBeLessThanOrEqual(1),
+    );
+    await userEvent.click(within(dialog).getByRole("button", { name: "Close comments" }));
+    await waitFor(() => expect(body.queryByRole("dialog")).not.toBeInTheDocument());
+    await expect(opener).toHaveFocus();
   },
 };

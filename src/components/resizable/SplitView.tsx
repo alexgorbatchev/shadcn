@@ -8,11 +8,16 @@ import {
   type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
+import type { Dialog as DialogPrimitive } from "@base-ui/react/dialog";
+import { XIcon } from "lucide-react";
 import { cn } from "../../utils/cn.js";
 import { useDefaultLayout, usePanelRef, type LayoutStorage } from "react-resizable-panels";
 import { Resizable, ResizablePanel, ResizableHandle } from "./Resizable.js";
 import { Separator } from "../Separator.js";
 import { useMediaQuery } from "../../hooks/useMediaQuery.js";
+import { Button } from "../Button.js";
+import { useDirection } from "../DirectionProvider.js";
+import { Drawer, DrawerClose, DrawerContent, DrawerTitle } from "../Drawer.js";
 
 interface ISplitViewProps {
   sidebar: ReactNode;
@@ -40,11 +45,25 @@ interface ISplitViewProps {
    * Below `wideQuery`: "stack" places the panes one above the other; "takeover" shows an open sidebar in the content's
    * place, with the content hidden but still mounted, as a narrow window's inspector or review does; "strip" places an
    * open sidebar above the content as a strip whose height the divider resizes, so both stay in view and usable, as a
-   * persistent tool panel under a player does.
+   * persistent tool panel under a player does. "sheet" opens the sidebar as a modal, full-height panel from its own
+   * edge, titled `sidebarLabel` with a Close button, as a phone's navigation does; "drawer" opens it as a modal bottom
+   * drawer at 85% of the viewport height, full height while `sidebarExpanded`, as a phone's comments do. Both close on
+   * Escape, an outside press or a swipe toward their edge, report it through `onSidebarOpenChange`, and leave the
+   * content in the document's flow so the page scrolls as one document.
    */
-  narrowLayout?: "stack" | "takeover" | "strip";
-  /** Widens the sidebar to `maxSidebarSize`; turning it off restores the width it had before. */
+  narrowLayout?: "stack" | "takeover" | "strip" | "sheet" | "drawer";
+  /**
+   * Widens the sidebar to `maxSidebarSize`; turning it off restores the width it had before. With the "drawer" narrow
+   * layout it raises the drawer to the full viewport height.
+   */
   sidebarExpanded?: boolean;
+  /** Called when a "sheet" or "drawer" narrow layout asks to open or close the sidebar, such as on Escape or a swipe. */
+  onSidebarOpenChange?: (open: boolean) => void;
+  /**
+   * Where focus goes when a "sheet" or "drawer" narrow layout closes, as Base UI's `finalFocus`: by default the element
+   * that had focus before it opened; return `false` from a function to leave focus where the consumer put it.
+   */
+  sidebarFinalFocus?: DialogPrimitive.Popup.Props["finalFocus"];
 }
 
 interface ISplitViewSlots {
@@ -62,6 +81,8 @@ const layoutStorage: LayoutStorage = {
       const raw = localStorage.getItem(key);
       if (!raw) return null;
       const value: unknown = JSON.parse(raw);
+      // A sidebar width in pixels, or a layout of percentages.
+      if (typeof value === "number") return Number.isFinite(value) && value > 0 ? raw : null;
       if (typeof value !== "object" || value === null || Array.isArray(value)) return null;
       return Object.values(value).every(
         (size) => typeof size === "number" && Number.isFinite(size) && size >= 0 && size <= 100,
@@ -80,6 +101,29 @@ const layoutStorage: LayoutStorage = {
     }
   },
 };
+
+/** The sidebar's width beside the content is kept in pixels, so a width chosen in one window size keeps in another. */
+function getSidebarWidthKey(storageKey: string): string {
+  return `split-view:${storageKey}:sidebar-px`;
+}
+
+function readSidebarWidth(storage: LayoutStorage, storageKey: string): number | null {
+  try {
+    const raw = storage.getItem(getSidebarWidthKey(storageKey));
+    const value: unknown = raw === null ? null : JSON.parse(raw);
+    return typeof value === "number" && Number.isFinite(value) && value > 0 ? value : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeSidebarWidth(storage: LayoutStorage, storageKey: string, width: number): void {
+  try {
+    storage.setItem(getSidebarWidthKey(storageKey), JSON.stringify(width));
+  } catch {
+    /* Resizing remains available without browser storage. */
+  }
+}
 
 function createSlot(): HTMLDivElement {
   const slot = document.createElement("div");
@@ -125,12 +169,15 @@ export function SplitView({
   wideQuery = "(min-width: 1024px)",
   narrowLayout = "stack",
   sidebarExpanded = false,
+  onSidebarOpenChange,
+  sidebarFinalFocus,
 }: ISplitViewProps): ReactElement {
   const isFill = layoutMode === "fill";
   const isWide = useMediaQuery(wideQuery);
+  const direction = useDirection();
   const isTakeover = !isWide && narrowLayout === "takeover" && sidebarOpen;
   const isStrip = !isWide && narrowLayout === "strip" && sidebarOpen;
-  const layout = useDefaultLayout({ id: storageKey, storage, onlySaveAfterUserInteractions: true });
+  const isOverlay = !isWide && (narrowLayout === "sheet" || narrowLayout === "drawer");
   // The strip's height is remembered apart from the side-by-side width.
   const stripLayout = useDefaultLayout({ id: `${storageKey}:strip`, storage, onlySaveAfterUserInteractions: true });
   const sidebarRef = usePanelRef();
@@ -142,15 +189,13 @@ export function SplitView({
   );
   const [slots] = useState(createSlots);
   const portalSlots = isHydrated ? slots : null;
-  // The width an open sidebar returns to: the one it had when it last closed, else the saved layout's, else the
-  // default. Expanding a panel that collapsed while its group was still narrow would restore a clamped size instead.
-  const storedSize = layout.defaultLayout?.sidebar;
-  const openSize = useRef<number | string>(
-    storedSize !== undefined && storedSize > 0 ? `${storedSize}%` : defaultSidebarSize,
-  );
-  // Only a sidebar that was shown open records its width; one closed from the start keeps the default.
-  const wasShownOpen = useRef(false);
+  // The width an open sidebar returns to, in pixels: the width it last had while open, else the saved width, else the
+  // default. Only an open sidebar records its width, so one closed from the start keeps the default, and expanding a
+  // panel that collapsed while its group was still narrow restores this width rather than a clamped one.
+  const [storedWidth] = useState(() => readSidebarWidth(storage, storageKey));
+  const openSize = useRef<number | string>(storedWidth ?? defaultSidebarSize);
   const pendingOpenSize = useRef<number | string | null>(null);
+  const groupRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const panel = sidebarRef.current;
     if (!isWide || !panel) return;
@@ -160,11 +205,8 @@ export function SplitView({
         pendingOpenSize.current = openSize.current;
         panel.expand();
       }
-      wasShownOpen.current = true;
       return;
     }
-    if (wasShownOpen.current && !panel.isCollapsed()) openSize.current = `${panel.getSize().asPercentage}%`;
-    wasShownOpen.current = false;
     panel.collapse();
   }, [isWide, sidebarOpen, sidebarRef]);
   // The width before Expand, which turning it off restores.
@@ -182,14 +224,16 @@ export function SplitView({
   }, [isWide, sidebarOpen, sidebarExpanded, maxSidebarSize, sidebarRef]);
   const sidebarContent = (
     <aside
-      hidden={!sidebarOpen}
+      // An overlay keeps its sidebar visible while it animates closed.
+      hidden={!sidebarOpen && !isOverlay}
       aria-label={sidebarLabel}
       className={cn(
         "min-w-0 bg-card",
         isWide && "h-full",
         sidebarPadding === "panel" && "p-4",
-        isFill && "min-h-0 overflow-y-auto",
-        !isWide && isFill && !isTakeover && !isStrip && "max-h-[35%] shrink-0",
+        (isFill || isOverlay) && "min-h-0 overflow-y-auto",
+        isOverlay && "flex-1",
+        !isWide && isFill && !isTakeover && !isStrip && !isOverlay && "max-h-[35%] shrink-0",
         isStrip && "h-full",
         isTakeover && isFill && "flex-1",
       )}
@@ -205,7 +249,8 @@ export function SplitView({
         "min-w-0 bg-card",
         isWide && "h-full",
         contentPadding === "panel" && "p-4",
-        isFill && "flex min-h-0 flex-1 flex-col overflow-hidden",
+        // An overlay leaves the content in the document's flow, so the page scrolls as one document.
+        isFill && (isOverlay ? "flex flex-1 flex-col" : "flex min-h-0 flex-1 flex-col overflow-hidden"),
       )}
     >
       {children}
@@ -227,8 +272,11 @@ export function SplitView({
           pendingOpenSize.current = null;
           sidebarRef.current?.resize(pending);
         } else if (pending === null && size.inPixels === 0) sidebarRef.current?.resize(minSidebarSize);
+        else if (pending === null) openSize.current = size.inPixels;
       }}
-      defaultSize={defaultSidebarSize}
+      defaultSize={openSize.current}
+      // Its width stays in pixels while the window resizes; the content takes the difference.
+      groupResizeBehavior="preserve-pixel-size"
       minSize={minSidebarSize}
       maxSize={maxSidebarSize}
     >
@@ -241,7 +289,24 @@ export function SplitView({
     </ResizablePanel>
   );
   const frame = isWide ? (
-    <Resizable orientation="horizontal" defaultLayout={layout.defaultLayout} onLayoutChanged={layout.onLayoutChanged}>
+    <Resizable
+      orientation="horizontal"
+      elementRef={groupRef}
+      onLayoutChanged={(layout, meta) => {
+        const share = layout.sidebar;
+        const group = groupRef.current;
+        if (!meta.isUserInteraction || !sidebarOpen || share === undefined || share <= 0 || !group) return;
+        // The panel reports its new width only after this change, so the width comes from the group's layout, whose
+        // shares divide the group's width without its divider.
+        const dividers = Array.from(group.querySelectorAll(":scope > [role='separator']"));
+        const width = dividers.reduce(
+          (total, divider) => total - divider.getBoundingClientRect().width,
+          group.getBoundingClientRect().width,
+        );
+        openSize.current = (width * share) / 100;
+        writeSidebarWidth(storage, storageKey, openSize.current);
+      }}
+    >
       {sidebarPosition === "start" ? sidebarPanel : contentPanel}
       {/* A closed sidebar leaves no divider behind; the handle stays laid out, which the panel group's map requires. */}
       <ResizableHandle
@@ -267,6 +332,44 @@ export function SplitView({
         {contentSlot}
       </ResizablePanel>
     </Resizable>
+  ) : isOverlay ? (
+    <>
+      <div className={cn("flex min-w-0 flex-col bg-card", isFill && "flex-1")}>{contentSlot}</div>
+      <Drawer
+        open={sidebarOpen}
+        onOpenChange={(open) => onSidebarOpenChange?.(open)}
+        // The handle is what a mouse drags; a touch swipe also starts anywhere in the panel.
+        showSwipeHandle
+        swipeDirection={
+          narrowLayout === "drawer"
+            ? "down"
+            : (sidebarPosition === "start") === (direction === "rtl")
+              ? "right"
+              : "left"
+        }
+      >
+        <DrawerContent
+          aria-label={sidebarLabel}
+          finalFocus={sidebarFinalFocus}
+          className={cn(
+            narrowLayout === "drawer" &&
+              "data-[swipe-axis=y]:[--drawer-content-max-height:100dvh] data-[swipe-axis=y]:rounded-t-none",
+            narrowLayout === "drawer" && (sidebarExpanded ? "h-dvh" : "h-[85dvh]"),
+          )}
+        >
+          {narrowLayout === "sheet" && (
+            <div className="flex shrink-0 items-center justify-between gap-2 p-panel pb-0">
+              <DrawerTitle>{sidebarLabel}</DrawerTitle>
+              <DrawerClose render={<Button variant="ghost" size="sm" />}>
+                <XIcon aria-hidden="true" />
+                Close
+              </DrawerClose>
+            </div>
+          )}
+          {sidebarSlot}
+        </DrawerContent>
+      </Drawer>
+    </>
   ) : (
     <div className={cn("flex min-w-0 flex-col bg-card", isFill && "h-full min-h-0 overflow-hidden")}>
       {sidebarPosition === "start" ? sidebarSlot : contentSlot}
