@@ -612,3 +612,117 @@ export const FullWidthTextFields: Story = {
     await expect(notes).toHaveValue("Still editable");
   },
 };
+
+const tableAlignments = ["default", "start", "center", "end"] as const;
+const wideColumns = Array.from({ length: 12 }, (_, index) => `Metric ${index + 1}`);
+
+export const TableInStack: Story = {
+  args: {
+    spec: {
+      root: "root",
+      elements: {
+        root: {
+          type: "Stack",
+          props: { direction: null, gap: null, align: null, justify: null, className: null },
+          children: [...tableAlignments.map((alignment) => `stack-${alignment}`), "wide-stack"],
+        },
+        ...Object.fromEntries(
+          tableAlignments.flatMap((alignment) => [
+            [
+              `stack-${alignment}`,
+              {
+                type: "Stack",
+                props: { align: alignment === "default" ? null : alignment },
+                children: [`table-${alignment}`],
+              },
+            ],
+            [
+              `table-${alignment}`,
+              {
+                type: "Table",
+                props: {
+                  caption: `Benchmarks aligned ${alignment}`,
+                  columns: ["Option", "Latency", "Cost"],
+                  rows: [
+                    ["Blue-green", "120 ms", "$40"],
+                    ["Canary", "95 ms", "$55"],
+                  ],
+                },
+              },
+            ],
+          ]),
+        ),
+        "wide-stack": { type: "Stack", props: { align: null }, children: ["wide-table"] },
+        "wide-table": {
+          type: "Table",
+          props: {
+            caption: "Wide benchmarks",
+            columns: wideColumns,
+            rows: [wideColumns.map((_, index) => `measured value ${index + 1}`)],
+          },
+        },
+      },
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    for (const alignment of tableAlignments) {
+      const table = canvas.getByRole("table", { name: `Benchmarks aligned ${alignment}` });
+      const wrapper = table.closest('[data-slot="table-container"]')?.parentElement;
+      const stack = wrapper?.parentElement;
+      const firstColumn = within(table).getByRole("columnheader", { name: "Option" });
+      await expect(wrapper).toBeInstanceOf(HTMLElement);
+      await expect(wrapper?.getBoundingClientRect().width).toBeGreaterThanOrEqual(
+        firstColumn.getBoundingClientRect().width,
+      );
+      await expect(wrapper?.getBoundingClientRect().width).toBeCloseTo(stack?.getBoundingClientRect().width ?? 0, 0);
+      await expect(within(table).getByRole("cell", { name: "Canary" })).toBeVisible();
+    }
+    const wide = canvas.getByRole("table", { name: "Wide benchmarks" });
+    const container = wide.closest('[data-slot="table-container"]');
+    await expect(container).toBeInstanceOf(HTMLElement);
+    await expect(container?.clientWidth).toBeGreaterThan(0);
+    await expect(container?.scrollWidth).toBeGreaterThan(container?.clientWidth ?? 0);
+    await expect(getComputedStyle(container ?? document.body).overflowX).toBe("auto");
+  },
+};
+
+export const TabsWithPanels: Story = {
+  args: {
+    spec: {
+      root: "tabs",
+      elements: {
+        tabs: {
+          type: "Tabs",
+          props: {
+            tabs: [
+              { value: "summary", label: "Summary" },
+              { value: "risks", label: "Risks" },
+            ],
+          },
+          children: ["summary", "risks", "footer"],
+        },
+        summary: { type: "Text", props: { text: "Summary panel content" } },
+        risks: { type: "Collapsible", props: { title: "Risk details", defaultOpen: true }, children: ["risk-text"] },
+        "risk-text": { type: "Text", props: { text: "Risks panel content" } },
+        footer: { type: "Text", props: { text: "Shown under every tab" } },
+      },
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const summaryTab = canvas.getByRole("tab", { name: "Summary" });
+    const risksTab = canvas.getByRole("tab", { name: "Risks" });
+    await expect(canvas.getByRole("tabpanel")).toHaveTextContent("Summary panel content");
+    await expect(summaryTab).toHaveAttribute("aria-controls", canvas.getByRole("tabpanel").id);
+    await expect(canvas.getByText("Risks panel content")).not.toBeVisible();
+    await expect(canvas.getByText("Shown under every tab")).toBeVisible();
+    await userEvent.click(risksTab);
+    await expect(risksTab).toHaveAttribute("aria-selected", "true");
+    await waitFor(() => expect(canvas.getByRole("tabpanel")).toHaveTextContent("Risks panel content"));
+    await expect(risksTab).toHaveAttribute("aria-controls", canvas.getByRole("tabpanel").id);
+    await expect(canvas.getByText("Summary panel content")).not.toBeVisible();
+    await expect(canvas.getByText("Summary panel content")).toBeInTheDocument();
+    await expect(canvas.getByText("Shown under every tab")).toBeVisible();
+  },
+};

@@ -53,7 +53,7 @@ export const componentDefinitions = {
       className: z.string().nullable().describe("Additional CSS classes"),
     }),
     slots: ["default"],
-    description: "Flex container for layouts",
+    description: "Flex container for layouts. Fills the width of its parent.",
     example: { direction: "vertical", gap: "md" },
   },
 
@@ -64,7 +64,7 @@ export const componentDefinitions = {
       className: z.string().nullable().describe("Additional CSS classes"),
     }),
     slots: ["default"],
-    description: "Grid layout (1-6 columns)",
+    description: "Grid layout (1-6 columns). Fills the width of its parent.",
     example: { columns: 3, gap: "md" },
   },
 
@@ -88,7 +88,8 @@ export const componentDefinitions = {
     }),
     slots: ["default"],
     events: ["change"],
-    description: "Tab navigation. Use { $bindState } on value for active tab binding.",
+    description:
+      "Tabs with panels. Child i is the panel of tab i: only the active tab's panel shows, and inactive panels stay mounted but hidden. Children beyond the tab count render below the panels. Use { $bindState } on value for active tab binding.",
   },
 
   Accordion: {
@@ -101,7 +102,8 @@ export const componentDefinitions = {
       ),
       type: z.enum(["single", "multiple"]).nullable(),
     }),
-    description: "Collapsible sections. Items as [{title, content}]. Type 'single' (default) or 'multiple'.",
+    description:
+      "Collapsible text sections. Items as [{title, content}] with plain-text content; children are not rendered (use Collapsible to hide other components). Type 'single' (default) or 'multiple'.",
   },
 
   Collapsible: {
