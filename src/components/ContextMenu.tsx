@@ -79,6 +79,8 @@ function ContextMenuContent({
           dir={direction}
           data-density={resolvedDensity}
           data-slot="context-menu-content"
+          // Menus never scroll: the development ScrollGuard reports one whose content outgrows the viewport.
+          data-scroll="none"
           className={(state) =>
             cn(
               "   max-h-(--available-height) min-w-36 origin-(--transform-origin) overflow-x-hidden overflow-y-auto rounded-sm bg-popover p-1 text-popover-foreground  border border-frame-edge shadow-frame duration-100 outline-none       data-open:animate-in data-open:fade-in-0  data-closed:animate-out data-closed:fade-out-0 motion-reduce:data-open:animate-none motion-reduce:data-closed:animate-none ",

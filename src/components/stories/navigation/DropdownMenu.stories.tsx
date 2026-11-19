@@ -15,6 +15,8 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuSubContent,
 } from "../../DropdownMenu";
+import { MenuEmpty, MenuFilterProvider, MenuInput, MenuList } from "../../MenuParts";
+import type { MenuPoint } from "../../../menu/types";
 import { Button } from "../../Button";
 import { DirectionProvider } from "../../DirectionProvider";
 import { expect, fireEvent, fn, userEvent, waitFor, within } from "storybook/test";
@@ -787,5 +789,99 @@ export const DisabledReasons: Story = {
     await userEvent.keyboard("{ArrowDown}{Enter}");
     await expect(canvas.getByLabelText("Menu action")).toHaveTextContent("Analyze");
     await expect(announcements.textContent?.split(" | ")).toHaveLength(3);
+  },
+};
+
+/** A shared menu opened at the pointer by a right-click on any row, as one menu instance serves a whole list. */
+export const AtPoint: Story = {
+  render: function Render() {
+    const [point, setPoint] = useState<MenuPoint>();
+    const [row, setRow] = useState<string>();
+    return (
+      <div className="flex flex-col gap-1">
+        {["Alpha", "Bravo", "Charlie"].map((name) => (
+          <div
+            key={name}
+            role="button"
+            tabIndex={0}
+            className="rounded-sm border border-border px-2 py-1"
+            onContextMenu={(event) => {
+              event.preventDefault();
+              setRow(name);
+              setPoint({ clientX: event.clientX, clientY: event.clientY });
+            }}
+          >
+            {name}
+          </div>
+        ))}
+        <DropdownMenu open={point !== undefined} onOpenChange={(isOpen) => !isOpen && setPoint(undefined)}>
+          <DropdownMenuContent point={point} aria-label={`Actions for ${row ?? "row"}`}>
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>{row}</DropdownMenuLabel>
+              <DropdownMenuItem>Open</DropdownMenuItem>
+              <DropdownMenuItem>Rename</DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(canvasElement.ownerDocument.body);
+    const row = canvas.getByRole("button", { name: "Bravo" });
+    const rect = row.getBoundingClientRect();
+    const x = Math.round(rect.left + 20);
+    const y = Math.round(rect.top + rect.height / 2);
+    fireEvent.contextMenu(row, { clientX: x, clientY: y });
+    const menu = await body.findByRole("menu", { name: "Actions for Bravo" });
+    await waitFor(() => expect(Math.round(menu.getBoundingClientRect().left)).toBe(x));
+    await expect(Math.round(menu.getBoundingClientRect().top)).toBe(y);
+  },
+};
+
+const PLAYLISTS = ["Warm up", "Peak time", "Closing", "Deep house", "Disco edits", "Techno"];
+
+/** A submenu with a filter field at its top, for a list longer than a menu should show at once. */
+export const FilterableSubmenu: Story = {
+  render: () => (
+    <DropdownMenu>
+      <DropdownMenuTrigger render={<Button variant="outline" />}>Track actions</DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuGroup>
+          <MenuFilterProvider>
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>Add to playlist</DropdownMenuSubTrigger>
+              <DropdownMenuSubContent aria-label="Add to playlist">
+                <MenuInput aria-label="Filter playlists" placeholder="Filter playlists" />
+                <MenuList>
+                  {PLAYLISTS.map((playlist) => (
+                    <DropdownMenuItem key={playlist}>{playlist}</DropdownMenuItem>
+                  ))}
+                </MenuList>
+                <MenuEmpty>No playlists match</MenuEmpty>
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
+          </MenuFilterProvider>
+        </DropdownMenuGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(canvasElement.ownerDocument.body);
+    await userEvent.click(canvas.getByRole("button", { name: "Track actions" }));
+    await userEvent.click(await body.findByRole("menuitem", { name: "Add to playlist" }));
+    const submenu = await body.findByRole("menu", { name: "Add to playlist" });
+    // The filter field sits beside the list of items, which is the element with the menu role.
+    const input = body.getByRole("searchbox", { name: "Filter playlists" });
+    await userEvent.type(input, "dis");
+    await waitFor(() =>
+      expect(
+        within(submenu)
+          .getAllByRole("menuitem")
+          .map((item) => item.textContent),
+      ).toEqual(["Disco edits"]),
+    );
   },
 };

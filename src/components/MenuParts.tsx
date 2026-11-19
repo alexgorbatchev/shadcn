@@ -189,6 +189,58 @@ function MenuSubContent({
   );
 }
 
+/**
+ * Makes the menu or submenu it wraps filterable: put a `MenuInput` at the top of its content and its items in a
+ * `MenuList`. Pass `filter={null}` with a controlled `value` to render the matching items yourself, for example to show
+ * only as many as fit.
+ */
+function MenuFilterProvider(props: MenuPrimitive.FilterProvider.Props): ReactElement {
+  return <MenuPrimitive.FilterProvider {...props} />;
+}
+
+type MenuInputProps = MenuPrimitive.Input.Props & IDensityProps;
+
+/** The filter field of a `MenuFilterProvider` menu; typing narrows the items while the arrows keep moving among them. */
+function MenuInput({ density, className, ...props }: MenuInputProps): ReactElement {
+  return (
+    <MenuPrimitive.Input
+      data-density={density}
+      data-slot="menu-input"
+      className={(state) =>
+        cn(
+          "mb-1 h-control-sm w-full min-w-0 rounded-sm border border-input bg-secondary px-1.5 text-sm outline-none placeholder:text-faint-foreground focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring",
+          typeof className === "function" ? className(state) : className,
+        )
+      }
+      {...props}
+    />
+  );
+}
+
+/** The items of a filterable menu, so the filter field can share the popup with them. */
+function MenuList(props: MenuPrimitive.List.Props): ReactElement {
+  return <MenuPrimitive.List data-slot="menu-list" {...props} />;
+}
+
+type MenuEmptyProps = MenuPrimitive.Empty.Props & IDensityProps;
+
+/** Shown in a filterable menu when no item matches its query. */
+function MenuEmpty({ density, className, ...props }: MenuEmptyProps): ReactElement {
+  return (
+    <MenuPrimitive.Empty
+      data-density={density}
+      data-slot="menu-empty"
+      className={(state) =>
+        cn(
+          "px-1.5 py-1 text-sm text-muted-foreground empty:hidden",
+          typeof className === "function" ? className(state) : className,
+        )
+      }
+      {...props}
+    />
+  );
+}
+
 function MenuCheckboxItem({
   analytics,
   density,
@@ -315,4 +367,8 @@ export {
   MenuSub,
   MenuSubTrigger,
   MenuSubContent,
+  MenuFilterProvider,
+  MenuInput,
+  MenuList,
+  MenuEmpty,
 };

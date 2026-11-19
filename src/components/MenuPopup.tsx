@@ -4,10 +4,11 @@ import { usePortalContainer } from "../hooks/usePortalContainer.js";
 import { usePortalNode } from "../hooks/usePortalNode.js";
 import { PortalProvider } from "./PortalProvider.js";
 import { useDirection } from "./DirectionProvider.js";
-import type { MenuPopupProps } from "../menu/types.js";
-import type { ReactElement } from "react";
+import type { MenuPoint, MenuPopupProps } from "../menu/types.js";
+import { useMemo, type ReactElement } from "react";
 import { Menu as MenuPrimitive } from "@base-ui/react/menu";
 import { cn } from "../utils/cn.js";
+
 function MenuPortal({ container, ref, children, ...props }: MenuPrimitive.Portal.Props): ReactElement {
   const resolvedContainer = usePortalContainer(container);
   const portal = usePortalNode(ref);
@@ -18,6 +19,19 @@ function MenuPortal({ container, ref, children, ...props }: MenuPrimitive.Portal
   );
 }
 
+/** A zero-size anchor at the point, which Base UI positions against as it does a context menu's pointer. */
+function usePointAnchor(point: MenuPoint | undefined): MenuPrimitive.Positioner.Props["anchor"] {
+  const x = point?.clientX;
+  const y = point?.clientY;
+  return useMemo(
+    () =>
+      x === undefined || y === undefined
+        ? undefined
+        : { getBoundingClientRect: () => DOMRect.fromRect({ x, y, width: 0, height: 0 }) },
+    [x, y],
+  );
+}
+
 function MenuPopup({
   density,
   width = "content",
@@ -25,26 +39,28 @@ function MenuPopup({
   alignOffset = 0,
   side = "bottom",
   sideOffset = 4,
+  point,
   className,
   ...props
 }: MenuPopupProps): ReactElement {
   const resolvedDensity = useDensity(density);
   const direction = useDirection();
+  const anchor = usePointAnchor(point);
+  // At a point the menu flips to the side with room, then `sticky` lets it shift along that side's axis too, so a
+  // menu opened near the viewport's bottom or end edge stays wholly visible instead of shrinking into a scroller.
+  const placement = anchor
+    ? { anchor, align: "start" as const, alignOffset: 0, side: "bottom" as const, sideOffset: 0, sticky: true }
+    : { align, alignOffset, side, sideOffset };
 
   return (
     <MenuPortal>
-      <MenuPrimitive.Positioner
-        dir={direction}
-        className="isolate outline-none"
-        align={align}
-        alignOffset={alignOffset}
-        side={side}
-        sideOffset={sideOffset}
-      >
+      <MenuPrimitive.Positioner dir={direction} className="isolate outline-none" {...placement}>
         <MenuPrimitive.Popup
           dir={direction}
           data-density={resolvedDensity}
           data-slot="dropdown-menu-content"
+          // Menus never scroll: the development ScrollGuard reports one whose content outgrows the viewport.
+          data-scroll="none"
           className={(state) =>
             cn(
               "max-h-(--available-height) max-w-(--available-width) min-w-32 origin-(--transform-origin) overflow-x-hidden overflow-y-auto rounded-md bg-popover p-1 text-popover-foreground shadow-frame border border-frame-edge shadow-frame duration-120 outline-none data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:overflow-hidden data-closed:fade-out-0",

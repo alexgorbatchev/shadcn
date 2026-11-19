@@ -37,7 +37,12 @@ export {
   MenuSub,
   MenuSubTrigger,
   MenuSubContent,
+  MenuFilterProvider,
+  MenuInput,
+  MenuList,
+  MenuEmpty,
 } from "./components/MenuParts.js";
+export type { MenuPoint, MenuPopupProps } from "./menu/types.js";
 export { FormDialog } from "./components/FormDialog.js";
 export { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "./components/Accordion.js";
 export {
