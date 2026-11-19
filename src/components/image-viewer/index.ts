@@ -19,3 +19,9 @@ export type {
   ImageComparisonOrientation,
   ImageZoom,
 } from "./types.js";
+export { ImageRegionMarker, ImageRegionMarkerBadge } from "./ImageRegionMarker.js";
+export type {
+  IImageRegionMarkerBadgeProps,
+  IImageRegionMarkerProps,
+  ImageRegionMarkerVariant,
+} from "./ImageRegionMarker.js";

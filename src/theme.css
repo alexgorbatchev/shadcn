@@ -96,6 +96,9 @@
     --ag-panel-padding-sm: 12px;
     --ag-field-gap: 20px;
     --ag-section-gap: 32px;
+    /* Target emphasis: a dark and a light line that keep 3:1 against any content in every theme, so they stay fixed. */
+    --target-emphasis: #4a0a3a;
+    --target-emphasis-contrast: #ffffff;
     color-scheme: dark;
     --background: #121417;
     --foreground: #eceff3;
@@ -646,5 +649,19 @@
     &:hover::before {
       opacity: 1;
     }
+  }
+}
+
+/* Marks the target a jump went to: a light 2px line against the element, then a dark 2px line outside it. Against any
+   colour one of the two keeps at least 3:1. Forced colours drop the shadow, so both lines become one Highlight
+   outline. */
+@utility target-emphasis {
+  outline: 2px solid var(--target-emphasis);
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px var(--target-emphasis-contrast);
+
+  @media (forced-colors: active) {
+    outline: 4px solid Highlight;
+    outline-offset: 0;
   }
 }

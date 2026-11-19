@@ -1,5 +1,6 @@
 import type { ReactElement } from "react";
 import type { IImageDiff } from "./types.js";
+import { ImageRegionMarker } from "./ImageRegionMarker.js";
 
 interface IImageDifferenceOverlayProps {
   diff: IImageDiff;
@@ -14,11 +15,10 @@ export function ImageDifferenceOverlay({ diff }: IImageDifferenceOverlayProps): 
   return (
     <div data-slot="image-difference-overlay" aria-hidden="true" className="pointer-events-none absolute inset-0">
       {diff.regions.map((region) => (
-        <div
+        <ImageRegionMarker
           key={`${region.x}:${region.y}:${region.width}:${region.height}`}
           data-slot="image-difference-region"
-          // A two-tone stroke outside the changed pixels stays readable over light and dark screenshots.
-          className="absolute rounded-xs bg-warning/10 shadow-[0_0_0_4px_var(--background)] ring-1 ring-background outline-2 outline-offset-1 outline-warning"
+          variant="difference"
           style={{
             left: toPercent(region.x, diff.width),
             top: toPercent(region.y, diff.height),
