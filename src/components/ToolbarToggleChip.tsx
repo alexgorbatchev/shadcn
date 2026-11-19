@@ -34,7 +34,8 @@ export interface IToolbarToggleChipProps extends IDensityProps, IAnalyticsProps 
   focusOnPointer?: boolean;
   /**
    * Whether Space activates the chip. Turn it off where Space belongs to the surrounding application, such as a player
-   * whose transport key is Space; Enter still activates the chip and Space reaches the application's listeners.
+   * whose transport key is Space; Enter still activates the chip, and Space reaches the application's listeners with its
+   * default intact. The chip then carries `data-space-activates="false"` for key handlers that defer to native controls.
    */
   spaceActivates?: boolean;
   className?: string;
@@ -77,11 +78,11 @@ export function ToolbarToggleChip({
   };
   const onKeyDown = (event: KeyboardEvent<HTMLButtonElement> & { preventBaseUIHandler?: () => void }): void => {
     if (spaceActivates || event.key !== " ") return;
-    // The toolbar never turns this Space into a click, and the key still bubbles to the application.
-    event.preventDefault();
+    // The toolbar never turns this Space into a click; the key bubbles on, unprevented, to the application.
     event.preventBaseUIHandler?.();
   };
   const onKeyUp = (event: KeyboardEvent<HTMLButtonElement>): void => {
+    // Without this, a native button would still click on Space's release.
     if (!spaceActivates && event.key === " ") event.preventDefault();
   };
   const button = (
@@ -89,6 +90,7 @@ export function ToolbarToggleChip({
       data-density={density}
       data-slot="toolbar-toggle-chip"
       data-pressed={pressedLabel(pressed)}
+      data-space-activates={spaceActivates ? undefined : "false"}
       aria-pressed={pressedLabel(pressed)}
       {...(shortcut && { "aria-keyshortcuts": shortcut.toUpperCase() })}
       aria-describedby={disabledReason ? reasonId : undefined}

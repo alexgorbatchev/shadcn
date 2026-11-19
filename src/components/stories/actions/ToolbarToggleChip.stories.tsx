@@ -54,7 +54,8 @@ export const KeepsFocusAndSpace: Story = {
     return (
       <div
         onKeyDown={(event) => {
-          if (event.key === " ") onSpace(false);
+          // The application's own Space, which the chip leaves unprevented.
+          if (event.key === " " && !event.defaultPrevented) onSpace(false);
         }}
       >
         <button type="button">Outside</button>
@@ -74,6 +75,7 @@ export const KeepsFocusAndSpace: Story = {
     await expect(outside).toHaveFocus();
     // Space reaches the surrounding application instead of toggling the chip.
     canvas.getByRole("button", { name: "Dark" }).focus();
+    await expect(canvas.getByRole("button", { name: "Dark" })).toHaveAttribute("data-space-activates", "false");
     await userEvent.keyboard(" ");
     await expect(args.onPressedChange).toHaveBeenLastCalledWith(false);
     await expect(args.onPressedChange).toHaveBeenCalledTimes(2);
