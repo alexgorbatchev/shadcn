@@ -218,6 +218,8 @@ type CommandItemProps = ComponentProps<typeof CommandPrimitive.Item> &
     disabledReason?: string;
     /** Runs instead of `onSelect` when Enter or a click selects an item with a disabled reason, to announce it. */
     onDisabledSelect?: () => void;
+    /** Gives the item a minimum height of 44px when the primary pointer is coarse. */
+    touchTarget?: boolean;
   };
 
 function CommandItem({
@@ -227,6 +229,7 @@ function CommandItem({
   disabledReason,
   onDisabledSelect,
   ref,
+  touchTarget,
   ...props
 }: CommandItemProps): ReactElement {
   const trackedOnSelect = useAnalyticsCallback("CommandItem", analytics, { name: "ui.activate" }, props.onSelect);
@@ -252,6 +255,7 @@ function CommandItem({
       data-disabled-reason={disabledReason ? "" : undefined}
       className={cn(
         "group/command-item relative flex min-h-control cursor-default items-center gap-control-gap px-control-x text-sm outline-none select-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-[selected=true]:bg-muted data-[selected=true]:text-foreground data-disabled-reason:flex-wrap data-disabled-reason:py-1 data-disabled-reason:data-[disabled=true]:pointer-events-auto data-disabled-reason:data-[disabled=true]:opacity-100 data-disabled-reason:data-[disabled=true]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:size-4",
+        touchTarget && "pointer-coarse:min-h-11",
         className,
       )}
       {...props}

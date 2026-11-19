@@ -32,7 +32,7 @@ const meta: Meta<typeof Command> = {
           <CommandList label="Commands">
             <CommandEmpty>No results found.</CommandEmpty>
             <CommandGroup heading="Workspace">
-              <CommandItem value="new-file" keywords={["create"]} onSelect={setAction}>
+              <CommandItem value="new-file" keywords={["create"]} onSelect={setAction} touchTarget>
                 New file<CommandShortcut>Ctrl+N</CommandShortcut>
               </CommandItem>
               <CommandItem value="delete" disabled>
@@ -83,8 +83,14 @@ export const Compact: Story = {
   ...Default,
   args: { density: "compact" },
   play: async (context) => {
+    const canvas = within(context.canvasElement);
+    const first = canvas.getByRole("option", { name: "New file Ctrl+N" });
+    const settings = canvas.getByRole("option", { name: "Settings" });
+    const coarse = matchMedia("(pointer: coarse)").matches;
+    await expect(first.getBoundingClientRect().height).toBe(coarse ? 44 : 20);
+    await expect(settings.getBoundingClientRect().height).toBe(20);
     await Default.play?.(context);
-    const input = within(context.canvasElement).getByRole("combobox", { name: "Search commands" });
+    const input = canvas.getByRole("combobox", { name: "Search commands" });
     await expect(input.getBoundingClientRect().height).toBe(20);
   },
 };
