@@ -35,7 +35,7 @@ beforeAll(async () => {
 afterAll(async () => {
   await browser?.close();
   await rm(consumerRoot, { recursive: true, force: true });
-});
+}, 60_000);
 
 test.each([
   [

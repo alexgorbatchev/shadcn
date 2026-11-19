@@ -26,7 +26,7 @@ beforeAll(async () => {
 }, 60_000);
 afterAll(async () => {
   await rm(consumerRoot, { recursive: true, force: true });
-});
+}, 60_000);
 
 test("a production install adds no third-party packages beyond the consumer's own React", async () => {
   await Bun.write(

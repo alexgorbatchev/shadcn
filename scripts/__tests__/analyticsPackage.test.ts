@@ -45,7 +45,7 @@ createRoot(document.getElementById("root")!).render(
 afterAll(async () => {
   await browser?.close();
   await rm(consumerRoot, { recursive: true, force: true });
-});
+}, 60_000);
 
 test.each(["development", "production"])(
   "packed analytics shares context with core components in %s",
