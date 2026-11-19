@@ -19,7 +19,7 @@ import { cn } from "../utils/cn.js";
 import { ChevronRightIcon, CheckIcon } from "lucide-react";
 
 const menuItemClassName =
-  "group/menu-item relative flex cursor-default items-center data-has-reason:flex-wrap data-has-reason:data-disabled:pointer-events-auto data-has-reason:data-disabled:opacity-100 data-has-reason:data-disabled:text-muted-foreground gap-control-gap rounded-md px-1.5 py-1 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground not-data-[variant=destructive]:focus:**:text-accent-foreground data-inset:ps-7 data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 data-[variant=destructive]:focus:text-destructive data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 data-[variant=destructive]:*:[svg]:text-destructive";
+  "group/menu-item relative flex cursor-default items-center data-has-description:flex-wrap data-has-reason:flex-wrap data-has-reason:data-disabled:pointer-events-auto data-has-reason:data-disabled:opacity-100 data-has-reason:data-disabled:text-muted-foreground gap-control-gap rounded-md px-1.5 py-1 text-sm outline-hidden select-none focus:bg-accent focus:text-accent-foreground not-data-[variant=destructive]:focus:**:text-accent-foreground data-inset:ps-7 data-[variant=destructive]:text-destructive data-[variant=destructive]:focus:bg-destructive/10 data-[variant=destructive]:focus:text-destructive data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4 data-[variant=destructive]:*:[svg]:text-destructive";
 
 function MenuGroup({ ...props }: MenuPrimitive.Group.Props): ReactElement {
   return <MenuPrimitive.Group data-slot="menu-group" {...props} />;
@@ -48,12 +48,14 @@ function MenuItem({
   className,
   inset,
   variant = "default",
+  description,
   disabledReason,
   onDisabledSelect,
   children,
   ...props
 }: MenuItemProps & IAnalyticsProps): ReactElement {
   const trackedOnClick = useAnalyticsCallback("MenuItem", analytics, { name: "ui.activate" }, props.onClick);
+  const descriptionId = useId();
   const reasonId = useId();
   // Base UI never runs a disabled item's click or key handlers, so the capture phase reports the attempt instead.
   const disabledSelect: Pick<MenuItemProps, "onClickCapture" | "onKeyDownCapture"> = disabledReason
@@ -77,18 +79,32 @@ function MenuItem({
       data-slot="menu-item"
       data-inset={inset}
       data-variant={variant}
+      data-has-description={description ? "" : undefined}
       data-has-reason={disabledReason ? "" : undefined}
       className={(state) => cn(menuItemClassName, typeof className === "function" ? className(state) : className)}
       {...props}
       // Base UI keeps disabled menu items focusable, so the reason stays reachable with the arrow keys.
       disabled={Boolean(disabledReason) || props.disabled}
       aria-describedby={
-        [props["aria-describedby"], disabledReason ? reasonId : undefined].filter(Boolean).join(" ") || undefined
+        [props["aria-describedby"], description ? descriptionId : undefined, disabledReason ? reasonId : undefined]
+          .filter(Boolean)
+          .join(" ") || undefined
       }
       onClick={trackedOnClick}
       {...disabledSelect}
     >
       {children}
+      {description && (
+        // Hidden from the item's content so it stays out of the accessible name; `aria-describedby` still reads it.
+        <span
+          id={descriptionId}
+          aria-hidden
+          data-slot="menu-item-description"
+          className="basis-full text-xs text-muted-foreground group-has-[>svg]/menu-item:ps-6"
+        >
+          {description}
+        </span>
+      )}
       {disabledReason && (
         <span
           id={reasonId}

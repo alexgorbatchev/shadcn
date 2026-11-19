@@ -792,6 +792,62 @@ export const DisabledReasons: Story = {
   },
 };
 
+/** A short secondary line under an item's label says what it changes; it describes the item without renaming it. */
+export const Descriptions: Story = {
+  render: function Render() {
+    const [action, setAction] = useState("None");
+    return (
+      <>
+        <DropdownMenu>
+          <DropdownMenuTrigger render={<Button variant="outline" />}>Track actions</DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuGroup>
+              <DropdownMenuItem description="writes into the files" onClick={() => setAction("File tags")}>
+                <FileIcon />
+                File tags…
+              </DropdownMenuItem>
+              <DropdownMenuItem description="moves the file" disabledReason="One track only">
+                <SaveIcon />
+                Move audio file…
+              </DropdownMenuItem>
+              <DropdownMenuItem description="reads the audio again">Analyze…</DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+        <output aria-label="Menu action">{action}</output>
+      </>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole("button", { name: "Track actions" }));
+    const menu = within(await within(canvasElement.ownerDocument.body).findByRole("menu"));
+    const fileTags = menu.getByRole("menuitem", { name: "File tags…" });
+    await waitFor(() => expect(menu.getByText("writes into the files")).toBeVisible());
+    await expect(fileTags).toHaveAccessibleDescription("writes into the files");
+    await expect(fileTags).not.toHaveAccessibleName(/writes into the files/);
+    await expect(menu.getByRole("menuitem", { name: "Analyze…" })).toHaveAccessibleDescription("reads the audio again");
+    // With a disabled reason too, the description comes first and both describe the item.
+    const move = menu.getByRole("menuitem", { name: /^Move audio file…/ });
+    await expect(move).not.toHaveAccessibleName(/moves the file/);
+    await expect(move).toHaveAttribute("aria-disabled", "true");
+    await expect(move).toHaveAccessibleDescription("moves the file One track only");
+    await expect(menu.getByText("moves the file")).toBeVisible();
+    await expect(
+      menu.getByText("moves the file").compareDocumentPosition(menu.getByText("One track only")) &
+        Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    // The description sits on its own line under the label.
+    const icon = fileTags.querySelector("svg");
+    await expect(icon).toBeInstanceOf(SVGElement);
+    await expect(menu.getByText("writes into the files").getBoundingClientRect().top).toBeGreaterThanOrEqual(
+      icon?.getBoundingClientRect().bottom ?? Number.POSITIVE_INFINITY,
+    );
+    await userEvent.click(fileTags);
+    await expect(canvas.getByLabelText("Menu action")).toHaveTextContent("File tags");
+  },
+};
+
 /** A shared menu opened at the pointer by a right-click on any row, as one menu instance serves a whole list. */
 export const AtPoint: Story = {
   render: function Render() {

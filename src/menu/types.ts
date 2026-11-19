@@ -8,6 +8,12 @@ interface IMenuInsetProps extends IDensityProps {
 interface IMenuItemOptions extends IMenuInsetProps {
   variant?: "default" | "destructive";
   /**
+   * Shows a short secondary line under the label, such as what the item changes, that the item references through
+   * `aria-describedby` as its accessible description rather than as part of its name. With `disabledReason`, the
+   * description comes first.
+   */
+  description?: string;
+  /**
    * Disables the item while keeping it reachable with the arrow keys, and shows why as visible secondary text that
    * the item references through `aria-describedby`.
    */
