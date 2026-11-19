@@ -119,6 +119,10 @@ export const PlainWrapping: Story = {
     const group = canvas.getByRole("group", { name: "Vibe" });
     await expect(getComputedStyle(group).flexWrap).toBe("wrap");
     const dark = canvas.getByRole("button", { name: "Dark" }).getBoundingClientRect();
+    const bright = canvas.getByRole("button", { name: "Bright" }).getBoundingClientRect();
+    // Chips share rows inside the vertical toolbar, starting at its leading edge.
+    await expect(bright.top).toBe(dark.top);
+    await expect(dark.left).toBe(group.getBoundingClientRect().left);
     const deep = canvas.getByRole("button", { name: "Deep" }).getBoundingClientRect();
     await expect(deep.top).toBeGreaterThan(dark.top);
     await expect(group.scrollWidth).toBeLessThanOrEqual(group.clientWidth);

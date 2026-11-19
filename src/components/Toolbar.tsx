@@ -104,7 +104,10 @@ function ToolbarInput({
 
 type ToolbarGroupProps = ToolbarPrimitive.Group.Props &
   IDensityProps & {
-    /** Lets the group's controls wrap onto further lines instead of overflowing, as a set of chips does. */
+    /**
+     * Lets the group's controls wrap onto further lines instead of overflowing, as a set of chips does. They run in
+     * rows even inside a vertical toolbar, whose arrow keys still move through them in order.
+     */
     wrap?: boolean;
   };
 
@@ -117,7 +120,8 @@ function ToolbarGroup({ density, className, wrap = false, ...props }: ToolbarGro
       className={(state) =>
         cn(
           "flex items-center gap-control-gap data-[orientation=vertical]:flex-col",
-          wrap && "flex-wrap",
+          // Wrapped chips run in rows even inside a vertical toolbar, left-aligned, so a set of values reads as text does.
+          wrap && "flex-wrap justify-start data-[orientation=vertical]:flex-row",
           typeof className === "function" ? className(state) : className,
         )
       }
