@@ -406,6 +406,7 @@ export { useSidebar } from "./hooks/useSidebar.js";
 export { InlineEdit } from "./components/InlineEdit.js";
 export { StarRating } from "./components/StarRating.js";
 export { ReviewList, type IReviewListRow } from "./components/ReviewList.js";
+export { ChoiceTable, type IChoiceTableColumn, type IChoiceTableRow } from "./components/ChoiceTable.js";
 export { ConfirmationDialog } from "./components/ConfirmationDialog.js";
 export { ImagePicker } from "./components/ImagePicker.js";
 export type {
