@@ -12,7 +12,7 @@ export const JsonTable = ({ props }: BaseComponentProps<JsonProps<"Table">>) => 
   const rows = (props.rows ?? []).map((row) => row.map(String));
 
   return (
-    <div className="rounded-md border border-border overflow-hidden">
+    <div className="w-full min-w-0 rounded-md border border-border overflow-hidden">
       <TablePrimitive>
         {props.caption && <TableCaption>{props.caption}</TableCaption>}
         <TableHeader>

@@ -31,7 +31,7 @@ export const JsonStack = ({ props, children }: BaseComponentProps<JsonProps<"Sta
   return (
     <div
       className={cn(
-        "flex",
+        "flex w-full min-w-0",
         isHorizontal ? "flex-row flex-wrap" : "flex-col",
         gapClass,
         alignClass,

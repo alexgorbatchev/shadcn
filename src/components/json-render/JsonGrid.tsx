@@ -21,5 +21,5 @@ export const JsonGrid = ({ props, children }: BaseComponentProps<JsonProps<"Grid
   const cols = colsMap[n] ?? "grid-cols-1";
   const gridGap = gridGapMap[props.gap ?? "md"] ?? "gap-3";
 
-  return <div className={cn("grid", cols, gridGap, props.className)}>{children}</div>;
+  return <div className={cn("grid w-full min-w-0", cols, gridGap, props.className)}>{children}</div>;
 };
