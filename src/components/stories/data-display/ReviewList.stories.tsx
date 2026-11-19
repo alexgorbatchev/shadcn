@@ -109,3 +109,112 @@ export const KeyboardGestures: Story = {
     await expect(canvas.getByRole("checkbox", { name: "Include Glass Steps" })).toBeChecked();
   },
 };
+
+interface ITreeNode {
+  id: string;
+  children?: readonly ITreeNode[];
+}
+
+const TREE: readonly ITreeNode[] = [
+  { id: "Crates", children: [{ id: "Peak Time" }, { id: "Warmup" }] },
+  { id: "Closing" },
+  { id: "Archive", children: [{ id: "2025" }] },
+];
+
+function leavesOf(node: ITreeNode): string[] {
+  return node.children ? node.children.flatMap(leavesOf) : [node.id];
+}
+
+function TreeReviewListExample(): ReactElement {
+  const [included, setIncluded] = useState<ReadonlySet<string>>(() => new Set(TREE.flatMap(leavesOf)));
+  const [expanded, setExpanded] = useState<ReadonlySet<string>>(() => new Set(["Crates"]));
+  const byId = new Map<string, ITreeNode>();
+  const rows: IReviewListRow[] = [];
+  const add = (nodes: readonly ITreeNode[], level: number): void => {
+    for (const node of nodes) {
+      byId.set(node.id, node);
+      const leaves = leavesOf(node);
+      const count = leaves.filter((leaf) => included.has(leaf)).length;
+      rows.push({
+        id: node.id,
+        level,
+        isIncluded: count === leaves.length,
+        isIndeterminate: count > 0 && count < leaves.length,
+        ...(node.children && { isExpanded: expanded.has(node.id) }),
+        checkboxLabel: `Include ${node.id}`,
+        content: <span>{node.id}</span>,
+      });
+      if (node.children && expanded.has(node.id)) add(node.children, level + 1);
+    }
+  };
+  add(TREE, 1);
+  return (
+    <div className="flex w-[480px] flex-col gap-2">
+      <p data-testid="included">
+        {TREE.flatMap(leavesOf)
+          .filter((leaf) => included.has(leaf))
+          .join(", ") || "none"}
+      </p>
+      <ReviewList
+        label="Playlists"
+        rows={rows}
+        onExpandedChange={(id, isExpanded) =>
+          setExpanded((current) => {
+            const next = new Set(current);
+            if (isExpanded) next.add(id);
+            else next.delete(id);
+            return next;
+          })
+        }
+        onIncludedChange={(ids, isIncluded) =>
+          setIncluded((current) => {
+            const next = new Set(current);
+            for (const leaf of ids.flatMap((id) => leavesOf(byId.get(id) ?? { id }))) {
+              if (isIncluded) next.add(leaf);
+              else next.delete(leaf);
+            }
+            return next;
+          })
+        }
+      />
+    </div>
+  );
+}
+
+/** A tree review: Enter or the disclosure shows a folder's rows, a partly included folder is mixed, Shift+↓ ranges. */
+export const TreeGestures: Story = {
+  render: () => <TreeReviewListExample />,
+  play: async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+    const tree = canvas.getByRole("treegrid", { name: "Playlists" });
+    const row = (name: string): HTMLElement | null => canvas.getByText(name).closest("[role='row']");
+    await expect(row("Peak Time")).toHaveAttribute("aria-level", "2");
+    await expect(row("Crates")).toHaveAttribute("aria-expanded", "true");
+    await expect(canvas.queryByText("2025")).toBeNull();
+    await userEvent.tab();
+    // ↓ to Peak Time, X excludes it, and its folder turns mixed.
+    await userEvent.keyboard("{ArrowDown}x");
+    await expect(canvas.getByRole("checkbox", { name: "Include Crates" })).toHaveAttribute("aria-checked", "mixed");
+    // Shift+↓ sets the range from the anchor (Peak Time) to the cursor to the anchor's state: excluded.
+    await userEvent.keyboard("{Shift>}{ArrowDown}{/Shift}");
+    await expect(includedTitlesOf(canvasElement)).toBe("Closing, 2025");
+    await expect(canvas.getByRole("checkbox", { name: "Include Crates" })).not.toBeChecked();
+    // Enter on a folder shows its rows; a click on the disclosure hides them again and never changes inclusion.
+    await userEvent.keyboard("{End}{Enter}");
+    await expect(row("Archive")).toHaveAttribute("aria-expanded", "true");
+    await expect(canvas.getByText("2025")).toBeVisible();
+    await expect(tree.querySelectorAll("[role='row']")).toHaveLength(6);
+    const disclosure = row("Archive")?.querySelector<HTMLElement>("[data-slot='review-list-disclosure']");
+    if (!disclosure) throw new Error("Archive has no disclosure");
+    await userEvent.click(disclosure);
+    await expect(canvas.queryByText("2025")).toBeNull();
+    await expect(includedTitlesOf(canvasElement)).toBe("Closing, 2025");
+    // Enter on a row without children does nothing.
+    await userEvent.keyboard("{Home}{ArrowDown}{Enter}");
+    await expect(tree.querySelectorAll("[role='row']")).toHaveLength(5);
+  },
+};
+
+function includedTitlesOf(canvasElement: HTMLElement): string {
+  return within(canvasElement).getByTestId("included").textContent ?? "";
+}
