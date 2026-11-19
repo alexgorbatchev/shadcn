@@ -438,6 +438,8 @@ export {
   ToolbarGroup,
   ToolbarSeparator,
 } from "./components/Toolbar.js";
+export { ToolbarToggleChip } from "./components/ToolbarToggleChip.js";
+export type { IToolbarToggleChipProps, ToggleChipPressed } from "./components/ToolbarToggleChip.js";
 export { Stepper, StepperList, StepperTrigger, StepperIndicator, StepperContent } from "./components/Stepper.js";
 export { AppShell } from "./components/AppShell.js";
 export type { AppShellContent, AppShellProps, AppShellNavigationItem } from "./components/AppShell.js";

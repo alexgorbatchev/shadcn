@@ -657,3 +657,32 @@ export const ResponsiveColumnWidths: Story = {
     await expect(canvas.getByRole("columnheader", { name: "BPM" }).getBoundingClientRect().width).toBe(60);
   },
 };
+export const RowStripes: Story = {
+  render: (): ReactElement => (
+    <Table>
+      <TableBody>
+        <TableRow stripe="rgb(229, 72, 77)">
+          <TableCell>Red track</TableCell>
+          <TableCell>Artist</TableCell>
+        </TableRow>
+        <TableRow stripe="rgb(0, 144, 255)" aria-selected>
+          <TableCell>Selected blue track</TableCell>
+          <TableCell>Artist</TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell>Uncolored track</TableCell>
+          <TableCell>Artist</TableCell>
+        </TableRow>
+      </TableBody>
+    </Table>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const shadow = (name: string): string => getComputedStyle(canvas.getByRole("cell", { name })).boxShadow;
+    await expect(shadow("Red track")).toContain("rgb(229, 72, 77)");
+    // A selected row keeps its selection edge and draws the stripe inside it.
+    await expect(shadow("Selected blue track")).toContain("rgb(0, 144, 255)");
+    await expect(shadow("Selected blue track").split("inset").length).toBe(3);
+    await expect(shadow("Uncolored track")).toBe("none");
+  },
+};

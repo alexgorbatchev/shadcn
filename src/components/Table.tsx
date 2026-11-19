@@ -82,15 +82,25 @@ function TableFooter({ density, className, ...props }: TableFooterProps): ReactE
   );
 }
 
-type TableRowProps = ComponentProps<"tr"> & IDensityProps;
+type TableRowProps = ComponentProps<"tr"> &
+  IDensityProps & {
+    /**
+     * A CSS color drawn as a 4 px stripe at the row's leading edge, such as a track's label color. A selected row
+     * keeps its selection edge and draws the stripe just inside it.
+     */
+    stripe?: string;
+  };
 
-function TableRow({ density, className, ...props }: TableRowProps): ReactElement {
+function TableRow({ density, className, stripe, style, ...props }: TableRowProps): ReactElement {
   return (
     <tr
       data-density={density}
       data-slot="table-row"
+      data-stripe={stripe ? "" : undefined}
+      style={stripe ? { ...style, ["--row-stripe" as string]: stripe } : style}
       className={cn(
         "border-b transition-colors outline-none hover:bg-muted/50 has-aria-expanded:bg-muted/50 focus:outline-2 focus:-outline-offset-2 focus:outline-ring data-[state=selected]:bg-muted aria-selected:bg-primary/10 aria-selected:shadow-[inset_3px_0_0_var(--primary)] aria-selected:hover:bg-primary/15",
+        "data-stripe:[&>td:first-child]:shadow-[inset_4px_0_0_var(--row-stripe)] data-stripe:aria-selected:[&>td:first-child]:shadow-[inset_3px_0_0_var(--primary),inset_7px_0_0_var(--row-stripe)]",
         className,
       )}
       {...props}
