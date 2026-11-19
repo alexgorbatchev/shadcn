@@ -105,3 +105,32 @@ test("a filterable menu narrows its items as people type and says when none matc
   await userEvent.keyboard("zz");
   await expect.element(page.getByText("No playlists match")).toBeVisible();
 });
+
+test("a trigger's menu with room on neither side shifts until it fits instead of scrolling", async () => {
+  await page.viewport(900, 600);
+  const report = vi.fn<(error: Error) => void>();
+  onTestFinished(observeScrollGuards(document, report));
+  const items = Array.from({ length: 15 }, (_, index) => `Item ${index}`);
+  await render(
+    <div style={{ position: "fixed", top: 280, left: 100 }}>
+      <DropdownMenu open>
+        <DropdownMenuTrigger>Middle actions</DropdownMenuTrigger>
+        <DropdownMenuContent aria-label="Middle menu">
+          {items.map((item) => (
+            <MenuItem key={item}>{item}</MenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>,
+  );
+  const menu = page.getByRole("menu", { name: "Middle menu" });
+  await expect.element(menu).toBeVisible();
+  const element = menu.element();
+  // Taller than the room below (~300px) and above (~280px) the trigger, but shorter than the window.
+  await expect.poll(() => element.getBoundingClientRect().height).toBeGreaterThan(320);
+  await expect.poll(() => element.getBoundingClientRect().bottom).toBeLessThanOrEqual(600);
+  expect(element.getBoundingClientRect().top).toBeGreaterThanOrEqual(0);
+  expect(element.scrollHeight).toBeLessThanOrEqual(element.clientHeight);
+  await new Promise((resolve) => requestAnimationFrame(resolve));
+  expect(report).not.toHaveBeenCalled();
+});

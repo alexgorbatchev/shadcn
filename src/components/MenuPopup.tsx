@@ -46,11 +46,12 @@ function MenuPopup({
   const resolvedDensity = useDensity(density);
   const direction = useDirection();
   const anchor = usePointAnchor(point);
-  // At a point the menu flips to the side with room, then `sticky` lets it shift along that side's axis too, so a
-  // menu opened near the viewport's bottom or end edge stays wholly visible instead of shrinking into a scroller.
+  // A menu flips to the side with room, then `sticky` lets it shift along that side's axis too, over its trigger or
+  // point if it must, so a menu shorter than the window always lies wholly inside it instead of shrinking into a
+  // scroller. Menus never scroll; the development ScrollGuard reports one taller than the window.
   const placement = anchor
     ? { anchor, align: "start" as const, alignOffset: 0, side: "bottom" as const, sideOffset: 0, sticky: true }
-    : { align, alignOffset, side, sideOffset };
+    : { align, alignOffset, side, sideOffset, sticky: true };
 
   return (
     <MenuPortal>
