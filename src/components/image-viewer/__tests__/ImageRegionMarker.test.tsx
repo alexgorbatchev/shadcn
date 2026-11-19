@@ -54,16 +54,12 @@ function pixelAt(pixels: ImageData, x: number, y: number): Rgb {
   return [pixels.data[offset] ?? 0, pixels.data[offset + 1] ?? 0, pixels.data[offset + 2] ?? 0];
 }
 
+function toColor([red, green, blue]: Rgb): Color {
+  return new Color("srgb", [red / 255, green / 255, blue / 255]);
+}
+
 function contrast(first: Rgb, second: Rgb): number {
-  return new Color(
-    "srgb",
-    first.map((channel) => channel / 255),
-  ).contrastWCAG21(
-    new Color(
-      "srgb",
-      second.map((channel) => channel / 255),
-    ),
-  );
+  return toColor(first).contrastWCAG21(toColor(second));
 }
 
 async function capture(): Promise<{ pixels: ImageData; scale: number }> {
