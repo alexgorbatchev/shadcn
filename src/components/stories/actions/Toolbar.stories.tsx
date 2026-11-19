@@ -99,3 +99,28 @@ export const DisabledState: Story = {
     await expect(disabled).toHaveFocus();
   },
 };
+/** A plain, vertical toolbar inside another surface, whose groups of chips wrap onto further lines. */
+export const PlainWrapping: Story = {
+  render: (args) => (
+    <div className="w-48">
+      <Toolbar {...args} aria-label="Tags" orientation="vertical" variant="plain">
+        <ToolbarGroup aria-label="Vibe" wrap>
+          {["Dark", "Bright", "Hypnotic", "Warm", "Deep"].map((name) => (
+            <ToolbarButton key={name}>{name}</ToolbarButton>
+          ))}
+        </ToolbarGroup>
+      </Toolbar>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const toolbar = canvas.getByRole("toolbar", { name: "Tags" });
+    await expect(getComputedStyle(toolbar).borderTopWidth).toBe("0px");
+    const group = canvas.getByRole("group", { name: "Vibe" });
+    await expect(getComputedStyle(group).flexWrap).toBe("wrap");
+    const dark = canvas.getByRole("button", { name: "Dark" }).getBoundingClientRect();
+    const deep = canvas.getByRole("button", { name: "Deep" }).getBoundingClientRect();
+    await expect(deep.top).toBeGreaterThan(dark.top);
+    await expect(group.scrollWidth).toBeLessThanOrEqual(group.clientWidth);
+  },
+};

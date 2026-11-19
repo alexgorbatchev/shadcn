@@ -7,15 +7,23 @@ import { Toolbar as ToolbarPrimitive } from "@base-ui/react/toolbar";
 import { cn } from "../utils/cn.js";
 import { buttonVariants } from "./Button.js";
 
-function Toolbar({ density, className, ...props }: ToolbarPrimitive.Root.Props & IDensityProps): ReactElement {
+type ToolbarProps = ToolbarPrimitive.Root.Props &
+  IDensityProps & {
+    /** `framed` (the default) draws a card around the controls; `plain` lays them out inside another surface. */
+    variant?: "framed" | "plain";
+  };
+
+function Toolbar({ density, className, variant = "framed", ...props }: ToolbarProps): ReactElement {
   return (
     <ToolbarPrimitive.Root
       data-density={density}
       data-slot="toolbar"
       data-scroll="none"
+      data-variant={variant}
       className={(state) =>
         cn(
-          "flex min-w-0 gap-control-gap rounded-sm border border-border bg-card p-1 text-card-foreground data-[orientation=vertical]:flex-col",
+          "flex min-w-0 gap-control-gap rounded-sm text-card-foreground data-[orientation=vertical]:flex-col",
+          variant === "framed" && "border border-border bg-card p-1",
           typeof className === "function" ? className(state) : className,
         )
       }
@@ -94,14 +102,22 @@ function ToolbarInput({
   );
 }
 
-function ToolbarGroup({ density, className, ...props }: ToolbarPrimitive.Group.Props & IDensityProps): ReactElement {
+type ToolbarGroupProps = ToolbarPrimitive.Group.Props &
+  IDensityProps & {
+    /** Lets the group's controls wrap onto further lines instead of overflowing, as a set of chips does. */
+    wrap?: boolean;
+  };
+
+function ToolbarGroup({ density, className, wrap = false, ...props }: ToolbarGroupProps): ReactElement {
   return (
     <ToolbarPrimitive.Group
       data-density={density}
       data-slot="toolbar-group"
+      data-wrap={wrap ? "" : undefined}
       className={(state) =>
         cn(
           "flex items-center gap-control-gap data-[orientation=vertical]:flex-col",
+          wrap && "flex-wrap",
           typeof className === "function" ? className(state) : className,
         )
       }
