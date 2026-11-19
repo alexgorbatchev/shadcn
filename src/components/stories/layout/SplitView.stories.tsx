@@ -334,6 +334,51 @@ export const NarrowTakeover: Story = {
   },
 };
 
+/** Below the breakpoint, an open persistent panel sits above the content as a resizable strip; both stay usable. */
+export const NarrowStrip: Story = {
+  render: function Example(args) {
+    const [open, setOpen] = useState(false);
+    return (
+      <div className="flex h-96 w-[600px] flex-col gap-2">
+        <Button onClick={() => setOpen(!open)}>{open ? "Close tags" : "Open tags"}</Button>
+        <SplitView
+          {...args}
+          sidebarLabel="Tags"
+          resizeLabel="Resize tags"
+          sidebarPosition="end"
+          sidebarOpen={open}
+          wideQuery="(min-width: 100000px)"
+          narrowLayout="strip"
+          layout="fill"
+          sidebar={<button type="button">Dark</button>}
+        >
+          <input aria-label="Draft answer" defaultValue="" />
+        </SplitView>
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const field = canvas.getByRole("textbox", { name: "Draft answer" });
+    await userEvent.type(field, "Keep this");
+    await userEvent.click(canvas.getByRole("button", { name: "Open tags" }));
+    const strip = canvas.getByRole("complementary", { name: "Tags" });
+    await expect(strip).toBeVisible();
+    // The content stays in view below the strip, with its draft.
+    await expect(canvas.getByRole("region", { name: "Content" })).toBeVisible();
+    await expect(canvas.getByRole("textbox", { name: "Draft answer" })).toBe(field);
+    const handle = canvas.getByRole("separator", { name: "Resize tags" });
+    await expect(handle).toHaveAttribute("aria-orientation", "horizontal");
+    await expect(strip.compareDocumentPosition(field) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    const before = strip.getBoundingClientRect().height;
+    handle.focus();
+    await userEvent.keyboard("{ArrowDown}{ArrowDown}{ArrowDown}");
+    await expect(strip.getBoundingClientRect().height).toBeGreaterThan(before);
+    await userEvent.click(canvas.getByRole("button", { name: "Close tags" }));
+    await expect(field).toHaveValue("Keep this");
+  },
+};
+
 /** A dock closed while its workspace was still narrow opens at its default width once there is room. */
 export const DockOpensAtDefaultWidth: Story = {
   render: function Example(args) {

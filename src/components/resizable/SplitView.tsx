@@ -38,9 +38,11 @@ interface ISplitViewProps {
   wideQuery?: string;
   /**
    * Below `wideQuery`: "stack" places the panes one above the other; "takeover" shows an open sidebar in the content's
-   * place, with the content hidden but still mounted, as a narrow window's inspector or review does.
+   * place, with the content hidden but still mounted, as a narrow window's inspector or review does; "strip" places an
+   * open sidebar above the content as a strip whose height the divider resizes, so both stay in view and usable, as a
+   * persistent tool panel under a player does.
    */
-  narrowLayout?: "stack" | "takeover";
+  narrowLayout?: "stack" | "takeover" | "strip";
   /** Widens the sidebar to `maxSidebarSize`; turning it off restores the width it had before. */
   sidebarExpanded?: boolean;
 }
@@ -127,7 +129,10 @@ export function SplitView({
   const isFill = layoutMode === "fill";
   const isWide = useMediaQuery(wideQuery);
   const isTakeover = !isWide && narrowLayout === "takeover" && sidebarOpen;
+  const isStrip = !isWide && narrowLayout === "strip" && sidebarOpen;
   const layout = useDefaultLayout({ id: storageKey, storage, onlySaveAfterUserInteractions: true });
+  // The strip's height is remembered apart from the side-by-side width.
+  const stripLayout = useDefaultLayout({ id: `${storageKey}:strip`, storage, onlySaveAfterUserInteractions: true });
   const sidebarRef = usePanelRef();
   // Server rendering and hydration render the panels in place; the browser then moves them into stable slots.
   const isHydrated = useSyncExternalStore(
@@ -184,7 +189,8 @@ export function SplitView({
         isWide && "h-full",
         sidebarPadding === "panel" && "p-4",
         isFill && "min-h-0 overflow-y-auto",
-        !isWide && isFill && !isTakeover && "max-h-[35%] shrink-0",
+        !isWide && isFill && !isTakeover && !isStrip && "max-h-[35%] shrink-0",
+        isStrip && "h-full",
         isTakeover && isFill && "flex-1",
       )}
     >
@@ -245,6 +251,21 @@ export function SplitView({
         className={cn(!sidebarOpen && "invisible w-0")}
       />
       {sidebarPosition === "start" ? contentPanel : sidebarPanel}
+    </Resizable>
+  ) : isStrip ? (
+    <Resizable
+      orientation="vertical"
+      className={cn(isFill && "h-full min-h-0")}
+      defaultLayout={stripLayout.defaultLayout}
+      onLayoutChanged={stripLayout.onLayoutChanged}
+    >
+      <ResizablePanel id="strip" defaultSize="40%" minSize="15%" maxSize="70%">
+        {sidebarSlot}
+      </ResizablePanel>
+      <ResizableHandle thickness="strong" aria-label={resizeLabel} />
+      <ResizablePanel id="content" minSize="25%">
+        {contentSlot}
+      </ResizablePanel>
     </Resizable>
   ) : (
     <div className={cn("flex min-w-0 flex-col bg-card", isFill && "h-full min-h-0 overflow-hidden")}>
