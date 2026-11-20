@@ -3,7 +3,17 @@ import { useAnalyticsCallback } from "../../hooks/useAnalyticsCallback.js";
 import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
 import type { ItemInstance, SelectionDataRef } from "@headless-tree/core";
-import { ChevronRightIcon, FileIcon, FolderIcon, FolderOpenIcon } from "lucide-react";
+import {
+  ChevronRightIcon,
+  CircleAlertIcon,
+  CircleCheckIcon,
+  CircleDotIcon,
+  CircleIcon,
+  FileIcon,
+  FolderIcon,
+  FolderOpenIcon,
+  HourglassIcon,
+} from "lucide-react";
 import type { ComponentProps, FocusEvent, KeyboardEvent, MouseEvent, ReactElement, ReactNode } from "react";
 import type { IDensityProps } from "../../density/types.js";
 import { cn } from "../../utils/cn.js";
@@ -37,6 +47,12 @@ type TreeItemProps<T> = useRender.ComponentProps<"div", TreeItemState> &
     /** Marks a row with activity its reader has not seen yet: the label turns bold. Pair it with a `marker`. */
     isUnread?: boolean;
     /**
+     * The row's start slot, before its icon and label and outside its link: a status control (a `TreeItemAction`
+     * holding a `TreeItemStatusIcon`) or a plain status icon. `null` keeps the slot empty so rows stay aligned. It
+     * fades with the row.
+     */
+    leading?: ReactNode;
+    /**
      * A visual marker at the row's end, such as a `TreeItemDot` for new activity, never faded by `isDimmed`. It is
      * hidden from assistive technology; state what it means in `descriptionLabel`.
      */
@@ -68,6 +84,58 @@ type TreeItemActionProps = ComponentProps<typeof Button>;
  */
 export function TreeItemAction({ variant = "ghost", size = "icon-xs", ...props }: TreeItemActionProps): ReactElement {
   return <Button variant={variant} size={size} {...props} tabIndex={-1} />;
+}
+
+/**
+ * A row's hand-back state, drawn by `TreeItemStatusIcon`: two waiting states, waiting with unsent answers, failed,
+ * held for an Undo window, handed back, and handed back with unsent changes.
+ */
+export type TreeItemStatus =
+  | "needs-answers"
+  | "needs-review"
+  | "unsent"
+  | "failed"
+  | "held"
+  | "handed-back"
+  | "handed-back-unsent";
+
+const STATUS_ICONS: Record<TreeItemStatus, typeof CircleIcon> = {
+  "needs-answers": CircleDotIcon,
+  "needs-review": CircleIcon,
+  unsent: CircleIcon,
+  failed: CircleAlertIcon,
+  held: HourglassIcon,
+  "handed-back": CircleCheckIcon,
+  "handed-back-unsent": CircleCheckIcon,
+};
+
+interface ITreeItemStatusIconProps {
+  status: TreeItemStatus;
+  className?: string;
+}
+
+/**
+ * The status icon set for a row's `leading` slot. Each state has its own shape, so forced colors keep them apart; the
+ * unsent states add a filled marker at the top end. It is decorative: the row's `descriptionLabel` names the state.
+ */
+export function TreeItemStatusIcon({ status, className }: ITreeItemStatusIconProps): ReactElement {
+  const Icon = STATUS_ICONS[status];
+  const hasMarker = status === "unsent" || status === "handed-back-unsent";
+  return (
+    <span
+      aria-hidden="true"
+      data-slot="tree-item-status"
+      data-status={status}
+      className={cn("relative inline-flex size-4 shrink-0 items-center justify-center [&>svg]:size-3.5", className)}
+    >
+      <Icon />
+      {hasMarker && (
+        <svg viewBox="0 0 6 6" className="absolute -top-0.5 -right-0.5 size-1.5" focusable="false">
+          <circle cx="3" cy="3" r="3" fill="currentColor" />
+        </svg>
+      )}
+    </span>
+  );
 }
 
 interface ITreeItemDotProps {
@@ -122,6 +190,7 @@ export function TreeItem<T>({
   isDropTarget = false,
   isDimmed = false,
   isUnread = false,
+  leading,
   marker,
   linkProps,
   dropHint,
@@ -292,6 +361,17 @@ export function TreeItem<T>({
               />
             ) : (
               <span className={cn("shrink-0", expandOn === "disclosure" ? "size-control-xs" : "size-3.5")} />
+            )}
+            {leading !== undefined && (
+              <div
+                data-slot="tree-item-leading"
+                className={cn("flex size-control-xs shrink-0 items-center justify-center", faded)}
+                onClick={(event) => event.stopPropagation()}
+                onDoubleClick={(event) => event.stopPropagation()}
+                onKeyDown={(event) => event.stopPropagation()}
+              >
+                {leading}
+              </div>
             )}
             {linkProps && !isEditing ? (
               link

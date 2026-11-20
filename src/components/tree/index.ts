@@ -1,7 +1,7 @@
 export { Tree } from "./Tree.js";
-export { TreeItem, TreeItemAction, TreeItemDot } from "./TreeItem.js";
+export { TreeItem, TreeItemAction, TreeItemDot, TreeItemStatusIcon } from "./TreeItem.js";
 export type { TreeProps } from "./Tree.js";
-export type { TreeItemProps } from "./TreeItem.js";
+export type { TreeItemProps, TreeItemStatus } from "./TreeItem.js";
 export { useTree, AssistiveTreeDescription } from "@headless-tree/react";
 export {
   syncDataLoaderFeature,

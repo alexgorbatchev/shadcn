@@ -7,6 +7,7 @@ import {
   TreeItem,
   TreeItemAction,
   TreeItemDot,
+  TreeItemStatusIcon,
   useTree,
   syncDataLoaderFeature,
   hotkeysCoreFeature,
@@ -22,6 +23,7 @@ import {
 } from "../../ContextMenu";
 import { InlineEdit } from "../../InlineEdit";
 import { useState } from "react";
+import type { TreeItemStatus } from "../../tree";
 type Item = {
   name: string;
   children?: string[];
@@ -541,5 +543,68 @@ export const NewActivity: Story = {
     const button = canvas.getByRole("treeitem", { name: "Button.tsx" });
     await expect(button).toHaveAccessibleDescription("New round");
     await expect(marker(button)?.textContent).toBe("");
+  },
+};
+
+const statusRows: Record<string, TreeItemStatus | null> = {
+  "Choose a hero direction": "needs-answers",
+  "Pricing page copy": "needs-review",
+  "Brand questionnaire": "unsent",
+  "Interview 35": "failed",
+  "Interview 02": "held",
+  "Plan comparison": "handed-back",
+  "Navigation IA": "handed-back-unsent",
+  "Draft only": null,
+};
+const waitingStatuses = new Set<TreeItemStatus>(["needs-answers", "needs-review", "unsent", "failed"]);
+
+function StatusRowsExample() {
+  const tree = useTree<string>({
+    rootItemId: "root",
+    getItemName: (item) => item.getItemData(),
+    isItemFolder: (item) => item.getId() === "root",
+    dataLoader: { getItem: (id) => id, getChildren: (id) => (id === "root" ? Object.keys(statusRows) : []) },
+    features: [syncDataLoaderFeature, hotkeysCoreFeature, selectionFeature],
+  });
+  return (
+    <Tree
+      tree={tree}
+      label="Hand-back states"
+      variant="sidebar"
+      renderItem={(item) => {
+        const status = statusRows[item.getId()] ?? null;
+        return (
+          <TreeItem
+            item={item}
+            isDimmed={status === "handed-back" || status === "handed-back-unsent"}
+            linkProps={{ href: "#", onClick: (event) => event.preventDefault() }}
+            leading={
+              status === null ? null : waitingStatuses.has(status) ? (
+                <TreeItemAction aria-label={`Mark ${item.getId()} as reviewed`} onClick={action}>
+                  <TreeItemStatusIcon status={status} />
+                </TreeItemAction>
+              ) : (
+                <TreeItemStatusIcon status={status} />
+              )
+            }
+          />
+        );
+      }}
+    />
+  );
+}
+
+/** Row-start status: waiting states are pointer controls outside the link; others are icons; drafts keep the slot. */
+export const StatusRows: Story = {
+  render: () => <StatusRowsExample />,
+  play: async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+    await expect(canvasElement.querySelectorAll("[data-slot='tree-item-leading']")).toHaveLength(8);
+    await expect(canvasElement.querySelectorAll("[data-slot='tree-item-status']")).toHaveLength(7);
+    const control = canvas.getByRole("button", { name: "Mark Pricing page copy as reviewed" });
+    await expect(control).toHaveAttribute("tabindex", "-1");
+    await userEvent.click(control);
+    await expect(action).toHaveBeenCalled();
+    await expect(canvas.queryByRole("button", { name: "Mark Interview 02 as reviewed" })).not.toBeInTheDocument();
   },
 };

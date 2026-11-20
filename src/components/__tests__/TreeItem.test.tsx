@@ -1,4 +1,5 @@
 import type { ReactElement } from "react";
+import type { TreeItemStatus } from "../tree";
 import { expect, test } from "vitest";
 import { render } from "vitest-browser-react";
 import { page, userEvent } from "vitest/browser";
@@ -7,7 +8,9 @@ import { ThemeProvider } from "../ThemeProvider";
 import {
   Tree,
   TreeItem,
+  TreeItemAction,
   TreeItemDot,
+  TreeItemStatusIcon,
   hotkeysCoreFeature,
   selectionFeature,
   syncDataLoaderFeature,
@@ -121,4 +124,93 @@ test("a rollup dot shows the count of new items beside it", async () => {
   const dot = document.querySelector("[data-slot='tree-item-dot']");
   expect(dot?.querySelector("[data-slot='tree-item-dot-count']")?.textContent).toBe("3");
   expect(dot?.getAttribute("aria-hidden")).toBe("true");
+});
+
+const STATUSES: TreeItemStatus[] = [
+  "needs-answers",
+  "needs-review",
+  "unsent",
+  "failed",
+  "held",
+  "handed-back",
+  "handed-back-unsent",
+];
+
+function StatusTree({ onReview }: { onReview: (name: string) => void }): ReactElement {
+  const tree = useTree<string>({
+    rootItemId: "root",
+    getItemName: (item) => item.getItemData(),
+    isItemFolder: (item) => item.getId() === "root",
+    dataLoader: { getItem: (id) => id, getChildren: (id) => (id === "root" ? [...STATUSES, "draft"] : []) },
+    features: [syncDataLoaderFeature, hotkeysCoreFeature, selectionFeature],
+  });
+  return (
+    <ThemeProvider forcedTheme="light">
+      <button type="button">Before</button>
+      <Tree
+        tree={tree}
+        label="Pages"
+        variant="sidebar"
+        renderItem={(item) => {
+          const status = STATUSES.find((value) => value === item.getId());
+          const isWaiting =
+            status === "needs-answers" || status === "needs-review" || status === "unsent" || status === "failed";
+          return (
+            <TreeItem
+              item={item}
+              isDimmed={status === "handed-back" || status === "handed-back-unsent"}
+              linkProps={{ href: `#${item.getId()}`, onClick: (event) => event.preventDefault() }}
+              leading={
+                status === undefined ? null : isWaiting ? (
+                  <TreeItemAction aria-label={`Review ${item.getId()}`} onClick={() => onReview(item.getId())}>
+                    <TreeItemStatusIcon status={status} />
+                  </TreeItemAction>
+                ) : (
+                  <TreeItemStatusIcon status={status} />
+                )
+              }
+            />
+          );
+        }}
+      />
+      <button type="button">After</button>
+    </ThemeProvider>
+  );
+}
+
+test("puts a status control or icon at the row's start, outside its link, with one shape per state", async () => {
+  const reviewed: string[] = [];
+  await render(<StatusTree onReview={(name) => reviewed.push(name)} />);
+  const link = page.getByRole("treeitem", { name: "needs-review", exact: true }).element();
+  const row = link.parentElement;
+  const leading = row?.querySelector("[data-slot='tree-item-leading']");
+  // The slot comes before the link and is not inside it, so its control is its own hit area.
+  expect(leading).not.toBeNull();
+  expect(link.contains(leading ?? null)).toBe(false);
+  expect(leading && link.compareDocumentPosition(leading) & Node.DOCUMENT_POSITION_PRECEDING).toBeTruthy();
+  const shapes = STATUSES.map(
+    (status) =>
+      page.getByRole("treeitem", { name: status, exact: true }).element().parentElement?.querySelector("svg")
+        ?.innerHTML ?? "",
+  );
+  expect(new Set(shapes.slice(0, 2)).size).toBe(2);
+  expect(document.querySelectorAll("[data-status='unsent'] svg, [data-status='handed-back-unsent'] svg")).toHaveLength(
+    4,
+  );
+  // A row without a status keeps an empty slot so titles line up.
+  const draft = page.getByRole("treeitem", { name: "draft" }).element().parentElement;
+  expect(draft?.querySelector("[data-slot='tree-item-leading']")?.childElementCount).toBe(0);
+  // The control is a pointer shortcut: the tree stays one Tab stop.
+  await userEvent.click(page.getByRole("button", { name: "Before" }));
+  await userEvent.keyboard("{Tab}");
+  await expect.element(page.getByRole("treeitem", { name: "needs-answers" })).toHaveFocus();
+  await userEvent.keyboard("{Tab}");
+  await expect.element(page.getByRole("button", { name: "After" })).toHaveFocus();
+  await userEvent.click(page.getByRole("button", { name: "Review failed" }));
+  expect(reviewed).toEqual(["failed"]);
+  // A handed-back row fades its start slot with its content.
+  const handedBack = page.getByRole("treeitem", { name: "handed-back", exact: true }).element().parentElement;
+  await userEvent.hover(page.getByRole("button", { name: "After" }));
+  const slot = handedBack?.querySelector("[data-slot='tree-item-leading']");
+  await expect.poll(() => (slot ? getComputedStyle(slot).opacity : "missing")).toBe("0.7");
 });
