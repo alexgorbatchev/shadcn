@@ -541,3 +541,54 @@ export const NarrowDrawer: Story = {
     await expect(opener).toHaveFocus();
   },
 };
+
+/**
+ * `drawerHeight="half"` opens the drawer at half the viewport height, so what it refers to, such as a region on an
+ * image above it, stays in view; Full height still raises it to the whole viewport.
+ */
+export const NarrowHalfDrawer: Story = {
+  render: function Example(args) {
+    const [open, setOpen] = useState(false);
+    const [expanded, setExpanded] = useState(false);
+    return (
+      <div className="flex w-[600px] flex-col gap-2">
+        <Button onClick={() => setOpen(true)}>Comment on region</Button>
+        <SplitView
+          {...args}
+          sidebarLabel="Comments on this image"
+          sidebarPosition="end"
+          sidebarOpen={open}
+          sidebarExpanded={expanded}
+          drawerHeight="half"
+          onSidebarOpenChange={setOpen}
+          wideQuery="(min-width: 100000px)"
+          narrowLayout="drawer"
+          layout="fill"
+          sidebar={
+            <div className="flex gap-2 p-panel">
+              <Button variant="outline" onClick={() => setExpanded(!expanded)}>
+                {expanded ? "Collapse" : "Full height"}
+              </Button>
+            </div>
+          }
+        >
+          <h2>Deploy monitor screenshot</h2>
+        </SplitView>
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(canvasElement.ownerDocument.body);
+    const view = canvasElement.ownerDocument.defaultView!;
+    await userEvent.click(canvas.getByRole("button", { name: "Comment on region" }));
+    const dialog = await body.findByRole("dialog", { name: "Comments on this image" });
+    await waitFor(() =>
+      expect(Math.abs(dialog.getBoundingClientRect().height - view.innerHeight * 0.5)).toBeLessThanOrEqual(1),
+    );
+    await userEvent.click(within(dialog).getByRole("button", { name: "Full height" }));
+    await waitFor(() =>
+      expect(Math.abs(dialog.getBoundingClientRect().height - view.innerHeight)).toBeLessThanOrEqual(1),
+    );
+  },
+};

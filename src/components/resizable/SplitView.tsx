@@ -57,6 +57,12 @@ interface ISplitViewProps {
    * layout it raises the drawer to the full viewport height.
    */
   sidebarExpanded?: boolean;
+  /**
+   * Height of the "drawer" narrow layout until `sidebarExpanded` raises it to full height: "tall" (the default) is 85%
+   * of the viewport, as a phone's comments; "half" is 50%, so content the drawer refers to, such as a region on an
+   * image, stays in view above it.
+   */
+  drawerHeight?: "tall" | "half";
   /** Called when a "sheet" or "drawer" narrow layout asks to open or close the sidebar, such as on Escape or a swipe. */
   onSidebarOpenChange?: (open: boolean) => void;
   /**
@@ -169,6 +175,7 @@ export function SplitView({
   wideQuery = "(min-width: 1024px)",
   narrowLayout = "stack",
   sidebarExpanded = false,
+  drawerHeight = "tall",
   onSidebarOpenChange,
   sidebarFinalFocus,
 }: ISplitViewProps): ReactElement {
@@ -354,7 +361,8 @@ export function SplitView({
           className={cn(
             narrowLayout === "drawer" &&
               "data-[swipe-axis=y]:[--drawer-content-max-height:100dvh] data-[swipe-axis=y]:rounded-t-none",
-            narrowLayout === "drawer" && (sidebarExpanded ? "h-dvh" : "h-[85dvh]"),
+            narrowLayout === "drawer" &&
+              (sidebarExpanded ? "h-dvh" : drawerHeight === "half" ? "h-[50dvh]" : "h-[85dvh]"),
           )}
         >
           {narrowLayout === "sheet" && (
