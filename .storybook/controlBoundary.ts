@@ -47,20 +47,42 @@ function surfaceBehind(element: Element): Rgb {
   return layers.reduceRight<Rgb>((under, layer) => paint(layer, under), [255, 255, 255]);
 }
 
-/** The stronger of a control's border and fill contrast against the surface behind it. */
+// The strongest drawn edge of one box: any border side (grouped buttons drop the edge they share with a neighbour)
+// or its outline.
+function edgeContrast(style: CSSStyleDeclaration, surface: Rgb): number {
+  const edges = (["top", "right", "bottom", "left"] as const).map((side) => ({
+    width: style.getPropertyValue(`border-${side}-width`),
+    style: style.getPropertyValue(`border-${side}-style`),
+    color: style.getPropertyValue(`border-${side}-color`),
+  }));
+  edges.push({ width: style.outlineWidth, style: style.outlineStyle, color: style.outlineColor });
+  return edges
+    .filter((edge) => Number.parseFloat(edge.width) > 0 && edge.style !== "none")
+    .reduce((strongest, edge) => Math.max(strongest, contrast(paint(edge.color, surface), surface)), 1);
+}
+
+// A wrapper that hugs the control, such as an image marker badge's outlined holder, draws the control's edge.
+function hugsControl(wrapper: Element, control: DOMRect): boolean {
+  const box = wrapper.getBoundingClientRect();
+  return (
+    Math.abs(box.left - control.left) <= 1 &&
+    Math.abs(box.top - control.top) <= 1 &&
+    Math.abs(box.right - control.right) <= 1 &&
+    Math.abs(box.bottom - control.bottom) <= 1
+  );
+}
+
+/** The strongest of a control's edges (its own or a hugging wrapper's) and its fill, against the surface behind it. */
 export function boundaryContrast(element: Element): number {
   const style = getComputedStyle(element);
   const surface = surfaceBehind(element);
-  // Any drawn side counts: grouped buttons drop the edge they share with a neighbour.
-  const border = (["top", "right", "bottom", "left"] as const).reduce((strongest, side) => {
-    const isDrawn =
-      Number.parseFloat(style.getPropertyValue(`border-${side}-width`)) > 0 &&
-      style.getPropertyValue(`border-${side}-style`) !== "none";
-    if (!isDrawn) return strongest;
-    return Math.max(strongest, contrast(paint(style.getPropertyValue(`border-${side}-color`), surface), surface));
-  }, 1);
+  const box = element.getBoundingClientRect();
+  let edge = edgeContrast(style, surface);
+  for (let node = element.parentElement; node && hugsControl(node, box); node = node.parentElement) {
+    edge = Math.max(edge, edgeContrast(getComputedStyle(node), surface));
+  }
   const fill = contrast(paint(style.backgroundColor, surface), surface);
-  return Math.max(border, fill);
+  return Math.max(edge, fill);
 }
 
 // Visible text, as opposed to an icon with an accessible name or a visually hidden label.
