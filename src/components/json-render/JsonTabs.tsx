@@ -6,6 +6,7 @@ import { TabsContent } from "../../index.js";
 import { TabsList } from "../../index.js";
 import { TabsTrigger } from "../../index.js";
 import { type JsonProps } from "./catalog.js";
+import { JsonRevealScope } from "./JsonForm.js";
 
 function toChildList(children: ReactNode): ReactNode[] {
   if (Array.isArray(children)) return children;
@@ -41,7 +42,7 @@ export const JsonTabs = ({ props, children, bindings, emit }: BaseComponentProps
       {hasPanels &&
         tabs.map((tab, index) => (
           <TabsContent key={tab.value} value={tab.value} keepMounted>
-            {childList[index]}
+            <JsonRevealScope onReveal={() => setValue(tab.value)}>{childList[index]}</JsonRevealScope>
           </TabsContent>
         ))}
       {extraChildren}

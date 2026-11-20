@@ -140,6 +140,11 @@ export type {
 } from "./drag-drop/types.js";
 export { EmptyState } from "./components/EmptyState.js";
 export { PageMessage } from "./components/PageMessage.js";
+export { ActionBar, ActionBarRow } from "./components/ActionBar.js";
+export type { IActionBarProps, IActionBarRowProps } from "./components/ActionBar.js";
+export { ErrorSummary, ErrorSummaryItem } from "./components/ErrorSummary.js";
+export type { IErrorSummaryProps, IErrorSummaryItemProps } from "./components/ErrorSummary.js";
+export { Outline, OutlineSection, OutlineItem } from "./components/Outline.js";
 export { DataViewer, formatDataLabel } from "./components/DataViewer.js";
 export type { DataViewerProps } from "./components/DataViewer.js";
 export { JsonViewer } from "./components/JsonViewer.js";

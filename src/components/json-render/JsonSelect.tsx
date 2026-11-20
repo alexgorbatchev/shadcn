@@ -2,15 +2,16 @@ import { useId, useState } from "react";
 import { useBoundProp } from "@json-render/react";
 import { useFieldValidation } from "@json-render/react";
 import { type BaseComponentProps } from "@json-render/react";
-import { Label } from "../../index.js";
 import { Select } from "../../index.js";
 import { SelectContent } from "../../index.js";
 import { SelectItem } from "../../index.js";
 import { SelectTrigger } from "../../index.js";
 import { SelectValue } from "../../index.js";
 import { type JsonProps } from "./catalog.js";
+import { JsonFieldLabel, JsonFieldMessage, JsonFieldValue, useJsonField, useJsonForm } from "./JsonForm.js";
 export const JsonSelect = ({ props, bindings, emit }: BaseComponentProps<JsonProps<"Select">>) => {
   const id = useId();
+  const form = useJsonForm();
   const [boundValue, setBoundValue] = useBoundProp<string>(props.value ?? undefined, bindings?.value);
   const [localValue, setLocalValue] = useState<string>(props.value ?? "");
   const isBound = !!bindings?.value;
@@ -20,17 +21,21 @@ export const JsonSelect = ({ props, bindings, emit }: BaseComponentProps<JsonPro
   const options = rawOptions.map((opt) => (typeof opt === "string" ? opt : String(opt ?? "")));
   const validateOn = props.validateOn ?? "change";
 
-  const hasValidation = !!(bindings?.value && props.checks?.length);
+  // Inside a JsonFormProvider the consumer owns the field's messages.
+  const hasValidation = !!(bindings?.value && props.checks?.length) && !form;
   const { errors, validate } = useFieldValidation(
     bindings?.value ?? "",
     hasValidation ? { checks: props.checks ?? [], validateOn } : undefined,
   );
+  const field = useJsonField({ path: bindings?.value, label: props.label, checks: props.checks, ownErrors: errors });
+  if (field.mode === "values") return <JsonFieldValue field={field} text={value} />;
 
   return (
     <div className="space-y-2">
-      <Label htmlFor={id}>{props.label}</Label>
+      <JsonFieldLabel field={field} htmlFor={id} />
       <Select
         value={value}
+        disabled={field.mode === "locked"}
         onValueChange={(v) => {
           setValue(v ?? "");
           // Select has no native blur event, so only validate on "change"
@@ -38,7 +43,7 @@ export const JsonSelect = ({ props, bindings, emit }: BaseComponentProps<JsonPro
           emit("change");
         }}
       >
-        <SelectTrigger id={id} className="w-full">
+        <SelectTrigger id={id} className="w-full" {...field.controlProps}>
           <SelectValue placeholder={props.placeholder ?? "Select..."} />
         </SelectTrigger>
         <SelectContent>
@@ -49,7 +54,7 @@ export const JsonSelect = ({ props, bindings, emit }: BaseComponentProps<JsonPro
           ))}
         </SelectContent>
       </Select>
-      {errors.length > 0 && <p className="text-sm text-destructive">{errors[0]}</p>}
+      <JsonFieldMessage field={field} />
     </div>
   );
 };

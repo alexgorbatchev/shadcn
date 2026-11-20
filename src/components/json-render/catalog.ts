@@ -112,7 +112,8 @@ export const componentDefinitions = {
       defaultOpen: z.boolean().nullable(),
     }),
     slots: ["default"],
-    description: "Collapsible section with trigger. Children render inside.",
+    description:
+      "Collapsible section with trigger. Children render inside and stay mounted but hidden while it is closed.",
   },
 
   Dialog: {
@@ -415,7 +416,7 @@ export const componentDefinitions = {
     }),
     events: ["select"],
     description:
-      "Dropdown menu with trigger button and selectable items. Use { $bindState } on value for selected item binding.",
+      "Dropdown menu with trigger button and selectable items. Without a binding the label is the trigger's text and items are actions. With { $bindState } on value it is a choice: the label names the question above the trigger, the trigger shows the chosen item's label ('Choose…' before a choice) and the open menu marks the chosen item checked.",
   },
 
   Toggle: {

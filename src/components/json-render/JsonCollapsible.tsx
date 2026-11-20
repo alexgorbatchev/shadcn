@@ -1,12 +1,14 @@
 import { Button } from "../../index.js";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { type BaseComponentProps } from "@json-render/react";
 import { Collapsible } from "../../index.js";
 import { CollapsibleContent } from "../../index.js";
 import { CollapsibleTrigger } from "../../index.js";
 import { type JsonProps } from "./catalog.js";
+import { JsonRevealScope } from "./JsonForm.js";
 export const JsonCollapsible = ({ props, children }: BaseComponentProps<JsonProps<"Collapsible">>) => {
   const [open, setOpen] = useState(props.defaultOpen ?? false);
+  const reveal = useCallback(() => setOpen(true), []);
   return (
     <Collapsible open={open} onOpenChange={setOpen} className="w-full">
       <CollapsibleTrigger render={<Button variant="outline" fullWidth align="start" />}>
@@ -21,7 +23,10 @@ export const JsonCollapsible = ({ props, children }: BaseComponentProps<JsonProp
           <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
         </svg>
       </CollapsibleTrigger>
-      <CollapsibleContent className="pt-2">{children}</CollapsibleContent>
+      {/* Kept mounted while closed, so the questions inside stay known and can open their section. */}
+      <CollapsibleContent className="pt-2" keepMounted>
+        <JsonRevealScope onReveal={reveal}>{children}</JsonRevealScope>
+      </CollapsibleContent>
     </Collapsible>
   );
 };

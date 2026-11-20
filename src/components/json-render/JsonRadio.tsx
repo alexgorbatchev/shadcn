@@ -2,12 +2,14 @@ import { useId, useState } from "react";
 import { useBoundProp } from "@json-render/react";
 import { useFieldValidation } from "@json-render/react";
 import { type BaseComponentProps } from "@json-render/react";
-import { Label, Field, FieldLabel } from "../../index.js";
+import { Field, FieldLabel } from "../../index.js";
 import { RadioGroup } from "../../index.js";
 import { RadioGroupItem } from "../../index.js";
 import { type JsonProps } from "./catalog.js";
+import { JsonFieldLabel, JsonFieldMessage, JsonFieldValue, useJsonField, useJsonForm } from "./JsonForm.js";
 export const JsonRadio = ({ props, bindings, emit }: BaseComponentProps<JsonProps<"Radio">>) => {
   const id = useId();
+  const form = useJsonForm();
   const rawOptions = props.options ?? [];
   const options = rawOptions.map((opt) => (typeof opt === "string" ? opt : String(opt ?? "")));
   const [boundValue, setBoundValue] = useBoundProp<string>(props.value ?? undefined, bindings?.value);
@@ -17,18 +19,25 @@ export const JsonRadio = ({ props, bindings, emit }: BaseComponentProps<JsonProp
   const setValue = isBound ? setBoundValue : setLocalValue;
 
   const validateOn = props.validateOn ?? "change";
-  const hasValidation = !!(bindings?.value && props.checks?.length);
+  // Inside a JsonFormProvider the consumer owns the field's messages.
+  const hasValidation = !!(bindings?.value && props.checks?.length) && !form;
   const { errors, validate } = useFieldValidation(
     bindings?.value ?? "",
     hasValidation ? { checks: props.checks ?? [], validateOn } : undefined,
   );
+  const field = useJsonField({ path: bindings?.value, label: props.label, checks: props.checks, ownErrors: errors });
+  if (field.mode === "values") return <JsonFieldValue field={field} text={value} />;
 
   return (
     <div className="space-y-2">
-      {props.label && <Label id={id}>{props.label}</Label>}
+      <JsonFieldLabel field={field} id={id} />
       <RadioGroup
-        aria-labelledby={props.label ? id : undefined}
+        aria-labelledby={field.label ? id : undefined}
+        // Focusable from script only, so a consumer can focus the labelled group rather than an unchecked option.
+        tabIndex={-1}
         value={value}
+        disabled={field.mode === "locked"}
+        {...field.controlProps}
         onValueChange={(v) => {
           setValue(v);
           if (hasValidation && validateOn === "change") validate();
@@ -42,7 +51,7 @@ export const JsonRadio = ({ props, bindings, emit }: BaseComponentProps<JsonProp
           </Field>
         ))}
       </RadioGroup>
-      {errors.length > 0 && <p className="text-sm text-destructive">{errors[0]}</p>}
+      <JsonFieldMessage field={field} />
     </div>
   );
 };

@@ -4,6 +4,7 @@ import { type BaseComponentProps } from "@json-render/react";
 import { ToggleGroup } from "../../index.js";
 import { ToggleGroupItem } from "../../index.js";
 import { type JsonProps } from "./catalog.js";
+import { JsonFieldValue, useJsonField } from "./JsonForm.js";
 export const JsonToggleGroup = ({ props, bindings, emit }: BaseComponentProps<JsonProps<"ToggleGroup">>) => {
   const type = props.type ?? "single";
   const items = props.items ?? [];
@@ -12,11 +13,26 @@ export const JsonToggleGroup = ({ props, bindings, emit }: BaseComponentProps<Js
   const isBound = !!bindings?.value;
   const value = isBound ? (boundValue ?? "") : localValue;
   const setValue = isBound ? setBoundValue : setLocalValue;
+  const field = useJsonField({ path: bindings?.value });
+  // Only a bound group is an answer; an unbound one switches a view and keeps working in every mode.
+  const mode = isBound ? field.mode : "edit";
+  const selected = value ? value.split(",") : [];
+  if (mode === "values")
+    return (
+      <JsonFieldValue
+        field={field}
+        text={items
+          .filter((item) => selected.includes(item.value))
+          .map((item) => item.label)
+          .join(", ")}
+      />
+    );
 
   return (
     <ToggleGroup
       multiple={type === "multiple"}
-      value={value ? value.split(",") : []}
+      disabled={mode === "locked"}
+      value={selected}
       onValueChange={(values) => {
         setValue(values.join(","));
         emit("change");

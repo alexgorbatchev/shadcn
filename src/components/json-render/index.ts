@@ -73,3 +73,23 @@ export const components = {
   Pagination: JsonPagination,
 };
 export { componentDefinitions } from "./catalog.js";
+export {
+  JsonFieldLabel,
+  JsonFieldMessage,
+  JsonFieldValue,
+  JsonFormProvider,
+  JsonRevealScope,
+  stripRequiredMark,
+  useJsonField,
+  useJsonForm,
+  useJsonReveal,
+} from "./JsonForm.js";
+export type {
+  IJsonField,
+  IJsonFieldLabelProps,
+  IJsonFieldOptions,
+  IJsonFieldValueProps,
+  IJsonFormProviderProps,
+  IJsonRevealScopeProps,
+  JsonFormMode,
+} from "./JsonForm.js";
