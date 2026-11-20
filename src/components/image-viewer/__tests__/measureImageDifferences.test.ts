@@ -29,18 +29,31 @@ test("compares 2560×1440 screenshots in slices without long main-thread tasks",
   const change = { x: 1800, y: 1100, width: 320, height: 120 };
   const before = await loadImage(createSvgImageUrl(2560, 1440, WHITE, [{ rect: change, color: BLUE }]));
   const after = await loadImage(createSvgImageUrl(2560, 1440, WHITE, [{ rect: change, color: RED }]));
-  let yields = 0;
   const [diff, longTasks] = await recordLongTasks(() =>
     measureImageDifferences(before, after, {
-      yieldToMain: async () => {
-        yields++;
-        await new Promise((resolve) => setTimeout(resolve, 0));
-      },
+      yieldToMain: () => new Promise((resolve) => setTimeout(resolve, 0)),
     }),
   );
   expect(diff.regions).toEqual([{ ...change, changedPixels: change.width * change.height }]);
-  expect(yields).toBeGreaterThan(4);
   expect(longTasks).toEqual([]);
+});
+
+test("yields after drawing each image and whenever a slice's time budget runs out", async () => {
+  const before = await loadImage(createSvgImageUrl(320, 100, WHITE));
+  const after = await loadImage(createSvgImageUrl(320, 100, BLUE));
+  // Each clock reading advances by the whole budget, so every 32-row band ends its slice. How many bands a real
+  // slice holds depends on the machine, so the count is fixed through the clock rather than measured.
+  let clock = 0;
+  let yields = 0;
+  await measureImageDifferences(before, after, {
+    sliceBudget: 8,
+    now: () => (clock += 8),
+    yieldToMain: async () => {
+      yields++;
+    },
+  });
+  // Two yields after drawing, then one after each of the four bands of 100 rows.
+  expect(yields).toBe(2 + 4);
 });
 
 test("a zero slice budget yields after every band of rows", async () => {
