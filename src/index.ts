@@ -500,6 +500,8 @@ export { WeatherForecast } from "./components/WeatherForecast.js";
 export type { WeatherForecastDay, WeatherForecastProps } from "./components/WeatherForecast.js";
 export { PageHeader } from "./components/PageHeader.js";
 export type { PageHeaderProps } from "./components/PageHeader.js";
+export { PanelHeader } from "./components/PanelHeader.js";
+export type { PanelHeaderProps } from "./components/PanelHeader.js";
 export { PageIntro } from "./components/PageIntro.js";
 export type { PageIntroHighlight, PageIntroProps } from "./components/PageIntro.js";
 export { WorkspaceSwitcher } from "./components/WorkspaceSwitcher.js";
