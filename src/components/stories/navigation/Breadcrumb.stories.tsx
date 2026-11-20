@@ -226,3 +226,46 @@ export const RightToLeft: Story = {
     await expect(home).toHaveFocus();
   },
 };
+
+const LONG_PROJECT = "Customer research synthesis for Q4 planning and roadmap alignment across all regional teams";
+
+export const Truncated: Story = {
+  render: (args) => (
+    <div className="w-80">
+      <Breadcrumb {...args}>
+        <BreadcrumbList overflow="truncate">
+          <BreadcrumbItem>
+            <BreadcrumbLink href="#project" title={LONG_PROJECT}>
+              {LONG_PROJECT}
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink href="#interviews">Interviews</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Interview 35</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const list = canvas.getByRole("list");
+    const project = canvas.getByRole("link", { name: LONG_PROJECT });
+    const folder = canvas.getByRole("link", { name: "Interviews" });
+    const page = canvas.getByRole("link", { name: "Interview 35" });
+    const separator = list.querySelector<HTMLElement>("[data-slot=breadcrumb-separator]");
+    // One line: every item shares the first item's top, and the list stays inside its 320 px container.
+    await expect(folder.getBoundingClientRect().top).toBe(project.getBoundingClientRect().top);
+    await expect(page.getBoundingClientRect().top).toBe(project.getBoundingClientRect().top);
+    await expect(list.scrollWidth).toBeLessThanOrEqual(list.clientWidth);
+    // The long item gives up its width and ends in an ellipsis; separators keep their size.
+    await expect(project.scrollWidth).toBeGreaterThan(project.clientWidth);
+    await expect(getComputedStyle(project).textOverflow).toBe("ellipsis");
+    await expect(separator?.getBoundingClientRect().width).toBeGreaterThan(0);
+    await expect(list).toHaveAttribute("data-overflow", "truncate");
+  },
+};

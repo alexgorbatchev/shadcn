@@ -15,15 +15,27 @@ function Breadcrumb({ density, className, ...props }: BreadcrumbProps): ReactEle
   );
 }
 
-type BreadcrumbListProps = ComponentProps<"ol"> & IDensityProps;
+type BreadcrumbListProps = ComponentProps<"ol"> &
+  IDensityProps & {
+    /**
+     * `wrap` (the default) lets a long path break onto more lines. `truncate` keeps the path on one line: every item
+     * shrinks and ends in an ellipsis, longer items giving up more width, while separators keep their size. Give each
+     * truncated item its full text as a tooltip or accessible name.
+     */
+    overflow?: "wrap" | "truncate";
+  };
 
-function BreadcrumbList({ density, className, ...props }: BreadcrumbListProps): ReactElement {
+function BreadcrumbList({ density, overflow = "wrap", className, ...props }: BreadcrumbListProps): ReactElement {
   return (
     <ol
       data-density={density}
       data-slot="breadcrumb-list"
+      data-overflow={overflow}
       className={cn(
-        "flex flex-wrap items-center gap-control-gap text-sm wrap-break-word text-muted-foreground",
+        "flex items-center gap-control-gap text-sm text-muted-foreground",
+        overflow === "wrap"
+          ? "flex-wrap wrap-break-word"
+          : "min-w-0 flex-nowrap overflow-hidden whitespace-nowrap [&>li]:min-w-0 [&>li>*]:min-w-0 [&>li>*]:truncate [&>li[data-slot=breadcrumb-separator]]:shrink-0",
         className,
       )}
       {...props}
