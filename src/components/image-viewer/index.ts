@@ -6,6 +6,17 @@ export { ImageZoomControl } from "./ImageZoomControl.js";
 export type { IImageZoomControlProps } from "./ImageZoomControl.js";
 export { ImageRegionSelect } from "./ImageRegionSelect.js";
 export type { IImageRegionSelectProps } from "./ImageRegionSelect.js";
+export { ImageRegionFields } from "./ImageRegionFields.js";
+export type { IImageRegionFieldsProps } from "./ImageRegionFields.js";
+export {
+  IMAGE_REGION_STEP,
+  MIN_IMAGE_REGION_SIZE,
+  applyImageRegionKey,
+  clampImageRegion,
+  formatImageRegion,
+  getImageRegionFromCorners,
+  placeImageRegion,
+} from "./imageRegion.js";
 export { FramedImage } from "./FramedImage.js";
 export type { FramedImageSize, IFramedImageProps } from "./FramedImage.js";
 export { ImageComparison } from "./ImageComparison.js";

@@ -2,8 +2,11 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn, waitFor, within } from "storybook/test";
 import { useState, type ReactElement } from "react";
 import {
-  ImageRegionMarker,
+  ImageRegionFields,
   ImageRegionSelect,
+  applyImageRegionKey,
+  formatImageRegion,
+  placeImageRegion,
   ImageViewer,
   ImageZoomToggle,
   getNormalizedImagePoint,
@@ -118,7 +121,7 @@ const meta: Meta<typeof ImageViewer> = {
     docs: {
       description: {
         component:
-          'Import from `@alexgorbatchev/shadcn/image-viewer`. ImageViewer fills the container it is given, such as a `DialogContent size="fullscreen"` body, and shows one framed image in a native scroll viewport. `fit` scales the image down proportionally to fit both dimensions, centered and without scrollbars, and never upscales it; `fit-width` fills the width and scrolls vertically; a number is a scale from the fitted one up to 4 (400%), so `1` shows natural size. Without `zoom` or `defaultZoom` it opens at `fit`, or at `fit-width` for an image much taller than the stage, and never narrower than `openingWidth`. Zooming keeps the viewed center. The stage, named "<alt>, <percent>", owns its gestures: a drag pans, two fingers pinch-zoom and Mod+wheel zooms around the pointer, so a touch never reaches overlay content unless it handles the pointer itself, such as `ImageRegionSelect`; while focused it takes + or = (zoom in), − (zoom out), 0 (fit), 1 (100%) and arrows (pan while larger than the stage), and `onStageKeyDown` runs first to add or replace keys. `showZoomControl` shows the zoom bar (Fit, Fit width, −, percent, +) in a toolbar row, and `toolbar` adds further controls to that row, which wraps onto further rows when its controls do not fit. `overlay` renders content sized and positioned exactly over the rendered image at every zoom, `imageRef` and `overlayRef` expose the rendered image box, and `getNormalizedImagePoint(event, box)` maps pointer coordinates to 0–1 image coordinates.',
+          'Import from `@alexgorbatchev/shadcn/image-viewer`. ImageViewer fills the container it is given, such as a `DialogContent size="fullscreen"` body, and shows one framed image in a native scroll viewport. `fit` scales the image down proportionally to fit both dimensions, centered and without scrollbars, and never upscales it; `fit-width` fills the width and scrolls vertically; a number is a scale from the fitted one up to 4 (400%), so `1` shows natural size. Without `zoom` or `defaultZoom` it opens at `fit`, or at `fit-width` for an image much taller than the stage, and never narrower than `openingWidth`. Zooming keeps the viewed center. The stage, named "<alt>, <percent>", owns its gestures: a drag pans, two fingers pinch-zoom and Mod+wheel zooms around the pointer, so a touch never reaches overlay content unless it handles the pointer itself, such as `ImageRegionSelect`; while focused it takes + or = (zoom in), − (zoom out), 0 (fit), 1 (100%) and arrows (pan while larger than the stage), and `onStageKeyDown` runs first to add or replace keys. `showZoomControl` shows the zoom bar (Fit, Fit width, −, percent, +) in a toolbar row, and `toolbar` adds further controls to that row, which wraps onto further rows when its controls do not fit. `overlay` renders content sized and positioned exactly over the rendered image at every zoom, `imageRef` and `overlayRef` expose the rendered image box, and `getNormalizedImagePoint(event, box)` maps pointer coordinates to 0–1 image coordinates. `ImageRegionSelect` is a region tool for the overlay: a drag draws a region, a click places a half-size region centred on it and a second click makes the two clicks opposite corners; it reports each region through `onRegionChange` and draws the placed `region` with its text form (`formatImageRegion`, "Region 60% × 50% at 25%, 25%") as its accessible name. For keyboard placement, `placeImageRegion()` gives the half-size region in the middle and `applyImageRegionKey(region, key, shiftKey)` moves it by 5% with arrows or resizes it with Shift+arrows from `onStageKeyDown`; `ImageRegionFields` shows Left, Top, Width and Height as percent fields that take typed values.',
       },
     },
   },
@@ -246,42 +249,41 @@ function RegionToolExample(props: IImageViewerProps): ReactElement {
       <ImageViewer
         {...props}
         showZoomControl
-        stageKeyShortcuts="R"
+        stageKeyShortcuts="R Enter"
         onStageKeyDown={(event) => {
-          if (event.key !== "r" && event.key !== "R") return;
+          if (event.key === "r" || event.key === "R") {
+            event.preventDefault();
+            setIsOn((current) => !current);
+            setRegion(undefined);
+            return;
+          }
+          if (!isOn) return;
+          if (event.key === "Enter" && !region) {
+            event.preventDefault();
+            setRegion(placeImageRegion());
+            return;
+          }
+          if (event.key === "Escape" && region) {
+            event.preventDefault();
+            setRegion(undefined);
+            return;
+          }
+          // While a region is placed, arrows move it and Shift+arrows resize it instead of panning.
+          const next = region && applyImageRegionKey(region, event.key, event.shiftKey);
+          if (!next) return;
           event.preventDefault();
-          setIsOn((current) => !current);
+          setRegion(next);
         }}
         toolbar={
           <Toggle variant="outline" size="sm" pressed={isOn} onPressedChange={setIsOn}>
             Comment on a region
           </Toggle>
         }
-        overlay={
-          <>
-            {region && (
-              <ImageRegionMarker
-                region={{
-                  left: `${region.x * 100}%`,
-                  top: `${region.y * 100}%`,
-                  width: `${region.width * 100}%`,
-                  height: `${region.height * 100}%`,
-                }}
-              />
-            )}
-            {isOn && (
-              <ImageRegionSelect
-                onSelect={(next) => {
-                  setRegion(next);
-                  setIsOn(false);
-                }}
-              />
-            )}
-          </>
-        }
+        overlay={isOn ? <ImageRegionSelect region={region} onRegionChange={setRegion} /> : undefined}
       />
-      <output aria-label="Drawn region" className="text-sm">
-        {region ? `${Math.round(region.width * 100)}% × ${Math.round(region.height * 100)}%` : "None"}
+      {region && <ImageRegionFields region={region} onRegionChange={setRegion} />}
+      <output aria-label="Placed region" className="text-sm">
+        {region ? formatImageRegion(region) : "None"}
       </output>
     </div>
   );
@@ -334,6 +336,11 @@ export const NarrowToolbar: Story = {
   },
 };
 
+/**
+ * A region tool that works without dragging (WCAG 2.5.7): Enter places a half-size region in the middle, arrows move it
+ * and Shift+arrows resize it by 5%, the four fields take typed values, a click places a half-size region on the click
+ * and a second click makes the two clicks opposite corners. A drag still draws a region directly.
+ */
 export const RegionTool: Story = {
   args: { defaultZoom: "fit" },
   render: (args) => <RegionToolExample {...args} />,
@@ -342,27 +349,42 @@ export const RegionTool: Story = {
     await findRenderedImage(canvasElement, "Dashboard screenshot");
     const tool = canvas.getByRole("button", { name: "Comment on a region" });
     const viewport = canvas.getByRole("region", { name: /^Dashboard screenshot, \d+%$/ });
-    const output = canvas.getByRole("status", { name: "Drawn region" });
-    await expect(viewport.getAttribute("aria-keyshortcuts")).toMatch(/ R$/);
+    const output = canvas.getByRole("status", { name: "Placed region" });
+    await expect(viewport.getAttribute("aria-keyshortcuts")).toMatch(/ R Enter$/);
     await expect(canvasElement.querySelector("[data-slot=image-region-select]")).toBeNull();
     viewport.focus();
     await userEvent.keyboard("r");
     await expect(tool).toHaveAttribute("aria-pressed", "true");
+    const left = viewport.scrollLeft;
+    await userEvent.keyboard("{Enter}");
+    await expect(canvas.getByRole("img", { name: "Region 50% × 50% at 25%, 25%" })).toBeVisible();
+    await userEvent.keyboard("{Shift>}{ArrowRight}{ArrowRight}{/Shift}");
+    await expect(output).toHaveTextContent("Region 60% × 50% at 25%, 25%");
+    await userEvent.keyboard("{ArrowRight}");
+    await expect(output).toHaveTextContent("Region 60% × 50% at 30%, 25%");
+    await expect(viewport.scrollLeft).toBe(left);
+    const width = canvas.getByRole("textbox", { name: "Width" });
+    await userEvent.clear(width);
+    await userEvent.type(width, "30");
+    await userEvent.tab();
+    await expect(output).toHaveTextContent("Region 30% × 50% at 30%, 25%");
     const surface = canvasElement.querySelector<HTMLElement>("[data-slot=image-region-select]")!;
     const box = surface.getBoundingClientRect();
+    const at = (x: number, y: number) => ({ clientX: box.left + box.width * x, clientY: box.top + box.height * y });
+    await userEvent.pointer({ keys: "[MouseLeft]", target: surface, coords: at(0.5, 0.4) });
+    await expect(output).toHaveTextContent("Region 50% × 50% at 25%, 15%");
+    await userEvent.pointer({ keys: "[MouseLeft]", target: surface, coords: at(0.9, 0.8) });
+    await expect(output).toHaveTextContent("Region 40% × 40% at 50%, 40%");
     await userEvent.pointer([
-      {
-        keys: "[MouseLeft>]",
-        target: surface,
-        coords: { clientX: box.left + box.width * 0.25, clientY: box.top + box.height * 0.25 },
-      },
-      { target: surface, coords: { clientX: box.left + box.width * 0.5, clientY: box.top + box.height * 0.4 } },
-      { target: surface, coords: { clientX: box.left + box.width * 0.75, clientY: box.top + box.height * 0.75 } },
+      { keys: "[MouseLeft>]", target: surface, coords: at(0.25, 0.25) },
+      { target: surface, coords: at(0.5, 0.4) },
+      { target: surface, coords: at(0.75, 0.75) },
       { keys: "[/MouseLeft]", target: surface },
     ]);
-    await expect(output).toHaveTextContent("50% × 50%");
-    await expect(tool).toHaveAttribute("aria-pressed", "false");
-    await expect(canvasElement.querySelector("[data-slot=image-region-marker]")).not.toBeNull();
+    await expect(output).toHaveTextContent("Region 50% × 50% at 25%, 25%");
+    viewport.focus();
+    await userEvent.keyboard("{Escape}");
+    await expect(output).toHaveTextContent("None");
   },
 };
 
