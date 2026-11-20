@@ -126,13 +126,16 @@ export function TreeItemStatusIcon({ status, className }: ITreeItemStatusIconPro
       aria-hidden="true"
       data-slot="tree-item-status"
       data-status={status}
-      className={cn("relative inline-flex size-4 shrink-0 items-center justify-center [&>svg]:size-3.5", className)}
+      className={cn("relative inline-flex size-4 shrink-0 items-center justify-center", className)}
     >
-      <Icon />
+      <Icon className="size-3.5" />
       {hasMarker && (
-        <svg viewBox="0 0 6 6" className="absolute -top-0.5 -right-0.5 size-1.5" focusable="false">
-          <circle cx="3" cy="3" r="3" fill="currentColor" />
-        </svg>
+        // The marker sits in its own box, so the icon's size never applies to it.
+        <span data-slot="tree-item-status-marker" className="absolute -top-0.5 -right-0.5 flex size-1.5">
+          <svg viewBox="0 0 6 6" className="size-full" focusable="false">
+            <circle cx="3" cy="3" r="3" fill="currentColor" />
+          </svg>
+        </span>
       )}
     </span>
   );

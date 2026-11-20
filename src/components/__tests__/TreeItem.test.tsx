@@ -197,6 +197,9 @@ test("puts a status control or icon at the row's start, outside its link, with o
   expect(document.querySelectorAll("[data-status='unsent'] svg, [data-status='handed-back-unsent'] svg")).toHaveLength(
     4,
   );
+  // The unsent marker stays a small dot beside the icon, never the icon's size.
+  for (const marker of document.querySelectorAll("[data-slot='tree-item-status-marker'] svg"))
+    expect(marker.getBoundingClientRect().width).toBeLessThanOrEqual(6);
   // A row without a status keeps an empty slot so titles line up.
   const draft = page.getByRole("treeitem", { name: "draft" }).element().parentElement;
   expect(draft?.querySelector("[data-slot='tree-item-leading']")?.childElementCount).toBe(0);
