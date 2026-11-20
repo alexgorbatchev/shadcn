@@ -44,11 +44,20 @@ interface IJsonFormExampleProps {
   state?: Record<string, unknown>;
   mode?: JsonFormMode;
   errors?: Record<string, string>;
+  /** Binding paths whose value is still the author's default. */
+  defaults?: string[];
   /** Probe names, each with a button outside the spec that reveals and focuses the probe. */
   reveal?: string[];
 }
 
-function JsonFormExample({ spec, state = {}, mode, errors, reveal = [] }: IJsonFormExampleProps): ReactElement {
+function JsonFormExample({
+  spec,
+  state = {},
+  mode,
+  errors,
+  defaults,
+  reveal = [],
+}: IJsonFormExampleProps): ReactElement {
   const [store] = useState(() => createStateStore(state));
   return (
     <div className="flex flex-col gap-4">
@@ -66,7 +75,7 @@ function JsonFormExample({ spec, state = {}, mode, errors, reveal = [] }: IJsonF
         </Button>
       ))}
       <JSONUIProvider registry={registry} store={store}>
-        <JsonFormProvider mode={mode} errors={errors}>
+        <JsonFormProvider mode={mode} errors={errors} defaults={defaults}>
           <Renderer spec={spec} registry={registry} />
         </JsonFormProvider>
       </JSONUIProvider>
@@ -321,5 +330,156 @@ export const RevealOpensHidingContainers: Story = {
     await userEvent.click(canvas.getByRole("button", { name: "Go to inTab" }));
     await waitFor(() => expect(canvas.getByText("Probe inTab")).toHaveFocus());
     await expect(canvas.getByText("Probe inTab")).toBeVisible();
+  },
+};
+
+const settingsSpec: Spec = {
+  root: "root",
+  elements: {
+    root: { type: "Stack", props: {}, children: ["oncall", "notify", "budget", "risk", "pilot", "agree"] },
+    oncall: {
+      type: "Switch",
+      props: { label: "Page the on-call team", name: "oncall", checked: { $bindState: "/answers/oncall" } },
+    },
+    notify: {
+      type: "Switch",
+      props: { label: "Notify support", name: "notify", checked: { $bindState: "/answers/notify" } },
+    },
+    budget: {
+      type: "Slider",
+      props: { label: "Budget cap", min: 1, max: 20, value: { $bindState: "/answers/budget" } },
+    },
+    risk: {
+      type: "Slider",
+      props: { label: "Acceptable risk", min: 1, max: 5, value: { $bindState: "/answers/risk" } },
+    },
+    pilot: { type: "Toggle", props: { label: "Pilot first", pressed: { $bindState: "/answers/pilot" } } },
+    agree: { type: "Checkbox", props: { label: "Agree", checked: { $bindState: "/answers/agree" } } },
+  },
+};
+
+export const DefaultTagsAndNotSet: Story = {
+  args: {
+    spec: settingsSpec,
+    state: { answers: { oncall: false, notify: null, budget: 5, risk: null, pilot: false, agree: false } },
+    defaults: ["/answers/oncall", "/answers/budget", "/answers/pilot", "/answers/agree"],
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // Each control still at the author's value carries a "Default" tag; controls left null carry none.
+    await expect(canvas.getAllByText("Default")).toHaveLength(4);
+    // A switch and a slider left null read "Not set" instead of off or their minimum.
+    await expect(canvas.getAllByText("Not set")).toHaveLength(2);
+    const notify = canvas.getByRole("switch", { name: "Notify support" });
+    await expect(notify).toHaveAccessibleDescription("Not set");
+    await expect(canvas.getByRole("switch", { name: "Page the on-call team" })).not.toHaveAccessibleDescription(
+      "Not set",
+    );
+    await expect(canvas.getByRole("slider", { name: "Acceptable risk" })).toHaveAttribute("aria-valuetext", "Not set");
+    await expect(canvas.getByRole("slider", { name: "Budget cap" })).not.toHaveAttribute("aria-valuetext", "Not set");
+    // Choosing a value replaces "Not set".
+    await userEvent.click(notify);
+    await waitFor(() => expect(canvas.getAllByText("Not set")).toHaveLength(1));
+    await expect(notify).toHaveAttribute("aria-checked", "true");
+  },
+};
+
+export const NotSetReadOnly: Story = {
+  args: {
+    spec: settingsSpec,
+    state: { answers: { oncall: true, notify: null, budget: 5, risk: null, pilot: false, agree: false } },
+    mode: "values",
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("group", { name: "Notify support" })).toHaveTextContent("Not set");
+    await expect(canvas.getByRole("group", { name: "Acceptable risk" })).toHaveTextContent("Not set");
+    await expect(canvas.getByRole("group", { name: "Page the on-call team" })).toHaveTextContent("On");
+    await expect(canvas.getByRole("group", { name: "Budget cap" })).toHaveTextContent("5");
+    await expect(canvas.queryByText("Default")).not.toBeInTheDocument();
+  },
+};
+
+const channelsSpec: Spec = {
+  root: "root",
+  elements: {
+    root: { type: "Stack", props: {}, children: ["channels", "view"] },
+    channels: {
+      type: "ToggleGroup",
+      props: {
+        type: "multiple",
+        label: "Which channels should the voice cover?",
+        description: "Choose every channel that applies.",
+        items: [
+          { label: "Email", value: "email" },
+          { label: "Chat", value: "chat" },
+          { label: "Phone", value: "phone" },
+        ],
+        value: { $bindState: "/answers/channels" },
+        checks: [{ type: "required", message: "Choose at least one channel" }],
+      },
+    },
+    view: {
+      type: "ToggleGroup",
+      props: {
+        items: [
+          { label: "List", value: "list" },
+          { label: "Cards", value: "cards" },
+        ],
+        value: { $bindState: "/ui/view" },
+      },
+    },
+  },
+};
+
+export const ToggleGroupQuestion: Story = {
+  args: { spec: channelsSpec, state: { answers: { channels: "email" }, ui: { view: "list" } } },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const group = canvas.getByRole("group", { name: "Which channels should the voice cover?" });
+    await expect(group).toHaveAttribute("aria-required", "true");
+    await expect(group).toHaveAccessibleDescription("Choose every channel that applies.");
+    await expect(canvas.getByText("Required")).toBeVisible();
+    const email = within(group).getByRole("button", { name: "Email" });
+    const chat = within(group).getByRole("button", { name: "Chat" });
+    // Pressed options show a check, not only a darker fill.
+    await expect(email.querySelector('[data-slot="toggle-group-item-check"]')).not.toBeNull();
+    await expect(chat.querySelector('[data-slot="toggle-group-item-check"]')).toBeNull();
+    await userEvent.click(chat);
+    await waitFor(() => expect(chat.querySelector('[data-slot="toggle-group-item-check"]')).not.toBeNull());
+    await expect(chat).toHaveAttribute("aria-pressed", "true");
+    // A group bound to /ui switches a view and stays unnamed by any question.
+    await expect(canvas.getByRole("button", { name: "Cards" })).toBeEnabled();
+  },
+};
+
+export const ToggleGroupQuestionValues: Story = {
+  args: { spec: channelsSpec, state: { answers: { channels: "email,phone" }, ui: { view: "list" } }, mode: "values" },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("group", { name: "Which channels should the voice cover?" })).toHaveTextContent(
+      "Email, Phone",
+    );
+  },
+};
+
+export const ToggleGroupOwnValidation: Story = {
+  render: () => {
+    const [store] = useState(() => createStateStore({ answers: { channels: "email" } }));
+    return (
+      <JSONUIProvider registry={registry} store={store}>
+        <Renderer spec={channelsSpec} registry={registry} />
+      </JSONUIProvider>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // Outside a JsonFormProvider the group shows its own check's message once the person clears it.
+    await userEvent.click(canvas.getByRole("button", { name: "Email" }));
+    await expect(await canvas.findByText("Choose at least one channel")).toBeVisible();
+    await expect(canvas.getByRole("group", { name: "Which channels should the voice cover?" })).toHaveAttribute(
+      "aria-invalid",
+      "true",
+    );
   },
 };

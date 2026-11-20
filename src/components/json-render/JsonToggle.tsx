@@ -3,7 +3,7 @@ import { useBoundProp } from "@json-render/react";
 import { type BaseComponentProps } from "@json-render/react";
 import { Toggle } from "../../index.js";
 import { type JsonProps } from "./catalog.js";
-import { JsonFieldValue, useJsonField } from "./JsonForm.js";
+import { JsonFieldTags, JsonFieldValue, useJsonField } from "./JsonForm.js";
 export const JsonToggle = ({ props, bindings, emit }: BaseComponentProps<JsonProps<"Toggle">>) => {
   const [boundPressed, setBoundPressed] = useBoundProp<boolean>(props.pressed ?? undefined, bindings?.pressed);
   const [localPressed, setLocalPressed] = useState(props.pressed ?? false);
@@ -15,7 +15,7 @@ export const JsonToggle = ({ props, bindings, emit }: BaseComponentProps<JsonPro
   const mode = isBound ? field.mode : "edit";
   if (mode === "values") return <JsonFieldValue field={field} text={pressed ? "On" : "Off"} />;
 
-  return (
+  const toggle = (
     <Toggle
       variant={props.variant ?? "default"}
       pressed={pressed}
@@ -27,5 +27,14 @@ export const JsonToggle = ({ props, bindings, emit }: BaseComponentProps<JsonPro
     >
       {props.label}
     </Toggle>
+  );
+  // A bound toggle is an answer, so it carries the field's tags beside it.
+  return isBound && (field.isRequired || field.isDefault) ? (
+    <div className="flex flex-wrap items-center gap-2">
+      {toggle}
+      <JsonFieldTags field={field} />
+    </div>
+  ) : (
+    toggle
   );
 };

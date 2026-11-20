@@ -439,9 +439,19 @@ export const componentDefinitions = {
       ),
       type: z.enum(["single", "multiple"]).nullable(),
       value: z.string().nullable(),
+      // Optional so a group that only switches a view keeps validating without them.
+      label: z
+        .string()
+        .nullish()
+        .describe(
+          "The question the group answers, shown above the options and naming the group. Set it whenever value is bound to an answer.",
+        ),
+      description: z.string().nullish().describe("Help text shown under the label, or null."),
+      checks: validationCheckSchema.optional(),
     }),
     events: ["change"],
-    description: "Group of toggle buttons. Type 'single' (default) or 'multiple'. Use { $bindState } on value.",
+    description:
+      "Group of toggle buttons. Type 'single' (default) or 'multiple'. Use { $bindState } on value. Bound to an answer it is a question: label names it above the options, pressed options show a check, and checks validate it.",
   },
 
   ButtonGroup: {

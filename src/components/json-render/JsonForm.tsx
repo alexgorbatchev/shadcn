@@ -15,11 +15,13 @@ export type JsonFormMode = "edit" | "locked" | "values";
 interface IJsonFormContext {
   mode: JsonFormMode;
   errors: Readonly<Record<string, string>>;
+  defaults: readonly string[];
 }
 
 const JsonFormContext = createContext<IJsonFormContext | undefined>(undefined);
 
 const noErrors: Readonly<Record<string, string>> = {};
+const noDefaults: readonly string[] = [];
 
 export interface IJsonFormProviderProps {
   mode?: JsonFormMode;
@@ -29,12 +31,23 @@ export interface IJsonFormProviderProps {
    * messages, so no message appears before the consumer decides to show it.
    */
   errors?: Readonly<Record<string, string>>;
+  /**
+   * Binding paths whose value is still the one the author set, such as `["/answers/oncall"]`. Each of those controls
+   * shows a "Default" tag beside its label until its value changes, so a person can tell a value they chose from one
+   * they never touched.
+   */
+  defaults?: readonly string[];
   children?: ReactNode;
 }
 
-/** Sets the mode and the field messages of the bound controls rendered inside it. */
-export function JsonFormProvider({ mode = "edit", errors = noErrors, children }: IJsonFormProviderProps): ReactElement {
-  const value = useMemo(() => ({ mode, errors }), [mode, errors]);
+/** Sets the mode, the field messages and the default-valued fields of the bound controls rendered inside it. */
+export function JsonFormProvider({
+  mode = "edit",
+  errors = noErrors,
+  defaults = noDefaults,
+  children,
+}: IJsonFormProviderProps): ReactElement {
+  const value = useMemo(() => ({ mode, errors, defaults }), [mode, errors, defaults]);
   return <JsonFormContext value={value}>{children}</JsonFormContext>;
 }
 
@@ -89,6 +102,8 @@ export interface IJsonField {
   /** The label without a trailing "*": the "Required" tag replaces it. */
   label: string;
   isRequired: boolean;
+  /** The value is still the author's default (`JsonFormProvider`'s `defaults`); the label shows a "Default" tag. */
+  isDefault: boolean;
   error?: string;
   mode: JsonFormMode;
   messageId: string;
@@ -114,6 +129,7 @@ export function useJsonField({ path, label, checks, ownErrors = [] }: IJsonField
   return {
     label: stripRequiredMark(label ?? ""),
     isRequired,
+    isDefault: !!path && !!form?.defaults.includes(path),
     error,
     mode: form?.mode ?? "edit",
     messageId,
@@ -131,9 +147,24 @@ export interface IJsonFieldLabelProps {
   htmlFor?: string;
 }
 
-/** The field's label followed by its "Required" tag. */
+/** The field's "Required" and "Default" tags, in that order; nothing when neither applies. */
+export function JsonFieldTags({ field }: { field: IJsonField }): ReactElement | null {
+  if (!field.isRequired && !field.isDefault) return null;
+  return (
+    <>
+      {field.isRequired && <Badge variant="outline">Required</Badge>}
+      {field.isDefault && (
+        <Badge variant="outline" data-slot="json-field-default">
+          Default
+        </Badge>
+      )}
+    </>
+  );
+}
+
+/** The field's label followed by its "Required" and "Default" tags. */
 export function JsonFieldLabel({ field, id, htmlFor }: IJsonFieldLabelProps): ReactElement | null {
-  if (!field.label && !field.isRequired) return null;
+  if (!field.label && !field.isRequired && !field.isDefault) return null;
   return (
     <div data-slot="json-field-label" className="flex flex-wrap items-center gap-2">
       {field.label && (
@@ -141,10 +172,13 @@ export function JsonFieldLabel({ field, id, htmlFor }: IJsonFieldLabelProps): Re
           {field.label}
         </Label>
       )}
-      {field.isRequired && <Badge variant="outline">Required</Badge>}
+      <JsonFieldTags field={field} />
     </div>
   );
 }
+
+/** What an answer control the author left empty shows instead of a value it would not send. */
+export const NOT_SET_TEXT = "Not set";
 
 /** The field's message, referenced by the control's `aria-describedby`. */
 export function JsonFieldMessage({ field }: { field: IJsonField }): ReactElement | null {

@@ -2,10 +2,10 @@ import { useId, useState } from "react";
 import { useBoundProp } from "@json-render/react";
 import { useFieldValidation } from "@json-render/react";
 import { type BaseComponentProps } from "@json-render/react";
-import { Badge, Field, FieldLabel } from "../../index.js";
+import { Field, FieldLabel } from "../../index.js";
 import { Checkbox } from "../../index.js";
 import { type JsonProps } from "./catalog.js";
-import { JsonFieldMessage, JsonFieldValue, useJsonField, useJsonForm } from "./JsonForm.js";
+import { JsonFieldMessage, JsonFieldTags, JsonFieldValue, useJsonField, useJsonForm } from "./JsonForm.js";
 export const JsonCheckbox = ({ props, bindings, emit }: BaseComponentProps<JsonProps<"Checkbox">>) => {
   const id = useId();
   const form = useJsonForm();
@@ -39,8 +39,11 @@ export const JsonCheckbox = ({ props, bindings, emit }: BaseComponentProps<JsonP
             emit("change");
           }}
         />
-        <FieldLabel htmlFor={id}>{field.label}</FieldLabel>
-        {field.isRequired && <Badge variant="outline">Required</Badge>}
+        {/* The tags sit beside the label, not at the far edge of the row. */}
+        <div className="flex flex-auto flex-wrap items-center gap-2">
+          <FieldLabel htmlFor={id}>{field.label}</FieldLabel>
+          <JsonFieldTags field={field} />
+        </div>
       </Field>
       <JsonFieldMessage field={field} />
     </div>
