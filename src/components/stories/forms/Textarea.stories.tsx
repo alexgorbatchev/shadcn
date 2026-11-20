@@ -245,3 +245,25 @@ export const FormSubmissionAndReset: Story = {
     await expect(input.checkValidity()).toBe(true);
   },
 };
+
+/** A bounded textarea grows with its content up to 18rem, then scrolls, so a long paste keeps later controls in view. */
+export const Bounded: Story = {
+  args: { bounded: true, defaultValue: Array.from({ length: 60 }, (_, line) => `Line ${line + 1}`).join("\n") },
+  play: async ({ canvasElement }) => {
+    const input = within(canvasElement).getByRole("textbox", { name: "Description" });
+    const rem = Number.parseFloat(getComputedStyle(document.documentElement).fontSize);
+    await expect(input.getBoundingClientRect().height).toBeLessThanOrEqual(18 * rem + 1);
+    await expect(input.scrollHeight).toBeGreaterThan(input.clientHeight);
+    await expect(getComputedStyle(input).overflowY).toBe("auto");
+  },
+};
+
+/** Without bounded, the textarea keeps growing with its content. */
+export const Unbounded: Story = {
+  args: { defaultValue: Array.from({ length: 60 }, (_, line) => `Line ${line + 1}`).join("\n") },
+  play: async ({ canvasElement }) => {
+    const input = within(canvasElement).getByRole("textbox", { name: "Description" });
+    const rem = Number.parseFloat(getComputedStyle(document.documentElement).fontSize);
+    await expect(input.getBoundingClientRect().height).toBeGreaterThan(18 * rem);
+  },
+};
