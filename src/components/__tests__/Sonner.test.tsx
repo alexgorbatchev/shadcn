@@ -234,3 +234,26 @@ test.each(["ltr", "rtl"] as const)("native mobile offsets and desktop resizing w
   await close.click();
   await expect.element(title).not.toBeInTheDocument();
 });
+
+test.each([
+  [true, "polite"],
+  [false, null],
+] as const)("live=%s controls whether the notifications section is a live region", async (live, ariaLive) => {
+  const id = `live-${live}`;
+  const screen = await render(
+    <ThemeProvider forcedTheme="light">
+      <Sonner id={id} live={live} hotkey={[]} duration={Infinity} containerAriaLabel="Notifications" />
+    </ThemeProvider>,
+  );
+  toast("Moved Pricing to Interviews", { id: `${id}-toast`, toasterId: id, action: { label: "Show", onClick() {} } });
+  await expect.element(screen.getByText("Moved Pricing to Interviews")).toBeVisible();
+  const section = screen.getByText("Moved Pricing to Interviews").element().closest("section")!;
+  expect(section.getAttribute("aria-live")).toBe(ariaLive);
+  expect(section.hasAttribute("aria-relevant")).toBe(live);
+  expect(section.hasAttribute("aria-atomic")).toBe(live);
+  expect(section.getAttribute("aria-label")?.trim()).toBe("Notifications");
+  expect(section.tabIndex).toBe(-1);
+  await expect.element(screen.getByRole("button", { name: "Show" })).toBeVisible();
+  toast.dismiss(`${id}-toast`);
+  await expect.element(screen.getByText("Moved Pricing to Interviews")).not.toBeInTheDocument();
+});

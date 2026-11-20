@@ -421,3 +421,38 @@ export const PauseOnHover: Story = {
     await waitFor(() => expect(canvas.queryByText("Upload saved")).toBeNull());
   },
 };
+
+export const AnnouncedByApplication: Story = {
+  args: { live: false },
+  render: function Render(args) {
+    const [announcement, setAnnouncement] = useState("");
+    return (
+      <>
+        <Sonner {...args} />
+        <div aria-live="polite" data-testid="application-announcer">
+          {announcement}
+        </div>
+        <Button
+          onClick={() => {
+            toast("Archived Pricing", { toasterId: args.id, action: { label: "Undo", onClick() {} } });
+            setAnnouncement("Archived Pricing. Undo is in Notifications.");
+          }}
+        >
+          Archive page
+        </Button>
+      </>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole("button", { name: "Archive page" }));
+    await waitFor(() => expect(canvas.getByText("Archived Pricing")).toBeVisible());
+    const section = canvas.getByText("Archived Pricing").closest("section");
+    await expect(section).not.toHaveAttribute("aria-live");
+    await expect(canvas.getByTestId("application-announcer")).toHaveTextContent(
+      "Archived Pricing. Undo is in Notifications.",
+    );
+    await userEvent.click(canvas.getByRole("button", { name: "Close toast" }));
+    await waitFor(() => expect(canvas.queryByText("Archived Pricing")).toBeNull());
+  },
+};

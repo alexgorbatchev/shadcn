@@ -11,7 +11,15 @@ import { useDirection } from "@base-ui/react/direction-provider";
 import { cn } from "../../utils/cn.js";
 import { buttonVariants } from "../Button.js";
 
-type SonnerProps = ToasterProps & IDensityProps & IAnalyticsProps;
+interface ISonnerLiveProps {
+  /**
+   * Render the notifications section as a polite live region. Defaults to true. Pass false when the
+   * application announces each toast through its own live region, so screen readers hear it once.
+   */
+  live?: boolean;
+}
+
+type SonnerProps = Omit<ToasterProps, "containerLive"> & ISonnerLiveProps & IDensityProps & IAnalyticsProps;
 function Sonner({
   analytics,
   density,
@@ -21,6 +29,7 @@ function Sonner({
   theme,
   dir,
   expand = true,
+  live = true,
   ...props
 }: SonnerProps): ReactElement {
   const activate = useAnalyticsCallback<[MouseEvent<HTMLDivElement>]>(
@@ -45,6 +54,7 @@ function Sonner({
         theme={theme ?? resolvedTheme}
         dir={dir ?? inheritedDirection}
         expand={expand}
+        containerLive={live}
         className={cn(
           "[&[data-sonner-toaster]]:font-mono",
           "[@media(max-width:600px)]:[&[data-sonner-toaster]]:w-auto!",

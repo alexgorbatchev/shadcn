@@ -1,8 +1,31 @@
-diff --git a/node_modules/sonner/.bun-tag-eec9caba2bab3780 b/.bun-tag-eec9caba2bab3780
-new file mode 100644
-index 0000000000000000000000000000000000000000..e69de29bb2d1d6434b8b29ae775ad8c2e48c5391
+diff --git a/dist/index.d.mts b/dist/index.d.mts
+index a25db7918f195250e345bc25c587b3f4d11f9dcb..3b2738592c6dca34bcaf350b9dd17ba857a798f4 100644
+--- a/dist/index.d.mts
++++ b/dist/index.d.mts
+@@ -116,6 +116,8 @@ interface ToasterProps {
+     icons?: ToastIcons;
+     customAriaLabel?: string;
+     containerAriaLabel?: string;
++    /** Render the toast section as a polite live region. Defaults to true. */
++    containerLive?: boolean;
+ }
+ type SwipeDirection = 'top' | 'right' | 'bottom' | 'left';
+ interface ToastToDismiss {
+diff --git a/dist/index.d.ts b/dist/index.d.ts
+index a25db7918f195250e345bc25c587b3f4d11f9dcb..3b2738592c6dca34bcaf350b9dd17ba857a798f4 100644
+--- a/dist/index.d.ts
++++ b/dist/index.d.ts
+@@ -116,6 +116,8 @@ interface ToasterProps {
+     icons?: ToastIcons;
+     customAriaLabel?: string;
+     containerAriaLabel?: string;
++    /** Render the toast section as a polite live region. Defaults to true. */
++    containerLive?: boolean;
+ }
+ type SwipeDirection = 'top' | 'right' | 'bottom' | 'left';
+ interface ToastToDismiss {
 diff --git a/dist/index.js b/dist/index.js
-index 394dbc2272f43b84642b0f9d5cc7eb1eacb0ffb3..6d141781a4faa9cc312f8c421c67dfe3717111f4 100644
+index 394dbc2272f43b84642b0f9d5cc7eb1eacb0ffb3..8ccb1e0d104efd788ee150e5f7464b1d386619bd 100644
 --- a/dist/index.js
 +++ b/dist/index.js
 @@ -597,8 +597,8 @@ const Toast = (props)=>{
@@ -43,8 +66,33 @@ index 394dbc2272f43b84642b0f9d5cc7eb1eacb0ffb3..6d141781a4faa9cc312f8c421c67dfe3
      const deleteToast = React__default.default.useCallback(()=>{
          // Save the offset for the exit swipe animation
          setRemoved(true);
+@@ -987,7 +979,7 @@ const Toaster = /*#__PURE__*/ React__default.default.forwardRef(function Toaster
+     const { id, invert, position = 'bottom-right', hotkey = [
+         'altKey',
+         'KeyT'
+-    ], expand, closeButton, className, offset, mobileOffset, theme = 'light', richColors, duration, style, visibleToasts = VISIBLE_TOASTS_AMOUNT, toastOptions, dir = getDocumentDirection(), gap = GAP, icons, customAriaLabel, containerAriaLabel = 'Notifications' } = props;
++    ], expand, closeButton, className, offset, mobileOffset, theme = 'light', richColors, duration, style, visibleToasts = VISIBLE_TOASTS_AMOUNT, toastOptions, dir = getDocumentDirection(), gap = GAP, icons, customAriaLabel, containerAriaLabel = 'Notifications', containerLive = true } = props;
+     const [toasts, setToasts] = React__default.default.useState([]);
+     const filteredToasts = React__default.default.useMemo(()=>{
+         if (id) {
+@@ -1149,9 +1141,12 @@ const Toaster = /*#__PURE__*/ React__default.default.forwardRef(function Toaster
+         ref: ref,
+         "aria-label": customAriaLabel != null ? customAriaLabel : `${containerAriaLabel} ${hotkeyLabel}`,
+         tabIndex: -1,
+-        "aria-live": "polite",
+-        "aria-relevant": "additions text",
+-        "aria-atomic": "false",
++        // A host that announces its toasts itself renders the section without a live region.
++        ...containerLive ? {
++            "aria-live": "polite",
++            "aria-relevant": "additions text",
++            "aria-atomic": "false"
++        } : {},
+         suppressHydrationWarning: true,
+         "data-react-aria-top-layer": true
+     }, possiblePositions.map((position, index)=>{
 diff --git a/dist/index.mjs b/dist/index.mjs
-index c124f821a68f7070647a5a04441d0caa53689662..de84213523dc4ca54593cecacc40ab2d883a4f11 100644
+index c124f821a68f7070647a5a04441d0caa53689662..d94bf3bc68ebe1b96bc0c230583fa33aefcd96c7 100644
 --- a/dist/index.mjs
 +++ b/dist/index.mjs
 @@ -590,8 +590,8 @@ const Toast = (props)=>{
@@ -85,3 +133,28 @@ index c124f821a68f7070647a5a04441d0caa53689662..de84213523dc4ca54593cecacc40ab2d
      const deleteToast = React.useCallback(()=>{
          // Save the offset for the exit swipe animation
          setRemoved(true);
+@@ -980,7 +972,7 @@ const Toaster = /*#__PURE__*/ React.forwardRef(function Toaster(props, ref) {
+     const { id, invert, position = 'bottom-right', hotkey = [
+         'altKey',
+         'KeyT'
+-    ], expand, closeButton, className, offset, mobileOffset, theme = 'light', richColors, duration, style, visibleToasts = VISIBLE_TOASTS_AMOUNT, toastOptions, dir = getDocumentDirection(), gap = GAP, icons, customAriaLabel, containerAriaLabel = 'Notifications' } = props;
++    ], expand, closeButton, className, offset, mobileOffset, theme = 'light', richColors, duration, style, visibleToasts = VISIBLE_TOASTS_AMOUNT, toastOptions, dir = getDocumentDirection(), gap = GAP, icons, customAriaLabel, containerAriaLabel = 'Notifications', containerLive = true } = props;
+     const [toasts, setToasts] = React.useState([]);
+     const filteredToasts = React.useMemo(()=>{
+         if (id) {
+@@ -1142,9 +1134,12 @@ const Toaster = /*#__PURE__*/ React.forwardRef(function Toaster(props, ref) {
+         ref: ref,
+         "aria-label": customAriaLabel != null ? customAriaLabel : `${containerAriaLabel} ${hotkeyLabel}`,
+         tabIndex: -1,
+-        "aria-live": "polite",
+-        "aria-relevant": "additions text",
+-        "aria-atomic": "false",
++        // A host that announces its toasts itself renders the section without a live region.
++        ...containerLive ? {
++            "aria-live": "polite",
++            "aria-relevant": "additions text",
++            "aria-atomic": "false"
++        } : {},
+         suppressHydrationWarning: true,
+         "data-react-aria-top-layer": true
+     }, possiblePositions.map((position, index)=>{
