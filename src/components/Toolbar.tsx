@@ -46,6 +46,9 @@ interface IToolbarItemVariantProps {
 // A pressed toggle carries a 3:1 boundary and a tint, so its state does not rest on a faint fill alone.
 const pressedClasses = "aria-pressed:border-primary aria-pressed:bg-primary/15 aria-pressed:text-foreground";
 
+// In a vertical toolbar each tool spans the group, so its label starts at the shared leading edge instead of centring.
+const verticalClasses = "data-[orientation=vertical]:justify-start";
+
 function ToolbarButton({
   analytics,
   density,
@@ -64,6 +67,7 @@ function ToolbarButton({
         cn(
           buttonVariants({ variant }),
           pressedClasses,
+          verticalClasses,
           "data-disabled:border-dashed data-disabled:border-border data-disabled:bg-transparent data-disabled:text-faint-foreground data-disabled:font-normal",
           typeof className === "function" ? className(state) : className,
         )
@@ -89,7 +93,7 @@ function ToolbarLink({
       data-slot="toolbar-link"
       data-variant={variant}
       className={(state) =>
-        cn(buttonVariants({ variant }), typeof className === "function" ? className(state) : className)
+        cn(buttonVariants({ variant }), verticalClasses, typeof className === "function" ? className(state) : className)
       }
       {...props}
       onClick={trackedOnClick}
@@ -138,7 +142,8 @@ function ToolbarGroup({ density, className, wrap = false, ...props }: ToolbarGro
       data-wrap={wrap ? "" : undefined}
       className={(state) =>
         cn(
-          "flex items-center gap-control-gap data-[orientation=vertical]:flex-col",
+          // A vertical group is a list of tools: each spans the group and starts its label at the shared leading edge.
+          "flex items-center gap-control-gap data-[orientation=vertical]:flex-col data-[orientation=vertical]:items-stretch",
           // Wrapped chips run in rows even inside a vertical toolbar, left-aligned, so a set of values reads as text does.
           wrap && "flex-wrap justify-start data-[orientation=vertical]:flex-row",
           typeof className === "function" ? className(state) : className,

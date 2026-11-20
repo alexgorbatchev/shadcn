@@ -47,6 +47,33 @@ export const Vertical: Story = {
     );
   },
 };
+/** A vertical list of tools in a narrow side panel: each tool spans the panel and starts its label at the same edge. */
+export const VerticalTools: Story = {
+  render: (args) => (
+    <div className="w-64">
+      <Toolbar {...args} aria-label="Pages tools" orientation="vertical" variant="plain">
+        <ToolbarGroup>
+          <ToolbarButton>Find a page…</ToolbarButton>
+          <ToolbarButton aria-pressed>Needs you</ToolbarButton>
+          <ToolbarButton>New project</ToolbarButton>
+          <ToolbarButton>Show archived</ToolbarButton>
+        </ToolbarGroup>
+      </Toolbar>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const boxes = ["Find a page…", "Needs you", "New project", "Show archived"].map((name) =>
+      canvas.getByRole("button", { name }).getBoundingClientRect(),
+    );
+    const toolbar = canvas.getByRole("toolbar", { name: "Pages tools" }).getBoundingClientRect();
+    await expect(new Set(boxes.map((box) => box.left))).toEqual(new Set([toolbar.left]));
+    await expect(new Set(boxes.map((box) => box.width))).toEqual(new Set([toolbar.width]));
+    // Each label starts at its button's leading padding, not centred in the row.
+    const label = canvas.getByRole("button", { name: "Show archived" });
+    await expect(getComputedStyle(label).justifyContent).toBe("flex-start");
+  },
+};
 const toolbarClasses = fn((_state: unknown) => "font-medium");
 export const NativeStateCallbacks: Story = {
   render: (args) => (
