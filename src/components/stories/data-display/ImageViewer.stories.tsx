@@ -118,7 +118,7 @@ const meta: Meta<typeof ImageViewer> = {
     docs: {
       description: {
         component:
-          'Import from `@alexgorbatchev/shadcn/image-viewer`. ImageViewer fills the container it is given, such as a `DialogContent size="fullscreen"` body, and shows one framed image in a native scroll viewport. `fit` scales the image down proportionally to fit both dimensions, centered and without scrollbars, and never upscales it; `fit-width` fills the width and scrolls vertically; a number is a scale from the fitted one up to 4 (400%), so `1` shows natural size. Without `zoom` or `defaultZoom` it opens at `fit`, or at `fit-width` for an image much taller than the stage, and never narrower than `openingWidth`. Zooming keeps the viewed center. The stage, named "<alt>, <percent>", owns its gestures: a drag pans, two fingers pinch-zoom and Mod+wheel zooms around the pointer, so a touch never reaches overlay content unless it handles the pointer itself, such as `ImageRegionSelect`; while focused it takes + or = (zoom in), − (zoom out), 0 (fit), 1 (100%) and arrows (pan while larger than the stage), and `onStageKeyDown` runs first to add or replace keys. `showZoomControl` shows the zoom bar (Fit, Fit width, −, percent, +) in a toolbar row, and `toolbar` adds further controls to that row. `overlay` renders content sized and positioned exactly over the rendered image at every zoom, `imageRef` and `overlayRef` expose the rendered image box, and `getNormalizedImagePoint(event, box)` maps pointer coordinates to 0–1 image coordinates.',
+          'Import from `@alexgorbatchev/shadcn/image-viewer`. ImageViewer fills the container it is given, such as a `DialogContent size="fullscreen"` body, and shows one framed image in a native scroll viewport. `fit` scales the image down proportionally to fit both dimensions, centered and without scrollbars, and never upscales it; `fit-width` fills the width and scrolls vertically; a number is a scale from the fitted one up to 4 (400%), so `1` shows natural size. Without `zoom` or `defaultZoom` it opens at `fit`, or at `fit-width` for an image much taller than the stage, and never narrower than `openingWidth`. Zooming keeps the viewed center. The stage, named "<alt>, <percent>", owns its gestures: a drag pans, two fingers pinch-zoom and Mod+wheel zooms around the pointer, so a touch never reaches overlay content unless it handles the pointer itself, such as `ImageRegionSelect`; while focused it takes + or = (zoom in), − (zoom out), 0 (fit), 1 (100%) and arrows (pan while larger than the stage), and `onStageKeyDown` runs first to add or replace keys. `showZoomControl` shows the zoom bar (Fit, Fit width, −, percent, +) in a toolbar row, and `toolbar` adds further controls to that row, which wraps onto further rows when its controls do not fit. `overlay` renders content sized and positioned exactly over the rendered image at every zoom, `imageRef` and `overlayRef` expose the rendered image box, and `getNormalizedImagePoint(event, box)` maps pointer coordinates to 0–1 image coordinates.',
       },
     },
   },
@@ -286,6 +286,53 @@ function RegionToolExample(props: IImageViewerProps): ReactElement {
     </div>
   );
 }
+
+export const NarrowToolbar: Story = {
+  args: { defaultZoom: "fit", showZoomControl: true },
+  render: (args) => (
+    // A 320 px phone with 16 px gutters leaves 288 px for the toolbar.
+    <div className="flex h-96 w-72 flex-col border border-border">
+      <ImageViewer
+        {...args}
+        toolbar={
+          <>
+            <Toggle variant="outline" size="sm">
+              Comment on a region
+            </Toggle>
+            <Button variant="outline" size="sm">
+              Comment on image
+            </Button>
+          </>
+        }
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await findRenderedImage(canvasElement, "Dashboard screenshot");
+    const toolbar = canvasElement.querySelector<HTMLElement>("[data-slot=image-viewer-toolbar]");
+    if (!toolbar) throw new Error("The viewer toolbar is missing.");
+    // Controls that do not fit wrap onto further rows instead of scrolling out of view.
+    await expect(toolbar.scrollWidth).toBeLessThanOrEqual(toolbar.clientWidth);
+    const bounds = toolbar.getBoundingClientRect();
+    for (const name of [
+      /^Fit$/,
+      /^Fit width$/,
+      /^Zoom out$/,
+      /^Zoom in$/,
+      /^Comment on a region$/,
+      /^Comment on image$/,
+    ]) {
+      const control = canvas.getByRole("button", { name }).getBoundingClientRect();
+      await expect(control.left).toBeGreaterThanOrEqual(bounds.left - 0.5);
+      await expect(control.right).toBeLessThanOrEqual(bounds.right + 0.5);
+    }
+    // The zoom bar stays one group on its own row.
+    const fit = canvas.getByRole("button", { name: /^Fit$/ }).getBoundingClientRect();
+    const zoomIn = canvas.getByRole("button", { name: "Zoom in" }).getBoundingClientRect();
+    await expect(zoomIn.top).toBeCloseTo(fit.top, 0);
+  },
+};
 
 export const RegionTool: Story = {
   args: { defaultZoom: "fit" },

@@ -41,7 +41,10 @@ export interface IImageViewerProps extends IDensityProps {
    * `ImageZoomToggle` yourself instead to put a simpler control in a header.
    */
   showZoomControl?: boolean;
-  /** Further controls in the toolbar row after the zoom bar, such as comment actions. Renders the row on its own too. */
+  /**
+   * Further controls in the toolbar row after the zoom bar, such as comment actions. Renders the row on its own too.
+   * Controls that do not fit wrap onto further rows, so every control stays visible on narrow screens.
+   */
   toolbar?: ReactNode;
   /**
    * Content sized and positioned exactly over the rendered image at every zoom level, such as region selections or
@@ -142,7 +145,7 @@ export function ImageViewer({
       {(showZoomControl || toolbar !== undefined) && (
         <div
           data-slot="image-viewer-toolbar"
-          className="flex shrink-0 flex-nowrap items-center gap-control-gap overflow-x-auto overscroll-x-contain *:shrink-0"
+          className="flex shrink-0 flex-wrap items-center gap-control-gap *:shrink-0"
         >
           {showZoomControl && (
             <ImageZoomControl zoom={shownZoom} scale={scale} scales={scales} onZoomChange={setZoom} density={density} />
