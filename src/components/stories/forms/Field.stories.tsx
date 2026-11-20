@@ -766,3 +766,43 @@ export const FormComposition: Story = {
     await expect(canvas.getByRole("status", { name: "Submitted report" })).toBeEmptyDOMElement();
   },
 };
+
+/** Choice cards whose title and description can be selected and quoted; a drag never picks the option. */
+export const SelectableChoiceLabel: Story = {
+  render: function Render() {
+    const storyId = useId();
+    const [value, setValue] = useState("bold");
+    return (
+      <RadioGroup aria-label="Hero direction" value={value} onValueChange={(next) => setValue(String(next))}>
+        {[
+          { value: "bold", title: "Bold", description: "Large type and a strong accent colour." },
+          { value: "quiet", title: "Quiet", description: "Soft neutrals and generous whitespace." },
+        ].map((option) => (
+          <FieldLabel key={option.value} htmlFor={`${storyId}-${option.value}`} selectable>
+            <Field orientation="horizontal">
+              <FieldContent>
+                <FieldTitle>{option.title}</FieldTitle>
+                <FieldDescription>{option.description}</FieldDescription>
+              </FieldContent>
+              <RadioGroupItem id={`${storyId}-${option.value}`} value={option.value} aria-label={option.title} />
+            </Field>
+          </FieldLabel>
+        ))}
+      </RadioGroup>
+    );
+  },
+  play: async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+    const description = canvas.getByText("Soft neutrals and generous whitespace.");
+    await expect(getComputedStyle(description).userSelect).not.toBe("none");
+    const selection = document.getSelection();
+    selection?.selectAllChildren(description);
+    description.click();
+    await expect(canvas.getByRole("radio", { name: "Quiet" })).not.toBeChecked();
+    await expect(canvas.getByRole("radio", { name: "Bold" })).toBeChecked();
+    await expect(selection?.toString()).toBe("Soft neutrals and generous whitespace.");
+    selection?.removeAllRanges();
+    await userEvent.click(description);
+    await expect(canvas.getByRole("radio", { name: "Quiet" })).toBeChecked();
+  },
+};

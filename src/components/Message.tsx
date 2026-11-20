@@ -5,6 +5,9 @@ import type { IMessageContextValue, MessageStyle } from "../message/types.js";
 import { useRender } from "@base-ui/react/use-render";
 import { MessageContext } from "../message/MessageContext.js";
 import { cn } from "../utils/cn.js";
+import { ChevronRightIcon } from "lucide-react";
+import { buttonVariants } from "./Button.js";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "./Collapsible.js";
 
 type MessageGroupProps = ComponentProps<"div"> & IDensityProps;
 
@@ -128,4 +131,69 @@ function MessageFooter({ density, className, ...props }: MessageFooterProps): Re
   });
 }
 
-export { MessageGroup, Message, MessageAvatar, MessageContent, MessageFooter, MessageHeader };
+type MessageThreadProps = ComponentProps<typeof Collapsible> & IDensityProps;
+
+/**
+ * The replies under a message, collapsed to one summary line such as "3 replies · last: your agent, 2 min ago" until
+ * the reader expands them. Controlled through `open` and `onOpenChange`, or uncontrolled through `defaultOpen`.
+ */
+function MessageThread({ density, className, ...props }: MessageThreadProps): ReactElement {
+  return (
+    <Collapsible
+      data-density={density}
+      data-slot="message-thread"
+      className={cn("flex min-w-0 flex-col gap-control-gap", className)}
+      {...props}
+    />
+  );
+}
+
+type MessageThreadSummaryProps = ComponentProps<typeof CollapsibleTrigger> & IDensityProps;
+
+/** The summary line that expands or collapses a thread's replies; it reports its state through `aria-expanded`. */
+function MessageThreadSummary({ density, className, children, ...props }: MessageThreadSummaryProps): ReactElement {
+  return (
+    <CollapsibleTrigger
+      data-density={density}
+      data-slot="message-thread-summary"
+      className={cn(
+        buttonVariants({ variant: "link", size: "inline" }),
+        "group/message-thread-summary w-fit max-w-full justify-start text-xs whitespace-normal text-muted-foreground",
+        className,
+      )}
+      {...props}
+    >
+      <ChevronRightIcon
+        aria-hidden="true"
+        className="size-3 shrink-0 group-aria-expanded/message-thread-summary:rotate-90 motion-reduce:transition-none"
+      />
+      {children}
+    </CollapsibleTrigger>
+  );
+}
+
+type MessageThreadRepliesProps = ComponentProps<typeof CollapsibleContent> & IDensityProps;
+
+/** The replies a thread summary expands. */
+function MessageThreadReplies({ density, className, ...props }: MessageThreadRepliesProps): ReactElement {
+  return (
+    <CollapsibleContent
+      data-density={density}
+      data-slot="message-thread-replies"
+      className={cn("min-w-0", className)}
+      {...props}
+    />
+  );
+}
+
+export {
+  MessageGroup,
+  Message,
+  MessageAvatar,
+  MessageContent,
+  MessageFooter,
+  MessageHeader,
+  MessageThread,
+  MessageThreadSummary,
+  MessageThreadReplies,
+};

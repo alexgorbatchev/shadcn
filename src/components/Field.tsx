@@ -99,18 +99,39 @@ function FieldContent({ density, className, ...props }: FieldContentProps): Reac
   );
 }
 
-type FieldLabelProps = ComponentProps<typeof Label> & IDensityProps;
+type FieldLabelProps = ComponentProps<typeof Label> &
+  IDensityProps & {
+    /**
+     * Lets people select the label's text, for example to quote or copy an option's description. A click that ends a
+     * drag selection inside the label then leaves its control alone; a plain click still activates it.
+     */
+    selectable?: boolean;
+  };
 
-function FieldLabel({ density, className, ...props }: FieldLabelProps): ReactElement {
+/** Whether the document holds a non-empty text selection that touches the given element. */
+function hasSelectionWithin(element: HTMLElement): boolean {
+  const selection = element.ownerDocument.getSelection();
+  if (!selection || selection.isCollapsed || selection.rangeCount === 0) return false;
+  return selection.getRangeAt(0).intersectsNode(element);
+}
+
+function FieldLabel({ density, className, selectable = false, onClick, ...props }: FieldLabelProps): ReactElement {
   return (
     <Label
       data-density={density}
       data-slot="field-label"
+      data-selectable={selectable || undefined}
       className={cn(
         "group/field-label peer/field-label flex w-fit gap-2 leading-snug group-data-[disabled=true]/field:opacity-50 has-data-checked:border-primary/30 has-data-checked:bg-primary/5 has-[>[data-slot=field]]:rounded-sm has-[>[data-slot=field]]:border has-[>[data-slot=field]]:not-has-[:disabled,[data-disabled]]:hover:bg-muted/50 has-[>[data-slot=field]]:has-[:focus-visible]:border-ring has-[>[data-slot=field]]:has-[:focus-visible]:ring-3 has-[>[data-slot=field]]:has-[:focus-visible]:ring-ring *:data-[slot=field]:p-2.5",
         "has-[>[data-slot=field]]:w-full has-[>[data-slot=field]]:flex-col",
+        selectable && "select-text",
         className,
       )}
+      onClick={(event) => {
+        // A click that ends a drag selection belongs to the selection, so it must not pick the labelled control.
+        if (selectable && hasSelectionWithin(event.currentTarget)) event.preventDefault();
+        onClick?.(event);
+      }}
       {...props}
     />
   );

@@ -2,7 +2,17 @@ import type { ComponentProps, ReactElement } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { useState } from "react";
 import { expect, fn, userEvent, waitFor, within } from "storybook/test";
-import { Message, MessageAvatar, MessageContent, MessageFooter, MessageGroup, MessageHeader } from "../../Message";
+import {
+  Message,
+  MessageAvatar,
+  MessageContent,
+  MessageFooter,
+  MessageGroup,
+  MessageHeader,
+  MessageThread,
+  MessageThreadReplies,
+  MessageThreadSummary,
+} from "../../Message";
 import { Avatar, AvatarFallback } from "../../Avatar";
 import { Bubble, BubbleContent } from "../../Bubble";
 import { Button } from "../../Button";
@@ -393,4 +403,67 @@ export const PaddedContent: Story = {
     </div>
   ),
   play: async ({ canvasElement }) => assertAvatarAtSurface(canvasElement),
+};
+
+/** A thread collapsed to its first message and one summary line; the summary expands the replies. */
+export const CollapsedThread: Story = {
+  render: function Render() {
+    const [isOpen, setOpen] = useState(false);
+    return (
+      <div className="flex w-96 flex-col gap-2">
+        <Message role="article" aria-label="Your comment">
+          <MessageContent>
+            <Bubble variant="tinted">
+              <BubbleContent>Can the More tab hold Settings?</BubbleContent>
+            </Bubble>
+          </MessageContent>
+        </Message>
+        <MessageThread open={isOpen} onOpenChange={setOpen}>
+          <MessageThreadSummary>3 replies · last: your agent, 2 min ago</MessageThreadSummary>
+          <MessageThreadReplies>
+            <Message role="article" aria-label="Agent reply">
+              <MessageContent>
+                <Bubble variant="muted">
+                  <BubbleContent>Yes, Settings moves under More.</BubbleContent>
+                </Bubble>
+              </MessageContent>
+            </Message>
+          </MessageThreadReplies>
+        </MessageThread>
+      </div>
+    );
+  },
+  play: async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+    const summary = canvas.getByRole("button", { name: "3 replies · last: your agent, 2 min ago" });
+    await expect(summary).toHaveAttribute("aria-expanded", "false");
+    await expect(canvas.queryByRole("article", { name: "Agent reply" })).toBeNull();
+    await userEvent.click(summary);
+    await expect(summary).toHaveAttribute("aria-expanded", "true");
+    await expect(canvas.getByRole("article", { name: "Agent reply" })).toBeVisible();
+    summary.focus();
+    await userEvent.keyboard("{Enter}");
+    await waitFor(() => expect(summary).toHaveAttribute("aria-expanded", "false"));
+  },
+};
+
+export const ExpandedThread: Story = {
+  render: () => (
+    <div className="w-96">
+      <MessageThread defaultOpen density="compact">
+        <MessageThreadSummary density="compact">1 reply · last: you, 10:38</MessageThreadSummary>
+        <MessageThreadReplies density="compact">
+          <p>Reply text</p>
+        </MessageThreadReplies>
+      </MessageThread>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("button", { name: "1 reply · last: you, 10:38" })).toHaveAttribute(
+      "aria-expanded",
+      "true",
+    );
+    await expect(canvas.getByText("Reply text")).toBeVisible();
+  },
 };

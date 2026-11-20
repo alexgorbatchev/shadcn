@@ -364,6 +364,9 @@ export {
   MessageContent,
   MessageHeader,
   MessageFooter,
+  MessageThread,
+  MessageThreadSummary,
+  MessageThreadReplies,
 } from "./components/Message.js";
 export {
   Attachment,
@@ -495,6 +498,8 @@ export type { SettingsSectionProps } from "./components/SettingsSection.js";
 export { TagInput } from "./components/TagInput.js";
 export type { TagInputProps } from "./components/TagInput.js";
 
+export { FilterChip } from "./components/FilterChip.js";
+export type { FilterChipProps } from "./components/FilterChip.js";
 export { FilterBar } from "./components/FilterBar.js";
 export type { FilterBarProps, FilterDefinition } from "./components/FilterBar.js";
 export { Kanban } from "./components/Kanban.js";
