@@ -21,7 +21,10 @@ export type {
 } from "./types.js";
 export { ImageRegionMarker, ImageRegionMarkerBadge } from "./ImageRegionMarker.js";
 export type {
+  IImageRegionBadgePosition,
+  IImageRegionBox,
   IImageRegionMarkerBadgeProps,
   IImageRegionMarkerProps,
+  ImageRegionLength,
   ImageRegionMarkerVariant,
 } from "./ImageRegionMarker.js";

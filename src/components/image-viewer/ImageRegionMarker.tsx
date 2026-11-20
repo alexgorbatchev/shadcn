@@ -24,42 +24,86 @@ const imageRegionMarkerVariants = cva(
 
 export type ImageRegionMarkerVariant = NonNullable<VariantProps<typeof imageRegionMarkerVariants>["variant"]>;
 
+/** A length in CSS pixels, or any CSS length such as a percentage of the positioned image box. */
+export type ImageRegionLength = number | string;
+
+/** Where a region sits inside its positioned image box. */
+export interface IImageRegionBox {
+  left: ImageRegionLength;
+  top: ImageRegionLength;
+  width: ImageRegionLength;
+  height: ImageRegionLength;
+}
+
+/** Where a badge sits relative to its marker's box. */
+export interface IImageRegionBadgePosition {
+  left: ImageRegionLength;
+  top: ImageRegionLength;
+}
+
 export interface IImageRegionMarkerProps extends ComponentProps<"div"> {
   /** Which kind of region the marker outlines. Defaults to `comment`. */
   variant?: ImageRegionMarkerVariant;
+  /** The region's box inside the positioned image box. Lets consumers place the marker without passing `style`. */
+  region?: IImageRegionBox;
 }
 
 /**
- * Outlines a region drawn over an image. Position it with `style` (`left`, `top`, `width`, `height`, in pixels or
- * percentages of the positioned image box). Children render inside the marker's box, such as an
- * `ImageRegionMarkerBadge` pinned to one of its corners.
+ * Outlines a region drawn over an image. Position it with `region` (`left`, `top`, `width`, `height`, in pixels or
+ * any CSS length, such as percentages of the positioned image box). Children render inside the marker's box, such as
+ * an `ImageRegionMarkerBadge` pinned to one of its corners.
  */
-export function ImageRegionMarker({ variant, className, ...props }: IImageRegionMarkerProps): ReactElement {
+export function ImageRegionMarker({
+  variant,
+  region,
+  className,
+  style,
+  ...props
+}: IImageRegionMarkerProps): ReactElement {
   return (
     <div
       data-slot="image-region-marker"
       data-variant={variant ?? "comment"}
       className={cn(imageRegionMarkerVariants({ variant }), className)}
+      style={region ? { ...style, ...region } : style}
       {...props}
     />
   );
 }
 
-export type IImageRegionMarkerBadgeProps = ComponentProps<"div">;
+export interface IImageRegionMarkerBadgeProps extends ComponentProps<"div"> {
+  /** Where the badge sits relative to its marker's box. */
+  position?: IImageRegionBadgePosition;
+  /**
+   * Whether the badge takes pointer input. Defaults to `true`; pass `false` while another gesture, such as drawing a
+   * new region, owns the pointer so the badge does not intercept it.
+   */
+  interactive?: boolean;
+}
 
 /**
  * Holds an interactive control, such as a comment-count button, beside an `ImageRegionMarker`. It carries the
- * marker's outline and halo, so its edge stays visible on light and dark screenshots. Position it with `style`
- * relative to the marker's box; it receives pointer events although the marker does not.
+ * marker's outline and halo, so its edge stays visible on light and dark screenshots. Position it with `position`
+ * relative to the marker's box; it receives pointer events although the marker does not, unless `interactive` is
+ * `false`.
  */
-export function ImageRegionMarkerBadge({ className, ...props }: IImageRegionMarkerBadgeProps): ReactElement {
+export function ImageRegionMarkerBadge({
+  position,
+  interactive = true,
+  className,
+  style,
+  ...props
+}: IImageRegionMarkerBadgeProps): ReactElement {
   return (
     <div
       data-slot="image-region-marker-badge"
+      data-interactive={interactive}
       className={cn(
-        "pointer-events-auto absolute z-10 rounded-sm shadow-[0_0_0_4px_var(--background)] outline-2 outline-primary forced-colors:outline-[Highlight]",
+        "absolute z-10 rounded-sm shadow-[0_0_0_4px_var(--background)] outline-2 outline-primary forced-colors:outline-[Highlight]",
+        interactive ? "pointer-events-auto" : "pointer-events-none",
         className,
       )}
+      style={position ? { ...style, ...position } : style}
       {...props}
     />
   );

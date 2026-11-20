@@ -19,7 +19,7 @@ export function ImageDifferenceOverlay({ diff }: IImageDifferenceOverlayProps): 
           key={`${region.x}:${region.y}:${region.width}:${region.height}`}
           data-slot="image-difference-region"
           variant="difference"
-          style={{
+          region={{
             left: toPercent(region.x, diff.width),
             top: toPercent(region.y, diff.height),
             width: toPercent(region.width, diff.width),

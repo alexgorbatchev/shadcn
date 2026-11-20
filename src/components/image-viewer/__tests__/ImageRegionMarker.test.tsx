@@ -23,8 +23,8 @@ function RegionFixture({ theme, screenshot, variant }: IRegionFixtureProps): Rea
   return (
     <ThemeProvider forcedTheme={theme}>
       <div data-testid="screenshot" className="relative" style={{ width: 240, height: 140, background: screenshot }}>
-        <ImageRegionMarker variant={variant} style={REGION}>
-          <ImageRegionMarkerBadge style={{ left: REGION.width + 8, top: -32 }}>
+        <ImageRegionMarker variant={variant} region={REGION}>
+          <ImageRegionMarkerBadge position={{ left: REGION.width + 8, top: -32 }}>
             <button type="button" className="h-6 w-10 rounded-sm bg-secondary text-secondary-foreground">
               3
             </button>
@@ -162,4 +162,34 @@ test("forced colours draw the target emphasis as one Highlight outline", async (
   const mark = screen.container.firstElementChild ?? document.body;
   expect(getComputedStyle(mark).outlineWidth).toBe("4px");
   expect(getComputedStyle(mark).outlineOffset).toBe("0px");
+});
+
+test("region and position place the marker and badge, and position overrides a conflicting style", async () => {
+  const screen = await render(
+    <div className="relative" style={{ width: 200, height: 100 }}>
+      <ImageRegionMarker region={{ left: "10%", top: 5, width: "50%", height: 40 }} style={{ left: 0, zIndex: 3 }}>
+        <ImageRegionMarkerBadge position={{ left: 12, top: -20 }} style={{ top: 0, zIndex: 4 }} />
+      </ImageRegionMarker>
+    </div>,
+  );
+  const marker = screen.container.querySelector<HTMLElement>("[data-slot=image-region-marker]");
+  const badge = screen.container.querySelector<HTMLElement>("[data-slot=image-region-marker-badge]");
+  expect(getComputedStyle(marker ?? document.body).left).toBe("20px");
+  expect(getComputedStyle(marker ?? document.body).width).toBe("100px");
+  expect(marker?.style.zIndex).toBe("3");
+  expect(getComputedStyle(badge ?? document.body).top).toBe("-20px");
+  expect(badge?.style.zIndex).toBe("4");
+  expect(getComputedStyle(badge ?? document.body).pointerEvents).toBe("auto");
+  expect(badge?.dataset.interactive).toBe("true");
+});
+
+test("a badge that is not interactive lets the pointer through", async () => {
+  const screen = await render(
+    <ImageRegionMarker>
+      <ImageRegionMarkerBadge interactive={false} />
+    </ImageRegionMarker>,
+  );
+  const badge = screen.container.querySelector<HTMLElement>("[data-slot=image-region-marker-badge]");
+  expect(getComputedStyle(badge ?? document.body).pointerEvents).toBe("none");
+  expect(badge?.dataset.interactive).toBe("false");
 });
