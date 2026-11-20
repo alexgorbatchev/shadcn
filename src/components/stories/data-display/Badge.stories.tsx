@@ -4,6 +4,8 @@ import { CheckIcon, BookmarkIcon } from "lucide-react";
 import { expect, fn, userEvent, within } from "storybook/test";
 import { Badge } from "../../Badge";
 import { Spinner } from "../../Spinner";
+import { Button } from "../../Button";
+import { boundaryContrast, minimumBoundaryContrast } from "../../../../.storybook/controlBoundary";
 
 const meta: Meta<typeof Badge> = {
   title: "@alexgorbatchev/shadcn/components/data-display/Badge",
@@ -34,6 +36,27 @@ export const Default: Story = {
 };
 export const Secondary: Story = { ...Default, args: { variant: "secondary" } };
 export const Outline: Story = { ...Default, args: { variant: "outline" } };
+
+/** A status tag beside an outline action: the pill shape, regular weight and quiet edge keep state distinct from action. */
+export const OutlineBesideOutlineButton: Story = {
+  render: () => (
+    <div className="flex items-center gap-2">
+      <Badge variant="outline">Required</Badge>
+      <Button variant="outline">Later</Button>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const badge = getComputedStyle(canvas.getByText("Required"));
+    const button = canvas.getByRole("button", { name: "Later" });
+    const buttonStyle = getComputedStyle(button);
+    await expect(badge.borderTopLeftRadius).not.toBe(buttonStyle.borderTopLeftRadius);
+    await expect(Number.parseFloat(badge.borderTopLeftRadius)).toBeGreaterThan(Number.parseFloat(badge.height) / 2 - 1);
+    await expect(Number(badge.fontWeight)).toBeLessThan(Number(buttonStyle.fontWeight));
+    await expect(badge.borderTopColor).not.toBe(buttonStyle.borderTopColor);
+    await expect(boundaryContrast(button)).toBeGreaterThanOrEqual(minimumBoundaryContrast);
+  },
+};
 export const Destructive: Story = { ...Default, args: { variant: "destructive" } };
 export const Ghost: Story = { ...Default, args: { variant: "ghost" } };
 export const Success: Story = { tags: ["visual"], ...Default, args: { variant: "success" } };

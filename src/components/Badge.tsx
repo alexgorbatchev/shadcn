@@ -14,7 +14,10 @@ const badgeVariants = cva(
         secondary: "bg-secondary text-secondary-foreground [a]:hover:bg-secondary/80",
         destructive:
           "bg-destructive text-destructive-foreground focus-visible:ring-destructive [a]:hover:bg-destructive/80",
-        outline: "border-border text-foreground [a]:hover:bg-muted [a]:hover:text-muted-foreground",
+        // A status tag, not an action: a pill with a quiet divider edge and regular-weight muted text, so it never matches
+        // the 4px corners, 3:1 edge and medium-weight label of an outline Button beside it.
+        outline:
+          "rounded-full border-border font-normal text-muted-foreground [a]:hover:bg-muted [a]:hover:text-foreground",
         ghost: "hover:bg-muted hover:text-muted-foreground ",
         success: "bg-success text-success-foreground",
         warning: "bg-warning text-warning-foreground",
