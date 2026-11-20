@@ -55,6 +55,7 @@ export const JsonToggleGroup = ({ props, bindings, emit }: BaseComponentProps<Js
         </p>
       )}
       <ToggleGroup
+        variant="outline"
         multiple={type === "multiple"}
         disabled={mode === "locked"}
         value={selected}

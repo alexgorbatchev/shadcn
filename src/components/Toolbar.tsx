@@ -32,21 +32,38 @@ function Toolbar({ density, className, variant = "framed", ...props }: ToolbarPr
   );
 }
 
+/**
+ * `outline` (the default) gives a text action a visible boundary at rest. `ghost` is borderless and is only for
+ * icon-only buttons whose icon identifies them as controls, such as a formatting toolbar.
+ */
+type ToolbarItemVariant = "outline" | "ghost";
+
+interface IToolbarItemVariantProps {
+  /** `outline` (the default) for text actions; `ghost` only for icon-only buttons. */
+  variant?: ToolbarItemVariant;
+}
+
+// A pressed toggle carries a 3:1 boundary and a tint, so its state does not rest on a faint fill alone.
+const pressedClasses = "aria-pressed:border-primary aria-pressed:bg-primary/15 aria-pressed:text-foreground";
+
 function ToolbarButton({
   analytics,
   density,
   className,
+  variant = "outline",
   ...props
-}: ToolbarPrimitive.Button.Props & IDensityProps & IAnalyticsProps): ReactElement {
+}: ToolbarPrimitive.Button.Props & IDensityProps & IAnalyticsProps & IToolbarItemVariantProps): ReactElement {
   const trackedOnClick = useAnalyticsCallback("ToolbarButton", analytics, { name: "ui.activate" }, props.onClick);
 
   return (
     <ToolbarPrimitive.Button
       data-density={density}
       data-slot="toolbar-button"
+      data-variant={variant}
       className={(state) =>
         cn(
-          buttonVariants({ variant: "ghost" }),
+          buttonVariants({ variant }),
+          pressedClasses,
           "data-disabled:border-dashed data-disabled:border-border data-disabled:bg-transparent data-disabled:text-faint-foreground data-disabled:font-normal",
           typeof className === "function" ? className(state) : className,
         )
@@ -61,16 +78,18 @@ function ToolbarLink({
   analytics,
   density,
   className,
+  variant = "outline",
   ...props
-}: ToolbarPrimitive.Link.Props & IDensityProps & IAnalyticsProps): ReactElement {
+}: ToolbarPrimitive.Link.Props & IDensityProps & IAnalyticsProps & IToolbarItemVariantProps): ReactElement {
   const trackedOnClick = useAnalyticsCallback("ToolbarLink", analytics, { name: "ui.activate" }, props.onClick);
 
   return (
     <ToolbarPrimitive.Link
       data-density={density}
       data-slot="toolbar-link"
+      data-variant={variant}
       className={(state) =>
-        cn(buttonVariants({ variant: "ghost" }), typeof className === "function" ? className(state) : className)
+        cn(buttonVariants({ variant }), typeof className === "function" ? className(state) : className)
       }
       {...props}
       onClick={trackedOnClick}

@@ -54,6 +54,7 @@ function RichTextEditor({ editor, label, density, analytics }: RichTextEditorPro
       <Toolbar aria-label={`${label} formatting`} className="rounded-b-none border-0 border-b border-border">
         <ToolbarGroup>
           <ToolbarButton
+            variant="ghost"
             aria-label="Bold"
             aria-pressed={state?.bold}
             disabled={!state?.editable}
@@ -62,6 +63,7 @@ function RichTextEditor({ editor, label, density, analytics }: RichTextEditorPro
             <BoldIcon />
           </ToolbarButton>
           <ToolbarButton
+            variant="ghost"
             aria-label="Italic"
             aria-pressed={state?.italic}
             disabled={!state?.editable}
@@ -73,6 +75,7 @@ function RichTextEditor({ editor, label, density, analytics }: RichTextEditorPro
         <ToolbarSeparator />
         <ToolbarGroup>
           <ToolbarButton
+            variant="ghost"
             aria-label="Bullet list"
             aria-pressed={state?.bulletList}
             disabled={!state?.editable}
@@ -81,6 +84,7 @@ function RichTextEditor({ editor, label, density, analytics }: RichTextEditorPro
             <ListIcon />
           </ToolbarButton>
           <ToolbarButton
+            variant="ghost"
             aria-label="Numbered list"
             aria-pressed={state?.orderedList}
             disabled={!state?.editable}
@@ -92,6 +96,7 @@ function RichTextEditor({ editor, label, density, analytics }: RichTextEditorPro
         <ToolbarSeparator />
         <ToolbarGroup>
           <ToolbarButton
+            variant="ghost"
             aria-label="Undo"
             disabled={!state?.editable || !state.undo}
             onClick={() => editor?.chain().focus().undo().run()}
@@ -99,6 +104,7 @@ function RichTextEditor({ editor, label, density, analytics }: RichTextEditorPro
             <UndoIcon />
           </ToolbarButton>
           <ToolbarButton
+            variant="ghost"
             aria-label="Redo"
             disabled={!state?.editable || !state.redo}
             onClick={() => editor?.chain().focus().redo().run()}
