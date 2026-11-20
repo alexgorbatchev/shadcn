@@ -842,3 +842,52 @@ export const RightToLeftInvalid: Story = {
     ),
   ],
 };
+
+const fixture_longItems = [
+  { value: "window", label: "Maintenance window · Q1" },
+  {
+    value: "rollback",
+    label:
+      "When should I delete the old replica, and what should I check first? Connection pool sizes were raised · Q4",
+  },
+];
+
+export const LongItems: Story = {
+  args: { items: fixture_longItems },
+  render: (args) => (
+    <div className="w-80">
+      <Select {...args}>
+        <SelectTrigger aria-label="Decision">
+          <SelectValue placeholder="Choose" />
+        </SelectTrigger>
+        <SelectContent>
+          {fixture_longItems.map((item) => (
+            <SelectItem key={item.value} value={item.value}>
+              {item.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
+    </div>
+  ),
+  play: async ({ canvasElement, userEvent }) => {
+    const trigger = within(canvasElement).getByRole("combobox", { name: "Decision" });
+    await userEvent.click(trigger);
+    const list = await within(canvasElement.ownerDocument.body).findByRole("listbox");
+    const popup = list.closest('[data-slot="select-content"]') as HTMLElement;
+    const view = canvasElement.ownerDocument.documentElement;
+    await waitFor(() => {
+      const bounds = popup.getBoundingClientRect();
+      // The popup grows past a narrow trigger for long items but stays inside the viewport.
+      expect(bounds.width).toBeGreaterThan(trigger.getBoundingClientRect().width);
+      expect(bounds.left).toBeGreaterThanOrEqual(0);
+      expect(bounds.right).toBeLessThanOrEqual(view.clientWidth);
+    });
+    // Items wrap instead of being clipped, so every label stays readable in full.
+    for (const option of within(list).getAllByRole("option")) {
+      const text = option.querySelector<HTMLElement>('[class*="wrap-break-word"]') ?? option;
+      expect(text.scrollWidth).toBeLessThanOrEqual(text.clientWidth);
+    }
+    await userEvent.keyboard("{Escape}");
+  },
+};

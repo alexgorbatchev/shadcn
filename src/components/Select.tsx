@@ -117,7 +117,7 @@ function SelectContent({
             data-align-trigger={alignItemWithTrigger}
             className={(state) =>
               cn(
-                "relative isolate max-h-(--available-height) w-(--anchor-width) min-w-36 origin-(--transform-origin) overflow-x-hidden overflow-y-auto rounded-md bg-popover text-popover-foreground border border-frame-edge shadow-frame duration-120 data-[align-trigger=true]:animate-none data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:animate-none",
+                "relative isolate max-h-(--available-height) w-max min-w-[max(--spacing(36),var(--anchor-width))] max-w-(--available-width) origin-(--transform-origin) overflow-x-hidden overflow-y-auto rounded-md bg-popover text-popover-foreground border border-frame-edge shadow-frame duration-120 data-[align-trigger=true]:animate-none data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:animate-none",
                 typeof className === "function" ? className(state) : className,
               )
             }
@@ -163,7 +163,7 @@ function SelectItem({ density, className, children, ...props }: SelectItemProps)
       }
       {...props}
     >
-      <SelectPrimitive.ItemText className="flex flex-1 shrink-0 gap-2 whitespace-nowrap">
+      <SelectPrimitive.ItemText className="flex min-w-0 flex-1 gap-2 wrap-break-word">
         {children}
       </SelectPrimitive.ItemText>
       <SelectPrimitive.ItemIndicator
