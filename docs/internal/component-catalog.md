@@ -23,7 +23,7 @@ Exact reviewed source revisions and links are in [upstream test reuse](./upstrea
 
 ## Core imports
 
-The package root exports NumberField parts, Toolbar parts, Meter parts, Stepper parts, TagInput, FilterBar, Kanban, AppShell, PageHeader, PageIntro, WorkspaceSwitcher, AccountMenu, AuthForm, SettingsSection, StatCard, BarList, StatusTracker, DashboardLayout, BillingUsage, the layout components Stack, Grid, GridItem, and Container, the typography components Text and Heading, and WeatherSummary and WeatherForecast. `EmailCodeAuthForm` ships from `/input-otp` with the InputOTP parts it composes.
+The package root exports NumberField parts, Toolbar parts, Meter parts, Stepper parts, TagInput, FilterBar, Kanban, AppShell, PageHeader, PageIntro, WorkspaceSwitcher, AccountMenu, AuthForm, SettingsSection, StatCard, BarList, StatusTracker, DashboardLayout, BillingUsage, the layout components Stack, Grid, GridItem, and Container, the typography components Text and Heading, the stacked DescriptionList parts (DescriptionListItem, DescriptionTerm, DescriptionDetails), and WeatherSummary and WeatherForecast. `EmailCodeAuthForm` ships from `/input-otp` with the InputOTP parts it composes.
 
 NumberField's noninteractive viewport scrub cursor uses Base UI's document.body portal and resolves density through React context. Its viewport portal is independent of custom popup containers.
 

@@ -238,6 +238,18 @@ export { OptionSelect } from "./components/OptionSelect.js";
 export type { OptionSelectOption, OptionSelectProps } from "./components/OptionSelect.js";
 
 export { Kbd, KbdGroup } from "./components/Kbd.js";
+export {
+  DescriptionList,
+  DescriptionListItem,
+  DescriptionTerm,
+  DescriptionDetails,
+} from "./components/DescriptionList.js";
+export type {
+  DescriptionListProps,
+  DescriptionListItemProps,
+  DescriptionTermProps,
+  DescriptionDetailsProps,
+} from "./components/DescriptionList.js";
 
 export {
   Item,
