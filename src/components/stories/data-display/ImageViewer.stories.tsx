@@ -2,16 +2,25 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn, waitFor, within } from "storybook/test";
 import { useState, type ReactElement } from "react";
 import {
+  ImageRegionMarker,
+  ImageRegionSelect,
   ImageViewer,
   ImageZoomToggle,
   getNormalizedImagePoint,
+  type IImageRect,
   type IImageViewerProps,
   type INormalizedImagePoint,
   type ImageZoom,
 } from "../../image-viewer";
 import { Button } from "../../Button";
+import { Toggle } from "../../Toggle";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "../../Dialog";
-import { fixture_brokenImage, fixture_largeScreenshot, fixture_smallScreenshot } from "../fixtures";
+import {
+  fixture_brokenImage,
+  fixture_largeScreenshot,
+  fixture_smallScreenshot,
+  fixture_tallScreenshot,
+} from "../fixtures";
 
 const LARGE_SIZE = { width: 1600, height: 1000 };
 
@@ -109,13 +118,13 @@ const meta: Meta<typeof ImageViewer> = {
     docs: {
       description: {
         component:
-          'Import from `@alexgorbatchev/shadcn/image-viewer`. ImageViewer fills the container it is given, such as a `DialogContent size="fullscreen"` body, and shows one image in a native scroll viewport. `fit` (the default) scales the image down proportionally to fit both dimensions, centered and without scrollbars, and never upscales it; `original` shows natural size in CSS pixels, centered on axes where it is smaller and scrolling where it is larger. Switching zoom keeps the viewed center. Control zoom with `zoom` and `onZoomChange`, or leave it uncontrolled with `defaultZoom`; place `ImageZoomToggle` in a header or toolbar, or set `showZoomControl` for the built-in toggle. `overlay` renders content sized and positioned exactly over the rendered image at every zoom, `imageRef` and `overlayRef` expose the rendered image box, and `getNormalizedImagePoint(event, box)` maps pointer coordinates to 0–1 image coordinates.',
+          'Import from `@alexgorbatchev/shadcn/image-viewer`. ImageViewer fills the container it is given, such as a `DialogContent size="fullscreen"` body, and shows one framed image in a native scroll viewport. `fit` scales the image down proportionally to fit both dimensions, centered and without scrollbars, and never upscales it; `fit-width` fills the width and scrolls vertically; a number is a scale from the fitted one up to 4 (400%), so `1` shows natural size. Without `zoom` or `defaultZoom` it opens at `fit`, or at `fit-width` for an image much taller than the stage, and never narrower than `openingWidth`. Zooming keeps the viewed center. The stage, named "<alt>, <percent>", owns its gestures: a drag pans, two fingers pinch-zoom and Mod+wheel zooms around the pointer, so a touch never reaches overlay content unless it handles the pointer itself, such as `ImageRegionSelect`; while focused it takes + or = (zoom in), − (zoom out), 0 (fit), 1 (100%) and arrows (pan while larger than the stage), and `onStageKeyDown` runs first to add or replace keys. `showZoomControl` shows the zoom bar (Fit, Fit width, −, percent, +) in a toolbar row, and `toolbar` adds further controls to that row. `overlay` renders content sized and positioned exactly over the rendered image at every zoom, `imageRef` and `overlayRef` expose the rendered image box, and `getNormalizedImagePoint(event, box)` maps pointer coordinates to 0–1 image coordinates.',
       },
     },
   },
   args: { src: fixture_largeScreenshot, alt: "Dashboard screenshot", onZoomChange: fn() },
   argTypes: {
-    defaultZoom: { control: "inline-radio", options: ["fit", "original"] },
+    defaultZoom: { control: "inline-radio", options: ["fit", "fit-width", 1, 2] },
     showZoomControl: { control: "boolean" },
     density: { control: "select", options: ["compact", "comfortable"] },
   },
@@ -129,10 +138,11 @@ export default meta;
 type Story = StoryObj<typeof ImageViewer>;
 
 export const FitToScreen: Story = {
+  args: { defaultZoom: "fit" },
   play: async ({ canvasElement }) => {
     const image = await findRenderedImage(canvasElement, "Dashboard screenshot");
     await expectFitted(image, LARGE_SIZE.width / LARGE_SIZE.height);
-    await expect(within(canvasElement).getByRole("region", { name: "Dashboard screenshot" })).toHaveAttribute(
+    await expect(within(canvasElement).getByRole("region", { name: /^Dashboard screenshot, \d+%$/ })).toHaveAttribute(
       "data-zoom",
       "fit",
     );
@@ -140,14 +150,26 @@ export const FitToScreen: Story = {
 };
 
 export const OriginalSize: Story = {
-  args: { defaultZoom: "original" },
+  args: { defaultZoom: 1 },
   play: async ({ canvasElement, userEvent }) => {
     const image = await findRenderedImage(canvasElement, "Dashboard screenshot");
     await expectOriginalCentered(image);
-    const viewport = within(canvasElement).getByRole("region", { name: "Dashboard screenshot" });
+    const viewport = within(canvasElement).getByRole("region", { name: /^Dashboard screenshot, \d+%$/ });
     await userEvent.tab();
     await expect(viewport).toHaveFocus();
-    await expect(viewport).toHaveAttribute("data-zoom", "original");
+    await expect(viewport).toHaveAttribute("data-zoom", "1");
+    await expect(viewport).toHaveAccessibleName("Dashboard screenshot, 100%");
+  },
+};
+
+export const OpensTallImagesAtFitWidth: Story = {
+  args: { src: fixture_tallScreenshot, alt: "Tall page", openingWidth: 400 },
+  play: async ({ canvasElement }) => {
+    const image = await findRenderedImage(canvasElement, "Tall page");
+    const viewport = within(canvasElement).getByRole("region", { name: /^Tall page, \d+%$/ });
+    await waitFor(() => expect(viewport).toHaveAttribute("data-zoom", "fit-width"));
+    await waitFor(() => expect(image.getBoundingClientRect().width).toBeCloseTo(viewport.clientWidth, 0));
+    await expect(viewport.scrollHeight).toBeGreaterThan(viewport.clientHeight);
   },
 };
 
@@ -155,7 +177,7 @@ export const SmallImage: Story = {
   args: { src: fixture_smallScreenshot, alt: "Toolbar screenshot" },
   play: async ({ canvasElement }) => {
     const image = await findRenderedImage(canvasElement, "Toolbar screenshot");
-    const viewport = within(canvasElement).getByRole("region", { name: "Toolbar screenshot" });
+    const viewport = within(canvasElement).getByRole("region", { name: /^Toolbar screenshot, \d+%$/ });
     await waitFor(() => {
       const bounds = image.getBoundingClientRect();
       const frame = viewport.getBoundingClientRect();
@@ -167,45 +189,133 @@ export const SmallImage: Story = {
   },
 };
 
-export const BuiltInZoomControl: Story = {
-  args: { showZoomControl: true },
+export const ZoomBar: Story = {
+  args: { showZoomControl: true, defaultZoom: "fit" },
   play: async ({ canvasElement, userEvent, args }) => {
     const canvas = within(canvasElement);
     const image = await findRenderedImage(canvasElement, "Dashboard screenshot");
-    const fit = canvas.getByRole("button", { name: "Fit to screen" });
-    const original = canvas.getByRole("button", { name: "Original size" });
+    const fit = canvas.getByRole("button", { name: "Fit" });
+    const fitWidth = canvas.getByRole("button", { name: "Fit width" });
+    const zoomIn = canvas.getByRole("button", { name: "Zoom in" });
+    const zoomOut = canvas.getByRole("button", { name: "Zoom out" });
+    const level = canvas.getByRole("status", { name: "Zoom level" });
     await expect(canvas.getByRole("group", { name: "Zoom" })).toBeVisible();
     await expect(fit).toHaveAttribute("aria-pressed", "true");
-    await expect(original).toHaveAttribute("aria-pressed", "false");
-    await userEvent.click(original);
-    await expect(original).toHaveAttribute("aria-pressed", "true");
+    await expect(zoomOut).toHaveAttribute("aria-disabled", "true");
+    await expectFitted(image, LARGE_SIZE.width / LARGE_SIZE.height);
+    await userEvent.click(fitWidth);
+    await expect(fitWidth).toHaveAttribute("aria-pressed", "true");
     await expect(fit).toHaveAttribute("aria-pressed", "false");
-    await expect(args.onZoomChange).toHaveBeenLastCalledWith("original");
-    await expectOriginalCentered(image);
-    await userEvent.keyboard("{ArrowLeft}");
-    await expect(fit).toHaveFocus();
-    await userEvent.keyboard("{Enter}");
-    await expect(fit).toHaveAttribute("aria-pressed", "true");
+    await expect(args.onZoomChange).toHaveBeenLastCalledWith("fit-width");
+    for (let step = 0; step < 12; step++) {
+      if (zoomIn.getAttribute("aria-disabled") === "true") break;
+      await userEvent.click(zoomIn);
+    }
+    await expect(level).toHaveTextContent("400%");
+    await expect(args.onZoomChange).toHaveBeenLastCalledWith(4);
+    await expect(zoomIn).toHaveAttribute("aria-disabled", "true");
+    await expect(image.getBoundingClientRect().width).toBe(LARGE_SIZE.width * 4);
+    await userEvent.click(fit);
     await expect(args.onZoomChange).toHaveBeenLastCalledWith("fit");
     await expectFitted(image, LARGE_SIZE.width / LARGE_SIZE.height);
-    await userEvent.click(fit);
-    await expect(fit).toHaveAttribute("aria-pressed", "true");
   },
 };
 
 export const RestoresViewedCenter: Story = {
-  args: { showZoomControl: true, defaultZoom: "original" },
+  args: { showZoomControl: true, defaultZoom: 1 },
   play: async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);
     const image = await findRenderedImage(canvasElement, "Dashboard screenshot");
     await expectOriginalCentered(image);
-    const viewport = canvas.getByRole("region", { name: "Dashboard screenshot" });
+    const viewport = canvas.getByRole("region", { name: /^Dashboard screenshot, \d+%$/ });
     viewport.scrollTo({ left: 0, top: 0, behavior: "instant" });
     await waitFor(() => expect(viewport.scrollLeft).toBe(0));
-    await userEvent.click(canvas.getByRole("button", { name: "Fit to screen" }));
+    await userEvent.click(canvas.getByRole("button", { name: "Fit" }));
     await expectFitted(image, LARGE_SIZE.width / LARGE_SIZE.height);
-    await userEvent.click(canvas.getByRole("button", { name: "Original size" }));
+    viewport.focus();
+    await userEvent.keyboard("1");
     await expectOriginalCentered(image);
+  },
+};
+
+function RegionToolExample(props: IImageViewerProps): ReactElement {
+  const [isOn, setIsOn] = useState(false);
+  const [region, setRegion] = useState<IImageRect>();
+  return (
+    <div className="flex h-96 flex-col gap-2">
+      <ImageViewer
+        {...props}
+        showZoomControl
+        stageKeyShortcuts="R"
+        onStageKeyDown={(event) => {
+          if (event.key !== "r" && event.key !== "R") return;
+          event.preventDefault();
+          setIsOn((current) => !current);
+        }}
+        toolbar={
+          <Toggle variant="outline" size="sm" pressed={isOn} onPressedChange={setIsOn}>
+            Comment on a region
+          </Toggle>
+        }
+        overlay={
+          <>
+            {region && (
+              <ImageRegionMarker
+                region={{
+                  left: `${region.x * 100}%`,
+                  top: `${region.y * 100}%`,
+                  width: `${region.width * 100}%`,
+                  height: `${region.height * 100}%`,
+                }}
+              />
+            )}
+            {isOn && (
+              <ImageRegionSelect
+                onSelect={(next) => {
+                  setRegion(next);
+                  setIsOn(false);
+                }}
+              />
+            )}
+          </>
+        }
+      />
+      <output aria-label="Drawn region" className="text-sm">
+        {region ? `${Math.round(region.width * 100)}% × ${Math.round(region.height * 100)}%` : "None"}
+      </output>
+    </div>
+  );
+}
+
+export const RegionTool: Story = {
+  args: { defaultZoom: "fit" },
+  render: (args) => <RegionToolExample {...args} />,
+  play: async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+    await findRenderedImage(canvasElement, "Dashboard screenshot");
+    const tool = canvas.getByRole("button", { name: "Comment on a region" });
+    const viewport = canvas.getByRole("region", { name: /^Dashboard screenshot, \d+%$/ });
+    const output = canvas.getByRole("status", { name: "Drawn region" });
+    await expect(viewport.getAttribute("aria-keyshortcuts")).toMatch(/ R$/);
+    await expect(canvasElement.querySelector("[data-slot=image-region-select]")).toBeNull();
+    viewport.focus();
+    await userEvent.keyboard("r");
+    await expect(tool).toHaveAttribute("aria-pressed", "true");
+    const surface = canvasElement.querySelector<HTMLElement>("[data-slot=image-region-select]")!;
+    const box = surface.getBoundingClientRect();
+    await userEvent.pointer([
+      {
+        keys: "[MouseLeft>]",
+        target: surface,
+        coords: { clientX: box.left + box.width * 0.25, clientY: box.top + box.height * 0.25 },
+      },
+      { target: surface, coords: { clientX: box.left + box.width * 0.5, clientY: box.top + box.height * 0.4 } },
+      { target: surface, coords: { clientX: box.left + box.width * 0.75, clientY: box.top + box.height * 0.75 } },
+      { keys: "[/MouseLeft]", target: surface },
+    ]);
+    await expect(output).toHaveTextContent("50% × 50%");
+    await expect(tool).toHaveAttribute("aria-pressed", "false");
+    await expect(canvasElement.querySelector("[data-slot=image-region-marker]")).not.toBeNull();
   },
 };
 
@@ -248,7 +358,7 @@ export const FullscreenDialog: Story = {
       name: "Dashboard screenshot",
     });
     const image = await findRenderedImage(canvasElement, "Dashboard screenshot");
-    const viewport = within(dialog).getByRole("region", { name: "Dashboard screenshot" });
+    const viewport = within(dialog).getByRole("region", { name: /^Dashboard screenshot, \d+%$/ });
     const style = getComputedStyle(dialog);
     const contentBottom =
       dialog.getBoundingClientRect().bottom - parseFloat(style.paddingBottom) - parseFloat(style.borderBottomWidth);

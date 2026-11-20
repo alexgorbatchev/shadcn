@@ -118,4 +118,6 @@ export const fixture_widerBeforeScreenshot: string = factory_screenshot(960, 540
 export const fixture_largeScreenshot: string = factory_screenshot(1600, 1000, "#2563eb");
 /** A screenshot smaller than story frames, which fit zoom must not upscale. */
 export const fixture_smallScreenshot: string = factory_screenshot(240, 150, "#2563eb");
+/** A full-page capture much taller than story frames, which opens at fit width. */
+export const fixture_tallScreenshot: string = factory_screenshot(800, 1200, "#2563eb");
 export const fixture_brokenImage: string = "data:image/png;base64,AAAA";

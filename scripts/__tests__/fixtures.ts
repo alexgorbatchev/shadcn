@@ -316,7 +316,7 @@ export const fixture_featureConsumers: ReadonlyArray<readonly [string, readonly 
       { minChangedPixels: 1 },
     );
     console.log(JSON.stringify({
-      viewer: viewer.includes('aria-label="Screenshot"') && viewer.includes("Original size"),
+      viewer: viewer.includes('aria-label="Screenshot"') && viewer.includes("Fit width") && viewer.includes("Zoom in"),
       comparison: comparison.includes("Hold to show before") && comparison.includes('alt="After shot"'),
       regions: diff.regions.length,
     }));

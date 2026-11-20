@@ -6,6 +6,7 @@ import { emulateForcedColors } from "./emulateForcedColors.ts";
 import { nativeScrub } from "./nativeScrub.ts";
 import { nativeSwipe } from "./nativeSwipe.ts";
 import { nativeWheel } from "./nativeWheel.ts";
+import { nativeTouch } from "./nativeTouch.ts";
 import { beginResourceRequests, endResourceRequests } from "./nativeResourceRequests.js";
 import { treeDropGeometry } from "./treeDropGeometry.ts";
 import { prototypeSourceAliases } from "./prototypeSourceAliases.ts";
@@ -86,6 +87,7 @@ export default defineConfig({
         nativeScrub,
         nativeSwipe,
         nativeWheel,
+        nativeTouch,
         beginResourceRequests,
         endResourceRequests,
       },

@@ -1,14 +1,14 @@
 import { type BaseComponentProps } from "@json-render/react";
+import { FramedImage } from "../image-viewer/FramedImage.js";
 import { type JsonProps } from "./catalog.js";
 export const JsonImage = ({ props }: BaseComponentProps<JsonProps<"Image">>) => {
   if (props.src) {
     return (
-      <img
+      <FramedImage
         src={props.src}
         alt={props.alt ?? ""}
         width={props.width ?? undefined}
         height={props.height ?? undefined}
-        className="rounded max-w-full"
       />
     );
   }

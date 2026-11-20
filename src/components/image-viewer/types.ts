@@ -1,7 +1,19 @@
 import type { StackDirection } from "../../layout/types.js";
 
-/** `fit` scales the image down to the viewport; `original` shows it at its natural size in CSS pixels. */
-export type ImageZoom = "fit" | "original";
+/**
+ * `fit` scales the image down to show all of it; `fit-width` fills the viewport's width and scrolls vertically; a
+ * number is a scale in rendered CSS pixels per natural image pixel, from the fitted scale up to 4 (400%), so `1` shows
+ * the image at its natural size.
+ */
+export type ImageZoom = "fit" | "fit-width" | number;
+
+/** Scales of the two fitted zooms of an image in a viewport. */
+export interface IImageZoomScales {
+  /** Shows the whole image, never upscaled past its natural size. */
+  fit: number;
+  /** Fills the viewport's width, upscaled up to 4. */
+  fitWidth: number;
+}
 
 /** How ImageComparison presents the before and after images. */
 export type ImageComparisonMode = "toggle" | "swipe" | "side-by-side";

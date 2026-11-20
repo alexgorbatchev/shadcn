@@ -16,7 +16,7 @@ export interface IImageZoomToggleProps extends IDensityProps {
 }
 
 /**
- * Zoom selection for ImageViewer and ImageComparison. Each option is a pressed-state toggle with a constant visible
+ * Two-state zoom selection for ImageViewer and ImageComparison: Fit to screen or Original size (100%). Each option is a pressed-state toggle with a constant visible
  * name, so assistive technology announces the active zoom without relabelling a single button.
  */
 export function ImageZoomToggle({
@@ -32,10 +32,11 @@ export function ImageZoomToggle({
   return (
     <ToggleGroup
       aria-label={label}
-      required
-      value={[zoom]}
-      // The required group always reports exactly one of its two values.
-      onValueChange={(value) => onZoomChange(value[0] === "original" ? "original" : "fit")}
+      value={zoom === "fit" ? ["fit"] : zoom === 1 ? ["original"] : []}
+      // Other zooms, such as 150%, press neither option; pressing the pressed option again keeps it.
+      onValueChange={(value) => {
+        if (value[0] !== undefined) onZoomChange(value[0] === "original" ? 1 : "fit");
+      }}
       variant="outline"
       size={size}
       spacing={0}

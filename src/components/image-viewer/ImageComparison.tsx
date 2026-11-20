@@ -229,6 +229,7 @@ export function ImageComparison({
             zoom={zoom}
             naturalSize={afterImage.size}
             center={center}
+            onZoomChange={setZoom}
             fallback={fallback}
             viewportRef={beforeViewportRef}
             onViewportScroll={(viewport) => syncScroll(viewport, afterViewportRef.current)}
@@ -244,6 +245,7 @@ export function ImageComparison({
             zoom={zoom}
             naturalSize={afterImage.size}
             center={center}
+            onZoomChange={setZoom}
             fallback={fallback}
             viewportRef={afterViewportRef}
             onViewportScroll={(viewport) => syncScroll(viewport, beforeViewportRef.current)}
@@ -269,6 +271,7 @@ export function ImageComparison({
           zoom={zoom}
           naturalSize={afterImage.size}
           center={center}
+          onZoomChange={setZoom}
           fallback={fallback}
         >
           {renderAfterImage()}
@@ -298,6 +301,7 @@ export function ImageComparison({
           zoom={zoom}
           naturalSize={afterImage.size}
           center={center}
+          onZoomChange={setZoom}
           fallback={fallback}
         >
           {renderAfterImage(isShowingBefore ? "invisible" : undefined)}

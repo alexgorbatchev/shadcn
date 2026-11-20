@@ -22,8 +22,18 @@ test("fit never upscales an image smaller than the viewport", () => {
   });
 });
 
-test("original keeps the natural size whatever the viewport", () => {
-  expect(getImageStageSize({ width: 1600, height: 1000 }, { width: 200, height: 100 }, "original")).toEqual({
+test("a numeric zoom is the scale itself, clamped between the fitted scale and 400%", () => {
+  expect(getImageStageSize({ width: 400, height: 250 }, { width: 800, height: 600 }, 2)).toEqual({
+    width: 800,
+    height: 500,
+    scale: 2,
+  });
+  expect(getImageStageSize({ width: 400, height: 250 }, { width: 800, height: 600 }, 9).scale).toBe(4);
+  expect(getImageStageSize({ width: 1600, height: 1000 }, { width: 800, height: 600 }, 0.1).scale).toBe(0.5);
+});
+
+test("100% keeps the natural size whatever the viewport", () => {
+  expect(getImageStageSize({ width: 1600, height: 1000 }, { width: 200, height: 100 }, 1)).toEqual({
     width: 1600,
     height: 1000,
     scale: 1,

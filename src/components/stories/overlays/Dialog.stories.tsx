@@ -78,6 +78,30 @@ export const Fullscreen: Story = {
     await waitFor(() => expect(trigger).toHaveFocus());
   },
 };
+export const LongTitleBesideClose: Story = {
+  render: (args) => (
+    <Dialog {...args} defaultOpen>
+      <DialogContent size="fullscreen">
+        <DialogHeader>
+          <DialogTitle className="truncate">
+            {"Deploy monitor screenshot during the incident on the payments cluster, with every panel expanded. ".repeat(
+              6,
+            )}
+          </DialogTitle>
+          <DialogDescription>A long title truncates before the Close button.</DialogDescription>
+        </DialogHeader>
+      </DialogContent>
+    </Dialog>
+  ),
+  play: async () => {
+    const popup = await within(document.body).findByRole("dialog");
+    const close = within(popup).getByRole("button", { name: "Close" });
+    const title = popup.querySelector<HTMLElement>("[data-slot=dialog-title]")!;
+    await waitFor(() => expect(title.scrollWidth).toBeGreaterThan(title.clientWidth));
+    await expect(title.getBoundingClientRect().right).toBeLessThanOrEqual(close.getBoundingClientRect().left);
+  },
+};
+
 export const Default: Story = {
   play: async ({ canvasElement, userEvent, args }) => {
     const trigger = within(canvasElement).getByRole("button", { name: "Edit profile" });

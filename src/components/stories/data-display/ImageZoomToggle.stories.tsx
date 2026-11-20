@@ -11,13 +11,13 @@ const meta: Meta<typeof ImageZoomToggle> = {
     docs: {
       description: {
         component:
-          'Import from `@alexgorbatchev/shadcn/image-viewer`. A two-option toggle for ImageViewer and ImageComparison zoom that consumers place in a header or toolbar. "Fit to screen" and "Original size" are pressed-state toggles with constant names, so assistive technology announces the active zoom through `aria-pressed`. One option always stays pressed. `label` names the group (default "Zoom"); `size`, `orientation`, `layout`, `disabled`, and `density` follow ToggleGroup.',
+          'Import from `@alexgorbatchev/shadcn/image-viewer`. A two-option toggle for ImageViewer and ImageComparison zoom that consumers place in a header or toolbar. "Fit to screen" and "Original size" are pressed-state toggles with constant names, so assistive technology announces the active zoom through `aria-pressed`. Original size sets zoom `1`; other numeric zooms, such as 150% from the ImageViewer zoom bar, press neither option. `label` names the group (default "Zoom"); `size`, `orientation`, `layout`, `disabled`, and `density` follow ToggleGroup.',
       },
     },
   },
   args: { zoom: "fit", onZoomChange: fn() },
   argTypes: {
-    zoom: { control: "inline-radio", options: ["fit", "original"] },
+    zoom: { control: "inline-radio", options: ["fit", 1, 2] },
     size: { control: "select", options: ["sm", "default", "lg"] },
     orientation: { control: "inline-radio", options: ["horizontal", "vertical"] },
     layout: { control: "inline-radio", options: ["content", "fill"] },
@@ -50,7 +50,7 @@ export const Default: Story = {
     await userEvent.click(original);
     await expect(original).toHaveAttribute("aria-pressed", "true");
     await expect(fit).toHaveAttribute("aria-pressed", "false");
-    await expect(args.onZoomChange).toHaveBeenLastCalledWith("original");
+    await expect(args.onZoomChange).toHaveBeenLastCalledWith(1);
     await userEvent.click(original);
     await expect(original).toHaveAttribute("aria-pressed", "true");
     await expect(args.onZoomChange).toHaveBeenCalledTimes(1);
@@ -61,7 +61,7 @@ export const Default: Story = {
 };
 
 export const VerticalFill: Story = {
-  args: { orientation: "vertical", layout: "fill", label: "Screenshot zoom", zoom: "original" },
+  args: { orientation: "vertical", layout: "fill", label: "Screenshot zoom", zoom: 1 },
   play: async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);
     const group = canvas.getByRole("group", { name: "Screenshot zoom" });

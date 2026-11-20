@@ -16,10 +16,10 @@ test("keyboard users scroll an original-size image after focusing the viewer", a
   await page.viewport(1000, 700);
   const screen = await render(
     <div className="h-80 w-96">
-      <ImageViewer src={screenshot} alt="Dashboard capture" defaultZoom="original" />
+      <ImageViewer src={screenshot} alt="Dashboard capture" defaultZoom={1} />
     </div>,
   );
-  const viewport = screen.getByRole("region", { name: "Dashboard capture" });
+  const viewport = screen.getByRole("region", { name: /^Dashboard capture(, \d+%)?$/ });
   await expect.poll(() => viewport.element().scrollHeight).toBeGreaterThan(viewport.element().clientHeight);
   const top = viewport.element().scrollTop;
   const left = viewport.element().scrollLeft;
@@ -35,14 +35,14 @@ test("a new source replaces the previous image at its own natural size", async (
   const narrow = createSvgImageUrl(300, 120, [241, 245, 249, 255]);
   const screen = await render(
     <div className="h-80 w-96">
-      <ImageViewer src={screenshot} alt="Dashboard capture" defaultZoom="original" />
+      <ImageViewer src={screenshot} alt="Dashboard capture" defaultZoom={1} />
     </div>,
   );
   const image = screen.getByRole("img", { name: "Dashboard capture" });
   await expect.poll(() => image.element().getBoundingClientRect().width).toBe(1600);
   await screen.rerender(
     <div className="h-80 w-96">
-      <ImageViewer src={narrow} alt="Dashboard capture" defaultZoom="original" />
+      <ImageViewer src={narrow} alt="Dashboard capture" defaultZoom={1} />
     </div>,
   );
   await expect.poll(() => image.element().getBoundingClientRect().width).toBe(300);

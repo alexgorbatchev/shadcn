@@ -86,6 +86,7 @@ function DialogContent({
         data-density={resolvedDensity}
         data-slot="dialog-content"
         data-scroll="none"
+        data-close-button={showCloseButton ? "" : undefined}
         className={(state) =>
           cn(
             "fixed flex min-h-0 w-full flex-col gap-panel overscroll-contain bg-popover p-panel text-sm text-popover-foreground border border-frame-edge shadow-frame duration-120 outline-none data-open:animate-in data-open:fade-in-0 data-closed:animate-out data-closed:fade-out-0 motion-reduce:data-open:animate-none motion-reduce:data-closed:animate-none",
@@ -122,7 +123,8 @@ function DialogHeader({ density, className, ...props }: DialogHeaderProps): Reac
     <div
       data-density={density}
       data-slot="dialog-header"
-      className={cn("flex shrink-0 flex-col gap-2", className)}
+      // The header ends before the corner Close button, so a long title truncates instead of running under it.
+      className={cn("flex shrink-0 flex-col gap-2 in-data-close-button:pe-7", className)}
       {...props}
     />
   );

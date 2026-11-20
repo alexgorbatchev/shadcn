@@ -119,7 +119,7 @@ const meta: Meta<typeof ImageComparison> = {
     docs: {
       description: {
         component:
-          'Import from `@alexgorbatchev/shadcn/image-viewer`. ImageComparison fills its container and compares `before` and `after` images (`{ src, alt, crossOrigin? }`) labelled by `beforeLabel` and `afterLabel` (default "Before" and "After"). `toggle` (the default) shows the after image and the "Hold to show before" button shows the before image while a pointer, Space, or Enter is held. `swipe` stacks both images; the divider is a slider (0–100, arrows ±1, Page Up/Page Down ±10, Home/End) whose handle drags with pointer capture. `side-by-side` shows labelled panes left and right (`horizontal`) or top and bottom (`vertical`) that scroll in sync at original size. Every mode starts fitted and offers original size. A differently sized before image is drawn inside the after image box, and the toolbar reports the mismatch. "Highlight differences" compares pixels on first use, caches the result per image pair, outlines changed regions, and summarizes them; it is disabled with a reason when pixels cannot be read. `mode`, `orientation`, `zoom`, and `showDifferences` are controllable with matching `default*` and `on*Change` props; `showToolbar={false}` hides the controls, which sit beside wide comparisons and below narrow ones.',
+          'Import from `@alexgorbatchev/shadcn/image-viewer`. ImageComparison fills its container and compares `before` and `after` images (`{ src, alt, crossOrigin? }`) labelled by `beforeLabel` and `afterLabel` (default "Before" and "After"). `toggle` (the default) shows the after image and the "Hold to show before" button shows the before image while a pointer, Space, or Enter is held. `swipe` stacks both images; the divider is a slider (0–100, arrows ±1, Page Up/Page Down ±10, Home/End) whose handle drags with pointer capture. `side-by-side` shows labelled panes left and right (`horizontal`) or top and bottom (`vertical`) that scroll in sync when zoomed. Every mode starts fitted and offers original size (zoom `1`); the focused stage also takes the ImageViewer stage keys, Mod+wheel and pinch, and its name ends with the zoom percent. A differently sized before image is drawn inside the after image box, and the toolbar reports the mismatch. "Highlight differences" compares pixels on first use, caches the result per image pair, outlines changed regions, and summarizes them; it is disabled with a reason when pixels cannot be read. `mode`, `orientation`, `zoom`, and `showDifferences` are controllable with matching `default*` and `on*Change` props; `showToolbar={false}` hides the controls, which sit beside wide comparisons and below narrow ones.',
       },
     },
   },
@@ -134,7 +134,7 @@ const meta: Meta<typeof ImageComparison> = {
   argTypes: {
     defaultMode: { control: "inline-radio", options: ["toggle", "swipe", "side-by-side"] },
     defaultOrientation: { control: "inline-radio", options: ["horizontal", "vertical"] },
-    defaultZoom: { control: "inline-radio", options: ["fit", "original"] },
+    defaultZoom: { control: "inline-radio", options: ["fit", 1, 2] },
     defaultShowDifferences: { control: "boolean" },
     showToolbar: { control: "boolean" },
     density: { control: "select", options: ["compact", "comfortable"] },
@@ -253,8 +253,8 @@ export const SideBySide: Story = {
   play: async ({ canvasElement, userEvent, args }) => {
     const canvas = within(canvasElement);
     const afterImage = await findAfterImage(canvas);
-    const beforePane = canvas.getByRole("region", { name: "Before" });
-    const afterPane = canvas.getByRole("region", { name: "After" });
+    const beforePane = canvas.getByRole("region", { name: /^Before, \d+%$/ });
+    const afterPane = canvas.getByRole("region", { name: /^After, \d+%$/ });
     await expect(canvas.getByRole("img", { name: BEFORE_ALT })).toBeVisible();
     await expect(beforePane.getBoundingClientRect().right).toBeLessThanOrEqual(afterPane.getBoundingClientRect().left);
     await expect(beforePane.getBoundingClientRect().top).toBeCloseTo(afterPane.getBoundingClientRect().top, 0);
@@ -382,7 +382,7 @@ export const UnreadablePixels: Story = {
 };
 
 export const ModeChangesKeepViewedCenter: Story = {
-  args: { defaultZoom: "original" },
+  args: { defaultZoom: 1 },
   play: async ({ canvasElement, userEvent, args }) => {
     const canvas = within(canvasElement);
     const afterImage = await findAfterImage(canvas);
@@ -421,13 +421,13 @@ export const Controlled: Story = {
     await userEvent.click(canvas.getByRole("button", { name: "Horizontal" }));
     await userEvent.click(canvas.getByRole("button", { name: "Original size" }));
     await userEvent.click(canvas.getByRole("switch", { name: "Highlight differences" }));
-    await expect(state).toHaveTextContent("side-by-side horizontal original plain");
+    await expect(state).toHaveTextContent("side-by-side horizontal 1 plain");
     await expect(args.onModeChange).toHaveBeenLastCalledWith("side-by-side");
     await expect(args.onOrientationChange).toHaveBeenLastCalledWith("horizontal");
-    await expect(args.onZoomChange).toHaveBeenLastCalledWith("original");
+    await expect(args.onZoomChange).toHaveBeenLastCalledWith(1);
     await expect(args.onShowDifferencesChange).toHaveBeenLastCalledWith(false);
     await userEvent.click(canvas.getByRole("button", { name: "Toggle" }));
-    await expect(state).toHaveTextContent("toggle horizontal original plain");
+    await expect(state).toHaveTextContent("toggle horizontal 1 plain");
   },
 };
 

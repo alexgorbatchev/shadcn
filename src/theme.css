@@ -35,6 +35,7 @@
   --color-ring: var(--ring);
   --color-frame-edge: var(--frame-edge);
   --color-frame-halo: var(--frame-halo);
+  --color-media-edge: var(--media-edge);
   --color-backdrop: var(--backdrop);
   --color-terminal-background: var(--terminal-background);
   --color-sidebar: var(--sidebar, var(--background));
@@ -131,6 +132,7 @@
     --input: #6f7783;
     --ring: #ff5cd6;
     --frame-edge: rgb(255 255 255 / 0.24);
+    --media-edge: var(--input);
     --frame-halo: rgb(0 0 0 / 0.92);
     --backdrop: rgb(4 5 7 / 0.7);
     --terminal-background: #0b0c0f;
@@ -170,6 +172,7 @@
     --input: #6f7783;
     --ring: #ff5cd6;
     --frame-edge: rgb(255 255 255 / 0.24);
+    --media-edge: var(--input);
     --frame-halo: rgb(0 0 0 / 0.92);
     --backdrop: rgb(4 5 7 / 0.7);
     --terminal-background: #0b0c0f;
@@ -209,6 +212,7 @@
     --input: #747c88;
     --ring: #b8168c;
     --frame-edge: rgb(0 0 0 / 0.42);
+    --media-edge: var(--input);
     --frame-halo: rgb(255 255 255 / 0.95);
     --backdrop: rgb(10 12 16 / 0.55);
     --terminal-background: #ffffff;
@@ -226,6 +230,7 @@
     --faint-foreground: var(--muted-foreground);
     --destructive-soft: color-mix(in oklab, var(--destructive) 15%, transparent);
     --frame-edge: var(--border);
+    --media-edge: var(--muted-foreground);
     --frame-halo: transparent;
     --terminal-background: var(--background);
     --ag-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);

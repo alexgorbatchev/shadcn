@@ -52,23 +52,17 @@ test("dragging the swipe handle with a mouse captures the pointer and moves the 
 test("original-size panes follow each other when one scrolls with the wheel", async () => {
   const screen = await render(
     <div className="h-120 w-160">
-      <ImageComparison
-        before={before}
-        after={after}
-        defaultMode="side-by-side"
-        defaultZoom="original"
-        showToolbar={false}
-      />
+      <ImageComparison before={before} after={after} defaultMode="side-by-side" defaultZoom={1} showToolbar={false} />
     </div>,
   );
-  const beforePane = screen.getByRole("region", { name: "Before" }).element();
-  const afterPane = screen.getByRole("region", { name: "After" }).element();
+  const beforePane = screen.getByRole("region", { name: /^Before(, \d+%)?$/ }).element();
+  const afterPane = screen.getByRole("region", { name: /^After(, \d+%)?$/ }).element();
   await expect.poll(() => beforePane.scrollHeight).toBeGreaterThan(beforePane.clientHeight);
   const start = beforePane.scrollTop;
-  await commands.nativeWheel('[aria-label="Before"]', 120);
+  await commands.nativeWheel('[aria-label^="Before, "]', 120);
   await expect.poll(() => beforePane.scrollTop).toBeGreaterThan(start);
   await expect.poll(() => afterPane.scrollTop).toBe(beforePane.scrollTop);
-  await commands.nativeWheel('[aria-label="After"]', -60);
+  await commands.nativeWheel('[aria-label^="After, "]', -60);
   await expect.poll(() => afterPane.scrollTop).toBeLessThan(beforePane.scrollTop + 120);
   await expect.poll(() => beforePane.scrollTop).toBe(afterPane.scrollTop);
 });
@@ -112,9 +106,7 @@ test.each(["toggle", "swipe", "side-by-side"] as const)(
       .element(screen.getByRole("switch", { name: "Highlight differences" }))
       .toHaveAccessibleDescription("1 changed region");
     await screen.getByRole("button", { name: "Original size" }).click();
-    await expect
-      .poll(() => document.querySelector("[data-slot=image-viewport]")?.getAttribute("data-zoom"))
-      .toBe("original");
+    await expect.poll(() => document.querySelector("[data-slot=image-viewport]")?.getAttribute("data-zoom")).toBe("1");
     await new Promise(requestAnimationFrame);
     await new Promise(requestAnimationFrame);
     expect(report).not.toHaveBeenCalled();
@@ -201,17 +193,17 @@ test.each([
       <ImageComparison
         before={{ src: source, alt: "Before capture" }}
         after={{ src: source, alt: "After capture" }}
-        defaultZoom="original"
+        defaultZoom={1}
       />
     </div>,
   );
-  const toggleViewport = screen.getByRole("region", { name: "After" }).element();
+  const toggleViewport = screen.getByRole("region", { name: /^After(, \d+%)?$/ }).element();
   await expect.poll(() => toggleViewport[image.axis]).toBeGreaterThan(0);
   toggleViewport.scrollTo({ left: 0, top: 0, behavior: "instant" });
   await expect.poll(() => toggleViewport[image.axis]).toBe(0);
   await new Promise(requestAnimationFrame);
   await screen.getByRole("button", { name: "Swipe" }).click();
-  const swipeViewport = screen.getByRole("region", { name: "Before and After" }).element();
+  const swipeViewport = screen.getByRole("region", { name: /^Before and After(, \d+%)?$/ }).element();
   await expect.poll(() => swipeViewport.scrollWidth + swipeViewport.scrollHeight).toBeGreaterThan(0);
   expect(swipeViewport[image.axis]).toBe(0);
 });
