@@ -6,7 +6,7 @@ import { useCardSpotlight } from "../hooks/useCardSpotlight.js";
 import { cn } from "../utils/cn.js";
 
 const cardVariants = cva(
-  "group/card flex flex-col gap-(--card-spacing) overflow-hidden rounded-md bg-card py-(--card-spacing) text-sm text-card-foreground border [--card-spacing:var(--ag-panel-padding)] has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:var(--ag-panel-padding-sm)] data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-md *:[img:last-child]:rounded-b-md",
+  "group/card flex flex-col gap-(--card-spacing) overflow-clip rounded-md bg-card py-(--card-spacing) text-sm text-card-foreground border [--card-spacing:var(--ag-panel-padding)] has-data-[slot=card-footer]:pb-0 has-[>img:first-child]:pt-0 data-[size=sm]:[--card-spacing:var(--ag-panel-padding-sm)] data-[size=sm]:has-data-[slot=card-footer]:pb-0 *:[img:first-child]:rounded-t-md *:[img:last-child]:rounded-b-md",
   {
     variants: {
       variant: {

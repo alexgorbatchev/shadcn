@@ -147,3 +147,38 @@ test("default cards ignore pointer movement", async () => {
   await expect.element(screen.getByText("Notes opened")).toBeVisible();
   expect(readSpotlight(card.element())).toEqual(["", ""]);
 });
+
+function StickyActionsCard(): ReactElement {
+  return (
+    <ThemeProvider forcedTheme="dark">
+      <DensityProvider density="comfortable">
+        <div role="region" aria-label="Decision feed" tabIndex={0} className="h-64 overflow-y-auto">
+          <Card role="region" aria-label="Decision" className="w-80">
+            <CardHeader>
+              <CardTitle>Decision</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-4">
+              <p className="h-[600px]">Long context for the decision.</p>
+              <div role="group" aria-label="Decision actions" className="sticky bottom-0 bg-card">
+                <Button>Done</Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </DensityProvider>
+    </ThemeProvider>
+  );
+}
+
+test("cards clip their content without becoming a scroll container, so sticky children stay pinned", async () => {
+  const screen = await render(<StickyActionsCard />);
+  const card = screen.getByRole("region", { name: "Decision", exact: true }).element();
+  const feed = screen.getByRole("region", { name: "Decision feed" }).element();
+  const actions = screen.getByRole("group", { name: "Decision actions" }).element();
+  expect(getComputedStyle(card).overflow).toBe("clip");
+  // The actions rest at the end of 600 px of content, below the 256 px feed, yet stay inside its visible area.
+  expect(Math.round(actions.getBoundingClientRect().bottom)).toBeLessThanOrEqual(
+    Math.round(feed.getBoundingClientRect().bottom),
+  );
+  await expect.element(screen.getByRole("button", { name: "Done" })).toBeInViewport();
+});
