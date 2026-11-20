@@ -29,8 +29,18 @@ type TreeItemProps<T> = useRender.ComponentProps<"div", TreeItemState> &
     expandOn?: "click" | "doubleClick" | "disclosure";
     isEditing?: boolean;
     isDropTarget?: boolean;
-    /** Fades a settled row, such as completed work, to 70% opacity; hover and keyboard focus restore full opacity. */
+    /**
+     * Fades a settled row, such as completed work, to 70% opacity; hover and keyboard focus restore full opacity. The
+     * `marker` stays at full opacity, so new activity on a settled row stands out without un-fading it.
+     */
     isDimmed?: boolean;
+    /** Marks a row with activity its reader has not seen yet: the label turns bold. Pair it with a `marker`. */
+    isUnread?: boolean;
+    /**
+     * A visual marker at the row's end, such as a `TreeItemDot` for new activity, never faded by `isDimmed`. It is
+     * hidden from assistive technology; state what it means in `descriptionLabel`.
+     */
+    marker?: ReactNode;
     /** The registered native link owns row focus; disclosure and actions remain siblings. */
     linkProps?: useRender.ComponentProps<"a", TreeItemState>;
     /** Domain-controlled drag feedback; omitted rows have no tooltip wrapper. */
@@ -60,6 +70,32 @@ export function TreeItemAction({ variant = "ghost", size = "icon-xs", ...props }
   return <Button variant={variant} size={size} {...props} tabIndex={-1} />;
 }
 
+interface ITreeItemDotProps {
+  /** The number shown beside the dot, such as the new pages inside a collapsed folder; omitted for a single item. */
+  count?: number;
+  className?: string;
+}
+
+/**
+ * The new-activity dot for a `TreeItem`'s `marker`, with an optional count for a collapsed container that rolls up its
+ * rows. Drawn as an SVG fill in `currentColor`, so forced colors keep it visible. It is decorative: the row's
+ * `descriptionLabel` names it ("New round", "1 new page").
+ */
+export function TreeItemDot({ count, className }: ITreeItemDotProps): ReactElement {
+  return (
+    <span
+      aria-hidden="true"
+      data-slot="tree-item-dot"
+      className={cn("inline-flex items-center gap-1 text-xs font-medium text-primary tabular-nums", className)}
+    >
+      <svg viewBox="0 0 8 8" className="size-2 shrink-0" focusable="false">
+        <circle cx="4" cy="4" r="4" fill="currentColor" />
+      </svg>
+      {count !== undefined && <span data-slot="tree-item-dot-count">{count}</span>}
+    </span>
+  );
+}
+
 function isRowControl(event: MouseEvent<HTMLDivElement>): boolean {
   return (
     event.target !== event.currentTarget &&
@@ -85,6 +121,8 @@ export function TreeItem<T>({
   isEditing = false,
   isDropTarget = false,
   isDimmed = false,
+  isUnread = false,
+  marker,
   linkProps,
   dropHint,
   density,
@@ -136,12 +174,15 @@ export function TreeItem<T>({
     if (!event.shiftKey) item.getTree().getDataRef<SelectionDataRef>().current.selectUpToAnchorId = item.getId();
     item.primaryAction();
   };
+  // A dimmed row fades its content rather than itself, so the marker can stay at full opacity; hovering the row or
+  // focusing anything inside it restores the content.
+  const faded = isDimmed && "opacity-70 group-hover/tree-item:opacity-100 group-focus-within/tree-item:opacity-100";
   const label = (
     <>
       <span aria-hidden="true" className="flex shrink-0 [&>svg]:size-4">
         {startEnhancer ?? (item.isFolder() ? isExpanded ? <FolderOpenIcon /> : <FolderIcon /> : <FileIcon />)}
       </span>
-      <div className="min-w-0 flex-1 truncate">{children ?? item.getItemName()}</div>
+      <div className={cn("min-w-0 flex-1 truncate", isUnread && "font-semibold")}>{children ?? item.getItemName()}</div>
     </>
   );
   const link = useRender({
@@ -152,7 +193,10 @@ export function TreeItem<T>({
       {
         ...nativeProps,
         ref: undefined,
-        className: "flex min-w-0 flex-1 items-center gap-2 outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        className: cn(
+          "flex min-w-0 flex-1 items-center gap-2 outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          faded,
+        ),
         children: label,
         onFocus: () => item.setFocused(),
         onClick: (event: MouseEvent<HTMLAnchorElement>) => {
@@ -217,7 +261,7 @@ export function TreeItem<T>({
         className: cn(
           "relative flex min-h-control min-w-0 cursor-default items-center gap-2 rounded-sm py-1 pr-2 text-sm outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring",
           (isSelected || isDropTarget || isInsideTarget) && "bg-accent text-accent-foreground",
-          isDimmed && "opacity-70 focus-within:opacity-100 hover:opacity-100",
+          isDimmed && "group/tree-item",
         ),
         children: (
           <>
@@ -227,6 +271,7 @@ export function TreeItem<T>({
               <Button
                 variant="plain"
                 size="icon-xs"
+                className={cn(faded)}
                 tabIndex={-1}
                 aria-hidden="true"
                 aria-label={`${isExpanded ? "Collapse" : "Expand"} ${item.getItemName()}`}
@@ -241,14 +286,23 @@ export function TreeItem<T>({
                 <ChevronRightIcon className={cn(isExpanded && "rotate-90")} />
               </Button>
             ) : item.isFolder() ? (
-              <ChevronRightIcon aria-hidden="true" className={cn("size-3.5 shrink-0", isExpanded && "rotate-90")} />
+              <ChevronRightIcon
+                aria-hidden="true"
+                className={cn("size-3.5 shrink-0", isExpanded && "rotate-90", faded)}
+              />
             ) : (
               <span className={cn("shrink-0", expandOn === "disclosure" ? "size-control-xs" : "size-3.5")} />
             )}
-            {linkProps && !isEditing ? link : label}
+            {linkProps && !isEditing ? (
+              link
+            ) : isDimmed ? (
+              <div className={cn("flex min-w-0 flex-1 items-center gap-2", faded)}>{label}</div>
+            ) : (
+              label
+            )}
             {endEnhancer && (
               <div
-                className="flex shrink-0 items-center gap-1 text-xs tabular-nums"
+                className={cn("flex shrink-0 items-center gap-1 text-xs tabular-nums", faded)}
                 onClick={(event) => event.stopPropagation()}
                 onDoubleClick={(event) => event.stopPropagation()}
                 onKeyDown={(event) => event.stopPropagation()}
@@ -256,8 +310,13 @@ export function TreeItem<T>({
                 {endEnhancer}
               </div>
             )}
+            {marker !== undefined && marker !== null && marker !== false && (
+              <div aria-hidden="true" data-slot="tree-item-marker" className="flex shrink-0 items-center">
+                {marker}
+              </div>
+            )}
             {(hasDescription || actions) && (
-              <div className="flex shrink-0 items-center gap-1 text-xs tabular-nums">
+              <div className={cn("flex shrink-0 items-center gap-1 text-xs tabular-nums", faded)}>
                 {/* Hidden from the item's content; `aria-describedby` still reads a hidden element it names. */}
                 {description !== undefined && description !== null && (
                   <span

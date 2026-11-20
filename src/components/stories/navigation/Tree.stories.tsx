@@ -6,6 +6,7 @@ import {
   Tree,
   TreeItem,
   TreeItemAction,
+  TreeItemDot,
   useTree,
   syncDataLoaderFeature,
   hotkeysCoreFeature,
@@ -443,26 +444,102 @@ function DimmedExample() {
   );
 }
 
+/** The opacity of a row's label, the part a dimmed row fades; the row itself stays opaque. */
+function labelOpacity(row: HTMLElement): string {
+  const label = row.querySelector(":scope > div.flex-1");
+  return label ? getComputedStyle(label).opacity : "missing label";
+}
+
 export const DimmedRows: Story = {
   render: () => <DimmedExample />,
   play: async ({ canvasElement, userEvent }) => {
     const canvas = within(canvasElement);
     const readme = canvas.getByRole("treeitem", { name: "README.md" });
     const source = canvas.getByRole("treeitem", { name: "Source" });
+    const input = () => canvas.getByRole("treeitem", { name: "Input.tsx" });
     await expect(readme).toHaveAttribute("data-dimmed");
     await expect(source).not.toHaveAttribute("data-dimmed");
-    await expect(getComputedStyle(readme).opacity).toBe("0.7");
-    await expect(getComputedStyle(canvas.getByRole("treeitem", { name: "Input.tsx" })).opacity).toBe("0.7");
+    await expect(labelOpacity(readme)).toBe("0.7");
+    await expect(getComputedStyle(readme).opacity).toBe("1");
+    await expect(labelOpacity(input())).toBe("0.7");
     await expect(getComputedStyle(source).opacity).toBe("1");
     await userEvent.click(canvas.getByRole("treeitem", { name: "Button.tsx" }));
     await userEvent.keyboard("{ArrowDown}");
-    await waitFor(() => expect(canvas.getByRole("treeitem", { name: "Input.tsx" })).toHaveFocus());
-    await expect(getComputedStyle(canvas.getByRole("treeitem", { name: "Input.tsx" })).opacity).toBe("1");
+    await waitFor(() => expect(input()).toHaveFocus());
+    await waitFor(() => expect(labelOpacity(input())).toBe("1"));
     await userEvent.keyboard("{Enter}");
-    await expect(canvas.getByRole("treeitem", { name: "Input.tsx" })).toHaveAttribute("aria-selected", "true");
+    await expect(input()).toHaveAttribute("aria-selected", "true");
     await userEvent.keyboard("{ArrowDown}");
     await waitFor(() => expect(readme).toHaveFocus());
-    await expect(getComputedStyle(canvas.getByRole("treeitem", { name: "Input.tsx" })).opacity).toBe("0.7");
-    await expect(getComputedStyle(readme).opacity).toBe("1");
+    await waitFor(() => expect(labelOpacity(input())).toBe("0.7"));
+    await expect(labelOpacity(readme)).toBe("1");
+  },
+};
+
+const newItems: Record<string, { reason: string }> = {
+  readme: { reason: "Done · Reply" },
+  button: { reason: "New round" },
+};
+
+function NewActivityExample() {
+  const tree = useTree<Item>({
+    rootItemId: "root",
+    getItemName: (item) => item.getItemData().name,
+    isItemFolder: (item) => Boolean(item.getItemData().children),
+    dataLoader: {
+      getItem: (id) => {
+        const item = items[id];
+        if (!item) throw new Error("Unknown tree item");
+        return item;
+      },
+      getChildren: (id) => items[id]?.children ?? [],
+    },
+    features: [syncDataLoaderFeature, hotkeysCoreFeature, selectionFeature],
+  });
+  return (
+    <Tree
+      tree={tree}
+      label="Inbox"
+      variant="sidebar"
+      renderItem={(item) => {
+        const isNew = item.getId() in newItems;
+        // A collapsed folder rolls up the new rows inside it as a dot with their count.
+        const isCollapsedFolder = item.isFolder() && !item.isExpanded();
+        return (
+          <TreeItem
+            item={item}
+            isDimmed={completedItems.has(item.getId())}
+            isUnread={isNew}
+            endEnhancer={completedItems.has(item.getId()) ? <span>Done</span> : null}
+            marker={isNew ? <TreeItemDot /> : isCollapsedFolder ? <TreeItemDot count={1} /> : undefined}
+            descriptionLabel={newItems[item.getId()]?.reason ?? (isCollapsedFolder ? "1 new item" : undefined)}
+          />
+        );
+      }}
+    />
+  );
+}
+
+export const NewActivity: Story = {
+  render: () => <NewActivityExample />,
+  play: async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+    const readme = canvas.getByRole("treeitem", { name: "README.md" });
+    const source = canvas.getByRole("treeitem", { name: "Source" });
+    const marker = (row: HTMLElement) => row.querySelector<HTMLElement>("[data-slot='tree-item-marker']");
+    // A settled row keeps its fade while its new-activity dot stays at full opacity.
+    await expect(labelOpacity(readme)).toBe("0.7");
+    await expect(marker(readme)).not.toBeNull();
+    await expect(getComputedStyle(marker(readme) ?? readme).opacity).toBe("1");
+    await expect(readme).toHaveAccessibleDescription("Done · Reply");
+    await expect(getComputedStyle(readme.querySelector(".truncate") ?? readme).fontWeight).toBe("600");
+    await expect(source).toHaveAccessibleDescription("1 new item");
+    await expect(marker(source)?.textContent).toBe("1");
+    await userEvent.click(source);
+    await waitFor(() => expect(source).toHaveAttribute("aria-expanded", "true"));
+    await expect(marker(source)).toBeNull();
+    const button = canvas.getByRole("treeitem", { name: "Button.tsx" });
+    await expect(button).toHaveAccessibleDescription("New round");
+    await expect(marker(button)?.textContent).toBe("");
   },
 };
