@@ -1,4 +1,6 @@
+import { useState } from "react";
 import type { ReactElement } from "react";
+import { EllipsisIcon } from "lucide-react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, within } from "storybook/test";
 import { Button } from "../../Button";
@@ -10,60 +12,11 @@ import { Textarea } from "../../Textarea";
 import { Toggle } from "../../Toggle";
 import { ToggleGroup, ToggleGroupItem } from "../../ToggleGroup";
 import { Toolbar, ToolbarButton, ToolbarGroup, ToolbarLink } from "../../Toolbar";
-
-// WCAG 1.4.11: the visual boundary that identifies an interactive control needs 3:1 against the surface around it.
-const minimumBoundaryContrast = 3;
-
-type Rgb = readonly [number, number, number];
-
-// Resolves any CSS colour, including translucent and color-mix() values, to the sRGB pixel it paints over `under`.
-function paint(color: string, under: Rgb): Rgb {
-  const canvas = document.createElement("canvas");
-  canvas.width = 1;
-  canvas.height = 1;
-  const context = canvas.getContext("2d");
-  if (!context) throw new Error("A 2D canvas context is required to measure colours.");
-  context.fillStyle = `rgb(${under.join(" ")})`;
-  context.fillRect(0, 0, 1, 1);
-  context.fillStyle = color;
-  context.fillRect(0, 0, 1, 1);
-  const [red = 0, green = 0, blue = 0] = context.getImageData(0, 0, 1, 1).data;
-  return [red, green, blue];
-}
-
-function luminance([red, green, blue]: Rgb): number {
-  const channel = (value: number): number => {
-    const srgb = value / 255;
-    return srgb <= 0.04045 ? srgb / 12.92 : ((srgb + 0.055) / 1.055) ** 2.4;
-  };
-  return 0.2126 * channel(red) + 0.7152 * channel(green) + 0.0722 * channel(blue);
-}
-
-function contrast(first: Rgb, second: Rgb): number {
-  const [lighter, darker] = [luminance(first), luminance(second)].sort((a, b) => b - a);
-  return ((lighter ?? 0) + 0.05) / ((darker ?? 0) + 0.05);
-}
-
-// The surface a control sits on: the nearest ancestor that paints a background, composited down to the page.
-function surfaceBehind(element: Element): Rgb {
-  const layers: string[] = [];
-  for (let node = element.parentElement; node; node = node.parentElement) {
-    const background = getComputedStyle(node).backgroundColor;
-    layers.push(background);
-    if (paint(background, [0, 0, 0]).join() === paint(background, [255, 255, 255]).join()) break;
-  }
-  return layers.reduceRight<Rgb>((under, layer) => paint(layer, under), [255, 255, 255]);
-}
-
-/** The strongest of a control's border and fill contrast against the surface behind it. */
-function boundaryContrast(element: Element): number {
-  const style = getComputedStyle(element);
-  const surface = surfaceBehind(element);
-  const borderWidth = Number.parseFloat(style.borderTopWidth);
-  const border = borderWidth > 0 ? contrast(paint(style.borderTopColor, surface), surface) : 1;
-  const fill = contrast(paint(style.backgroundColor, surface), surface);
-  return Math.max(border, fill);
-}
+import {
+  boundaryContrast,
+  findBorderlessTextButtons,
+  minimumBoundaryContrast,
+} from "../../../../.storybook/controlBoundary";
 
 function ControlBoundaryGallery(): ReactElement {
   return (
@@ -73,6 +26,12 @@ function ControlBoundaryGallery(): ReactElement {
       <div className="flex flex-wrap items-center gap-2">
         <Button data-boundary="Outline button" variant="outline">
           Later
+        </Button>
+        <Button data-boundary="Ghost text button" variant="ghost">
+          Cancel
+        </Button>
+        <Button data-boundary="Small ghost text button" variant="ghost" size="sm">
+          Close
         </Button>
         <Checkbox data-boundary="Checkbox" aria-label="Notify me" />
         <RadioGroup aria-label="Channel" className="flex gap-4">
@@ -135,7 +94,7 @@ export const Default: Story = {
     const controls = Array.from(canvasElement.querySelectorAll("[data-boundary]")).filter(
       (control) => control.getBoundingClientRect().width > 1,
     );
-    await expect(new Set(controls.map((control) => control.getAttribute("data-boundary"))).size).toBe(15);
+    await expect(new Set(controls.map((control) => control.getAttribute("data-boundary"))).size).toBe(17);
     const measured = controls.map((control) => ({
       control: control.getAttribute("data-boundary"),
       passes: boundaryContrast(control) >= minimumBoundaryContrast,
@@ -145,5 +104,37 @@ export const Default: Story = {
       "aria-pressed",
       "true",
     );
+  },
+};
+
+function BorderlessTextDetection(): ReactElement {
+  const [showsLabelLikeButton, setShowsLabelLikeButton] = useState(true);
+  return (
+    <div className="flex flex-wrap items-center gap-2 p-panel">
+      {showsLabelLikeButton && <Button variant="plain">Looks like a label</Button>}
+      <Button variant="ghost" size="icon-sm" aria-label="More actions">
+        <EllipsisIcon />
+      </Button>
+      <Button variant="ghost" size="inline">
+        Show details
+      </Button>
+      <Button variant="link">Read the guide</Button>
+      <Button variant="outline" onClick={() => setShowsLabelLikeButton(false)}>
+        Remove the label-like button
+      </Button>
+    </div>
+  );
+}
+
+/**
+ * The catalog-wide check: a text button with no border, no fill and no link styling is reported; icon buttons and
+ * link-styled actions are not. Every story test runs this check after it finishes.
+ */
+export const BorderlessTextButtonsAreReported: Story = {
+  render: () => <BorderlessTextDetection />,
+  play: async ({ canvasElement, userEvent }) => {
+    await expect(findBorderlessTextButtons(canvasElement)).toEqual(["Looks like a label"]);
+    await userEvent.click(within(canvasElement).getByRole("button", { name: "Remove the label-like button" }));
+    await expect(findBorderlessTextButtons(canvasElement)).toEqual([]);
   },
 };

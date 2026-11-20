@@ -99,6 +99,7 @@ export default defineConfig({
   test: {
     exclude: ["node_modules/**"],
     maxWorkers: 4,
+    setupFiles: ["./.storybook/controlAffordance.setup.ts"],
     projects: [
       { extends: ".storybook/vitest.drag-drop.config.ts", root: ".", test: { name: "drag-drop-native" } },
       {

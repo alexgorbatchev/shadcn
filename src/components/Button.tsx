@@ -44,6 +44,16 @@ const buttonVariants = cva(
         "icon-lg": "size-control-lg",
       },
     },
+    compoundVariants: [
+      // Borderless is reserved for icon buttons, whose icon identifies them as controls. A ghost button sized for text
+      // keeps a visible 3:1 boundary at rest, and an inline one takes the link colour, so no text action reads as a label.
+      { variant: "ghost", size: ["content", "default", "xs", "sm", "lg"], className: "border-input" },
+      {
+        variant: "ghost",
+        size: "inline",
+        className: "text-primary underline-offset-4 hover:bg-transparent hover:underline",
+      },
+    ],
     defaultVariants: {
       align: "center",
       variant: "default",

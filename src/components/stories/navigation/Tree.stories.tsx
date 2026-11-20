@@ -1,4 +1,5 @@
 import type { Meta, ReactRenderer } from "@storybook/react-vite";
+import { EllipsisIcon } from "lucide-react";
 import type { StoryAnnotations } from "storybook/internal/types";
 import { expect, within, waitFor, fn } from "storybook/test";
 import {
@@ -123,7 +124,7 @@ function Example({ isComposed = false, isConstrained = false }: { isComposed?: b
                             descriptionLabel: "1234 files",
                             actions: (
                               <TreeItemAction aria-label={`Actions for ${item.getItemName()}`} onClick={action}>
-                                …
+                                <EllipsisIcon />
                               </TreeItemAction>
                             ),
                           }
