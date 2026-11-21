@@ -103,6 +103,7 @@ function Gantt<T extends GanttTask>({
                         <Button
                           type="button"
                           variant="link"
+                          size="xs"
                           className="min-w-0 flex-1 justify-start px-0"
                           onClick={() => onTaskSelect(task)}
                         >

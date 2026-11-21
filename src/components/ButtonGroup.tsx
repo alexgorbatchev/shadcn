@@ -1,5 +1,7 @@
 import type { IDensityProps } from "../density/types.js";
 import type { ComponentProps, ReactElement } from "react";
+import { ButtonSizeContext } from "./ButtonSizeContext.js";
+import type { ButtonSize } from "./buttonSize.js";
 import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
 import { cva, type VariantProps } from "class-variance-authority";
@@ -28,16 +30,22 @@ const buttonGroupVariants = cva(
   },
 );
 
-type ButtonGroupProps = ComponentProps<"div"> & VariantProps<typeof buttonGroupVariants> & IDensityProps;
+type ButtonGroupProps = ComponentProps<"div"> &
+  VariantProps<typeof buttonGroupVariants> &
+  IDensityProps & {
+    /** One size for every Button inside that names none, so the group's buttons share one height. */
+    size?: ButtonSize;
+  };
 
 function ButtonGroup({
   density,
   className,
   orientation,
   layout = "content",
+  size,
   ...props
 }: ButtonGroupProps): ReactElement {
-  return (
+  const group = (
     <div
       role="group"
       data-density={density}
@@ -47,6 +55,7 @@ function ButtonGroup({
       {...props}
     />
   );
+  return size ? <ButtonSizeContext value={size}>{group}</ButtonSizeContext> : group;
 }
 
 type ButtonGroupTextProps = useRender.ComponentProps<"div"> & IDensityProps;

@@ -1,11 +1,12 @@
 import type { IAnalyticsProps } from "../analytics/types.js";
 import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
 import type { IDensityProps } from "../density/types.js";
-import { useId, type ReactElement } from "react";
+import { use, useId, type ReactElement } from "react";
 import { Button as ButtonPrimitive } from "@base-ui/react/button";
 import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../utils/cn.js";
 import { Tooltip, TooltipTrigger, TooltipContent } from "./Tooltip.js";
+import { ButtonSizeContext } from "./ButtonSizeContext.js";
 
 const buttonVariants = cva(
   "group/button inline-flex shrink-0 items-center rounded-sm border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-colors outline-none select-none focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none data-disabled:border-dashed data-disabled:border-border data-disabled:bg-transparent data-disabled:text-faint-foreground data-disabled:font-normal aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
@@ -75,7 +76,7 @@ function Button({
   density,
   className,
   variant = "default",
-  size = "default",
+  size: requestedSize,
   align = "center",
   truncate = false,
   fullWidth = false,
@@ -84,12 +85,16 @@ function Button({
   ...props
 }: ButtonProps): ReactElement {
   const trackedOnClick = useAnalyticsCallback("Button", analytics, { name: "ui.activate" }, props.onClick);
+  // A button that names no size takes its group's, so siblings share one height (`ButtonGroup` `size`).
+  const groupSize = use(ButtonSizeContext);
+  const size = requestedSize ?? groupSize ?? "default";
   const reasonId = useId();
 
   const button = (
     <ButtonPrimitive
       data-density={density}
       data-slot="button"
+      data-size={size}
       className={(state) =>
         cn(
           buttonVariants({ variant, size, align, truncate, fullWidth }),

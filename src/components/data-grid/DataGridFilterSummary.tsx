@@ -51,7 +51,7 @@ export function DataGridFilterSummary<T extends RowData>({
                     </li>
                   ))}
                 </ul>
-                <Button variant="ghost" size="sm" onClick={() => table.setColumnFilters([])}>
+                <Button variant="ghost" size="xs" onClick={() => table.setColumnFilters([])}>
                   Clear filters
                 </Button>
               </div>
