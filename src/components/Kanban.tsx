@@ -103,6 +103,7 @@ function Kanban<T extends KanbanItem>({
                           <div className="flex items-center gap-1">
                             <OptionSelect
                               aria-label={`Move ${item.title} to`}
+                              size="sm"
                               value={column.id}
                               disabled={disabled}
                               onValueChange={(next) => move(item.id, next)}

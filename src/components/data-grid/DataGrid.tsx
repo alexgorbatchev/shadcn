@@ -405,6 +405,7 @@ function DataGridPagination<T extends RowData>({ table }: { table: DataGridTable
       <div className="flex items-center gap-2">
         <OptionSelect
           aria-label="Rows per page"
+          size="sm"
           value={String(table.state.pagination.pageSize)}
           onValueChange={(next) => table.setPageSize(Number(next))}
           options={[...new Set([10, 20, 50, 100, table.state.pagination.pageSize])].map((size) => ({

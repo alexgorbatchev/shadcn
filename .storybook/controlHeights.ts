@@ -9,7 +9,9 @@ export interface IMismatchedControl {
 // Buttons of the standard sizes: a content-sized button grows with its text and an inline one sits in a sentence, so
 // neither is a sibling control of fixed height.
 const controlSelector = ["xs", "sm", "default", "lg", "icon-xs", "icon-sm", "icon", "icon-lg"]
-  .map((size) => `[data-slot="button"][data-size="${size}"]`)
+  // Any button-like element of a standard size, including a menu or tooltip trigger rendered as a Button, whose slot
+  // the trigger replaces.
+  .flatMap((size) => [`button[data-size="${size}"]`, `a[data-size="${size}"]`, `[role="button"][data-size="${size}"]`])
   .join(", ");
 
 // Heights within half a pixel are the same control size after subpixel layout.
