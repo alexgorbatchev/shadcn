@@ -35,6 +35,11 @@ type TreeItemProps<T> = useRender.ComponentProps<"div", TreeItemState> &
   IAnalyticsProps & {
     item: ItemInstance<T>;
     startEnhancer?: ReactNode;
+    /**
+     * Whether the row shows its kind icon (folder or file) before the label. `false` drops it and its gap, so the label
+     * starts where the icon was; a tree whose disclosure already tells folders from leaves needs no icon.
+     */
+    hasIcon?: boolean;
     endEnhancer?: ReactNode;
     expandOn?: "click" | "doubleClick" | "disclosure";
     isEditing?: boolean;
@@ -193,6 +198,7 @@ export function TreeItem<T>({
   isDropTarget = false,
   isDimmed = false,
   isUnread = false,
+  hasIcon = true,
   leading,
   marker,
   linkProps,
@@ -251,9 +257,11 @@ export function TreeItem<T>({
   const faded = isDimmed && "opacity-70 group-hover/tree-item:opacity-100 group-focus-within/tree-item:opacity-100";
   const label = (
     <>
-      <span aria-hidden="true" className="flex shrink-0 [&>svg]:size-4">
-        {startEnhancer ?? (item.isFolder() ? isExpanded ? <FolderOpenIcon /> : <FolderIcon /> : <FileIcon />)}
-      </span>
+      {(hasIcon || startEnhancer) && (
+        <span aria-hidden="true" className="flex shrink-0 [&>svg]:size-4">
+          {startEnhancer ?? (item.isFolder() ? isExpanded ? <FolderOpenIcon /> : <FolderIcon /> : <FileIcon />)}
+        </span>
+      )}
       <div className={cn("min-w-0 flex-1 truncate", isUnread && "font-semibold")}>{children ?? item.getItemName()}</div>
     </>
   );

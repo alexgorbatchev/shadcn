@@ -217,3 +217,37 @@ test("puts a status control or icon at the row's start, outside its link, with o
   const slot = handedBack?.querySelector("[data-slot='tree-item-leading']");
   await expect.poll(() => (slot ? getComputedStyle(slot).opacity : "missing")).toBe("0.7");
 });
+
+function IconlessTree(): ReactElement {
+  const tree = useTree<string>({
+    rootItemId: "root",
+    initialState: { expandedItems: ["Docs"] },
+    getItemName: (item) => item.getItemData(),
+    isItemFolder: (item) => item.getId() !== "Plan",
+    dataLoader: {
+      getItem: (id) => id,
+      getChildren: (id) => (id === "root" ? ["Docs"] : id === "Docs" ? ["Plan"] : []),
+    },
+    features: [syncDataLoaderFeature, hotkeysCoreFeature, selectionFeature],
+  });
+  return (
+    <ThemeProvider forcedTheme="light">
+      <Tree
+        tree={tree}
+        label="Pages"
+        variant="sidebar"
+        renderItem={(item) => <TreeItem item={item} hasIcon={item.getId() !== "Plan"} />}
+      />
+    </ThemeProvider>
+  );
+}
+
+test("hasIcon={false} drops the kind icon, so the label starts where the icon was", async () => {
+  const screen = await render(<IconlessTree />);
+  const plan = screen.getByRole("treeitem", { name: "Plan" }).element();
+  const folder = screen.getByRole("treeitem", { name: "Docs" }).element();
+  await expect.element(page.getByRole("treeitem", { name: "Plan" })).toBeVisible();
+  expect(plan.querySelectorAll("svg")).toHaveLength(0);
+  // The folder keeps its default icon beside its chevron.
+  expect(folder.querySelectorAll("svg").length).toBeGreaterThan(1);
+});
