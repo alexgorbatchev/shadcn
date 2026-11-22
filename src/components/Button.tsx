@@ -8,8 +8,10 @@ import { cn } from "../utils/cn.js";
 import { Tooltip, TooltipTrigger, TooltipContent } from "./Tooltip.js";
 import { ButtonSizeContext } from "./ButtonSizeContext.js";
 
+// A keyboard hint child (Kbd or KbdGroup) sits at the trailing edge, so the label and icon keep the leading edge and the
+// hint never reads as part of the label.
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 items-center rounded-sm border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-colors outline-none select-none focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none data-disabled:border-dashed data-disabled:border-border data-disabled:bg-transparent data-disabled:text-faint-foreground data-disabled:font-normal aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "group/button inline-flex shrink-0 items-center [&>[data-slot=kbd-group]]:ms-auto [&>[data-slot=kbd-group]]:shrink-0 [&>[data-slot=kbd]]:ms-auto [&>[data-slot=kbd]]:shrink-0 rounded-sm border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-colors outline-none select-none focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none data-disabled:border-dashed data-disabled:border-border data-disabled:bg-transparent data-disabled:text-faint-foreground data-disabled:font-normal aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       truncate: { true: "max-w-full min-w-0" },
