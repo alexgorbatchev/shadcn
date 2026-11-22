@@ -257,3 +257,26 @@ test.each([
   toast.dismiss(`${id}-toast`);
   await expect.element(screen.getByText("Moved Pricing to Interviews")).not.toBeInTheDocument();
 });
+
+test("notifications inherit the surrounding typeface instead of sonner's system sans", async () => {
+  function Example() {
+    return (
+      <ThemeProvider forcedTheme="light">
+        <div data-testid="app-font" style={{ fontFamily: "Courier New, monospace" }}>
+          <Sonner id="typeface" duration={Infinity} />
+          <Button onClick={() => toast("Archived Plan", { id: "typeface-toast", toasterId: "typeface" })}>
+            Notify
+          </Button>
+        </div>
+      </ThemeProvider>
+    );
+  }
+  const screen = await render(<Example />);
+  await screen.getByRole("button", { name: "Notify" }).click();
+  await expect.element(page.getByText("Archived Plan")).toBeVisible();
+  const toaster = document.querySelector("[data-sonner-toaster]");
+  expect(toaster).not.toBeNull();
+  const expected = getComputedStyle(screen.getByTestId("app-font").element()).fontFamily;
+  expect(getComputedStyle(toaster as Element).fontFamily).toBe(expected);
+  expect(getComputedStyle(page.getByText("Archived Plan").element()).fontFamily).toBe(expected);
+});

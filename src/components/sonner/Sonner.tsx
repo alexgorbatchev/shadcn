@@ -30,6 +30,7 @@ function Sonner({
   dir,
   expand = true,
   live = true,
+  style,
   ...props
 }: SonnerProps): ReactElement {
   const activate = useAnalyticsCallback<[MouseEvent<HTMLDivElement>]>(
@@ -55,8 +56,10 @@ function Sonner({
         dir={dir ?? inheritedDirection}
         expand={expand}
         containerLive={live}
+        // Sonner's own stylesheet gives the toaster a system sans font. The toaster inherits the surrounding typeface
+        // instead, set inline so it applies whether or not the consumer's CSS build generated any library class.
+        style={{ fontFamily: "inherit", ...style }}
         className={cn(
-          "[&[data-sonner-toaster]]:font-mono",
           "[@media(max-width:600px)]:[&[data-sonner-toaster]]:w-auto!",
           "[@media(max-width:600px)]:[&[data-sonner-toaster]]:left-[var(--mobile-offset-left)]!",
           "[@media(max-width:600px)]:[&[data-sonner-toaster]]:right-[var(--mobile-offset-right)]!",
