@@ -251,3 +251,41 @@ test("hasIcon={false} drops the kind icon, so the label starts where the icon wa
   // The folder keeps its default icon beside its chevron.
   expect(folder.querySelectorAll("svg").length).toBeGreaterThan(1);
 });
+
+function TonedTree(): ReactElement {
+  const tree = useTree<string>({
+    rootItemId: "root",
+    getItemName: (item) => item.getItemData(),
+    isItemFolder: (item) => item.getId() === "root",
+    dataLoader: { getItem: (id) => id, getChildren: (id) => (id === "root" ? ["Live", "Quiet"] : []) },
+    features: [syncDataLoaderFeature, hotkeysCoreFeature, selectionFeature],
+  });
+  return (
+    <ThemeProvider forcedTheme="light">
+      <Tree
+        tree={tree}
+        label="Pages"
+        variant="sidebar"
+        renderItem={(item) => (
+          <TreeItem
+            item={item}
+            hasIcon={false}
+            tone={item.getId() === "Live" ? "warning" : "default"}
+            startEnhancer={item.getId() === "Live" ? <svg data-testid="live-icon" viewBox="0 0 1 1" /> : undefined}
+          />
+        )}
+      />
+    </ThemeProvider>
+  );
+}
+
+test("a warning-toned row is tinted and colours its start icon; other rows are untouched", async () => {
+  const screen = await render(<TonedTree />);
+  const live = screen.getByRole("treeitem", { name: "Live" }).element();
+  const quiet = screen.getByRole("treeitem", { name: "Quiet" }).element();
+  await expect.element(page.getByRole("treeitem", { name: "Live" })).toBeVisible();
+  expect(getComputedStyle(live).backgroundColor).not.toBe(getComputedStyle(quiet).backgroundColor);
+  const icon = screen.getByTestId("live-icon").element().parentElement;
+  expect(icon).not.toBeNull();
+  expect(getComputedStyle(icon as Element).color).not.toBe(getComputedStyle(quiet).color);
+});

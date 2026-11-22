@@ -40,6 +40,11 @@ type TreeItemProps<T> = useRender.ComponentProps<"div", TreeItemState> &
      * starts where the icon was; a tree whose disclosure already tells folders from leaves needs no icon.
      */
     hasIcon?: boolean;
+    /**
+     * Calls attention to the row with the `warning` tone: a tinted row and a warning-coloured start icon, such as a
+     * lightning bolt for something live. Pair it with words in `descriptionLabel`, so the meaning never rests on colour.
+     */
+    tone?: "default" | "warning";
     endEnhancer?: ReactNode;
     expandOn?: "click" | "doubleClick" | "disclosure";
     isEditing?: boolean;
@@ -199,6 +204,7 @@ export function TreeItem<T>({
   isDimmed = false,
   isUnread = false,
   hasIcon = true,
+  tone = "default",
   leading,
   marker,
   linkProps,
@@ -258,7 +264,7 @@ export function TreeItem<T>({
   const label = (
     <>
       {(hasIcon || startEnhancer) && (
-        <span aria-hidden="true" className="flex shrink-0 [&>svg]:size-4">
+        <span aria-hidden="true" className={cn("flex shrink-0 [&>svg]:size-4", tone === "warning" && "text-warning")}>
           {startEnhancer ?? (item.isFolder() ? isExpanded ? <FolderOpenIcon /> : <FolderIcon /> : <FileIcon />)}
         </span>
       )}
@@ -341,6 +347,8 @@ export function TreeItem<T>({
         className: cn(
           "relative flex min-h-control min-w-0 cursor-default items-center gap-2 rounded-sm py-1 pr-2 text-sm outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring",
           (isSelected || isDropTarget || isInsideTarget) && "bg-accent text-accent-foreground",
+          tone === "warning" &&
+            (isSelected || isDropTarget || isInsideTarget ? "bg-warning/25" : "bg-warning/12 hover:bg-warning/20"),
           isDimmed && "group/tree-item",
         ),
         children: (
