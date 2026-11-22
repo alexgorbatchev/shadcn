@@ -289,3 +289,17 @@ test("a warning-toned row is tinted and colours its start icon; other rows are u
   expect(icon).not.toBeNull();
   expect(getComputedStyle(icon as Element).color).not.toBe(getComputedStyle(quiet).color);
 });
+
+test("a selected warning-toned row keeps the selection background and adds a warning ring", async () => {
+  const screen = await render(<TonedTree />);
+  const live = screen.getByRole("treeitem", { name: "Live" });
+  const quiet = screen.getByRole("treeitem", { name: "Quiet" });
+  await quiet.click();
+  await expect.element(quiet).toHaveAttribute("aria-selected", "true");
+  const selectedBackground = getComputedStyle(quiet.element()).backgroundColor;
+  const quietShadow = getComputedStyle(quiet.element()).boxShadow;
+  await live.click();
+  await expect.element(live).toHaveAttribute("aria-selected", "true");
+  expect(getComputedStyle(live.element()).backgroundColor).toBe(selectedBackground);
+  expect(getComputedStyle(live.element()).boxShadow).not.toBe(quietShadow);
+});
