@@ -1059,9 +1059,9 @@
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
-    "@assistant-ui/ai-sdk": "0.0.19",
+    "@assistant-ui/ai-sdk": "0.0.20",
     "@assistant-ui/generative-ui": "0.0.12",
-    "@assistant-ui/react": "0.15.37",
+    "@assistant-ui/react": "0.15.38",
     "@assistant-ui/react-markdown": "0.14.26",
     "@assistant-ui/react-mcp": "0.1.29",
     "@assistant-ui/react-syntax-highlighter": "0.14.7",
@@ -1160,9 +1160,9 @@
     "zustand": "5.0.15"
   },
   "peerDependencies": {
-    "@assistant-ui/ai-sdk": "0.0.19",
+    "@assistant-ui/ai-sdk": "0.0.20",
     "@assistant-ui/generative-ui": "0.0.12",
-    "@assistant-ui/react": "0.15.37",
+    "@assistant-ui/react": "0.15.38",
     "@assistant-ui/react-markdown": "0.14.26",
     "@assistant-ui/react-mcp": "0.1.29",
     "@assistant-ui/react-syntax-highlighter": "0.14.7",
