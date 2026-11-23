@@ -374,10 +374,22 @@
 
     /* Horizontal scroll for any wide block. Wrap it and the wrapper owns the
        flow margin. Tables shrink to fit, so widen the table to make it scroll
-       instead of compress. */
+       instead of compress. An edge that hides more content fades out, so the
+       box reads as scrollable where an overlay scrollbar stays hidden. The
+       fades follow the box's own scroll position on any surface colour; a box
+       with nothing to scroll has no timeline and shows no fade. */
     &:where(.typeset-scroll) {
       overflow-x: auto;
       margin-block-start: var(--typeset-flow);
+      mask-image: linear-gradient(
+        to right,
+        transparent,
+        #000 var(--typeset-scroll-fade-start),
+        #000 calc(100% - var(--typeset-scroll-fade-end)),
+        transparent
+      );
+      animation: typeset-scroll-fade linear both;
+      animation-timeline: scroll(self inline);
     }
     &:where(.typeset-scroll > *) {
       margin-block-start: 0;
@@ -452,5 +464,33 @@
       figure > picture > img
     ):not(:where(.not-typeset, [data-not-typeset], .not-typeset *, [data-not-typeset] *)) {
     margin-block-start: 0;
+  }
+}
+
+@property --typeset-scroll-fade-start {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@property --typeset-scroll-fade-end {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+@keyframes typeset-scroll-fade {
+  0% {
+    --typeset-scroll-fade-start: 0px;
+    --typeset-scroll-fade-end: 2em;
+  }
+  10%,
+  90% {
+    --typeset-scroll-fade-start: 2em;
+    --typeset-scroll-fade-end: 2em;
+  }
+  100% {
+    --typeset-scroll-fade-start: 2em;
+    --typeset-scroll-fade-end: 0px;
   }
 }

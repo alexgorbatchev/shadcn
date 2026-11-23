@@ -535,11 +535,20 @@ export const TypesetTables: Story = {
     const region = canvas.getByRole("region", { name: "Wide findings" });
     await expect(getComputedStyle(region).overflowX).toBe("auto");
     await expect(region.scrollWidth).toBeGreaterThan(region.clientWidth);
+    // Only the edge that hides more content fades, so the box reads as scrollable.
+    const fade = (side: "start" | "end") =>
+      Number.parseFloat(getComputedStyle(region).getPropertyValue(`--typeset-scroll-fade-${side}`));
+    await expect(getComputedStyle(region).maskImage).toContain("linear-gradient");
+    await waitFor(() => expect(fade("end")).toBeGreaterThan(0));
+    await expect(fade("start")).toBe(0);
     await userEvent.tab();
     await expect(region).toHaveFocus();
     await userEvent.tab();
     await expect(canvas.getByRole("link", { name: "Open final findings" })).toHaveFocus();
     await waitFor(() => expect(region.scrollLeft).toBeGreaterThan(0));
+    region.scrollLeft = region.scrollWidth;
+    await waitFor(() => expect(fade("end")).toBe(0));
+    await expect(fade("start")).toBeGreaterThan(0);
   },
 };
 export const TypesetStreaming: Story = {
