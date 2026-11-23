@@ -19,16 +19,20 @@ function MenuPortal({ container, ref, children, ...props }: MenuPrimitive.Portal
   );
 }
 
-/** A zero-size anchor at the point, which Base UI positions against as it does a context menu's pointer. */
+/**
+ * An anchor at the point, which Base UI positions against as it does a context menu's pointer: zero-size for a
+ * pointer, or as tall as the row it was opened from, so the menu flips to the row's other side instead of over it.
+ */
 function usePointAnchor(point: MenuPoint | undefined): MenuPrimitive.Positioner.Props["anchor"] {
   const x = point?.clientX;
   const y = point?.clientY;
+  const height = point?.height ?? 0;
   return useMemo(
     () =>
       x === undefined || y === undefined
         ? undefined
-        : { getBoundingClientRect: () => DOMRect.fromRect({ x, y, width: 0, height: 0 }) },
-    [x, y],
+        : { getBoundingClientRect: () => DOMRect.fromRect({ x, y, width: 0, height }) },
+    [x, y, height],
   );
 }
 

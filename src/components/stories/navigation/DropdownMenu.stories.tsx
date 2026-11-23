@@ -20,7 +20,7 @@ import type { MenuPoint } from "../../../menu/types";
 import { Button } from "../../Button";
 import { DirectionProvider } from "../../DirectionProvider";
 import { expect, fireEvent, fn, userEvent, waitFor, within } from "storybook/test";
-import { useState, type ReactElement } from "react";
+import { useState, type KeyboardEvent, type ReactElement } from "react";
 import {
   BellIcon,
   MailIcon,
@@ -893,6 +893,68 @@ export const AtPoint: Story = {
     const menu = await body.findByRole("menu", { name: "Actions for Bravo" });
     await waitFor(() => expect(Math.round(menu.getBoundingClientRect().left)).toBe(x));
     await expect(Math.round(menu.getBoundingClientRect().top)).toBe(y);
+  },
+};
+
+/**
+ * A menu opened from the keyboard on a row passes the row's top and height: it opens below the row, and a row near the
+ * window's bottom gets it above, never over the row it acts on.
+ */
+export const AtRowFromKeyboard: Story = {
+  render: function Render() {
+    const [point, setPoint] = useState<MenuPoint>();
+    const [row, setRow] = useState<string>();
+    const openAt = (name: string, element: HTMLElement) => {
+      const rect = element.getBoundingClientRect();
+      setRow(name);
+      setPoint({ clientX: rect.left + 16, clientY: rect.top, height: rect.height });
+    };
+    const rowProps = (name: string) => ({
+      role: "button",
+      tabIndex: 0,
+      className: "rounded-sm border border-border px-2 py-1",
+      onKeyDown: (event: KeyboardEvent<HTMLDivElement>) => {
+        if (event.key !== "F10" || !event.shiftKey) return;
+        event.preventDefault();
+        openAt(name, event.currentTarget);
+      },
+    });
+    return (
+      <div className="flex h-[calc(100vh-2rem)] flex-col justify-between">
+        <div {...rowProps("Alpha")}>Alpha</div>
+        <div {...rowProps("Bravo")}>Bravo</div>
+        <DropdownMenu open={point !== undefined} onOpenChange={(isOpen) => !isOpen && setPoint(undefined)}>
+          <DropdownMenuContent point={point} aria-label={`Actions for ${row ?? "row"}`}>
+            <DropdownMenuGroup>
+              <DropdownMenuLabel>{row}</DropdownMenuLabel>
+              <DropdownMenuItem>Open</DropdownMenuItem>
+              <DropdownMenuItem>Rename</DropdownMenuItem>
+              <DropdownMenuItem>Move</DropdownMenuItem>
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    );
+  },
+  play: async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+    const body = within(canvasElement.ownerDocument.body);
+    const alpha = canvas.getByRole("button", { name: "Alpha" });
+    alpha.focus();
+    await userEvent.keyboard("{Shift>}{F10}{/Shift}");
+    const below = await body.findByRole("menu", { name: "Actions for Alpha" });
+    await waitFor(() =>
+      expect(below.getBoundingClientRect().top).toBeGreaterThanOrEqual(alpha.getBoundingClientRect().bottom - 1),
+    );
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() => expect(body.queryByRole("menu")).not.toBeInTheDocument());
+    const bravo = canvas.getByRole("button", { name: "Bravo" });
+    bravo.focus();
+    await userEvent.keyboard("{Shift>}{F10}{/Shift}");
+    const above = await body.findByRole("menu", { name: "Actions for Bravo" });
+    await waitFor(() =>
+      expect(above.getBoundingClientRect().bottom).toBeLessThanOrEqual(bravo.getBoundingClientRect().top + 1),
+    );
   },
 };
 

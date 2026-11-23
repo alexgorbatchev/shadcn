@@ -31,7 +31,11 @@ export type MenuSubTriggerProps = Menu.SubmenuTrigger.Props & IMenuInsetProps;
 export type MenuCheckboxItemProps = Menu.CheckboxItem.Props & IMenuInsetProps;
 export type MenuRadioItemProps = Menu.RadioItem.Props & IMenuInsetProps;
 /** A viewport point in CSS pixels, such as the right-click event that asked for a menu. */
-export type MenuPoint = Pick<MouseEvent, "clientX" | "clientY">;
+/**
+ * Where a menu opens without a trigger. A pointer gives a point; a keyboard opening on a row gives the row's top and
+ * `height`, so the menu opens below the row and, where it does not fit, flips above it instead of over it.
+ */
+export type MenuPoint = Pick<MouseEvent, "clientX" | "clientY"> & { height?: number };
 
 export type MenuPopupProps = Menu.Popup.Props &
   Pick<Menu.Positioner.Props, "align" | "alignOffset" | "side" | "sideOffset"> &
@@ -40,7 +44,9 @@ export type MenuPopupProps = Menu.Popup.Props &
     /**
      * Opens the menu at this viewport point instead of at its trigger, as a context menu opens at the pointer. The
      * menu's top start corner sits on the point; where the menu does not fit, it flips to the side with room and then
-     * shifts until it lies wholly inside the viewport. `side`, `align` and their offsets are ignored.
+     * shifts until it lies wholly inside the viewport. With a `height`, the point is the top of a box that tall, such as
+     * the row a keyboard opened the menu from: the menu opens below it or above it, never over it. `side`, `align` and
+     * their offsets are ignored.
      */
     point?: MenuPoint;
   };
