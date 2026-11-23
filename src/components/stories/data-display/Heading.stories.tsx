@@ -10,14 +10,14 @@ const meta: Meta<typeof Heading> = {
     docs: {
       description: {
         component:
-          "Heading renders `h1`–`h6` from the required `level` so the document outline stays correct, while `size` (sm, base, lg, xl) sets the visual size independently. Sizes default by level: 1 xl, 2 lg, 3 base, 4–6 sm. `truncate` keeps one line.",
+          "Heading renders `h1`–`h6` from the required `level` so the document outline stays correct, while `size` (sm, base, lg, xl, and the display sizes 2xl and 3xl for a page's own title) sets the visual size independently. Sizes default by level: 1 xl, 2 lg, 3 base, 4–6 sm. `truncate` keeps one line.",
       },
     },
   },
   args: { level: 2, children: "Upcoming" },
   argTypes: {
     level: { control: "select", options: [1, 2, 3, 4, 5, 6] },
-    size: { control: "select", options: ["sm", "base", "lg", "xl"] },
+    size: { control: "select", options: ["sm", "base", "lg", "xl", "2xl", "3xl"] },
   },
 };
 export default meta;
@@ -58,6 +58,29 @@ export const SizeIndependentOfLevel: Story = {
     const page = view.getComputedStyle(canvas.getByRole("heading", { name: "Default page", level: 1 }));
     const group = view.getComputedStyle(canvas.getByRole("heading", { name: "Large group", level: 3 }));
     await expect(group.fontSize).toBe(page.fontSize);
+  },
+};
+
+export const DisplaySizes: Story = {
+  render: () => (
+    <>
+      <Heading level={1} size="3xl">
+        Page title
+      </Heading>
+      <Heading level={1} size="2xl">
+        Smaller page title
+      </Heading>
+      <Heading level={1}>Default page</Heading>
+    </>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const view = canvasElement.ownerDocument.defaultView!;
+    const size = (name: string) =>
+      Number.parseFloat(view.getComputedStyle(canvas.getByRole("heading", { name, level: 1 })).fontSize);
+    // Display sizes sit above xl, largest first.
+    await expect(size("Page title")).toBeGreaterThan(size("Smaller page title"));
+    await expect(size("Smaller page title")).toBeGreaterThan(size("Default page"));
   },
 };
 

@@ -488,6 +488,12 @@ export { Text } from "./components/Text.js";
 export type { TextProps, TextSize, TextTone, TextWeight } from "./components/Text.js";
 export type { TextAlign } from "./typography/types.js";
 export { Heading } from "./components/Heading.js";
+export { Quote, quoteVariants } from "./components/Quote.js";
+export type { QuoteProps } from "./components/Quote.js";
+export { SkipLink } from "./components/SkipLink.js";
+export type { SkipLinkProps } from "./components/SkipLink.js";
+export { StatusDot, statusDotVariants } from "./components/StatusDot.js";
+export type { StatusDotProps } from "./components/StatusDot.js";
 export type { HeadingProps, HeadingLevel, HeadingSize } from "./components/Heading.js";
 export { WeatherSummary } from "./components/WeatherSummary.js";
 export type {

@@ -77,3 +77,43 @@ export const Narrow: Story = {
     await expect(note.getBoundingClientRect().height).toBeGreaterThanOrEqual(lineHeight * 2);
   },
 };
+
+const shortcuts = [
+  { action: "Open the command palette", keys: "⌘ K" },
+  { action: "Find a page", keys: "/" },
+  { action: "Show keyboard shortcuts", keys: "?" },
+];
+
+export const Horizontal: Story = {
+  args: { "aria-label": "Shortcuts" },
+  render: (args) => (
+    <div className="w-96">
+      <DescriptionList {...args} orientation="horizontal">
+        {shortcuts.map(({ action, keys }) => (
+          <DescriptionListItem key={action}>
+            <DescriptionTerm tone="default">{action}</DescriptionTerm>
+            <DescriptionDetails>{keys}</DescriptionDetails>
+          </DescriptionListItem>
+        ))}
+      </DescriptionList>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const list = canvas.getByLabelText("Shortcuts");
+    await expect(list).toHaveAttribute("data-orientation", "horizontal");
+    const listBox = list.getBoundingClientRect();
+    const details = canvas.getAllByRole("definition");
+    // Each term starts its row and its details end it, on the same line.
+    for (const [index, term] of canvas.getAllByRole("term").entries()) {
+      const termBox = term.getBoundingClientRect();
+      const detailBox = details[index]!.getBoundingClientRect();
+      await expect(termBox.left).toBe(listBox.left);
+      await expect(detailBox.right).toBe(listBox.right);
+      await expect(Math.abs(detailBox.top + detailBox.height / 2 - (termBox.top + termBox.height / 2))).toBeLessThan(2);
+    }
+    // A label that is the primary text takes the foreground colour, not the muted one.
+    const term = canvas.getByText("Find a page");
+    await expect(getComputedStyle(term).color).toBe(getComputedStyle(details[1]!).color);
+  },
+};

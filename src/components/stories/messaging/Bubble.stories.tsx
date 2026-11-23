@@ -376,6 +376,9 @@ async function assertTypesetDocument(canvasElement: HTMLElement): Promise<void> 
   await expect(within(doc).getByRole("checkbox", { name: "Review complete" })).toBeChecked();
   await userEvent.click(within(doc).getByRole("checkbox", { name: "Review complete" }));
   await expect(within(doc).getByRole("checkbox", { name: "Review complete" })).not.toBeChecked();
+  // Task items drop their bullet; a plain item in the same list keeps it.
+  await expect(getComputedStyle(within(doc).getByText("Review complete")).listStyleType).toBe("none");
+  await expect(getComputedStyle(within(doc).getByText("Owners: the reviewers")).listStyleType).toBe("disc");
   await expect(getComputedStyle(within(doc).getByRole("table", { name: "Review findings" })).display).toBe("table");
   await expect(getComputedStyle(within(doc).getByLabelText("Code sample")).direction).toBe("ltr");
 }

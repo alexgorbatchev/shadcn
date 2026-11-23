@@ -5,7 +5,7 @@ import type { Density, IDensityProps } from "../density/types.js";
 import { cn } from "../utils/cn.js";
 
 type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
-type HeadingSize = "sm" | "base" | "lg" | "xl";
+type HeadingSize = "sm" | "base" | "lg" | "xl" | "2xl" | "3xl";
 
 const HEADING_TAGS = { 1: "h1", 2: "h2", 3: "h3", 4: "h4", 5: "h5", 6: "h6" } as const;
 const DEFAULT_SIZES: Record<HeadingLevel, HeadingSize> = { 1: "xl", 2: "lg", 3: "base", 4: "sm", 5: "sm", 6: "sm" };
@@ -14,6 +14,9 @@ const SIZE_CLASSES: Record<HeadingSize, string> = {
   base: "text-base",
   lg: "text-lg",
   xl: "text-xl",
+  /** Display sizes for a page's own title. */
+  "2xl": "text-2xl tracking-tight",
+  "3xl": "text-3xl tracking-tight",
 };
 
 type HeadingState = { slot: "heading"; level: HeadingLevel; density?: Density };

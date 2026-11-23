@@ -272,6 +272,13 @@ export function TypesetDocumentExample(): ReactElement {
           Review complete
         </li>
       </ul>
+      <ul className="contains-task-list">
+        <li>Owners: the reviewers</li>
+        <li className="task-list-item">
+          <input type="checkbox" aria-label="Load tested" />
+          Load tested
+        </li>
+      </ul>
       <h5>Definitions</h5>
       <dl>
         <dt>Flow</dt>

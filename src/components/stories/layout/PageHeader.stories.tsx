@@ -82,3 +82,16 @@ export const NarrowWithLongAddress: Story = {
     await expect(canvas.getAllByRole("heading", { level: 1 })).toHaveLength(1);
   },
 };
+
+export const FocusableDisplayTitle: Story = {
+  args: { titleSize: "3xl", headingProps: { tabIndex: -1, id: "page-title" } },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const title = canvas.getByRole("heading", { name: "Projects", level: 1 });
+    // The app can move focus to the title, and a display size makes it the page's own title.
+    await expect(title).toHaveAttribute("id", "page-title");
+    title.focus();
+    await expect(title).toHaveFocus();
+    await expect(Number.parseFloat(getComputedStyle(title).fontSize)).toBeGreaterThan(24);
+  },
+};

@@ -1,4 +1,5 @@
 import type { IAnalyticsProps } from "../../analytics/types.js";
+import { StatusDot } from "../StatusDot.js";
 import { useAnalyticsCallback } from "../../hooks/useAnalyticsCallback.js";
 import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
@@ -165,18 +166,7 @@ interface ITreeItemDotProps {
  * `descriptionLabel` names it ("New round", "1 new page").
  */
 export function TreeItemDot({ count, className }: ITreeItemDotProps): ReactElement {
-  return (
-    <span
-      aria-hidden="true"
-      data-slot="tree-item-dot"
-      className={cn("inline-flex items-center gap-1 text-xs font-medium text-primary tabular-nums", className)}
-    >
-      <svg viewBox="0 0 8 8" className="size-2 shrink-0" focusable="false">
-        <circle cx="4" cy="4" r="4" fill="currentColor" />
-      </svg>
-      {count !== undefined && <span data-slot="tree-item-dot-count">{count}</span>}
-    </span>
-  );
+  return <StatusDot data-slot="tree-item-dot" count={count} className={className} />;
 }
 
 function isRowControl(event: MouseEvent<HTMLDivElement>): boolean {

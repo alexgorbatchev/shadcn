@@ -122,7 +122,7 @@ test("a rollup dot shows the count of new items beside it", async () => {
     </ThemeProvider>,
   );
   const dot = document.querySelector("[data-slot='tree-item-dot']");
-  expect(dot?.querySelector("[data-slot='tree-item-dot-count']")?.textContent).toBe("3");
+  expect(dot?.querySelector("[data-slot='status-dot-count']")?.textContent).toBe("3");
   expect(dot?.getAttribute("aria-hidden")).toBe("true");
 });
 

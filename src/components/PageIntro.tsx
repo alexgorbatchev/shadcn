@@ -1,6 +1,9 @@
-import type { ReactElement, ReactNode } from "react";
+import type { ComponentProps, ReactElement, ReactNode } from "react";
 import type { IDensityProps } from "../density/types.js";
+import { cn } from "../utils/cn.js";
 import { Card } from "./Card.js";
+import { Heading } from "./Heading.js";
+import type { HeadingSize } from "./Heading.js";
 
 type PageIntroHighlight = {
   title: string;
@@ -10,6 +13,10 @@ type PageIntroHighlight = {
 
 type PageIntroProps = IDensityProps & {
   title: string;
+  /** The title's visual size. Defaults to `2xl`; match the app's page titles with a display size such as `3xl`. */
+  titleSize?: HeadingSize;
+  /** Props for the title's `h1`, such as a `ref` and `tabIndex={-1}` so the app can move focus to it. */
+  headingProps?: Omit<ComponentProps<"h1">, "children">;
   /** One inviting sentence on what this page is for. */
   description: ReactNode;
   /** Context above the page title without introducing another heading. */
@@ -21,7 +28,17 @@ type PageIntroProps = IDensityProps & {
   highlights?: readonly PageIntroHighlight[];
 };
 
-function PageIntro({ title, description, eyebrow, icon, actions, highlights, density }: PageIntroProps): ReactElement {
+function PageIntro({
+  title,
+  titleSize = "2xl",
+  headingProps,
+  description,
+  eyebrow,
+  icon,
+  actions,
+  highlights,
+  density,
+}: PageIntroProps): ReactElement {
   return (
     <header data-density={density} data-slot="page-intro" data-scroll="none" className="@container/page-intro min-w-0">
       <Card variant="hero" className="gap-0 py-0">
@@ -45,7 +62,14 @@ function PageIntro({ title, description, eyebrow, icon, actions, highlights, den
               {eyebrow != null && (
                 <div className="mb-1 text-xs font-medium tracking-widest text-muted-foreground">{eyebrow}</div>
               )}
-              <h1 className="text-2xl font-semibold text-foreground">{title}</h1>
+              <Heading
+                level={1}
+                size={titleSize}
+                {...headingProps}
+                className={cn("outline-none", headingProps?.className)}
+              >
+                {title}
+              </Heading>
               <div className="mt-2 max-w-prose text-base text-pretty text-muted-foreground">{description}</div>
             </div>
           </div>

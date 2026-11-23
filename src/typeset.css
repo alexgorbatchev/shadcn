@@ -198,8 +198,11 @@
     }
 
     /* GFM task lists. */
-    &:where(ul.contains-task-list) {
+    &:where(li.task-list-item) {
       list-style-type: none;
+    }
+    /* A list of only task items needs no bullet column; a mixed list keeps it for its plain items. */
+    &:where(ul.contains-task-list:not(:has(> li:not(.task-list-item)))) {
       padding-inline-start: 0.25em;
     }
     &:where(li.task-list-item > input[type="checkbox"]) {

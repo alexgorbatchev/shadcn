@@ -106,3 +106,16 @@ export const Wide: Story = {
     await expect(first?.getBoundingClientRect().top).toEqual(second?.getBoundingClientRect().top);
   },
 };
+
+export const FocusableDisplayTitle: Story = {
+  args: { titleSize: "3xl", headingProps: { tabIndex: -1, id: "intro-title" } },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const title = canvas.getByRole("heading", { name: "Projects", level: 1 });
+    // The app can move focus to the title, and a display size makes it the page's own title.
+    await expect(title).toHaveAttribute("id", "intro-title");
+    title.focus();
+    await expect(title).toHaveFocus();
+    await expect(Number.parseFloat(getComputedStyle(title).fontSize)).toBeGreaterThan(24);
+  },
+};
