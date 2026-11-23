@@ -213,6 +213,7 @@ for (const width of [390, 1280]) {
 
 interface IOverlayExampleProps {
   narrowLayout: "sheet" | "drawer";
+  drawerTopInset?: string;
   sidebarPosition?: "start" | "end";
   onOpenChange?: (open: boolean) => void;
   finalFocus?: false;
@@ -220,6 +221,7 @@ interface IOverlayExampleProps {
 
 function OverlayExample({
   narrowLayout,
+  drawerTopInset,
   sidebarPosition = "start",
   onOpenChange,
   finalFocus,
@@ -239,6 +241,7 @@ function OverlayExample({
           narrowLayout={narrowLayout}
           sidebarOpen={isOpen}
           sidebarExpanded={isExpanded}
+          drawerTopInset={drawerTopInset}
           sidebarFinalFocus={finalFocus}
           onSidebarOpenChange={(open) => {
             onOpenChange?.(open);
@@ -345,6 +348,50 @@ test("drawer narrow layout opens at 85% of the viewport and at full height while
   await userEvent.keyboard("{Escape}");
   await expect.element(dialog).not.toBeInTheDocument();
   await expect.element(opener).toHaveFocus();
+});
+
+test("a drawer with a top inset starts that far below the viewport top, and still reaches full height", async () => {
+  await page.viewport(390, 844);
+  const screen = await render(<OverlayExample narrowLayout="drawer" sidebarPosition="end" drawerTopInset="3rem" />);
+  await screen.getByRole("button", { name: "Open panel" }).click();
+  const dialog = page.getByRole("dialog", { name: "Navigation" });
+  await expect.element(dialog).toBeVisible();
+  await expect.poll(() => Math.round(getBox(dialog).top)).toBe(48);
+  await expect.poll(() => Math.round(getBox(dialog).bottom)).toBe(844);
+  await dialog.getByRole("button", { name: "Full height" }).click();
+  await expect.poll(() => Math.round(getBox(dialog).height)).toBe(844);
+});
+
+test("a dark drawer's edge keeps 3:1 against the dimmed page", async () => {
+  await page.viewport(390, 844);
+  const screen = await render(<OverlayExample narrowLayout="drawer" sidebarPosition="end" />);
+  await screen.getByRole("button", { name: "Open panel" }).click();
+  const dialog = page.getByRole("dialog", { name: "Navigation" });
+  await expect.element(dialog).toBeVisible();
+  // The edge is the frame edge over the drawer's surface; the page behind is the backdrop over the page's surface.
+  const style = getComputedStyle(document.documentElement);
+  const mix = (top: string, bottom: string) => {
+    const [r1, g1, b1, a = 1] = top.match(/[\d.]+/g)?.map(Number) ?? [];
+    const [r2, g2, b2] = bottom.match(/[\d.]+/g)?.map(Number) ?? [];
+    return [r1, g1, b1].map((value, index) => (value ?? 0) * a + ([r2, g2, b2][index] ?? 0) * (1 - a));
+  };
+  const toRgb = (value: string) => {
+    const probe = document.createElement("div");
+    probe.style.color = value;
+    document.body.append(probe);
+    const color = getComputedStyle(probe).color;
+    probe.remove();
+    return color;
+  };
+  const luminance = (rgb: number[]) =>
+    rgb
+      .map((value) => value / 255)
+      .map((value) => (value <= 0.03928 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4))
+      .reduce((sum, value, index) => sum + value * ([0.2126, 0.7152, 0.0722][index] ?? 0), 0);
+  const edge = mix(toRgb(style.getPropertyValue("--frame-edge")), toRgb(style.getPropertyValue("--popover")));
+  const dimmed = mix(toRgb(style.getPropertyValue("--backdrop")), toRgb(style.getPropertyValue("--background")));
+  const [light, dark] = [luminance(edge), luminance(dimmed)].sort((left, right) => right - left);
+  expect(((light ?? 0) + 0.05) / ((dark ?? 0) + 0.05)).toBeGreaterThanOrEqual(3);
 });
 
 test("an overlay's final focus can leave focus where the consumer moved it", async () => {

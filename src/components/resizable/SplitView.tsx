@@ -63,6 +63,11 @@ interface ISplitViewProps {
    * image, stays in view above it.
    */
   drawerHeight?: "tall" | "half";
+  /**
+   * With the "drawer" narrow layout, a CSS length from the viewport's top where the drawer's top edge sits instead of
+   * `drawerHeight`, such as "3rem" to start it right under a phone's top bar, so no cut slice of the page shows above it.
+   */
+  drawerTopInset?: string;
   /** Called when a "sheet" or "drawer" narrow layout asks to open or close the sidebar, such as on Escape or a swipe. */
   onSidebarOpenChange?: (open: boolean) => void;
   /**
@@ -176,6 +181,7 @@ export function SplitView({
   narrowLayout = "stack",
   sidebarExpanded = false,
   drawerHeight = "tall",
+  drawerTopInset,
   onSidebarOpenChange,
   sidebarFinalFocus,
 }: ISplitViewProps): ReactElement {
@@ -362,8 +368,15 @@ export function SplitView({
             narrowLayout === "drawer" &&
               "data-[swipe-axis=y]:[--drawer-content-max-height:100dvh] data-[swipe-axis=y]:rounded-t-none",
             narrowLayout === "drawer" &&
-              (sidebarExpanded ? "h-dvh" : drawerHeight === "half" ? "h-[50dvh]" : "h-[85dvh]"),
+              (sidebarExpanded
+                ? "h-dvh"
+                : drawerTopInset
+                  ? "h-[calc(100dvh-var(--split-view-drawer-top))]"
+                  : drawerHeight === "half"
+                    ? "h-[50dvh]"
+                    : "h-[85dvh]"),
           )}
+          style={drawerTopInset ? { ["--split-view-drawer-top" as string]: drawerTopInset } : undefined}
         >
           {narrowLayout === "sheet" && (
             <div className="flex shrink-0 items-center justify-between gap-2 p-panel pb-0">
