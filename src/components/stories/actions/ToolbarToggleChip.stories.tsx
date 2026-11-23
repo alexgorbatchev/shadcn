@@ -127,3 +127,19 @@ export const DisabledWithReason: Story = {
     await expect(args.onPressedChange).not.toHaveBeenCalled();
   },
 };
+
+/** A pressed chip carries a check, so on and off differ by more than color; a mixed or unpressed one has none. */
+export const PressedCheck: Story = {
+  args: { pressed: false, detail: undefined },
+  play: async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+    const chip = canvas.getByRole("button", { name: "Dark" });
+    await expect(chip.querySelector("[data-slot='toolbar-toggle-chip-check']")).toBeNull();
+    await userEvent.click(chip);
+    await expect(chip).toHaveAttribute("aria-pressed", "true");
+    await expect(chip.querySelector("[data-slot='toolbar-toggle-chip-check']")).toBeInTheDocument();
+    await expect(
+      canvas.getByRole("button", { name: "Bright" }).querySelector("[data-slot='toolbar-toggle-chip-check']"),
+    ).toBeNull();
+  },
+};

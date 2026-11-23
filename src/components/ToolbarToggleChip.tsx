@@ -3,6 +3,7 @@ import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
 import type { IDensityProps } from "../density/types.js";
 import { useId, type KeyboardEvent, type MouseEvent, type ReactElement, type ReactNode } from "react";
 import { Toolbar as ToolbarPrimitive } from "@base-ui/react/toolbar";
+import { CheckIcon } from "lucide-react";
 import { cn } from "../utils/cn.js";
 import { buttonVariants } from "./Button.js";
 import { Kbd } from "./Kbd.js";
@@ -109,6 +110,10 @@ export function ToolbarToggleChip({
         if (!isDisabled) trackedChange(pressed !== true);
       }}
     >
+      {/* A check marks a pressed chip, so on reads apart from off and from a select beside it, not only by color. */}
+      {pressed === true && !swatch && (
+        <CheckIcon aria-hidden="true" data-slot="toolbar-toggle-chip-check" className="size-3.5 shrink-0" />
+      )}
       {swatch && (
         <span
           aria-hidden="true"
