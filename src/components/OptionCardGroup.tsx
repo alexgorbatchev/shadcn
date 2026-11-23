@@ -302,7 +302,13 @@ function OptionCard({
         data-folding={fold.isFoldable || undefined}
         aria-labelledby={recommended ? `${ids.label} ${ids.tag}` : ids.label}
         aria-describedby={getDescribedBy(ids, content)}
-        className={(state) => cn(CARD_CLASS, typeof className === "function" ? className(state) : className)}
+        className={(state) =>
+          cn(
+            CARD_CLASS,
+            "grid-cols-[minmax(2rem,max-content)_minmax(0,1fr)]",
+            typeof className === "function" ? className(state) : className,
+          )
+        }
         {...props}
       >
         <OptionCardContent ids={ids} fold={fold} {...content} />

@@ -35,3 +35,18 @@ test("forced colors keep a selected option card distinguishable from an unselect
   await settleTransitions(card.element());
   expect(await page.screenshot({ element: card, save: false })).not.toBe(unselectedImage);
 });
+
+test("radio markers leave room for the option label in touch density", async () => {
+  const screen = await render(
+    <DensityProvider density="touch">
+      <OptionCardGroup aria-label="Deployment strategy">
+        <OptionCard value="rolling" label="Rolling update" />
+      </OptionCardGroup>
+    </DensityProvider>,
+  );
+  const card = screen.getByRole("radio", { name: "Rolling update" }).element();
+  const marker = card.querySelector('[data-slot="option-card-marker"]');
+  const label = card.querySelector('[data-slot="option-card-label"]');
+  expect(marker?.firstElementChild?.scrollWidth).toBeLessThanOrEqual(marker?.clientWidth ?? 0);
+  expect(marker?.getBoundingClientRect().right).toBeLessThan(label?.getBoundingClientRect().left ?? 0);
+});
