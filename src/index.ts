@@ -551,3 +551,4 @@ export { LayoutGuard } from "./components/LayoutGuard.js";
 export type { ILayoutGuardProps } from "./components/LayoutGuard.js";
 export { collectLayoutViolations } from "./utils/collectLayoutViolations.js";
 export type { ILayoutViolation } from "./utils/collectLayoutViolations.js";
+export { SelectionAction } from "./components/SelectionAction.js";
