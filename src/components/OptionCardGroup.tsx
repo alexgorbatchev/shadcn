@@ -229,10 +229,11 @@ interface IFoldToggleProps {
 function FoldToggle({ fold, descriptionId }: IFoldToggleProps): ReactElement | null {
   if (!fold.isFoldable) return null;
   return (
+    // A bordered control, so More reads as one rather than as a word of the text it unfolds.
     <Button
       type="button"
-      variant="link"
-      size="sm"
+      variant="outline"
+      size="xs"
       data-slot="option-card-fold"
       aria-expanded={fold.isOpen}
       aria-controls={descriptionId}
@@ -251,7 +252,11 @@ function useOptionCardIds(): IOptionCardIds {
 
 type OptionCardProps = Omit<RadioPrimitive.Root.Props, "children"> & IDensityProps & IOptionCardContentProps;
 
-/** One option of an `OptionCardGroup`: a bordered card with a leading letter, a bold label and a muted description. */
+/**
+ * One option of an `OptionCardGroup`: a bordered card with a leading radio mark and letter, a bold label and a muted
+ * description. The radio mark shows the choice by shape as well as colour, and sets single choice apart from an
+ * `OptionCheckboxCard`'s checkbox.
+ */
 function OptionCard({
   label,
   description,
@@ -267,7 +272,27 @@ function OptionCard({
 }: OptionCardProps): ReactElement {
   const ids = useOptionCardIds();
   const fold = useFold(descriptionLines);
-  const content = { label, description, descriptionLines, recommended, recommendedLabel, reason, image, marker };
+  const radioMarker = (
+    <span className="flex items-start gap-1.5">
+      <span
+        data-slot="option-card-radio"
+        className="mt-0.5 flex size-4 shrink-0 items-center justify-center rounded-full border border-input group-data-checked/option-card:border-primary"
+      >
+        <span className="hidden size-2 rounded-full bg-primary group-data-checked/option-card:block forced-colors:bg-[Highlight]" />
+      </span>
+      {marker ?? <span className="before:content-[counter(option-card,lower-alpha)]" />}
+    </span>
+  );
+  const content = {
+    label,
+    description,
+    descriptionLines,
+    recommended,
+    recommendedLabel,
+    reason,
+    image,
+    marker: radioMarker,
+  };
   return (
     <div data-slot="option-card-item" className="relative min-w-0">
       <RadioPrimitive.Root

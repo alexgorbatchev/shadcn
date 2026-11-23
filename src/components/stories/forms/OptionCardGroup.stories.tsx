@@ -70,6 +70,12 @@ export const Default: Story = {
     await expect(getComputedStyle(blueGreen).outlineStyle).toBe("solid");
     await userEvent.keyboard("{ArrowUp}");
     await expect(rolling).toBeChecked();
+    // Each card leads with a radio mark beside its letter, so the choice shows by shape, not only by colour.
+    const marks = canvasElement.querySelectorAll<HTMLElement>("[data-slot=option-card-radio]");
+    await expect(marks).toHaveLength(3);
+    const dot = (mark: HTMLElement | undefined) => mark?.firstElementChild ?? null;
+    await expect(getComputedStyle(dot(marks[0]) ?? rolling).display).not.toBe("none");
+    await expect(getComputedStyle(dot(marks[1]) ?? rolling).display).toBe("none");
     await assertLayoutContained(canvasElement);
   },
 };
