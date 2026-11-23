@@ -350,3 +350,24 @@ export const InCard: Story = {
     );
   },
 };
+
+/** A chevron placed inline sits directly after the label, not at the row's trailing edge. */
+export const InlineChevron: Story = {
+  render: () => (
+    <Accordion className="w-[40rem]">
+      <AccordionItem value="badges">
+        <AccordionTrigger chevronPlacement="inline">Badge printing for the workshop</AccordionTrigger>
+        <AccordionContent>Their team name, printed on the front.</AccordionContent>
+      </AccordionItem>
+    </Accordion>
+  ),
+  play: async ({ canvasElement }) => {
+    const trigger = within(canvasElement).getByRole("button", { name: "Badge printing for the workshop" });
+    const icon = trigger.querySelector<SVGElement>("[data-slot=accordion-trigger-icon]");
+    const range = document.createRange();
+    range.selectNodeContents(trigger.firstChild ?? trigger);
+    const label = range.getBoundingClientRect();
+    await expect(icon).not.toBeNull();
+    await expect((icon?.getBoundingClientRect().left ?? 0) - label.right).toBeLessThan(16);
+  },
+};

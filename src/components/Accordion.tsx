@@ -40,17 +40,34 @@ function AccordionItem({ density, className, ...props }: AccordionItemProps): Re
   );
 }
 
-type AccordionTriggerProps = AccordionPrimitive.Trigger.Props & IDensityProps;
+type AccordionTriggerProps = AccordionPrimitive.Trigger.Props &
+  IDensityProps & {
+    /**
+     * Where the chevron sits: at the row's trailing edge (`end`, the default), or directly after the label (`inline`),
+     * so on a wide row it stays beside the words it expands instead of hundreds of pixels away.
+     */
+    chevronPlacement?: "end" | "inline";
+  };
 
-function AccordionTrigger({ density, className, children, ...props }: AccordionTriggerProps): ReactElement {
+function AccordionTrigger({
+  density,
+  className,
+  children,
+  chevronPlacement = "end",
+  ...props
+}: AccordionTriggerProps): ReactElement {
   return (
     <AccordionPrimitive.Header className="flex">
       <AccordionPrimitive.Trigger
         data-density={density}
         data-slot="accordion-trigger"
+        data-chevron-placement={chevronPlacement}
         className={(state) =>
           cn(
-            "group/accordion-trigger relative flex flex-1 items-start justify-between rounded-sm border border-transparent py-2.5 text-start text-sm font-medium transition-colors outline-none hover:underline focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring focus-visible:after:border-ring aria-disabled:pointer-events-none aria-disabled:opacity-50 **:data-[slot=accordion-trigger-icon]:ms-auto **:data-[slot=accordion-trigger-icon]:size-4 **:data-[slot=accordion-trigger-icon]:text-muted-foreground",
+            "group/accordion-trigger relative flex flex-1 items-start rounded-sm border border-transparent py-2.5 text-start text-sm font-medium transition-colors outline-none hover:underline focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring focus-visible:after:border-ring aria-disabled:pointer-events-none aria-disabled:opacity-50 **:data-[slot=accordion-trigger-icon]:size-4 **:data-[slot=accordion-trigger-icon]:text-muted-foreground",
+            chevronPlacement === "end"
+              ? "justify-between **:data-[slot=accordion-trigger-icon]:ms-auto"
+              : "justify-start gap-2 **:data-[slot=accordion-trigger-icon]:mt-0.5",
             typeof className === "function" ? className(state) : className,
           )
         }
