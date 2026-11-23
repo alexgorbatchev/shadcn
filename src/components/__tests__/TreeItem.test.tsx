@@ -109,6 +109,9 @@ test("a dimmed row keeps its marker at full opacity and an unread row's label is
   expect(end && getComputedStyle(end).opacity).toBe("1");
   const marker = getRow("Notes").querySelector("[data-slot='tree-item-marker']");
   expect(marker?.getAttribute("aria-hidden")).toBe("true");
+  // Nothing visible follows the marker, so no empty slot adds a gap after it and trailing markers share one right edge.
+  const afterMarker = marker?.nextElementSibling;
+  expect(afterMarker === null || afterMarker === undefined || afterMarker.hasAttribute("hidden")).toBe(true);
   expect(marker?.querySelector("svg circle")?.getAttribute("fill")).toBe("currentColor");
   const notesLabel = page.getByRole("treeitem", { name: "Notes" }).element().querySelector(".truncate");
   const planLabel = page.getByRole("treeitem", { name: "Plan" }).element().querySelector(".truncate");

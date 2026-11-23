@@ -410,9 +410,16 @@ export function TreeItem<T>({
                 {marker}
               </div>
             )}
-            {(hasDescription || actions) && (
+            {/* The spoken description sits outside the trailing slot, so a row with nothing visible after its marker or
+                tags adds no gap there and every row's trailing markers share one right edge. Hidden from the item's
+                content; `aria-describedby` still reads a hidden element it names. */}
+            {descriptionLabel && (
+              <span id={descriptionId} hidden>
+                {descriptionLabel}
+              </span>
+            )}
+            {((description !== undefined && description !== null) || actions) && (
               <div className={cn("flex shrink-0 items-center gap-1 text-xs tabular-nums", faded)}>
-                {/* Hidden from the item's content; `aria-describedby` still reads a hidden element it names. */}
                 {description !== undefined && description !== null && (
                   <span
                     aria-hidden="true"
@@ -420,11 +427,6 @@ export function TreeItem<T>({
                     data-slot="tree-item-description"
                   >
                     {description}
-                  </span>
-                )}
-                {descriptionLabel && (
-                  <span id={descriptionId} hidden>
-                    {descriptionLabel}
                   </span>
                 )}
                 {actions && (
