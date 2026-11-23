@@ -70,6 +70,9 @@ export const Default: Story = {
     await expect(getComputedStyle(blueGreen).outlineStyle).toBe("solid");
     await userEvent.keyboard("{ArrowUp}");
     await expect(rolling).toBeChecked();
+    // No letters: the radio mark alone leads each card, so nothing reads as numbering the author wrote.
+    for (const marker of canvasElement.querySelectorAll<HTMLElement>("[data-slot=option-card-marker]"))
+      await expect(marker.textContent).toBe("");
     // Each card leads with a radio mark beside its letter, so the choice shows by shape, not only by colour.
     const marks = canvasElement.querySelectorAll<HTMLElement>("[data-slot=option-card-radio]");
     await expect(marks).toHaveLength(3);

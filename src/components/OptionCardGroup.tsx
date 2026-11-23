@@ -14,7 +14,7 @@ import { Button } from "./Button.js";
 
 type OptionCardGroupProps = IAnalyticsProps & RadioGroupPrimitive.Props & IDensityProps;
 
-const GROUP_CLASS = "grid w-full gap-2 [counter-reset:option-card]";
+const GROUP_CLASS = "grid w-full gap-2";
 
 /**
  * A single-choice group of option cards. Each card is a radio: arrow keys move the selection between cards, Space
@@ -82,14 +82,17 @@ interface IOptionCardContentProps {
   reason?: ReactNode;
   /** A picture of the option shown above its label, such as a screenshot of a design choice. */
   image?: ReactNode;
-  /** Short identifier in the leading column; defaults to the card's letter in its group: a, b, c. */
+  /**
+   * An optional short identifier beside the card's radio mark or checkbox. Cards carry no letter by default: the mark
+   * leads the card, and readers took letters for numbering written by the author.
+   */
   marker?: ReactNode;
 }
 
 // A recommended card keeps the plain frame: only the checked card has a coloured frame, so a recommendation never
 // reads as the selection. Its Recommended tag says it.
 const CARD_CLASS =
-  "group/option-card grid w-full cursor-pointer grid-cols-[1.25rem_minmax(0,1fr)] items-start gap-x-2 rounded-md border border-input bg-card p-panel-sm text-start text-sm text-card-foreground transition-colors outline-none [counter-increment:option-card] hover:bg-muted/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring focus-visible:outline-solid data-checked:border-primary data-checked:ring-1 data-checked:ring-primary forced-colors:data-checked:border-[color:Highlight] aria-invalid:not-data-checked:border-destructive data-disabled:cursor-not-allowed data-disabled:opacity-50 data-disabled:hover:bg-card data-readonly:cursor-default data-folding:pb-10";
+  "group/option-card grid w-full cursor-pointer grid-cols-[1.25rem_minmax(0,1fr)] items-start gap-x-2 rounded-md border border-input bg-card p-panel-sm text-start text-sm text-card-foreground transition-colors outline-none hover:bg-muted/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring focus-visible:outline-solid data-checked:border-primary data-checked:ring-1 data-checked:ring-primary forced-colors:data-checked:border-[color:Highlight] aria-invalid:not-data-checked:border-destructive data-disabled:cursor-not-allowed data-disabled:opacity-50 data-disabled:hover:bg-card data-readonly:cursor-default data-folding:pb-10";
 
 interface IFold {
   ref: RefObject<HTMLSpanElement | null>;
@@ -177,7 +180,7 @@ function OptionCardContent({
         aria-hidden="true"
         className="font-mono leading-5 text-muted-foreground group-data-checked/option-card:text-primary forced-colors:group-data-checked/option-card:text-[color:Highlight]"
       >
-        {marker ?? <span className="before:content-[counter(option-card,lower-alpha)]" />}
+        {marker}
       </span>
       <span className="flex min-w-0 flex-col gap-1">
         {image !== undefined && (
@@ -282,7 +285,7 @@ function OptionCard({
       >
         <span className="hidden size-2 rounded-full bg-primary group-data-checked/option-card:block forced-colors:bg-[Highlight]" />
       </span>
-      {marker ?? <span className="before:content-[counter(option-card,lower-alpha)]" />}
+      {marker}
     </span>
   );
   const content = {
@@ -307,7 +310,7 @@ function OptionCard({
         className={(state) =>
           cn(
             CARD_CLASS,
-            "grid-cols-[minmax(2rem,max-content)_minmax(0,1fr)]",
+            "grid-cols-[max-content_minmax(0,1fr)]",
             typeof className === "function" ? className(state) : className,
           )
         }
