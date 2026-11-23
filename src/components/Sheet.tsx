@@ -99,6 +99,7 @@ function SheetContent({
         data-slot="sheet-content"
         data-scroll="none"
         data-side={side}
+        data-close-button={showCloseButton ? "" : undefined}
         data-sized={sheetWidth === undefined ? undefined : ""}
         style={
           sheetWidth === undefined
@@ -141,7 +142,11 @@ function SheetHeader({ density, className, ...props }: SheetHeaderProps): ReactE
     <div
       data-density={density}
       data-slot="sheet-header"
-      className={cn("flex flex-col gap-0.5 p-panel", className)}
+      // The header ends before the corner Close button, so a long title wraps instead of running under it.
+      className={cn(
+        "flex flex-col gap-0.5 p-panel in-data-close-button:pe-[calc(1.25rem+var(--spacing-control-sm))]",
+        className,
+      )}
       {...props}
     />
   );

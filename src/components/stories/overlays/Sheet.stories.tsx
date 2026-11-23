@@ -91,6 +91,34 @@ export const Top: Story = { ...Default, args: { side: "top" } };
 export const Bottom: Story = { ...Default, args: { side: "bottom" } };
 export const Compact: Story = { ...Default, args: { density: "compact", showCloseButton: false } };
 
+/** A long title wraps before the corner Close button instead of running under it. */
+export const LongTitle: Story = {
+  args: { side: "right", width: 640 },
+  render: (args) => (
+    <Sheet>
+      <SheetTrigger render={<Button variant="outline" />}>Open commit</SheetTrigger>
+      <SheetContent {...args}>
+        <SheetHeader>
+          <SheetTitle>
+            1 commit to main: feat(sheet): a side sheet takes a width and never grows past the viewport
+          </SheetTitle>
+          <SheetDescription>Pushed to the main branch.</SheetDescription>
+        </SheetHeader>
+      </SheetContent>
+    </Sheet>
+  ),
+  play: async ({ canvasElement }) => {
+    await userEvent.click(within(canvasElement).getByRole("button", { name: "Open commit" }));
+    const dialog = await within(canvasElement.ownerDocument.body).findByRole("dialog");
+    const title = within(dialog).getByRole("heading");
+    const close = within(dialog).getByRole("button", { name: "Close" });
+    await waitFor(() =>
+      expect(title.getBoundingClientRect().right).toBeLessThanOrEqual(close.getBoundingClientRect().left),
+    );
+  },
+};
+export const LongTitleCompact: Story = { ...LongTitle, args: { ...LongTitle.args, density: "compact" } };
+
 /** A wider side sheet for content such as code or data; it never grows past the viewport. */
 export const Wide: Story = {
   ...Default,
