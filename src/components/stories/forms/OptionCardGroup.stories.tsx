@@ -80,6 +80,17 @@ export const Default: Story = {
   },
 };
 
+/** An unchosen Recommended card keeps the plain frame: only the checked card is framed in colour. */
+export const RecommendedNotChosen: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const recommended = canvas.getByRole("radio", { name: "Blue-green Recommended" });
+    const plain = canvas.getByRole("radio", { name: "Rolling update" });
+    await expect(recommended).not.toBeChecked();
+    await expect(getComputedStyle(recommended).borderTopColor).toBe(getComputedStyle(plain).borderTopColor);
+  },
+};
+
 export const RecommendedOption: Story = {
   args: { defaultValue: "blue-green" },
   play: async ({ canvasElement }) => {

@@ -104,6 +104,9 @@ test("a dimmed row keeps its marker at full opacity and an unread row's label is
   // The row itself never fades, so nothing compounds the marker's opacity.
   expect(getComputedStyle(getRow("Notes")).opacity).toBe("1");
   expect(markerOpacity("Notes")).toBe("1");
+  // Tags at the row's end stay at full opacity too, so their muted text keeps 4.5:1.
+  const end = getRow("Notes").querySelector<HTMLElement>("[data-slot='tree-item-end']");
+  expect(end && getComputedStyle(end).opacity).toBe("1");
   const marker = getRow("Notes").querySelector("[data-slot='tree-item-marker']");
   expect(marker?.getAttribute("aria-hidden")).toBe("true");
   expect(marker?.querySelector("svg circle")?.getAttribute("fill")).toBe("currentColor");

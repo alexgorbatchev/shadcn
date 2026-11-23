@@ -54,7 +54,8 @@ type TreeItemProps<T> = useRender.ComponentProps<"div", TreeItemState> &
     isDropTarget?: boolean;
     /**
      * Fades a settled row, such as completed work, to 70% opacity; hover and keyboard focus restore full opacity. The
-     * `marker` stays at full opacity, so new activity on a settled row stands out without un-fading it.
+     * `marker` and the `endEnhancer`'s tags stay at full opacity, so new activity on a settled row stands out without
+     * un-fading it, and muted tag text keeps 4.5:1.
      */
     isDimmed?: boolean;
     /** Marks a row with activity its reader has not seen yet: the label turns bold. Pair it with a `marker`. */
@@ -391,9 +392,12 @@ export function TreeItem<T>({
             ) : (
               label
             )}
+            {/* The end slot keeps full opacity on a dimmed row: its tags and counts are already muted, and fading them
+                again would take their text below 4.5:1. */}
             {endEnhancer && (
               <div
-                className={cn("flex shrink-0 items-center gap-1 text-xs tabular-nums", faded)}
+                data-slot="tree-item-end"
+                className="flex shrink-0 items-center gap-1 text-xs tabular-nums"
                 onClick={(event) => event.stopPropagation()}
                 onDoubleClick={(event) => event.stopPropagation()}
                 onKeyDown={(event) => event.stopPropagation()}
