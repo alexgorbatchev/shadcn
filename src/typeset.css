@@ -33,11 +33,13 @@
 
   /*
    * Compact prose inside a dense control, such as an option card's description: the surrounding text size at every
-   * width (no larger phone step) and tighter spacing between blocks, so it reads as part of the control.
+   * width (no larger phone step), tighter spacing between blocks, and the control's own text colour, such as a muted
+   * description, so it reads as part of the control.
    */
   .typeset.typeset-compact:not(:where(.not-typeset, [data-not-typeset], .not-typeset *, [data-not-typeset] *)) {
     --typeset-flow: 0.5em;
     font-size: var(--typeset-size);
+    color: inherit;
   }
 
   .typeset *:not(:where(.not-typeset, [data-not-typeset], .not-typeset *, [data-not-typeset] *)) {

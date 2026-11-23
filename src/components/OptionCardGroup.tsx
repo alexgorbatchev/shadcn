@@ -213,7 +213,7 @@ function OptionCardContent({
           >
             {description !== undefined && <span className="block">{description}</span>}
             {reason !== undefined && (
-              <span data-slot="option-card-reason" className="flow-root text-card-foreground">
+              <span data-slot="option-card-reason" className="flow-root">
                 <span className="float-start me-1 font-semibold">Why:</span>
                 {reason}
               </span>

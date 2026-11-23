@@ -465,6 +465,10 @@ export const CompactProseDescription: Story = {
     const regularGap = gap(canvas.getByTestId("regular").querySelectorAll("p")[1]!);
     await expect(compactGap).toBeGreaterThan(0);
     await expect(compactGap).toBeLessThan(regularGap);
+    // Compact prose takes the card's muted description colour instead of the prose foreground.
+    const slot = compact.closest<HTMLElement>("[data-slot=option-card-description]")!;
+    await expect(getComputedStyle(compact).color).toBe(getComputedStyle(slot).color);
+    await expect(getComputedStyle(compact).color).not.toBe(getComputedStyle(canvas.getByText("Blue-green")).color);
   },
 };
 
@@ -507,5 +511,8 @@ export const FoldedProse: Story = {
     const why = within(card).getByText("Why:");
     const reasonText = within(card).getByText("Payment retries are where a slow rollback costs the most.");
     await expect(Math.abs(why.getBoundingClientRect().top - reasonText.getBoundingClientRect().top)).toBeLessThan(4);
+    // The reason reads in the description's muted colour, not the label's.
+    await expect(getComputedStyle(reasonText).color).toBe(getComputedStyle(description).color);
+    await expect(getComputedStyle(why).color).toBe(getComputedStyle(description).color);
   },
 };
