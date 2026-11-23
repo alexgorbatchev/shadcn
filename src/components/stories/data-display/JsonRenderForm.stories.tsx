@@ -256,6 +256,8 @@ export const ReadOnlyValues: Story = {
     await expect(canvas.queryByRole("radiogroup")).not.toBeInTheDocument();
     await expect(canvas.queryByRole("checkbox")).not.toBeInTheDocument();
     await expect(canvas.getByRole("group", { name: "Company name" })).toHaveTextContent("Northwind Studio");
+    // A read-only value asks for nothing, so no field carries a Required tag.
+    await expect(canvas.queryByText("Required")).not.toBeInTheDocument();
     await expect(canvas.getByRole("group", { name: "Notes" })).toHaveTextContent("No answer");
     await expect(canvas.getByRole("group", { name: "Plan" })).toHaveTextContent("Pro");
     await expect(canvas.getByRole("group", { name: "Frequency" })).toHaveTextContent("Weekly");

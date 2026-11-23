@@ -147,12 +147,16 @@ export interface IJsonFieldLabelProps {
   htmlFor?: string;
 }
 
-/** The field's "Required" and "Default" tags, in that order; nothing when neither applies. */
+/**
+ * The field's "Required" and "Default" tags, in that order; nothing when neither applies. "Required" asks for an
+ * answer, so a read-only value never carries it.
+ */
 export function JsonFieldTags({ field }: { field: IJsonField }): ReactElement | null {
-  if (!field.isRequired && !field.isDefault) return null;
+  const isRequiredShown = field.isRequired && field.mode !== "values";
+  if (!isRequiredShown && !field.isDefault) return null;
   return (
     <>
-      {field.isRequired && <Badge variant="outline">Required</Badge>}
+      {isRequiredShown && <Badge variant="outline">Required</Badge>}
       {field.isDefault && (
         <Badge variant="outline" data-slot="json-field-default">
           Default
@@ -164,7 +168,7 @@ export function JsonFieldTags({ field }: { field: IJsonField }): ReactElement | 
 
 /** The field's label followed by its "Required" and "Default" tags. */
 export function JsonFieldLabel({ field, id, htmlFor }: IJsonFieldLabelProps): ReactElement | null {
-  if (!field.label && !field.isRequired && !field.isDefault) return null;
+  if (!field.label && !(field.isRequired && field.mode !== "values") && !field.isDefault) return null;
   return (
     <div data-slot="json-field-label" className="flex flex-wrap items-center gap-2">
       {field.label && (
