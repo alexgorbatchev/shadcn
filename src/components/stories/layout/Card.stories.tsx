@@ -261,6 +261,43 @@ export const WithoutFooter: Story = {
   },
 };
 
+export const StretchedFooter: Story = {
+  render: (args) => (
+    <div className="grid grid-cols-2 gap-4">
+      <Card {...args} role="region" aria-label="Short card">
+        <CardHeader>
+          <CardTitle>Short</CardTitle>
+        </CardHeader>
+        <CardContent>One line.</CardContent>
+        <CardFooter>Short footer</CardFooter>
+      </Card>
+      <Card {...args} role="region" aria-label="Tall card">
+        <CardHeader>
+          <CardTitle>Tall</CardTitle>
+          <CardDescription>A description that adds height to this card.</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <p>First line.</p>
+          <p>Second line.</p>
+          <p>Third line.</p>
+        </CardContent>
+        <CardFooter>Tall footer</CardFooter>
+      </Card>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const shortCard = canvas.getByRole("region", { name: "Short card" });
+    const tallCard = canvas.getByRole("region", { name: "Tall card" });
+    const shortFooter = canvas.getByText("Short footer");
+    const tallFooter = canvas.getByText("Tall footer");
+    // Grid rows stretch the short card to the tall card's height; its footer stays on the bottom edge.
+    await expect(shortCard.getBoundingClientRect().height).toBeCloseTo(tallCard.getBoundingClientRect().height, 0);
+    await expect(shortFooter.getBoundingClientRect().bottom).toBeCloseTo(tallFooter.getBoundingClientRect().bottom, 0);
+    await expect(shortCard.getBoundingClientRect().bottom - shortFooter.getBoundingClientRect().bottom).toBeLessThan(2);
+  },
+};
+
 export const CustomSpacing: Story = {
   render: (args) => {
     const [spacing, setSpacing] = useState(16);

@@ -133,7 +133,7 @@ function CardFooter({ density, className, ...props }: CardFooterProps): ReactEle
       data-density={density}
       data-slot="card-footer"
       data-scroll="none"
-      className={cn("flex items-center rounded-b-md border-t bg-muted/50 p-(--card-spacing)", className)}
+      className={cn("mt-auto flex items-center rounded-b-md border-t bg-muted/50 p-(--card-spacing)", className)}
       {...props}
     />
   );
