@@ -13,7 +13,7 @@ const meta: Meta<typeof SelectionAction> = {
 export default meta;
 type Story = StoryObj<typeof SelectionAction>;
 
-function SelectionExample(): ReactElement {
+function SelectionExample({ width = "w-screen" }: { width?: string }): ReactElement {
   const block = useRef<HTMLElement>(null);
   const [isSelected, setSelected] = useState(false);
   useEffect(() => {
@@ -26,7 +26,7 @@ function SelectionExample(): ReactElement {
   }, []);
   return (
     <div className="h-[80vh] overflow-auto pt-24">
-      <section ref={block} className="relative h-[130vh] w-screen">
+      <section ref={block} className={`relative h-[130vh] ${width}`}>
         <p>Beginning of the content.</p>
         <p className="absolute top-[42vh]">Choose this text to reveal the action.</p>
       </section>
@@ -68,5 +68,29 @@ export const FollowsSelectionInTallBlock: Story = {
     await waitFor(checkPlacement);
     doc.getSelection()?.removeAllRanges();
     await waitFor(() => expect(canvasElement.querySelector('[data-slot="selection-action"]')).toBeNull());
+  },
+};
+
+export const StaysNearShortSelection: Story = {
+  render: () => <SelectionExample width="w-[min(65vw,28rem)]" />,
+  async play({ canvasElement }) {
+    const canvas = within(canvasElement);
+    const line = canvas.getByText("Choose this text to reveal the action.");
+    const doc = line.ownerDocument;
+    const range = doc.createRange();
+    const text = line.firstChild;
+    if (!text) throw new Error("Selection text not rendered");
+    range.setStart(text, 0);
+    range.setEnd(text, "Choose this".length);
+    doc.getSelection()?.addRange(range);
+    const button = await canvas.findByRole("button", { name: "Comment on selected text" });
+    await waitFor(() => {
+      const selected = range.getBoundingClientRect();
+      const rect = button.getBoundingClientRect();
+      expect(rect.left - selected.right).toBeLessThanOrEqual(12);
+      expect(rect.top - selected.bottom).toBeGreaterThanOrEqual(0);
+      expect(rect.top - selected.bottom).toBeLessThan(12);
+    });
+    doc.getSelection()?.removeAllRanges();
   },
 };

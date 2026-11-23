@@ -72,6 +72,7 @@ export function SelectionAction({
       const belowBlock = block.bottom + GAP;
       const aboveBlock = block.top - GAP - height;
       const besideBlock = block.right + GAP;
+      const sideGap = besideBlock - last.right;
       const nearAbove = first.top - GAP - height;
       const nearBelow = last.bottom + GAP;
 
@@ -79,7 +80,7 @@ export function SelectionAction({
       let y = nearBelow;
       if (belowBlock >= nearBelow && belowBlock <= nearBelow + height && belowBlock + height <= maxY) {
         y = belowBlock;
-      } else if (block.width > 0 && besideBlock >= last.right + GAP && besideBlock + width <= maxX) {
+      } else if (block.width > 0 && sideGap >= GAP && sideGap <= height && besideBlock + width <= maxX) {
         x = besideBlock;
         y = last.top + (last.height - height) / 2;
       } else if (aboveBlock >= minY && aboveBlock <= nearAbove && aboveBlock >= nearAbove - height) {
