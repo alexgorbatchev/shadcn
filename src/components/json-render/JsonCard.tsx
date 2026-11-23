@@ -21,7 +21,12 @@ export const JsonCard = ({ props, children }: BaseComponentProps<JsonProps<"Card
     <Card className={cn(maxWidthClass, centeredClass, props.className)}>
       {(props.title || props.description) && (
         <CardHeader>
-          {props.title && <CardTitle>{props.title}</CardTitle>}
+          {/* A card in a rendered document heads its content: a subheading, exposed as a heading. */}
+          {props.title && (
+            <CardTitle size="lg" role="heading" aria-level={2}>
+              {props.title}
+            </CardTitle>
+          )}
           {props.description && <CardDescription>{props.description}</CardDescription>}
         </CardHeader>
       )}

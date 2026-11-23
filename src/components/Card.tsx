@@ -59,14 +59,27 @@ function CardHeader({ density, className, ...props }: CardHeaderProps): ReactEle
   );
 }
 
-type CardTitleProps = ComponentProps<"div"> & IDensityProps;
+type CardTitleProps = ComponentProps<"div"> &
+  IDensityProps & {
+    /**
+     * `default` titles an app's own card. `lg` is the subheading step, larger and bolder than body text and smaller than
+     * a page title, for cards in rendered documents whose title heads the content under it.
+     */
+    size?: "default" | "lg";
+  };
 
-function CardTitle({ density, className, ...props }: CardTitleProps): ReactElement {
+function CardTitle({ density, size = "default", className, ...props }: CardTitleProps): ReactElement {
   return (
     <div
       data-density={density}
       data-slot="card-title"
-      className={cn("text-base leading-snug font-medium group-data-[size=sm]/card:text-sm", className)}
+      data-size={size}
+      className={cn(
+        size === "lg"
+          ? "text-lg leading-snug font-semibold"
+          : "text-base leading-snug font-medium group-data-[size=sm]/card:text-sm",
+        className,
+      )}
       {...props}
     />
   );

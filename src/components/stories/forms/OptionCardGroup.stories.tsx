@@ -5,7 +5,7 @@ import { OptionCard, OptionCardGroup, OptionCheckboxCard, OptionCheckboxGroup } 
 import { fixture_attachmentImage } from "../fixtures";
 import { Field, FieldError, FieldLegend, FieldSet } from "../../Field";
 import { Button } from "../../Button";
-import { expect, fn, waitFor, within } from "storybook/test";
+import { expect, fn, userEvent, waitFor, within } from "storybook/test";
 import { assertLayoutContained } from "../../../../.storybook/assertLayoutContained";
 
 type StrategyOptionsProps = Pick<ComponentProps<typeof OptionCard>, "disabled">;
@@ -445,5 +445,47 @@ export const CompactProseDescription: Story = {
     const regularGap = gap(canvas.getByTestId("regular").querySelectorAll("p")[1]!);
     await expect(compactGap).toBeGreaterThan(0);
     await expect(compactGap).toBeLessThan(regularGap);
+  },
+};
+
+export const FoldedProse: Story = {
+  render: (args) => (
+    <div className="w-80">
+      <OptionCardGroup aria-label="Rollout" {...args}>
+        <OptionCard
+          value="blue-green"
+          label="Blue-green"
+          descriptionLines={3}
+          description={
+            <span className="typeset typeset-compact block" data-testid="prose">
+              <p>{LONG_TRADE_OFF}</p>
+            </span>
+          }
+          recommended
+          reason={
+            <span className="typeset typeset-compact block">
+              <p>Payment retries are where a slow rollback costs the most.</p>
+            </span>
+          }
+        />
+      </OptionCardGroup>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const card = canvas.getByRole("radio", { name: "Blue-green Recommended" });
+    const description = card.querySelector<HTMLElement>("[data-slot=option-card-description]")!;
+    const prose = canvas.getByTestId("prose").querySelector("p")!;
+    const line = Number.parseFloat(getComputedStyle(prose).lineHeight);
+    // Folded to whole lines of the prose it holds, never through the middle of one.
+    await waitFor(() => expect(description.getBoundingClientRect().height).toBeCloseTo(3 * line, 0));
+    // More sits inside the card's border.
+    const more = await canvas.findByRole("button", { name: "More" });
+    await expect(more.getBoundingClientRect().bottom).toBeLessThanOrEqual(card.getBoundingClientRect().bottom);
+    await userEvent.click(more);
+    // The reason's first line runs beside its "Why:" label.
+    const why = within(card).getByText("Why:");
+    const reasonText = within(card).getByText("Payment retries are where a slow rollback costs the most.");
+    await expect(Math.abs(why.getBoundingClientRect().top - reasonText.getBoundingClientRect().top)).toBeLessThan(4);
   },
 };

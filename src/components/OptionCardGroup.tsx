@@ -91,6 +91,8 @@ const CARD_CLASS =
 
 interface IFold {
   ref: RefObject<HTMLSpanElement | null>;
+  /** The folded height in pixels: whole lines of the description's own text. */
+  height?: number;
   /** The description is taller than its fold, or open, so the More or Less button shows. */
   isFoldable: boolean;
   isOpen: boolean;
@@ -102,10 +104,14 @@ function useFold(lines: number | undefined): IFold {
   const ref = useRef<HTMLSpanElement>(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [height, setHeight] = useState<number>();
   useLayoutEffect(() => {
     const element = ref.current;
     if (!element || lines === undefined || isOpen) return;
-    const measure = () => setIsOverflowing(element.scrollHeight > element.clientHeight + 1);
+    const measure = () => {
+      setHeight(lines * getLineHeight(element));
+      setIsOverflowing(element.scrollHeight > element.clientHeight + 1);
+    };
     measure();
     const observer = new ResizeObserver(measure);
     observer.observe(element);
@@ -113,10 +119,25 @@ function useFold(lines: number | undefined): IFold {
   }, [lines, isOpen]);
   return {
     ref,
+    height,
     isFoldable: lines !== undefined && (isOverflowing || isOpen),
     isOpen,
     toggle: () => setIsOpen((open) => !open),
   };
+}
+
+/**
+ * The line height of the first line of text inside `element`. Prose nested in a description, such as rendered
+ * Markdown, can set its own size and leading, so folding by the card's line height would cut through a line.
+ */
+function getLineHeight(element: HTMLElement): number {
+  const walker = element.ownerDocument.createTreeWalker(element, NodeFilter.SHOW_TEXT, (node) =>
+    node.textContent?.trim() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_SKIP,
+  );
+  const text = walker.nextNode()?.parentElement ?? element;
+  const style = getComputedStyle(text);
+  const lineHeight = Number.parseFloat(style.lineHeight);
+  return Number.isFinite(lineHeight) ? lineHeight : Number.parseFloat(style.fontSize) * 1.2;
 }
 
 interface IOptionCardIds {
@@ -179,12 +200,17 @@ function OptionCardContent({
             data-slot="option-card-description"
             data-folded={isFolded || undefined}
             className="flex flex-col gap-1 text-muted-foreground wrap-break-word data-folded:overflow-hidden"
-            style={isFolded ? { maxHeight: `calc(${descriptionLines} * 1lh)` } : undefined}
+            style={
+              isFolded
+                ? { maxHeight: fold.height === undefined ? `calc(${descriptionLines} * 1lh)` : fold.height }
+                : undefined
+            }
           >
             {description !== undefined && <span className="block">{description}</span>}
             {reason !== undefined && (
-              <span data-slot="option-card-reason" className="block text-card-foreground">
-                <span className="font-semibold">Why:</span> {reason}
+              <span data-slot="option-card-reason" className="flow-root text-card-foreground">
+                <span className="float-start me-1 font-semibold">Why:</span>
+                {reason}
               </span>
             )}
           </span>

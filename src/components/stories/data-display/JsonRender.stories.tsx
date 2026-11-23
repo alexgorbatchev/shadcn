@@ -229,6 +229,13 @@ export const Display: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole("heading", { name: "Measurements" })).toBeVisible();
+    // A card's title heads its content: a subheading, larger and bolder than the text under it.
+    const title = canvas.getByRole("heading", { level: 2, name: "Archive" });
+    const body = canvas.getByText("Rendered from JSON");
+    await expect(Number.parseFloat(getComputedStyle(title).fontSize)).toBeGreaterThan(
+      Number.parseFloat(getComputedStyle(body).fontSize) + 2,
+    );
+    await expect(Number(getComputedStyle(title).fontWeight)).toBeGreaterThanOrEqual(600);
     await expect(canvas.getByRole("table")).toHaveTextContent("Monday80");
     await expect(canvas.getByRole("alert")).toHaveTextContent("SyncedAll records imported");
     await expect(canvas.getByRole("link", { name: "Read documentation" })).toHaveAttribute("href", "#docs");
