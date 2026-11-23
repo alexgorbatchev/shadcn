@@ -1,7 +1,8 @@
 import { useId, useState } from "react";
 import type { ComponentProps, ReactElement } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
-import { OptionCard, OptionCardGroup } from "../../OptionCardGroup";
+import { OptionCard, OptionCardGroup, OptionCheckboxCard, OptionCheckboxGroup } from "../../OptionCardGroup";
+import { fixture_attachmentImage } from "../fixtures";
 import { Field, FieldError, FieldLegend, FieldSet } from "../../Field";
 import { Button } from "../../Button";
 import { expect, fn, waitFor, within } from "storybook/test";
@@ -312,5 +313,97 @@ export const NarrowWidth: Story = {
     const canvas = within(canvasElement);
     await expect(canvas.getByRole("radio", { name: "Canary-release-to-one-percent-of-traffic-first" })).toBeVisible();
     await assertLayoutContained(canvasElement);
+  },
+};
+
+const LONG_TRADE_OFF =
+  "Starts a full copy of the service beside the running one and switches traffic over at once. Rollback is instant because the old copy keeps running until the switch is confirmed. It needs twice the capacity during the release, which matters on the database tier, where a second copy also doubles connection pool usage and replication lag for the length of the cut-over.";
+
+export const FoldedDescription: Story = {
+  render: (args) => (
+    <div className="w-96">
+      <OptionCardGroup aria-label="Deployment strategy" {...args}>
+        <OptionCard value="blue-green" label="Blue-green" description={LONG_TRADE_OFF} descriptionLines={3} />
+        <OptionCard value="recreate" label="Recreate" description="Stops everything first." descriptionLines={3} />
+      </OptionCardGroup>
+    </div>
+  ),
+  play: async ({ canvasElement, userEvent, args }) => {
+    const canvas = within(canvasElement);
+    // Only the description longer than three lines gets a More button, and pressing it changes no choice.
+    const more = await canvas.findByRole("button", { name: "More" });
+    await expect(canvas.getAllByRole("button", { name: "More" })).toHaveLength(1);
+    const card = canvas.getByRole("radio", { name: "Blue-green" });
+    const folded = card.getBoundingClientRect().height;
+    await userEvent.click(more);
+    await expect(more).toHaveAttribute("aria-expanded", "true");
+    await expect(more).toHaveTextContent("Less");
+    await waitFor(() => expect(card.getBoundingClientRect().height).toBeGreaterThan(folded));
+    await expect(card).not.toBeChecked();
+    await expect(args.onValueChange).not.toHaveBeenCalled();
+  },
+};
+
+export const RecommendedWithReasonAndImage: Story = {
+  render: (args) => (
+    <div className="w-96">
+      <OptionCardGroup aria-label="Hero layout" {...args}>
+        <OptionCard
+          value="split"
+          label="Split hero"
+          image={<img src={fixture_attachmentImage} alt="Split hero layout" className="block w-full" />}
+          description="Text on the left, product shot on the right."
+          recommended
+          reason="It keeps the call to action above the fold at every width."
+        />
+        <OptionCard value="full" label="Full-bleed hero" description="One large image behind the headline." />
+      </OptionCardGroup>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const card = canvas.getByRole("radio", { name: "Split hero Recommended" });
+    // The reason reads as part of the card's description, after the trade-off, and the image sits above the label.
+    await expect(card).toHaveAccessibleDescription(
+      "Text on the left, product shot on the right. Why: It keeps the call to action above the fold at every width.",
+    );
+    const image = canvas.getByRole("img", { name: "Split hero layout" });
+    await expect(image.getBoundingClientRect().bottom).toBeLessThanOrEqual(
+      canvas.getByText("Split hero").getBoundingClientRect().top,
+    );
+  },
+};
+
+export const MultipleChoice: Story = {
+  render: () => {
+    function Example(): ReactElement {
+      const [value, setValue] = useState<string[]>([]);
+      return (
+        <div className="w-96">
+          <OptionCheckboxGroup aria-label="Projects" value={value} onValueChange={setValue}>
+            <OptionCheckboxCard value="web" label="Web" description="The customer site." />
+            <OptionCheckboxCard value="api" label="API" description="Public endpoints." recommended />
+            <OptionCheckboxCard value="docs" label="Docs" />
+          </OptionCheckboxGroup>
+          <output aria-label="Chosen projects">{value.join(",")}</output>
+        </div>
+      );
+    }
+    return <Example />;
+  },
+  play: async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+    const web = canvas.getByRole("checkbox", { name: "Web" });
+    const docs = canvas.getByRole("checkbox", { name: "Docs" });
+    await userEvent.click(web);
+    await userEvent.click(docs);
+    await expect(web).toBeChecked();
+    await expect(docs).toBeChecked();
+    await expect(canvas.getByLabelText("Chosen projects")).toHaveTextContent("web,docs");
+    await userEvent.click(web);
+    await expect(web).not.toBeChecked();
+    await expect(canvas.getByLabelText("Chosen projects")).toHaveTextContent("docs");
+    // Choose-any cards show a checkbox in the leading column instead of a letter.
+    await expect(docs.querySelector("[data-slot=option-checkbox-indicator]")).not.toBeNull();
   },
 };

@@ -86,8 +86,13 @@ export { Textarea } from "./components/Textarea.js";
 export { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "./components/Tooltip.js";
 export { Label } from "./components/Label.js";
 export { RadioGroup, RadioGroupItem } from "./components/RadioGroup.js";
-export { OptionCardGroup, OptionCard } from "./components/OptionCardGroup.js";
-export type { OptionCardGroupProps, OptionCardProps } from "./components/OptionCardGroup.js";
+export { OptionCardGroup, OptionCard, OptionCheckboxGroup, OptionCheckboxCard } from "./components/OptionCardGroup.js";
+export type {
+  OptionCardGroupProps,
+  OptionCardProps,
+  OptionCheckboxGroupProps,
+  OptionCheckboxCardProps,
+} from "./components/OptionCardGroup.js";
 export {
   Card,
   CardHeader,
@@ -489,6 +494,8 @@ export type { TextProps, TextSize, TextTone, TextWeight } from "./components/Tex
 export type { TextAlign } from "./typography/types.js";
 export { Heading } from "./components/Heading.js";
 export { Quote, quoteVariants } from "./components/Quote.js";
+export { ReadMore } from "./components/ReadMore.js";
+export type { ReadMoreProps } from "./components/ReadMore.js";
 export type { QuoteProps } from "./components/Quote.js";
 export { SkipLink } from "./components/SkipLink.js";
 export type { SkipLinkProps } from "./components/SkipLink.js";
