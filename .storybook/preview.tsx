@@ -41,6 +41,7 @@ const preview: Preview = {
         items: [
           { value: "compact", title: "Compact" },
           { value: "comfortable", title: "Comfortable" },
+          { value: "touch", title: "Touch" },
         ],
       },
     },
@@ -61,7 +62,11 @@ const preview: Preview = {
       <PreviewFrame
         preset={context.globals.preset === "shadcn" ? "shadcn" : "devhost"}
         theme={context.globals.theme === "light" ? "light" : context.globals.theme === "system" ? "system" : "dark"}
-        density={context.globals.density === "compact" ? "compact" : "comfortable"}
+        density={
+          context.globals.density === "compact" || context.globals.density === "touch"
+            ? context.globals.density
+            : "comfortable"
+        }
       >
         <Story />
       </PreviewFrame>
