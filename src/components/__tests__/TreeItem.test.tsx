@@ -279,27 +279,30 @@ function TonedTree(): ReactElement {
   );
 }
 
-test("a warning-toned row is tinted and colours its start icon; other rows are untouched", async () => {
+test("a warning-toned row has a leading-edge bar and a coloured start icon but no fill; other rows are untouched", async () => {
   const screen = await render(<TonedTree />);
   const live = screen.getByRole("treeitem", { name: "Live" }).element();
   const quiet = screen.getByRole("treeitem", { name: "Quiet" }).element();
   await expect.element(page.getByRole("treeitem", { name: "Live" })).toBeVisible();
-  expect(getComputedStyle(live).backgroundColor).not.toBe(getComputedStyle(quiet).backgroundColor);
+  expect(getComputedStyle(live).backgroundColor).toBe(getComputedStyle(quiet).backgroundColor);
+  const bar = getComputedStyle(live, "::before");
+  expect(bar.width).toBe("2px");
+  expect(bar.backgroundColor).not.toBe("rgba(0, 0, 0, 0)");
+  expect(getComputedStyle(quiet, "::before").content).toBe("none");
   const icon = screen.getByTestId("live-icon").element().parentElement;
   expect(icon).not.toBeNull();
   expect(getComputedStyle(icon as Element).color).not.toBe(getComputedStyle(quiet).color);
 });
 
-test("a selected warning-toned row keeps the selection background and adds a warning ring", async () => {
+test("a selected warning-toned row keeps the selection background and its bar", async () => {
   const screen = await render(<TonedTree />);
   const live = screen.getByRole("treeitem", { name: "Live" });
   const quiet = screen.getByRole("treeitem", { name: "Quiet" });
   await quiet.click();
   await expect.element(quiet).toHaveAttribute("aria-selected", "true");
   const selectedBackground = getComputedStyle(quiet.element()).backgroundColor;
-  const quietShadow = getComputedStyle(quiet.element()).boxShadow;
   await live.click();
   await expect.element(live).toHaveAttribute("aria-selected", "true");
   expect(getComputedStyle(live.element()).backgroundColor).toBe(selectedBackground);
-  expect(getComputedStyle(live.element()).boxShadow).not.toBe(quietShadow);
+  expect(getComputedStyle(live.element(), "::before").width).toBe("2px");
 });

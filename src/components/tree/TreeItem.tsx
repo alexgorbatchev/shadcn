@@ -41,10 +41,10 @@ type TreeItemProps<T> = useRender.ComponentProps<"div", TreeItemState> &
      */
     hasIcon?: boolean;
     /**
-     * Calls attention to the row with the `warning` tone: a light tint and a warning-coloured start icon, such as a
-     * lightning bolt for something live. A selected row keeps the selection background and adds a warning ring instead.
-     * The tint stays light enough for coloured markers and muted text on the row to keep 4.5:1. Pair it with words in
-     * `descriptionLabel`, so the meaning never rests on colour.
+     * Calls attention to the row with the `warning` tone: a 2 px warning bar on its leading edge and a warning-coloured
+     * start icon, such as a lightning bolt for something live. The row takes no fill, so fills keep meaning selection, and
+     * a selected row keeps the selection background with the bar. Pair it with words in `descriptionLabel`, so the meaning
+     * never rests on colour.
      */
     tone?: "default" | "warning";
     endEnhancer?: ReactNode;
@@ -350,9 +350,7 @@ export function TreeItem<T>({
           "relative flex min-h-control min-w-0 cursor-default items-center gap-2 rounded-sm py-1 pr-2 text-sm outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring",
           (isSelected || isDropTarget || isInsideTarget) && "bg-accent text-accent-foreground",
           tone === "warning" &&
-            (isSelected || isDropTarget || isInsideTarget
-              ? "ring-1 ring-warning ring-inset"
-              : "bg-warning/8 hover:bg-warning/10"),
+            "before:pointer-events-none before:absolute before:inset-y-1 before:start-0 before:w-0.5 before:rounded-full before:bg-warning",
           isDimmed && "group/tree-item",
         ),
         children: (
