@@ -67,6 +67,7 @@ export const Comfortable: Story = {
   },
 };
 export const Compact: Story = { ...Comfortable, args: { density: "compact" } };
+export const Desktop: Story = { ...Comfortable, args: { density: "desktop" } };
 export const Touch: Story = { ...Comfortable, args: { density: "touch" } };
 export const DefaultDensity: Story = { ...Comfortable, args: { density: undefined } };
 export const Mixed: Story = {

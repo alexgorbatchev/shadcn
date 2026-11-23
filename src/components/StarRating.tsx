@@ -32,9 +32,9 @@ interface IStarRatingProps extends IDensityProps, IAnalyticsProps {
   onValueChange: (value: number) => void;
 }
 
-const ITEM_SIZES = { comfortable: "size-5", compact: "size-4", touch: "size-control" } as const;
-const STAR_SIZES = { comfortable: "size-3.5", compact: "size-3", touch: "size-5" } as const;
-const CLEAR_SIZES = { comfortable: "size-3", compact: "size-2.5", touch: "size-4" } as const;
+const ITEM_SIZES = { comfortable: "size-5", compact: "size-4", desktop: "size-6", touch: "size-control" } as const;
+const STAR_SIZES = { comfortable: "size-3.5", compact: "size-3", desktop: "size-4", touch: "size-5" } as const;
+const CLEAR_SIZES = { comfortable: "size-3", compact: "size-2.5", desktop: "size-3.5", touch: "size-4" } as const;
 
 /** Five stars and Unrated as one radio group; compact density draws it to fit a single-line row. */
 export function StarRating({

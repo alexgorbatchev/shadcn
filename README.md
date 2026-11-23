@@ -194,17 +194,19 @@ An independent production Vite consumer installed from the archive verifies RTL 
 
 # Configuration
 
-| Option                          | Type                                    | Default                         | Description                                                              |
-| :------------------------------ | :-------------------------------------- | :------------------------------ | :----------------------------------------------------------------------- |
-| `ThemeProvider.defaultTheme`    | `"light" \| "dark" \| "system"`         | `"system"`                      | Initial preference when storage has no saved value.                      |
-| `ThemeProvider.storageKey`      | `string`                                | `"shadcn-alexgorbatchev-theme"` | Local storage key for the preference.                                    |
-| `ThemeProvider.forcedTheme`     | `"light" \| "dark"`                     | unset                           | Overrides the displayed palette without changing the saved preference.   |
-| `ThemeProvider.preset`          | `"devhost" \| "shadcn"`                 | `"devhost"`                     | Document-wide design preset, independent of color mode and density.      |
-| `DensityProvider.density`       | `"compact" \| "comfortable" \| "touch"` | `"comfortable"`                 | Density for descendants and their portals.                               |
-| `DensityProvider.touchOnMobile` | `boolean`                               | `false`                         | Selects touch density below 48rem or when the primary pointer is coarse. |
-| Component `density`             | `"compact" \| "comfortable" \| "touch"` | inherited                       | Local override on styled components that expose the prop.                |
+| Option                          | Type                                                 | Default                         | Description                                                              |
+| :------------------------------ | :--------------------------------------------------- | :------------------------------ | :----------------------------------------------------------------------- |
+| `ThemeProvider.defaultTheme`    | `"light" \| "dark" \| "system"`                      | `"system"`                      | Initial preference when storage has no saved value.                      |
+| `ThemeProvider.storageKey`      | `string`                                             | `"shadcn-alexgorbatchev-theme"` | Local storage key for the preference.                                    |
+| `ThemeProvider.forcedTheme`     | `"light" \| "dark"`                                  | unset                           | Overrides the displayed palette without changing the saved preference.   |
+| `ThemeProvider.preset`          | `"devhost" \| "shadcn"`                              | `"devhost"`                     | Document-wide design preset, independent of color mode and density.      |
+| `DensityProvider.density`       | `"compact" \| "comfortable" \| "desktop" \| "touch"` | `"comfortable"`                 | Density for descendants and their portals.                               |
+| `DensityProvider.touchOnMobile` | `boolean`                                            | `false`                         | Selects touch density below 48rem or when the primary pointer is coarse. |
+| Component `density`             | `"compact" \| "comfortable" \| "desktop" \| "touch"` | inherited                       | Local override on styled components that expose the prop.                |
 
 Use `<DensityProvider touchOnMobile>` to select touch density on phones while using comfortable density on wider screens with a fine pointer. Touch uses 16px input text and a 44px minimum height for menu and select rows.
+
+Use `<DensityProvider density="desktop" touchOnMobile>` for 17px base text, 15px control labels, and 34px standard controls on wider screens with a fine pointer.
 
 `useTheme()` returns `theme`, `resolvedTheme`, `setTheme`, and `preset`. Call `setTheme("light")`, `setTheme("dark")`, or `setTheme("system")` from a component inside the provider.
 

@@ -346,6 +346,25 @@
     --ag-item-min-h: 0px;
   }
 
+  [data-density="desktop"] {
+    --ag-text-xs: 12px;
+    --ag-control-text: 15px;
+    --ag-text: 17px;
+    --ag-heading: 20px;
+    --ag-leading: 1.45;
+    --ag-cell-leading: 1.4;
+    --ag-control-h: 34px;
+    --ag-control-x: 12px;
+    --ag-control-gap: 6px;
+    --ag-tag-h: 20px;
+    --ag-tag-x: 6px;
+    --ag-panel-padding: 12px;
+    --ag-panel-padding-sm: 8px;
+    --ag-field-gap: 16px;
+    --ag-section-gap: 24px;
+    --ag-item-min-h: var(--ag-control-h);
+  }
+
   [data-density="touch"] {
     --ag-text-xs: 12px;
     --ag-control-text: 14px;
