@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react-vite";
 import { Textarea } from "../../Textarea";
 import { Field, FieldGroup, FieldLabel, FieldDescription, FieldError } from "../../Field";
 import { Button } from "../../Button";
+import { Input } from "../../Input";
 import { expect, fn, within } from "storybook/test";
 
 const meta: Meta<typeof Textarea> = {
@@ -265,5 +266,23 @@ export const Unbounded: Story = {
     const input = within(canvasElement).getByRole("textbox", { name: "Description" });
     const rem = Number.parseFloat(getComputedStyle(document.documentElement).fontSize);
     await expect(input.getBoundingClientRect().height).toBeGreaterThan(18 * rem);
+  },
+};
+
+/** A field that starts one line tall, as tall as an input, and grows as text is typed. */
+export const StartsOneLine: Story = {
+  render: () => (
+    <div className="flex w-80 flex-col gap-2">
+      <Input aria-label="Reference input" />
+      <Textarea aria-label="Note" startHeight="line" placeholder="Notes…" />
+    </div>
+  ),
+  play: async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+    const note = canvas.getByRole("textbox", { name: "Note" });
+    const input = canvas.getByRole("textbox", { name: "Reference input" });
+    await expect(note.getBoundingClientRect().height).toBe(input.getBoundingClientRect().height);
+    await userEvent.type(note, "A first line that runs long enough to wrap onto a second line in this narrow field.");
+    await expect(note.getBoundingClientRect().height).toBeGreaterThan(input.getBoundingClientRect().height);
   },
 };
