@@ -240,6 +240,7 @@ export const fixture_featureTypeExports: Record<string, string> = {
   "image-crop": "ImageCrop, cropToCanvas, type Crop",
   "image-viewer":
     "ImageViewer, ImageComparison, ImageZoomToggle, computeImageDiff, getNormalizedImagePoint, type ImageZoom, type IImageDiff",
+  "text-diff": "TextDiff, type ITextDiffProps, type TextDiffViewMode",
   editor: "RichTextEditor, useEditor, StarterKit, type Editor",
   tree: "Tree, useTree, type TreeConfig",
   "data-grid":
@@ -322,6 +323,17 @@ export const fixture_featureConsumers: ReadonlyArray<readonly [string, readonly 
     }));
     `,
     JSON.stringify({ viewer: true, comparison: true, regions: 1 }),
+  ],
+  [
+    "text-diff",
+    ["diff", "parse-diff"],
+    `
+    import { renderToString } from "react-dom/server";
+    import { TextDiff } from "@alexgorbatchev/shadcn/text-diff";
+    const markup = renderToString(<TextDiff before={"port = 80\\n"} after={"port = 8080\\n"} beforeLabel="Current" />);
+    console.log(JSON.stringify(markup.includes("<del") && markup.includes("<ins") && markup.includes("Current")));
+    `,
+    "true",
   ],
   [
     "editor",

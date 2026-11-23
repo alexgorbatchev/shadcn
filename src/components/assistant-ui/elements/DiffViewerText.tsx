@@ -9,7 +9,7 @@ export function DiffViewerText({ line, className, ...props }: IDiffViewerTextPro
   return (
     <code
       data-testid="DiffViewerText"
-      className={cn("min-w-0 flex-1 pe-3.5 break-all whitespace-pre-wrap", className)}
+      className={cn("min-w-0 flex-1 pe-3.5 wrap-anywhere whitespace-pre-wrap", className)}
       {...props}
     >
       {line?.type === "add" ? (

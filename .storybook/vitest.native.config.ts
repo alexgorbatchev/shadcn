@@ -70,6 +70,7 @@ export default defineConfig({
       "src/components/__tests__/!(Carousel).test.tsx",
       "src/components/data-grid/__tests__/*.test.ts",
       "src/components/image-viewer/__tests__/*.test.{ts,tsx}",
+      "src/components/text-diff/__tests__/*.test.ts",
       "src/utils/__tests__/*.test.ts",
       "src/components/assistant-ui/hooks/__tests__/*.test.ts",
       "src/components/assistant-ui/hooks/__tests__/*.test.tsx",

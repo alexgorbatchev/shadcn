@@ -57,6 +57,10 @@
       "types": "./dist/components/resizable/index.d.ts",
       "import": "./dist/components/resizable/index.js"
     },
+    "./text-diff": {
+      "types": "./dist/components/text-diff/index.d.ts",
+      "import": "./dist/components/text-diff/index.js"
+    },
     "./sonner": {
       "types": "./dist/components/sonner/index.d.ts",
       "import": "./dist/components/sonner/index.js"
