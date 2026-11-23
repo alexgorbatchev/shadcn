@@ -31,6 +31,15 @@
     --typeset-rule: var(--color-border, color-mix(in oklab, currentColor 20%, transparent));
   }
 
+  /*
+   * Compact prose inside a dense control, such as an option card's description: the surrounding text size at every
+   * width (no larger phone step) and tighter spacing between blocks, so it reads as part of the control.
+   */
+  .typeset.typeset-compact:not(:where(.not-typeset, [data-not-typeset], .not-typeset *, [data-not-typeset] *)) {
+    --typeset-flow: 0.5em;
+    font-size: var(--typeset-size);
+  }
+
   .typeset *:not(:where(.not-typeset, [data-not-typeset], .not-typeset *, [data-not-typeset] *)) {
     /* Paragraphs. */
     &:where(p) {

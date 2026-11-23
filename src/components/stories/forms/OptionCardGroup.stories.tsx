@@ -407,3 +407,43 @@ export const MultipleChoice: Story = {
     await expect(docs.querySelector("[data-slot=option-checkbox-indicator]")).not.toBeNull();
   },
 };
+
+export const CompactProseDescription: Story = {
+  render: (args) => (
+    <div className="w-96">
+      <OptionCardGroup aria-label="Rollout" {...args}>
+        <OptionCard
+          value="blue-green"
+          label="Blue-green"
+          description={
+            <span className="typeset typeset-compact block" data-testid="compact">
+              <p>Starts a full copy and switches traffic at once.</p>
+              <p>Rollback is instant.</p>
+            </span>
+          }
+        />
+        <OptionCard
+          value="recreate"
+          label="Recreate"
+          description={
+            <span className="typeset block" data-testid="regular">
+              <p>Stops everything, then starts the new release.</p>
+              <p>Simple, with downtime.</p>
+            </span>
+          }
+        />
+      </OptionCardGroup>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const compact = canvas.getByTestId("compact");
+    // Compact prose keeps the card's text size at every width and spaces its blocks more tightly than regular prose.
+    await expect(getComputedStyle(compact).fontSize).toBe(getComputedStyle(canvas.getByText("Blue-green")).fontSize);
+    const gap = (element: Element) => Number.parseFloat(getComputedStyle(element).marginBlockStart);
+    const compactGap = gap(compact.querySelectorAll("p")[1]!);
+    const regularGap = gap(canvas.getByTestId("regular").querySelectorAll("p")[1]!);
+    await expect(compactGap).toBeGreaterThan(0);
+    await expect(compactGap).toBeLessThan(regularGap);
+  },
+};
