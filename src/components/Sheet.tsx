@@ -5,7 +5,7 @@ import { useDensity } from "../hooks/useDensity.js";
 import { usePortalContainer } from "../hooks/usePortalContainer.js";
 import { usePortalNode } from "../hooks/usePortalNode.js";
 import { PortalProvider } from "./PortalProvider.js";
-import type { ComponentProps, ReactElement } from "react";
+import type { ComponentProps, CSSProperties, ReactElement } from "react";
 import { XIcon } from "lucide-react";
 
 import { Dialog as SheetPrimitive } from "@base-ui/react/dialog";
@@ -63,9 +63,17 @@ function SheetOverlay({ density, className, ...props }: SheetOverlayProps): Reac
   );
 }
 
+type SheetContentStyle = CSSProperties & { "--sheet-width": string };
+
 type SheetContentProps = SheetPrimitive.Popup.Props & {
   side?: "top" | "right" | "bottom" | "left";
   showCloseButton?: boolean;
+  /**
+   * Width of a left or right sheet; numbers are pixels. The sheet never grows past the viewport, so
+   * narrow screens still get a full-width panel. Without it the sheet takes three quarters of the
+   * viewport, at most 24rem. Top and bottom sheets always span the viewport.
+   */
+  width?: number | string;
 } & IDensityProps;
 
 function SheetContent({
@@ -74,10 +82,13 @@ function SheetContent({
   children,
   side = "right",
   showCloseButton = true,
+  width,
+  style,
   ...props
 }: SheetContentProps): ReactElement {
   const resolvedDensity = useDensity(density);
   const direction = useDirection();
+  const sheetWidth = typeof width === "number" ? `${width}px` : width;
 
   return (
     <SheetPortal>
@@ -88,9 +99,21 @@ function SheetContent({
         data-slot="sheet-content"
         data-scroll="none"
         data-side={side}
+        data-sized={sheetWidth === undefined ? undefined : ""}
+        style={
+          sheetWidth === undefined
+            ? style
+            : (state) => {
+                const sized: SheetContentStyle = {
+                  ...(typeof style === "function" ? style(state) : style),
+                  "--sheet-width": sheetWidth,
+                };
+                return sized;
+              }
+        }
         className={(state) =>
           cn(
-            "fixed  flex flex-col gap-panel bg-popover bg-clip-padding text-sm text-popover-foreground shadow-frame border border-frame-edge transition duration-200 ease-in-out data-ending-style:opacity-0 data-starting-style:opacity-0 data-[side=bottom]:inset-x-0 data-[side=bottom]:bottom-0 data-[side=bottom]:h-auto data-[side=bottom]:border-t data-[side=bottom]:data-ending-style:translate-y-[2.5rem] data-[side=bottom]:data-starting-style:translate-y-[2.5rem] data-[side=left]:inset-y-0 data-[side=left]:left-0 data-[side=left]:h-full data-[side=left]:w-3/4 data-[side=left]:border-r data-[side=left]:data-ending-style:translate-x-[-2.5rem] data-[side=left]:data-starting-style:translate-x-[-2.5rem] data-[side=right]:inset-y-0 data-[side=right]:right-0 data-[side=right]:h-full data-[side=right]:w-3/4 data-[side=right]:border-l data-[side=right]:data-ending-style:translate-x-[2.5rem] data-[side=right]:data-starting-style:translate-x-[2.5rem] data-[side=top]:inset-x-0 data-[side=top]:top-0 data-[side=top]:h-auto data-[side=top]:border-b data-[side=top]:data-ending-style:translate-y-[-2.5rem] data-[side=top]:data-starting-style:translate-y-[-2.5rem] data-[side=left]:sm:max-w-sm data-[side=right]:sm:max-w-sm",
+            "fixed  flex flex-col gap-panel bg-popover bg-clip-padding text-sm text-popover-foreground shadow-frame border border-frame-edge transition duration-200 ease-in-out data-ending-style:opacity-0 data-starting-style:opacity-0 data-[side=bottom]:inset-x-0 data-[side=bottom]:bottom-0 data-[side=bottom]:h-auto data-[side=bottom]:border-t data-[side=bottom]:data-ending-style:translate-y-[2.5rem] data-[side=bottom]:data-starting-style:translate-y-[2.5rem] data-[side=left]:inset-y-0 data-[side=left]:left-0 data-[side=left]:h-full data-[side=left]:w-3/4 data-[side=left]:border-r data-[side=left]:data-ending-style:translate-x-[-2.5rem] data-[side=left]:data-starting-style:translate-x-[-2.5rem] data-[side=right]:inset-y-0 data-[side=right]:right-0 data-[side=right]:h-full data-[side=right]:w-3/4 data-[side=right]:border-l data-[side=right]:data-ending-style:translate-x-[2.5rem] data-[side=right]:data-starting-style:translate-x-[2.5rem] data-[side=top]:inset-x-0 data-[side=top]:top-0 data-[side=top]:h-auto data-[side=top]:border-b data-[side=top]:data-ending-style:translate-y-[-2.5rem] data-[side=top]:data-starting-style:translate-y-[-2.5rem] data-[side=left]:sm:max-w-sm data-[side=right]:sm:max-w-sm data-[side=left]:data-sized:w-[min(var(--sheet-width),100%)] data-[side=left]:data-sized:max-w-none data-[side=right]:data-sized:w-[min(var(--sheet-width),100%)] data-[side=right]:data-sized:max-w-none",
             typeof className === "function" ? className(state) : className,
           )
         }

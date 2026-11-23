@@ -91,6 +91,47 @@ export const Top: Story = { ...Default, args: { side: "top" } };
 export const Bottom: Story = { ...Default, args: { side: "bottom" } };
 export const Compact: Story = { ...Default, args: { density: "compact", showCloseButton: false } };
 
+/** A wider side sheet for content such as code or data; it never grows past the viewport. */
+export const Wide: Story = {
+  ...Default,
+  args: { side: "right", width: 768 },
+  play: async ({ canvasElement, args }) => {
+    await userEvent.click(within(canvasElement).getByRole("button", { name: "Open preferences" }));
+    const dialog = await within(canvasElement.ownerDocument.body).findByRole("dialog", { name: "Preferences" });
+    const view = canvasElement.ownerDocument.defaultView!;
+    const expected = typeof args.width === "number" ? args.width : 640;
+    await waitFor(() =>
+      expect(Math.abs(dialog.getBoundingClientRect().width - Math.min(expected, view.innerWidth))).toBeLessThanOrEqual(
+        1,
+      ),
+    );
+    await expect(dialog).toHaveAttribute("data-sized");
+  },
+};
+
+/** A CSS length works too, and a caller's own style is kept. */
+export const WideLeftWithStyle: Story = {
+  ...Wide,
+  args: { side: "left", width: "40rem", style: { borderStyle: "dashed" } },
+  play: async (context) => {
+    await Wide.play?.(context);
+    const dialog = within(context.canvasElement.ownerDocument.body).getByRole("dialog", { name: "Preferences" });
+    await expect(dialog).toHaveStyle({ borderStyle: "dashed" });
+  },
+};
+
+/** A style function receives the popup state and keeps working alongside a width. */
+export const WideWithStyleFunction: Story = {
+  ...Wide,
+  args: { side: "right", width: 512, style: fn(() => ({ borderStyle: "dotted" })) },
+  play: async (context) => {
+    await Wide.play?.(context);
+    await expect(context.args.style).toHaveBeenCalled();
+    const dialog = within(context.canvasElement.ownerDocument.body).getByRole("dialog", { name: "Preferences" });
+    await expect(dialog).toHaveStyle({ borderStyle: "dotted" });
+  },
+};
+
 export const StateCallbacks: Story = {
   args: { className: fn(() => "gap-8"), titleClassName: fn(() => "mb-2"), descriptionClassName: fn(() => "mt-2") },
   render: ({ titleClassName, descriptionClassName, ...args }) => (
