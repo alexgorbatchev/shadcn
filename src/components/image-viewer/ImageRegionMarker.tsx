@@ -15,7 +15,7 @@ const imageRegionMarkerVariants = cva(
         /** A region being drawn or placed, before it has a comment. */
         draft: "bg-primary/10 outline-dashed outline-primary",
         /** A changed region found by comparing two images. */
-        difference: "bg-warning/10 outline-warning",
+        difference: "bg-warning/5 outline-dashed outline-offset-[3px] outline-warning/75",
       },
     },
     defaultVariants: { variant: "comment" },
@@ -71,7 +71,9 @@ export function ImageRegionMarker({
       className={cn(
         imageRegionMarkerVariants({ variant }),
         active && "z-10 outline-[3px]",
-        active && variant === "difference" && "bg-warning/20",
+        active &&
+          variant === "difference" &&
+          "bg-warning/25 shadow-[0_0_0_5px_var(--background)] outline-solid outline-warning",
         className,
       )}
       style={region ? { ...style, ...region } : style}

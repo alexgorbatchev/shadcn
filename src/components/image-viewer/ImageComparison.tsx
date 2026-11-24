@@ -221,16 +221,11 @@ export function ImageComparison({
     showDifferences && differences.status === "ready" ? (
       <ImageDifferenceOverlay diff={differences.diff} activeIndex={clampedActiveIndex} />
     ) : null;
-  const interactiveDiffOverlay =
-    showDifferences && differences.status === "ready" ? (
-      <ImageDifferenceOverlay
-        diff={differences.diff}
-        activeIndex={clampedActiveIndex}
-        onCommentRegion={
-          onCommentDifference ? (region, index) => onCommentDifference(region, index, differences.diff) : undefined
-        }
-      />
-    ) : null;
+  const activeRegion = regions[clampedActiveIndex];
+  const handleCommentActiveDifference =
+    onCommentDifference && showDifferences && differences.status === "ready" && activeRegion
+      ? () => onCommentDifference(activeRegion, clampedActiveIndex, differences.diff)
+      : undefined;
   const fallback = failedLabel ? (
     <p data-slot="image-comparison-error" className="m-auto p-panel text-center text-sm text-muted-foreground">
       The {failedLabel} image could not be loaded.
@@ -413,7 +408,7 @@ export function ImageComparison({
           >
             {renderAfterImage()}
             {afterOverlay}
-            {interactiveDiffOverlay}
+            {diffOverlay}
           </ImageViewport>
         </ComparisonPane>
       </div>
@@ -443,7 +438,7 @@ export function ImageComparison({
           {renderBeforeImage(undefined, { clipPath: `inset(0 ${100 - position}% 0 0)` })}
           {beforeOverlay}
           {afterOverlay}
-          {interactiveDiffOverlay}
+          {diffOverlay}
           <ImageSwipeDivider
             value={position}
             onValueChange={handlePositionChange}
@@ -479,7 +474,7 @@ export function ImageComparison({
           {renderBeforeImage(isShowingBefore ? undefined : "invisible")}
           {beforeOverlay}
           {afterOverlay}
-          {interactiveDiffOverlay}
+          {diffOverlay}
           {stageOverlay}
         </ImageViewport>
       </ComparisonPane>
@@ -514,6 +509,7 @@ export function ImageComparison({
           differences={differences}
           activeRegionIndex={clampedActiveIndex}
           onStepChange={stepChange}
+          onCommentActiveDifference={handleCommentActiveDifference}
           onPeekChange={setIsPeeking}
           beforeLabel={beforeLabel}
           afterLabel={afterLabel}

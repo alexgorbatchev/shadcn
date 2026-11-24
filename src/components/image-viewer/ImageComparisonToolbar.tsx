@@ -28,6 +28,7 @@ interface IImageComparisonToolbarProps extends IDensityProps {
   differences: ImageDifferenceState;
   activeRegionIndex: number;
   onStepChange: (delta: -1 | 1) => void;
+  onCommentActiveDifference?: () => void;
   onPeekChange: (isPeeking: boolean) => void;
   beforeLabel: string;
   afterLabel: string;
@@ -90,6 +91,7 @@ export function ImageComparisonToolbar({
   differences,
   activeRegionIndex,
   onStepChange,
+  onCommentActiveDifference,
   onPeekChange,
   beforeLabel,
   afterLabel,
@@ -116,7 +118,7 @@ export function ImageComparisonToolbar({
       aria-label="Comparison controls"
       data-slot="image-comparison-toolbar"
       data-density={density}
-      className="flex shrink-0 flex-wrap items-center gap-x-2 gap-y-2 border-b border-border px-panel-sm py-2"
+      className="flex shrink-0 flex-wrap items-center gap-x-2 gap-y-2 border-b border-border py-2"
     >
       <ToolbarSection title="Mode" titleId={`${id}-mode`}>
         <ToggleGroup
@@ -235,8 +237,11 @@ export function ImageComparisonToolbar({
             role="group"
             aria-label="Changed regions"
             data-slot="image-comparison-stepper"
-            className="flex items-center gap-1.5"
+            className="flex flex-wrap items-center gap-1.5"
           >
+            <span aria-hidden="true" className="text-muted-foreground">
+              ·
+            </span>
             <span
               data-slot="image-comparison-change-count"
               className="text-xs whitespace-nowrap text-muted-foreground tabular-nums"
@@ -263,6 +268,17 @@ export function ImageComparisonToolbar({
             >
               <ChevronRightIcon />
             </Button>
+            {onCommentActiveDifference && (
+              <Button
+                variant="outline"
+                size="sm"
+                density={density}
+                aria-label={`Comment on change ${activeRegionIndex + 1} of ${regionCount}`}
+                onClick={onCommentActiveDifference}
+              >
+                Comment
+              </Button>
+            )}
           </div>
         )}
         <p

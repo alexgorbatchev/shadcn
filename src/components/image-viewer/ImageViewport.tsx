@@ -49,6 +49,8 @@ interface IImageViewportProps {
   onStageKeyDown?: (event: KeyboardEvent<HTMLDivElement>) => void;
   /** Further `aria-keyshortcuts` the stage handles through `onStageKeyDown`, such as "R". */
   stageKeyShortcuts?: string;
+  /** Allows vertical touch scrolling of an enclosing list while fitted (nothing to pan). */
+  allowVerticalScroll?: boolean;
 }
 
 type Gesture =
@@ -117,6 +119,7 @@ export function ImageViewport({
   onZoomChange,
   onStageKeyDown,
   stageKeyShortcuts,
+  allowVerticalScroll = false,
 }: IImageViewportProps): ReactElement {
   const elementRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
@@ -345,7 +348,8 @@ export function ImageViewport({
         onPointerCancel={handlePointerEnd}
         onClickCapture={handleClickCapture}
         className={cn(
-          "flex min-h-0 min-w-0 flex-1 touch-none overscroll-contain outline-none select-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-inset data-pannable:cursor-grab data-panning:cursor-grabbing",
+          "flex min-h-0 min-w-0 flex-1 overscroll-contain outline-none select-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-inset data-pannable:cursor-grab data-panning:cursor-grabbing",
+          allowVerticalScroll && zoom === "fit" ? "touch-pan-y" : "touch-none",
           zoom === "fit" ? "overflow-hidden" : "overflow-auto",
         )}
       >
@@ -365,7 +369,7 @@ export function ImageViewport({
           data-slot="image-viewport-scroll-hint"
           data-edge="left"
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 left-0 w-5 border-l-2 border-primary/50 bg-gradient-to-r from-black/25 to-transparent"
+          className="pointer-events-none absolute inset-y-0 left-0 w-5 border-l border-foreground/30 bg-gradient-to-r from-black/35 via-black/15 to-transparent dark:from-black/55 dark:via-black/20"
         />
       )}
       {scrollHints.right && (
@@ -373,7 +377,7 @@ export function ImageViewport({
           data-slot="image-viewport-scroll-hint"
           data-edge="right"
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 right-0 w-5 border-r-2 border-primary/50 bg-gradient-to-l from-black/25 to-transparent"
+          className="pointer-events-none absolute inset-y-0 right-0 w-5 border-r border-foreground/30 bg-gradient-to-l from-black/35 via-black/15 to-transparent dark:from-black/55 dark:via-black/20"
         />
       )}
       {scrollHints.top && (
@@ -381,7 +385,7 @@ export function ImageViewport({
           data-slot="image-viewport-scroll-hint"
           data-edge="top"
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 h-5 border-t-2 border-primary/50 bg-gradient-to-b from-black/25 to-transparent"
+          className="pointer-events-none absolute inset-x-0 top-0 h-5 border-t border-foreground/30 bg-gradient-to-b from-black/35 via-black/15 to-transparent dark:from-black/55 dark:via-black/20"
         />
       )}
       {scrollHints.bottom && (
@@ -389,7 +393,7 @@ export function ImageViewport({
           data-slot="image-viewport-scroll-hint"
           data-edge="bottom"
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-5 border-b-2 border-primary/50 bg-gradient-to-t from-black/25 to-transparent"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-5 border-b border-foreground/30 bg-gradient-to-t from-black/35 via-black/15 to-transparent dark:from-black/55 dark:via-black/20"
         />
       )}
     </div>

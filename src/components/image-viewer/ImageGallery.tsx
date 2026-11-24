@@ -11,6 +11,7 @@ import {
 } from "react";
 import type { IDensityProps } from "../../density/types.js";
 import { cn } from "../../utils/cn.js";
+import { Badge } from "../Badge.js";
 import { Button } from "../Button.js";
 import { Toggle } from "../Toggle.js";
 import { ImageViewer } from "./ImageViewer.js";
@@ -26,6 +27,10 @@ export interface IImageGalleryItem {
   alt: string;
   /** The item's name, used in the step announcement: "Bold · 2 of 3". */
   label: string;
+  /** Short consequence or caption shown on the item's card in Compare all mode. */
+  description?: string;
+  /** Highlights this card in Compare all mode as the currently selected choice. */
+  selected?: boolean;
 }
 
 export interface IImageGalleryProps extends IDensityProps {
@@ -93,44 +98,55 @@ function CompareAllPane({
     <section
       aria-label={item.label}
       data-slot="image-gallery-compare-pane"
-      className="flex min-h-64 min-w-0 flex-col overflow-hidden rounded-md border border-border bg-background @2xl:min-h-0"
+      data-selected={item.selected ? "" : undefined}
+      className={cn(
+        "flex min-w-0 flex-col overflow-hidden rounded-md border bg-background",
+        item.selected ? "border-primary ring-1 ring-primary" : "border-border",
+      )}
     >
       <div
         data-slot="image-gallery-compare-header"
-        className="flex h-control shrink-0 items-center justify-between gap-2 border-b border-border px-control-x text-xs font-medium text-muted-foreground"
+        className="flex h-control shrink-0 items-center justify-between gap-2 border-b border-border px-control-x text-xs font-medium text-foreground"
       >
         <span className="truncate">{item.label}</span>
+        {item.selected && <Badge variant="default">Chosen</Badge>}
       </div>
-      <ImageViewport
-        label={item.label}
-        zoom={zoom}
-        naturalSize={image.size}
-        center={center}
-        onZoomChange={onZoomChange}
-        viewportRef={viewportRef}
-        onViewportScroll={onViewportScroll}
-        fallback={
-          image.status === "error" ? (
-            <p className="m-auto p-panel text-center text-sm text-muted-foreground">Image could not be loaded.</p>
-          ) : undefined
-        }
-      >
-        <img
-          src={item.src}
-          alt={item.alt}
-          draggable={false}
-          data-slot="image-gallery-compare-image"
-          className="block size-full outline-1 -outline-offset-1 outline-media-edge select-none"
-          onLoad={imageHandlers.onLoad}
-          onError={imageHandlers.onError}
-        />
-      </ImageViewport>
-      {footer !== undefined && footer !== null && (
+      <div className={cn("flex min-h-0 w-full shrink-0", zoom === "fit" ? "aspect-[16/10]" : "h-[min(60dvh,32rem)]")}>
+        <ImageViewport
+          label={item.label}
+          zoom={zoom}
+          naturalSize={image.size}
+          center={center}
+          onZoomChange={onZoomChange}
+          viewportRef={viewportRef}
+          onViewportScroll={onViewportScroll}
+          allowVerticalScroll
+          fallback={
+            image.status === "error" ? (
+              <p className="m-auto p-panel text-center text-sm text-muted-foreground">Image could not be loaded.</p>
+            ) : undefined
+          }
+        >
+          <img
+            src={item.src}
+            alt={item.alt}
+            draggable={false}
+            data-slot="image-gallery-compare-image"
+            className="block size-full outline-1 -outline-offset-1 outline-media-edge select-none"
+            onLoad={imageHandlers.onLoad}
+            onError={imageHandlers.onError}
+          />
+        </ImageViewport>
+      </div>
+      {(item.description || (footer !== undefined && footer !== null)) && (
         <div
           data-slot="image-gallery-compare-footer"
-          className="flex shrink-0 items-center justify-between gap-2 border-t border-border p-2"
+          className="flex shrink-0 flex-col gap-2 border-t border-border p-panel-sm"
         >
-          {footer}
+          {item.description && <p className="text-xs text-muted-foreground">{item.description}</p>}
+          {footer !== undefined && footer !== null && (
+            <div className="flex items-center justify-between gap-2">{footer}</div>
+          )}
         </div>
       )}
     </section>
@@ -248,7 +264,7 @@ export function ImageGallery({
         <div
           data-slot="image-gallery-compare-grid"
           className={cn(
-            "grid min-h-0 min-w-0 flex-1 grid-cols-1 gap-3 overflow-y-auto @2xl:overflow-hidden",
+            "grid min-h-0 min-w-0 flex-1 content-start grid-cols-1 gap-3 overflow-y-auto pb-2",
             count === 2 ? "@2xl:grid-cols-2" : "@xl:grid-cols-2 @3xl:grid-cols-3",
           )}
         >
