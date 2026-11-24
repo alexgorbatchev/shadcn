@@ -17,3 +17,5 @@ export {
   isOrderedDragTarget,
 } from "@headless-tree/core";
 export type { TreeInstance, ItemInstance, TreeConfig, DragTarget } from "@headless-tree/core";
+export { TreeSelect } from "./TreeSelect.js";
+export type { ITreeSelectNode, ITreeSelectProps } from "./TreeSelect.js";
