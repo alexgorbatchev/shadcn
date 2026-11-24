@@ -10,6 +10,7 @@ import type {
   IImageSize,
   ImageComparisonMode,
   ImageComparisonOrientation,
+  ImageComparisonSide,
   ImageDifferenceState,
   ImageZoom,
 } from "./types.js";
@@ -17,6 +18,8 @@ import type {
 interface IImageComparisonToolbarProps extends IDensityProps {
   mode: ImageComparisonMode;
   onModeChange: (mode: ImageComparisonMode) => void;
+  side: ImageComparisonSide;
+  onSideChange: (side: ImageComparisonSide) => void;
   orientation: ImageComparisonOrientation;
   onOrientationChange: (orientation: ImageComparisonOrientation) => void;
   zoom: ImageZoom;
@@ -74,6 +77,8 @@ function formatSize(size: IImageSize): string {
 export function ImageComparisonToolbar({
   mode,
   onModeChange,
+  side,
+  onSideChange,
   orientation,
   onOrientationChange,
   zoom,
@@ -120,6 +125,22 @@ export function ImageComparisonToolbar({
           <ToggleGroupItem value="side-by-side">Side by side</ToggleGroupItem>
         </ToggleGroup>
       </ToolbarSection>
+      <ToolbarSection title="Shown image" titleId={`${id}-side`}>
+        <ToggleGroup
+          aria-labelledby={`${id}-side`}
+          aria-keyshortcuts="B A"
+          required
+          value={[side]}
+          onValueChange={(value) => onSideChange(value[0] === "before" ? "before" : "after")}
+          variant="outline"
+          size="sm"
+          spacing={0}
+          disabled={mode !== "toggle"}
+        >
+          <ToggleGroupItem value="before">{beforeLabel}</ToggleGroupItem>
+          <ToggleGroupItem value="after">{afterLabel}</ToggleGroupItem>
+        </ToggleGroup>
+      </ToolbarSection>
       <ToolbarSection title="Orientation" titleId={`${id}-orientation`}>
         <ToggleGroup
           aria-labelledby={`${id}-orientation`}
@@ -164,7 +185,7 @@ export function ImageComparisonToolbar({
         onBlur={releasePeek}
         onContextMenu={(event) => event.preventDefault()}
       >
-        Hold to show before
+        Hold to show {side === "before" ? "after" : "before"}
       </Button>
       <Field orientation="horizontal">
         <Switch

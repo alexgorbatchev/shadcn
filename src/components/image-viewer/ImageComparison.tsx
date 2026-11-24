@@ -1,5 +1,5 @@
 import { useControlled } from "@base-ui/utils/useControlled";
-import { useRef, useState, type CSSProperties, type ReactElement, type ReactNode } from "react";
+import { useRef, useState, type CSSProperties, type KeyboardEvent, type ReactElement, type ReactNode } from "react";
 import type { IDensityProps } from "../../density/types.js";
 import { cn } from "../../utils/cn.js";
 import { Separator } from "../Separator.js";
@@ -14,6 +14,7 @@ import type {
   INormalizedImagePoint,
   ImageComparisonMode,
   ImageComparisonOrientation,
+  ImageComparisonSide,
   ImageZoom,
 } from "./types.js";
 
@@ -29,6 +30,11 @@ export interface IImageComparisonProps extends IDensityProps {
   /** Initial mode when uncontrolled. Defaults to `toggle`. */
   defaultMode?: ImageComparisonMode;
   onModeChange?: (mode: ImageComparisonMode) => void;
+  /** Controlled image shown in `toggle` mode. */
+  side?: ImageComparisonSide;
+  /** Initial image shown in `toggle` mode when uncontrolled. Defaults to `after`. */
+  defaultSide?: ImageComparisonSide;
+  onSideChange?: (side: ImageComparisonSide) => void;
   /** Controlled side-by-side arrangement. */
   orientation?: ImageComparisonOrientation;
   /** Initial side-by-side arrangement when uncontrolled. Defaults to `horizontal` (left and right). */
@@ -87,6 +93,9 @@ export function ImageComparison({
   mode: modeProp,
   defaultMode = "toggle",
   onModeChange,
+  side: sideProp,
+  defaultSide = "after",
+  onSideChange,
   orientation: orientationProp,
   defaultOrientation = "horizontal",
   onOrientationChange,
@@ -105,6 +114,12 @@ export function ImageComparison({
     default: defaultMode,
     name: "ImageComparison",
     state: "mode",
+  });
+  const [side, setSideState] = useControlled({
+    controlled: sideProp,
+    default: defaultSide,
+    name: "ImageComparison",
+    state: "side",
   });
   const [orientation, setOrientationState] = useControlled({
     controlled: orientationProp,
@@ -144,7 +159,10 @@ export function ImageComparison({
     beforeRef,
     afterRef,
   });
-  const isShowingBefore = mode === "toggle" && isPeeking;
+  // Holding the peek button shows the other image; the shown side applies in `toggle` mode only.
+  const shownSide: ImageComparisonSide =
+    mode !== "toggle" ? "after" : isPeeking ? (side === "before" ? "after" : "before") : side;
+  const isShowingBefore = shownSide === "before";
   const overlay =
     showDifferences && differences.status === "ready" ? <ImageDifferenceOverlay diff={differences.diff} /> : null;
   const fallback = failedLabel ? (
@@ -156,6 +174,18 @@ export function ImageComparison({
   function setMode(next: ImageComparisonMode): void {
     setModeState(next);
     onModeChange?.(next);
+  }
+  function setSide(next: ImageComparisonSide): void {
+    setSideState(next);
+    onSideChange?.(next);
+  }
+  /** B and A on the focused toggle stage show the before and after image. */
+  function handleToggleStageKey(event: KeyboardEvent<HTMLDivElement>): void {
+    if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+    const key = event.key.toLowerCase();
+    if (key !== "b" && key !== "a") return;
+    event.preventDefault();
+    setSide(key === "b" ? "before" : "after");
   }
   function setOrientation(next: ImageComparisonOrientation): void {
     setOrientationState(next);
@@ -303,6 +333,8 @@ export function ImageComparison({
           center={center}
           onZoomChange={setZoom}
           fallback={fallback}
+          onStageKeyDown={handleToggleStageKey}
+          stageKeyShortcuts="B A"
         >
           {renderAfterImage(isShowingBefore ? "invisible" : undefined)}
           {renderBeforeImage(isShowingBefore ? undefined : "invisible")}
@@ -333,6 +365,8 @@ export function ImageComparison({
           <ImageComparisonToolbar
             mode={mode}
             onModeChange={setMode}
+            side={side}
+            onSideChange={setSide}
             orientation={orientation}
             onOrientationChange={setOrientation}
             zoom={zoom}

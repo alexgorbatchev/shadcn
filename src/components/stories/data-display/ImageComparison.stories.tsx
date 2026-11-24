@@ -119,7 +119,7 @@ const meta: Meta<typeof ImageComparison> = {
     docs: {
       description: {
         component:
-          'Import from `@alexgorbatchev/shadcn/image-viewer`. ImageComparison fills its container and compares `before` and `after` images (`{ src, alt, crossOrigin? }`) labelled by `beforeLabel` and `afterLabel` (default "Before" and "After"). `toggle` (the default) shows the after image and the "Hold to show before" button shows the before image while a pointer, Space, or Enter is held. `swipe` stacks both images; the divider is a slider (0–100, arrows ±1, Page Up/Page Down ±10, Home/End) whose handle drags with pointer capture. `side-by-side` shows labelled panes left and right (`horizontal`) or top and bottom (`vertical`) that scroll in sync when zoomed. Every mode starts fitted and offers original size (zoom `1`); the focused stage also takes the ImageViewer stage keys, Mod+wheel and pinch, and its name ends with the zoom percent. A differently sized before image is drawn inside the after image box, and the toolbar reports the mismatch. "Highlight differences" compares pixels on first use, caches the result per image pair, outlines changed regions, and summarizes them; it is disabled with a reason when pixels cannot be read. `mode`, `orientation`, `zoom`, and `showDifferences` are controllable with matching `default*` and `on*Change` props; `showToolbar={false}` hides the controls, which sit beside wide comparisons and below narrow ones.',
+          'Import from `@alexgorbatchev/shadcn/image-viewer`. ImageComparison fills its container and compares `before` and `after` images (`{ src, alt, crossOrigin? }`) labelled by `beforeLabel` and `afterLabel` (default "Before" and "After"). `toggle` (the default) shows one image, chosen by the "Shown image" control or B and A on the focused stage (`side`, default `after`), and the "Hold to show before" (or "after") button shows the other image while a pointer, Space, or Enter is held; the header announces the shown image. `swipe` stacks both images; the divider is a slider (0–100, arrows ±1, Page Up/Page Down ±10, Home/End) whose handle drags with pointer capture. `side-by-side` shows labelled panes left and right (`horizontal`) or top and bottom (`vertical`) that scroll in sync when zoomed. Every mode starts fitted and offers original size (zoom `1`); the focused stage also takes the ImageViewer stage keys, Mod+wheel and pinch, and its name ends with the zoom percent. A differently sized before image is drawn inside the after image box, and the toolbar reports the mismatch. "Highlight differences" compares pixels on first use, caches the result per image pair, outlines changed regions, and summarizes them; it is disabled with a reason when pixels cannot be read. `mode`, `side`, `orientation`, `zoom`, and `showDifferences` are controllable with matching `default*` and `on*Change` props; `showToolbar={false}` hides the controls, which sit beside wide comparisons and below narrow ones.',
       },
     },
   },
@@ -127,6 +127,7 @@ const meta: Meta<typeof ImageComparison> = {
     before: { src: fixture_beforeScreenshot, alt: BEFORE_ALT },
     after: { src: fixture_afterScreenshot, alt: AFTER_ALT },
     onModeChange: fn(),
+    onSideChange: fn(),
     onOrientationChange: fn(),
     onZoomChange: fn(),
     onShowDifferencesChange: fn(),
@@ -191,6 +192,46 @@ export const Toggle: Story = {
     await userEvent.keyboard("[/Space]");
 
     await expectZoomModes(canvas, afterImage, (element) => userEvent.click(element));
+  },
+};
+
+export const ShownSide: Story = {
+  args: { defaultSide: "before" },
+  play: async ({ args, canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+    const beforeImage = await canvas.findByRole("img", { name: BEFORE_ALT });
+    const showing = canvas.getByText("Showing Before");
+    const before = canvas.getByRole("button", { name: "Before" });
+    const after = canvas.getByRole("button", { name: "After" });
+    await expect(before).toHaveAttribute("aria-pressed", "true");
+    await expect(beforeImage).toBeVisible();
+    await expect(canvas.queryByRole("img", { name: AFTER_ALT })).toBeNull();
+    const hold = canvas.getByRole("button", { name: "Hold to show after" });
+    await userEvent.pointer({ keys: "[MouseLeft>]", target: hold });
+    await expect(showing).toHaveTextContent("Showing After");
+    await userEvent.pointer({ keys: "[/MouseLeft]", target: hold });
+    await expect(showing).toHaveTextContent("Showing Before");
+
+    const stage = canvas.getByRole("region", { name: /^Before, \d+%$/ });
+    await expect(stage).toHaveAttribute("aria-keyshortcuts", expect.stringContaining("B A"));
+    stage.focus();
+    await userEvent.keyboard("a");
+    await expect(showing).toHaveTextContent("Showing After");
+    await expect(after).toHaveAttribute("aria-pressed", "true");
+    await expect(args.onSideChange).toHaveBeenLastCalledWith("after");
+    canvas.getByRole("region", { name: /^After, \d+%$/ }).focus();
+    await userEvent.keyboard("b");
+    await expect(showing).toHaveTextContent("Showing Before");
+    await expect(args.onSideChange).toHaveBeenLastCalledWith("before");
+    // Modified letters stay with the browser and the page.
+    canvas.getByRole("region", { name: /^Before, \d+%$/ }).focus();
+    await userEvent.keyboard("{Shift>}A{/Shift}");
+    await expect(showing).toHaveTextContent("Showing Before");
+
+    await userEvent.click(after);
+    await expect(showing).toHaveTextContent("Showing After");
+    await userEvent.click(canvas.getByRole("button", { name: "Side by side" }));
+    await expect(canvas.getByRole("button", { name: "Before" })).toBeDisabled();
   },
 };
 

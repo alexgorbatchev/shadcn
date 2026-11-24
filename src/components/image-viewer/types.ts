@@ -18,6 +18,9 @@ export interface IImageZoomScales {
 /** How ImageComparison presents the before and after images. */
 export type ImageComparisonMode = "toggle" | "swipe" | "side-by-side";
 
+/** The image a comparison shows in `toggle` mode. */
+export type ImageComparisonSide = "before" | "after";
+
 /** Side-by-side pane arrangement: `horizontal` places panes left and right, `vertical` top and bottom. */
 export type ImageComparisonOrientation = StackDirection;
 

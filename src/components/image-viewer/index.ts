@@ -19,6 +19,10 @@ export {
 } from "./imageRegion.js";
 export { FramedImage } from "./FramedImage.js";
 export type { FramedImageSize, IFramedImageProps } from "./FramedImage.js";
+export { ImageGallery } from "./ImageGallery.js";
+export type { IImageGalleryItem, IImageGalleryProps } from "./ImageGallery.js";
+export { MediaShell } from "./MediaShell.js";
+export type { IMediaShellProps } from "./MediaShell.js";
 export { ImageComparison } from "./ImageComparison.js";
 export type { IImageComparisonProps } from "./ImageComparison.js";
 export { computeImageDiff } from "./computeImageDiff.js";
@@ -45,6 +49,7 @@ export type {
   INormalizedImagePoint,
   ImageComparisonMode,
   ImageComparisonOrientation,
+  ImageComparisonSide,
   ImageZoom,
 } from "./types.js";
 export { ImageRegionMarker, ImageRegionMarkerBadge } from "./ImageRegionMarker.js";
