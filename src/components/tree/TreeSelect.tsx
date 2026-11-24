@@ -168,6 +168,7 @@ export function TreeSelect({
               <TreeItem
                 item={item}
                 expandOn="disclosure"
+                hasIcon={false}
                 description={description}
                 isDimmed={Boolean(node.disabledReason)}
                 aria-disabled={node.disabledReason || isDisabled ? true : undefined}

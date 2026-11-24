@@ -69,6 +69,8 @@ export const Hierarchy: Story = {
     const canvas = within(canvasElement);
     const tree = canvas.getByRole("tree", { name: "Destination" });
     await expect(within(tree).getByRole("treeitem", { name: "Week 46" })).toBeVisible();
+    // Places carry no file or folder icon: a leaf place is still a place, and the disclosure shows what holds others.
+    await expect(tree.querySelector("[data-slot=tree-item] svg.lucide-file")).toBeNull();
     await expect(within(tree).getByRole("treeitem", { name: "Navigation" })).toHaveAccessibleDescription(
       "Current location",
     );
