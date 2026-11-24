@@ -65,6 +65,18 @@ function GalleryInShell({ items, onIndexChange, onChoose, ...props }: IGalleryDe
               </Button>
             )
           }
+          renderItemFooter={(entry) => (
+            <Button
+              size="sm"
+              disabledReason={chosen === entry.key ? `${entry.label} is your answer` : undefined}
+              onClick={() => {
+                setChosen(entry.key);
+                onChoose?.(entry.key);
+              }}
+            >
+              {chosen === entry.key ? `${entry.label} chosen` : `Choose ${entry.label}`}
+            </Button>
+          )}
         />
       </MediaShell>
     </>
@@ -79,7 +91,7 @@ const meta: Meta<typeof ImageGallery> = {
     docs: {
       description: {
         component:
-          'Import `ImageGallery` and `MediaShell` from `@alexgorbatchev/shadcn/image-viewer`. `MediaShell` is the full-screen shell every image, comparison, gallery and diagram opens in: `title` (one line, truncated) and an optional `description` in the header, an always visible Close, and `children` filling the stage; `onOpenChange` receives Base UI\'s change details, so Escape can close an inner layer first with `details.cancel()`. `ImageGallery` steps through `items` (`{ key, src, alt, label }`) in one `ImageViewer` at the controlled `index`, keeping the zoom and viewed position between items so the same area of each can be compared. Its toolbar holds the zoom bar, Previous, "n of m" and Next (named by `previousLabel` and `nextLabel`, disabled with a reason at either end) and then `toolbar`, such as a Choose action; Left and Right step on the focused stage only at Fit, where arrows do not pan, and each step is announced politely as "<label> · n of m". `overlay`, `imageRef`, `stageRef`, `onStageKeyDown` and `stageKeyShortcuts` pass to the viewer. Name the shell after the shown item.',
+          'Import `ImageGallery` and `MediaShell` from `@alexgorbatchev/shadcn/image-viewer`. `MediaShell` is the full-screen shell every image, comparison, gallery and diagram opens in: `title` (one line, truncated) and an optional `description` in the header, an always visible Close, and `children` filling the stage; `onOpenChange` receives Base UI\'s change details, so Escape can close an inner layer first with `details.cancel()`. `ImageGallery` steps through `items` (`{ key, src, alt, label }`) in one `ImageViewer` at the controlled `index`, keeping the zoom and viewed position between items so the same area of each can be compared. Its toolbar holds the zoom bar, Previous, "n of m" and Next (named by `previousLabel` and `nextLabel`, disabled with a reason at either end), an optional "Compare all" toggle (enabled by `allowCompareAll` or `renderItemFooter`) that shows every item side by side with synchronized scrolling and per-item footers, and then `toolbar`, such as a Choose action; Left and Right step on the focused stage only at Fit, where arrows do not pan, and each step is announced politely as "<label> · n of m". `overlay`, `imageRef`, `stageRef`, `onStageKeyDown` and `stageKeyShortcuts` pass to the viewer. Name the shell after the shown item.',
       },
     },
   },
@@ -138,6 +150,32 @@ export const StepAndChoose: Story = {
     await findShown(dialog, "Quiet");
     await expect(dialog.getByRole("region", { name: `Quiet, ${percent}` })).toBeVisible();
 
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() => expect(body.queryByRole("dialog")).toBeNull());
+  },
+};
+
+export const CompareAll: Story = {
+  render: (args) => <GalleryInShell items={args.items} onIndexChange={args.onIndexChange} onChoose={chooseSpy} />,
+  play: async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+    await userEvent.click(canvas.getByRole("button", { name: "Open options" }));
+    const body = within(canvasElement.ownerDocument.body);
+    const shell = await body.findByRole("dialog", { name: "Quiet · 1 of 3" });
+    const dialog = within(shell);
+    await findShown(dialog, "Quiet");
+    await userEvent.click(dialog.getByRole("button", { name: "Compare all" }));
+    await findShown(dialog, "Quiet");
+    await findShown(dialog, "Bold");
+    await findShown(dialog, "Playful");
+    await expect(dialog.getByRole("button", { name: "Choose Quiet" })).toBeVisible();
+    await expect(dialog.getByRole("button", { name: "Choose Bold" })).toBeVisible();
+    await expect(dialog.getByRole("button", { name: "Choose Playful" })).toBeVisible();
+    await userEvent.click(dialog.getByRole("button", { name: "Choose Bold" }));
+    await expect(chooseSpy).toHaveBeenLastCalledWith("bold");
+    await expect(dialog.getByRole("button", { name: "Bold chosen" })).toHaveAttribute("aria-disabled", "true");
+    await userEvent.click(dialog.getByRole("button", { name: "Compare all" }));
+    await expect(dialog.getByText("1 of 3")).toBeVisible();
     await userEvent.keyboard("{Escape}");
     await waitFor(() => expect(body.queryByRole("dialog")).toBeNull());
   },

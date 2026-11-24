@@ -1,8 +1,23 @@
+import { useControlled } from "@base-ui/utils/useControlled";
 import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
-import { useState, type KeyboardEvent, type ReactElement, type ReactNode, type Ref } from "react";
+import {
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type ReactElement,
+  type ReactNode,
+  type Ref,
+  type RefObject,
+} from "react";
 import type { IDensityProps } from "../../density/types.js";
+import { cn } from "../../utils/cn.js";
 import { Button } from "../Button.js";
+import { Toggle } from "../Toggle.js";
 import { ImageViewer } from "./ImageViewer.js";
+import { ImageViewport } from "./ImageViewport.js";
+import { ImageZoomToggle } from "./ImageZoomToggle.js";
+import { useImageLoad } from "./hooks/useImageLoad.js";
+import type { INormalizedImagePoint, ImageZoom } from "./types.js";
 
 export interface IImageGalleryItem {
   /** Stable identity of the item, such as an option value. */
@@ -36,6 +51,90 @@ export interface IImageGalleryProps extends IDensityProps {
   onStageKeyDown?: (event: KeyboardEvent<HTMLDivElement>) => void;
   /** Further `aria-keyshortcuts` of the stage, such as "R". */
   stageKeyShortcuts?: string;
+  /** Controlled side-by-side mode showing every item together with synchronized scrolling. */
+  compareAll?: boolean;
+  /** Initial side-by-side mode when uncontrolled. Defaults to `false`. */
+  defaultCompareAll?: boolean;
+  onCompareAllChange?: (compareAll: boolean) => void;
+  /** Offers the Compare all toggle when there are at least two items. Enabled automatically when `renderItemFooter`, `compareAll`, or `onCompareAllChange` is passed. */
+  allowCompareAll?: boolean;
+  /** Label of the Compare all toggle button. Defaults to "Compare all". */
+  compareAllLabel?: string;
+  /** Footer rendered below each item in Compare all mode, such as a per-option Choose button. */
+  renderItemFooter?: (item: IImageGalleryItem, index: number) => ReactNode;
+}
+
+interface IScrollPosition {
+  left: number;
+  top: number;
+}
+
+interface ICompareAllPaneProps {
+  item: IImageGalleryItem;
+  zoom: ImageZoom;
+  center: RefObject<INormalizedImagePoint>;
+  onZoomChange: (zoom: ImageZoom) => void;
+  viewportRef: (node: HTMLDivElement | null) => void;
+  onViewportScroll: (viewport: HTMLDivElement) => void;
+  footer?: ReactNode;
+}
+
+function CompareAllPane({
+  item,
+  zoom,
+  center,
+  onZoomChange,
+  viewportRef,
+  onViewportScroll,
+  footer,
+}: ICompareAllPaneProps): ReactElement {
+  const [image, imageHandlers] = useImageLoad(item.src);
+  return (
+    <section
+      aria-label={item.label}
+      data-slot="image-gallery-compare-pane"
+      className="flex min-h-64 min-w-0 flex-col overflow-hidden rounded-md border border-border bg-background @2xl:min-h-0"
+    >
+      <div
+        data-slot="image-gallery-compare-header"
+        className="flex h-control shrink-0 items-center justify-between gap-2 border-b border-border px-control-x text-xs font-medium text-muted-foreground"
+      >
+        <span className="truncate">{item.label}</span>
+      </div>
+      <ImageViewport
+        label={item.label}
+        zoom={zoom}
+        naturalSize={image.size}
+        center={center}
+        onZoomChange={onZoomChange}
+        viewportRef={viewportRef}
+        onViewportScroll={onViewportScroll}
+        fallback={
+          image.status === "error" ? (
+            <p className="m-auto p-panel text-center text-sm text-muted-foreground">Image could not be loaded.</p>
+          ) : undefined
+        }
+      >
+        <img
+          src={item.src}
+          alt={item.alt}
+          draggable={false}
+          data-slot="image-gallery-compare-image"
+          className="block size-full outline-1 -outline-offset-1 outline-media-edge select-none"
+          onLoad={imageHandlers.onLoad}
+          onError={imageHandlers.onError}
+        />
+      </ImageViewport>
+      {footer !== undefined && footer !== null && (
+        <div
+          data-slot="image-gallery-compare-footer"
+          className="flex shrink-0 items-center justify-between gap-2 border-t border-border p-2"
+        >
+          {footer}
+        </div>
+      )}
+    </section>
+  );
 }
 
 /** Whether the viewer around the focused stage shows the whole image, where Left and Right cannot mean panning. */
@@ -45,9 +144,10 @@ function isFitted(stage: HTMLElement): boolean {
 
 /**
  * Steps through a set of images in one `ImageViewer`, keeping its zoom and viewed position, so the same area of each
- * image can be compared. The toolbar holds the zoom bar, Previous, "2 of 3" and Next, then `toolbar`; Left and Right
- * step on the focused stage only at Fit, where arrows do not pan. Each step is announced politely with the item's
- * label and position. Compose it inside `MediaShell` and name the shell after the shown item.
+ * image can be compared. The toolbar holds the zoom bar, Previous, "2 of 3" and Next, an optional Compare all toggle,
+ * then `toolbar`; Left and Right step on the focused stage only at Fit, where arrows do not pan. Compare all shows
+ * every item side by side with synchronized scrolling and optional per-item footers. Compose it inside `MediaShell`
+ * and name the shell after the shown item.
  */
 export function ImageGallery({
   items,
@@ -63,11 +163,36 @@ export function ImageGallery({
   stageRef,
   onStageKeyDown,
   stageKeyShortcuts,
+  compareAll: compareAllProp,
+  defaultCompareAll = false,
+  onCompareAllChange,
+  allowCompareAll,
+  compareAllLabel = "Compare all",
+  renderItemFooter,
   density,
 }: IImageGalleryProps): ReactElement {
   const [announcement, setAnnouncement] = useState("");
+  const [compareZoom, setCompareZoom] = useState<ImageZoom>("fit");
+  const [isComparingAll, setCompareAllState] = useControlled({
+    controlled: compareAllProp,
+    default: defaultCompareAll,
+    name: "ImageGallery",
+    state: "compareAll",
+  });
+  const compareCenter = useRef<INormalizedImagePoint>({ x: 0.5, y: 0.5 });
+  const compareViewports = useRef<Map<string, HTMLDivElement>>(new Map());
+  const expectedScrollRef = useRef(new WeakMap<HTMLElement, IScrollPosition>());
   const item = items[index];
   const count = items.length;
+  const canCompareAll =
+    count > 1 &&
+    (allowCompareAll ??
+      (compareAllProp !== undefined || onCompareAllChange !== undefined || renderItemFooter !== undefined));
+
+  function setCompareAll(next: boolean): void {
+    setCompareAllState(next);
+    onCompareAllChange?.(next);
+  }
 
   function step(next: number): void {
     const target = items[next];
@@ -85,10 +210,75 @@ export function ImageGallery({
     step(event.key === "ArrowLeft" ? index - 1 : index + 1);
   }
 
+  function syncCompareScroll(sourceKey: string, source: HTMLDivElement): void {
+    const expected = expectedScrollRef.current.get(source);
+    expectedScrollRef.current.delete(source);
+    if (expected?.left === source.scrollLeft && expected.top === source.scrollTop) return;
+    for (const [key, target] of compareViewports.current) {
+      if (key === sourceKey) continue;
+      const previous = { left: target.scrollLeft, top: target.scrollTop };
+      target.scrollLeft = source.scrollLeft;
+      target.scrollTop = source.scrollTop;
+      if (target.scrollLeft !== previous.left || target.scrollTop !== previous.top) {
+        expectedScrollRef.current.set(target, { left: target.scrollLeft, top: target.scrollTop });
+      }
+    }
+  }
+
   if (!item) return <div data-slot="image-gallery" data-density={density} />;
+
+  if (canCompareAll && isComparingAll) {
+    return (
+      <div
+        data-slot="image-gallery"
+        data-mode="compare-all"
+        data-scroll="none"
+        data-density={density}
+        className="@container flex size-full min-h-0 min-w-0 flex-1 flex-col gap-2"
+      >
+        <div
+          data-slot="image-gallery-toolbar"
+          className="flex shrink-0 flex-wrap items-center gap-control-gap *:shrink-0"
+        >
+          <ImageZoomToggle zoom={compareZoom} onZoomChange={setCompareZoom} density={density} />
+          <Toggle variant="outline" size="sm" density={density} pressed onPressedChange={setCompareAll}>
+            {compareAllLabel}
+          </Toggle>
+        </div>
+        <div
+          data-slot="image-gallery-compare-grid"
+          className={cn(
+            "grid min-h-0 min-w-0 flex-1 grid-cols-1 gap-3 overflow-y-auto @2xl:overflow-hidden",
+            count === 2 ? "@2xl:grid-cols-2" : "@xl:grid-cols-2 @3xl:grid-cols-3",
+          )}
+        >
+          {items.map((entry, entryIndex) => (
+            <CompareAllPane
+              key={entry.key}
+              item={entry}
+              zoom={compareZoom}
+              center={compareCenter}
+              onZoomChange={setCompareZoom}
+              viewportRef={(node) => {
+                if (node) compareViewports.current.set(entry.key, node);
+                else compareViewports.current.delete(entry.key);
+              }}
+              onViewportScroll={(viewport) => syncCompareScroll(entry.key, viewport)}
+              footer={renderItemFooter?.(entry, entryIndex)}
+            />
+          ))}
+        </div>
+        <p role="status" data-slot="image-gallery-status" className="sr-only">
+          {announcement}
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div
       data-slot="image-gallery"
+      data-mode="single"
       data-scroll="none"
       data-density={density}
       className="flex size-full min-h-0 min-w-0 flex-1 flex-col"
@@ -116,6 +306,7 @@ export function ImageGallery({
               <Button
                 variant="outline"
                 size="icon-sm"
+                density={density}
                 aria-label={previousLabel}
                 disabledReason={index === 0 ? "This is the first image" : undefined}
                 onClick={() => step(index - 1)}
@@ -128,6 +319,7 @@ export function ImageGallery({
               <Button
                 variant="outline"
                 size="icon-sm"
+                density={density}
                 aria-label={nextLabel}
                 disabledReason={index === count - 1 ? "This is the last image" : undefined}
                 onClick={() => step(index + 1)}
@@ -135,6 +327,11 @@ export function ImageGallery({
                 <ChevronRightIcon />
               </Button>
             </div>
+            {canCompareAll && (
+              <Toggle variant="outline" size="sm" density={density} pressed={false} onPressedChange={setCompareAll}>
+                {compareAllLabel}
+              </Toggle>
+            )}
             {toolbar}
           </>
         }

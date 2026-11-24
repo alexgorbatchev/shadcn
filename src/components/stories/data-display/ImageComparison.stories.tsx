@@ -119,7 +119,7 @@ const meta: Meta<typeof ImageComparison> = {
     docs: {
       description: {
         component:
-          'Import from `@alexgorbatchev/shadcn/image-viewer`. ImageComparison fills its container and compares `before` and `after` images (`{ src, alt, crossOrigin? }`) labelled by `beforeLabel` and `afterLabel` (default "Before" and "After"). `toggle` (the default) shows one image, chosen by the "Shown image" control or B and A on the focused stage (`side`, default `after`), and the "Hold to show before" (or "after") button shows the other image while a pointer, Space, or Enter is held; the header announces the shown image. `swipe` stacks both images; the divider is a slider (0–100, arrows ±1, Page Up/Page Down ±10, Home/End) whose handle drags with pointer capture. `side-by-side` shows labelled panes left and right (`horizontal`) or top and bottom (`vertical`) that scroll in sync when zoomed. Every mode starts fitted and offers original size (zoom `1`); the focused stage also takes the ImageViewer stage keys, Mod+wheel and pinch, and its name ends with the zoom percent. A differently sized before image is drawn inside the after image box, and the toolbar reports the mismatch. "Highlight differences" compares pixels on first use, caches the result per image pair, outlines changed regions, and summarizes them; it is disabled with a reason when pixels cannot be read. `mode`, `side`, `orientation`, `zoom`, and `showDifferences` are controllable with matching `default*` and `on*Change` props; `showToolbar={false}` hides the controls, which sit beside wide comparisons and below narrow ones.',
+          'Import from `@alexgorbatchev/shadcn/image-viewer`. ImageComparison fills its container and compares `before` and `after` images (`{ src, alt, crossOrigin? }`) labelled by `beforeLabel` and `afterLabel` (default "Before" and "After"). `toggle` (the default) shows one image, chosen by the "Shown image" control or B and A on the focused stage (`side`, default `after`), and the "Hold to show before" (or "after") button shows the other image while a pointer, Space, or Enter is held; the header announces the shown image. `swipe` stacks both images; the divider is a slider (0–100, arrows ±1, Page Up/Page Down ±10, Home/End) whose handle drags with pointer capture. `side-by-side` shows labelled panes left and right (`horizontal`) or top and bottom (`vertical`, chosen automatically when the stage is taller than wide unless controlled) that scroll in sync when zoomed. Every mode starts fitted and offers original size (zoom `1`) with edge-fade scroll hints when content extends out of view; the focused stage also takes the ImageViewer stage keys, Mod+wheel and pinch, and its name ends with the zoom percent. A differently sized before image is drawn inside the after image box, and the toolbar reports the mismatch. "Highlight differences" compares pixels on first use, caches the result per image pair, outlines changed regions, and offers a "Change n of m" stepper (`N` / `Shift+N` on the stage, centering each change in every shown pane, and jumping to the first change at original size); it is disabled with a reason when pixels cannot be read. `toolbar`, `beforeOverlay`, `afterOverlay`, `stageOverlay`, and `onCommentDifference` let consumers host region comments in every mode. Controls sit in a single horizontal wrapping row above the stage so images use the full width.',
       },
     },
   },
@@ -485,6 +485,34 @@ export const WithoutToolbar: Story = {
     slider.focus();
     await userEvent.keyboard("{PageDown}");
     await expect(slider).toHaveAttribute("aria-valuetext", "Baseline 40%, Candidate 60%");
+  },
+};
+
+export const StepThroughChanges: Story = {
+  args: {
+    before: { src: fixture_widerBeforeScreenshot, alt: BEFORE_ALT },
+    defaultMode: "side-by-side",
+    defaultShowDifferences: true,
+    onCommentDifference: fn(),
+  },
+  play: async ({ args, canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+    await findAfterImage(canvas);
+    const stepper = within(await canvas.findByRole("group", { name: "Changed regions" }));
+    await expect(stepper.getByText("Change 1 of 5")).toBeVisible();
+    await userEvent.click(canvas.getByRole("button", { name: "Next change" }));
+    await expect(stepper.getByText("Change 2 of 5")).toBeVisible();
+    await expect(canvasElement.querySelector("[data-slot=image-comparison-change-announcement]")).toHaveTextContent(
+      "Change 2 of 5",
+    );
+    const afterStage = canvas.getByRole("region", { name: /^After, \d+%$/ });
+    afterStage.focus();
+    await userEvent.keyboard("n");
+    await expect(stepper.getByText("Change 3 of 5")).toBeVisible();
+    await userEvent.keyboard("{Shift>}N{/Shift}");
+    await expect(stepper.getByText("Change 2 of 5")).toBeVisible();
+    await userEvent.click(canvas.getByRole("button", { name: "Comment on change 2 of 5" }));
+    await expect(args.onCommentDifference).toHaveBeenCalledTimes(1);
   },
 };
 

@@ -4,6 +4,7 @@ import { useStableCallback } from "@base-ui/utils/useStableCallback";
 import {
   useEffect,
   useRef,
+  useState,
   type KeyboardEvent,
   type MouseEvent,
   type PointerEvent,
@@ -53,6 +54,15 @@ interface IImageViewportProps {
 type Gesture =
   | { kind: "pan"; pointerId: number; startX: number; startY: number; left: number; top: number; moved: boolean }
   | { kind: "pinch"; distance: number; scale: number };
+
+interface IScrollHints {
+  left: boolean;
+  right: boolean;
+  top: boolean;
+  bottom: boolean;
+}
+
+const NO_SCROLL_HINTS: IScrollHints = { left: false, right: false, top: false, bottom: false };
 
 /** Pointer travel, in CSS pixels, before a press becomes a pan rather than a click. */
 const PAN_THRESHOLD = 4;
@@ -112,6 +122,7 @@ export function ImageViewport({
   const stageRef = useRef<HTMLDivElement>(null);
   const ref = useMergedRefs(elementRef, viewportRef);
   const viewportSize = useElementSize(elementRef);
+  const [scrollHints, setScrollHints] = useState<IScrollHints>(NO_SCROLL_HINTS);
   const pointers = useRef(new Map<number, Pick<MouseEvent, "clientX" | "clientY">>());
   const gesture = useRef<Gesture | null>(null);
   const suppressClick = useRef(false);
@@ -122,16 +133,38 @@ export function ImageViewport({
   const canPanX = viewportSize !== undefined && stageWidth > viewportSize.width + 0.5;
   const canPanY = viewportSize !== undefined && stageHeight > viewportSize.height + 0.5;
 
+  const updateScrollHints = useStableCallback((viewport: HTMLDivElement): void => {
+    const next: IScrollHints =
+      zoom === "fit"
+        ? NO_SCROLL_HINTS
+        : {
+            left: viewport.scrollLeft > 1,
+            right: viewport.scrollLeft + viewport.clientWidth < viewport.scrollWidth - 1,
+            top: viewport.scrollTop > 1,
+            bottom: viewport.scrollTop + viewport.clientHeight < viewport.scrollHeight - 1,
+          };
+    setScrollHints((current) =>
+      current.left === next.left &&
+      current.right === next.right &&
+      current.top === next.top &&
+      current.bottom === next.bottom
+        ? current
+        : next,
+    );
+  });
+
   useIsoLayoutEffect(() => {
     const viewport = elementRef.current;
     if (!viewport || stageWidth === 0 || stageHeight === 0) return;
     if (zoom === "fit") {
       center.current = { x: 0.5, y: 0.5 };
+      updateScrollHints(viewport);
       return;
     }
     viewport.scrollLeft = center.current.x * stageWidth - viewport.clientWidth / 2;
     viewport.scrollTop = center.current.y * stageHeight - viewport.clientHeight / 2;
-  }, [center, stageHeight, stageWidth, zoom]);
+    updateScrollHints(viewport);
+  }, [center, stageHeight, stageWidth, updateScrollHints, zoom]);
 
   /** Changes the zoom so the image point under `anchor` (by default the viewport's center) stays where it is. */
   const changeZoom = useStableCallback((next: ImageZoom, anchor?: Pick<MouseEvent, "clientX" | "clientY">): void => {
@@ -181,6 +214,7 @@ export function ImageViewport({
         y: stageHeight > viewport.clientHeight ? (viewport.scrollTop + viewport.clientHeight / 2) / stageHeight : 0.5,
       };
     }
+    updateScrollHints(viewport);
     onViewportScroll?.(viewport);
   }
 
@@ -292,37 +326,71 @@ export function ImageViewport({
   }
 
   return (
-    <div
-      ref={ref}
-      role="region"
-      aria-label={stage ? `${label}, ${formatImageZoom(stage.scale)}` : label}
-      aria-keyshortcuts={onZoomChange ? [STAGE_KEYS, stageKeyShortcuts].filter(Boolean).join(" ") : stageKeyShortcuts}
-      tabIndex={0}
-      data-slot="image-viewport"
-      data-zoom={zoom}
-      data-scale={stage?.scale}
-      data-pannable={canPanX || canPanY ? "" : undefined}
-      onScroll={handleScroll}
-      onKeyDown={handleKeyDown}
-      onPointerDown={handlePointerDown}
-      onPointerMove={handlePointerMove}
-      onPointerUp={handlePointerEnd}
-      onPointerCancel={handlePointerEnd}
-      onClickCapture={handleClickCapture}
-      className={cn(
-        "flex min-h-0 min-w-0 flex-1 touch-none overscroll-contain outline-none select-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-inset data-pannable:cursor-grab data-panning:cursor-grabbing",
-        zoom === "fit" ? "overflow-hidden" : "overflow-auto",
-      )}
-    >
-      {fallback ?? (
+    <div data-slot="image-viewport-frame" data-scroll="none" className="relative flex min-h-0 min-w-0 flex-1">
+      <div
+        ref={ref}
+        role="region"
+        aria-label={stage ? `${label}, ${formatImageZoom(stage.scale)}` : label}
+        aria-keyshortcuts={onZoomChange ? [STAGE_KEYS, stageKeyShortcuts].filter(Boolean).join(" ") : stageKeyShortcuts}
+        tabIndex={0}
+        data-slot="image-viewport"
+        data-zoom={zoom}
+        data-scale={stage?.scale}
+        data-pannable={canPanX || canPanY ? "" : undefined}
+        onScroll={handleScroll}
+        onKeyDown={handleKeyDown}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerEnd}
+        onPointerCancel={handlePointerEnd}
+        onClickCapture={handleClickCapture}
+        className={cn(
+          "flex min-h-0 min-w-0 flex-1 touch-none overscroll-contain outline-none select-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-inset data-pannable:cursor-grab data-panning:cursor-grabbing",
+          zoom === "fit" ? "overflow-hidden" : "overflow-auto",
+        )}
+      >
+        {fallback ?? (
+          <div
+            ref={stageRef}
+            data-slot="image-stage"
+            className="relative m-auto shrink-0"
+            style={{ width: stageWidth, height: stageHeight }}
+          >
+            {children}
+          </div>
+        )}
+      </div>
+      {scrollHints.left && (
         <div
-          ref={stageRef}
-          data-slot="image-stage"
-          className="relative m-auto shrink-0"
-          style={{ width: stageWidth, height: stageHeight }}
-        >
-          {children}
-        </div>
+          data-slot="image-viewport-scroll-hint"
+          data-edge="left"
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-y-0 left-0 w-5 border-l-2 border-primary/50 bg-gradient-to-r from-black/25 to-transparent"
+        />
+      )}
+      {scrollHints.right && (
+        <div
+          data-slot="image-viewport-scroll-hint"
+          data-edge="right"
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-y-0 right-0 w-5 border-r-2 border-primary/50 bg-gradient-to-l from-black/25 to-transparent"
+        />
+      )}
+      {scrollHints.top && (
+        <div
+          data-slot="image-viewport-scroll-hint"
+          data-edge="top"
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-0 h-5 border-t-2 border-primary/50 bg-gradient-to-b from-black/25 to-transparent"
+        />
+      )}
+      {scrollHints.bottom && (
+        <div
+          data-slot="image-viewport-scroll-hint"
+          data-edge="bottom"
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-5 border-b-2 border-primary/50 bg-gradient-to-t from-black/25 to-transparent"
+        />
       )}
     </div>
   );

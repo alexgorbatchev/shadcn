@@ -1,8 +1,7 @@
-import { Columns2Icon, Rows2Icon } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon, Columns2Icon, Rows2Icon } from "lucide-react";
 import { useId, type KeyboardEvent, type ReactElement, type ReactNode } from "react";
 import type { IDensityProps } from "../../density/types.js";
 import { Button } from "../Button.js";
-import { Field, FieldContent, FieldDescription, FieldLabel } from "../Field.js";
 import { Switch } from "../Switch.js";
 import { ToggleGroup, ToggleGroupItem } from "../ToggleGroup.js";
 import { ImageZoomToggle } from "./ImageZoomToggle.js";
@@ -27,11 +26,14 @@ interface IImageComparisonToolbarProps extends IDensityProps {
   showDifferences: boolean;
   onShowDifferencesChange: (showDifferences: boolean) => void;
   differences: ImageDifferenceState;
+  activeRegionIndex: number;
+  onStepChange: (delta: -1 | 1) => void;
   onPeekChange: (isPeeking: boolean) => void;
   beforeLabel: string;
   afterLabel: string;
   beforeSize?: IImageSize;
   afterSize?: IImageSize;
+  toolbar?: ReactNode;
 }
 
 interface IToolbarSectionProps {
@@ -42,9 +44,9 @@ interface IToolbarSectionProps {
 
 function ToolbarSection({ title, titleId, children }: IToolbarSectionProps): ReactElement {
   return (
-    <div data-slot="image-comparison-toolbar-section" className="flex min-w-0 flex-col gap-1.5">
-      {/* The options name themselves; a narrow bar drops the visible titles to save height. */}
-      <span id={titleId} className="sr-only text-xs font-medium text-muted-foreground @3xl:not-sr-only">
+    <div data-slot="image-comparison-toolbar-section" className="flex shrink-0 items-center">
+      {/* The options name themselves; keeping group titles screen-reader-only lets the bar fit in one row. */}
+      <span id={titleId} className="sr-only">
         {title}
       </span>
       {children}
@@ -73,7 +75,7 @@ function formatSize(size: IImageSize): string {
   return `${size.width} × ${size.height}`;
 }
 
-/** Comparison controls: a side panel when the comparison is wide and a wrapping bar below it when narrow. */
+/** Comparison controls in a single horizontal wrapping toolbar row above the stage so images get the full width. */
 export function ImageComparisonToolbar({
   mode,
   onModeChange,
@@ -86,16 +88,22 @@ export function ImageComparisonToolbar({
   showDifferences,
   onShowDifferencesChange,
   differences,
+  activeRegionIndex,
+  onStepChange,
   onPeekChange,
   beforeLabel,
   afterLabel,
   beforeSize,
   afterSize,
+  toolbar,
   density,
 }: IImageComparisonToolbarProps): ReactElement {
   const id = useId();
   const isUnavailable = differences.status === "unavailable";
+  const regionCount = showDifferences && differences.status === "ready" ? differences.diff.regions.length : 0;
+  const hasStepper = regionCount > 0;
   const releasePeek = (): void => onPeekChange(false);
+  const statusText = describeDifferences(differences, showDifferences);
   const sizeMismatch =
     beforeSize && afterSize && (beforeSize.width !== afterSize.width || beforeSize.height !== afterSize.height)
       ? `Sizes differ: ${beforeLabel} ${formatSize(beforeSize)}, ${afterLabel} ${formatSize(afterSize)}. ` +
@@ -108,7 +116,7 @@ export function ImageComparisonToolbar({
       aria-label="Comparison controls"
       data-slot="image-comparison-toolbar"
       data-density={density}
-      className="flex shrink-0 flex-wrap items-end gap-x-panel gap-y-3 border-t border-border p-panel-sm @3xl:w-72 @3xl:flex-col @3xl:flex-nowrap @3xl:items-stretch @3xl:overflow-y-auto @3xl:border-t-0 @3xl:border-s"
+      className="flex shrink-0 flex-wrap items-center gap-x-2 gap-y-2 border-b border-border px-panel-sm py-2"
     >
       <ToolbarSection title="Mode" titleId={`${id}-mode`}>
         <ToggleGroup
@@ -119,6 +127,7 @@ export function ImageComparisonToolbar({
           variant="outline"
           size="sm"
           spacing={0}
+          density={density}
         >
           <ToggleGroupItem value="toggle">Toggle</ToggleGroupItem>
           <ToggleGroupItem value="swipe">Swipe</ToggleGroupItem>
@@ -136,6 +145,7 @@ export function ImageComparisonToolbar({
           size="sm"
           spacing={0}
           disabled={mode !== "toggle"}
+          density={density}
         >
           <ToggleGroupItem value="before">{beforeLabel}</ToggleGroupItem>
           <ToggleGroupItem value="after">{afterLabel}</ToggleGroupItem>
@@ -151,6 +161,7 @@ export function ImageComparisonToolbar({
           size="sm"
           spacing={0}
           disabled={mode !== "side-by-side"}
+          density={density}
         >
           <ToggleGroupItem value="horizontal">
             <Columns2Icon data-icon="inline-start" />
@@ -163,13 +174,14 @@ export function ImageComparisonToolbar({
         </ToggleGroup>
       </ToolbarSection>
       <ToolbarSection title="Zoom" titleId={`${id}-zoom`}>
-        <ImageZoomToggle zoom={zoom} onZoomChange={onZoomChange} />
+        <ImageZoomToggle zoom={zoom} onZoomChange={onZoomChange} density={density} />
       </ToolbarSection>
       <Button
         variant="outline"
         size="sm"
+        density={density}
         disabled={mode !== "toggle"}
-        className="touch-none"
+        className="shrink-0 touch-none"
         onPointerDown={(event) => {
           if (event.button === 0) onPeekChange(true);
         }}
@@ -187,33 +199,83 @@ export function ImageComparisonToolbar({
       >
         {`Hold to show ${side === "before" ? "after" : "before"}`}
       </Button>
-      <Field orientation="horizontal">
-        <Switch
-          id={`${id}-differences`}
-          aria-describedby={`${id}-differences-status`}
-          checked={showDifferences && !isUnavailable}
-          disabled={isUnavailable}
-          onCheckedChange={onShowDifferencesChange}
-        />
-        <FieldContent>
-          <FieldLabel htmlFor={`${id}-differences`}>Highlight differences</FieldLabel>
-          {showDifferences && differences.status === "ready" && (
-            <FieldDescription data-slot="image-comparison-legend" className="flex items-center gap-1.5">
-              <span
-                aria-hidden="true"
-                className="mx-[3px] size-2.5 shrink-0 rounded-xs bg-warning/10 ring-1 ring-background outline-2 outline-offset-1 outline-warning"
-              />
-              Changed region
-            </FieldDescription>
-          )}
-        </FieldContent>
-      </Field>
-      <div data-slot="image-comparison-status" className="flex min-w-0 flex-col gap-1 text-xs text-muted-foreground">
-        <p id={`${id}-differences-status`} role="status">
-          {describeDifferences(differences, showDifferences)}
+      <div className="flex shrink-0 flex-wrap items-center gap-2">
+        <div className="flex items-center gap-1.5">
+          <Switch
+            id={`${id}-differences`}
+            aria-describedby={`${id}-differences-status`}
+            checked={showDifferences && !isUnavailable}
+            disabled={isUnavailable}
+            onCheckedChange={onShowDifferencesChange}
+          />
+          <label
+            htmlFor={`${id}-differences`}
+            className="cursor-pointer text-sm leading-none font-medium whitespace-nowrap select-none"
+          >
+            Highlight differences
+          </label>
+        </div>
+        {showDifferences && differences.status === "ready" && (
+          <span
+            data-slot="image-comparison-legend"
+            className="flex items-center gap-1.5 text-xs whitespace-nowrap text-muted-foreground"
+          >
+            <span
+              aria-hidden="true"
+              className="mx-[3px] size-2.5 shrink-0 rounded-xs bg-warning/10 ring-1 ring-background outline-2 outline-offset-1 outline-warning"
+            />
+            Changed region
+          </span>
+        )}
+        {hasStepper && (
+          <div
+            role="group"
+            aria-label="Changed regions"
+            data-slot="image-comparison-stepper"
+            className="flex items-center gap-1.5 border-s border-border ps-2"
+          >
+            <span
+              data-slot="image-comparison-change-count"
+              className="text-xs whitespace-nowrap text-muted-foreground tabular-nums"
+            >
+              Change {activeRegionIndex + 1} of {regionCount}
+            </span>
+            <Button
+              variant="outline"
+              size="icon-sm"
+              density={density}
+              aria-label="Previous change"
+              aria-keyshortcuts="Shift+N"
+              onClick={() => onStepChange(-1)}
+            >
+              <ChevronLeftIcon />
+            </Button>
+            <Button
+              variant="outline"
+              size="icon-sm"
+              density={density}
+              aria-label="Next change"
+              aria-keyshortcuts="N"
+              onClick={() => onStepChange(1)}
+            >
+              <ChevronRightIcon />
+            </Button>
+          </div>
+        )}
+        <p
+          id={`${id}-differences-status`}
+          role="status"
+          className={hasStepper || !statusText ? "sr-only" : "text-xs text-muted-foreground"}
+        >
+          {statusText}
         </p>
-        {sizeMismatch && <p data-slot="image-comparison-size-mismatch">{sizeMismatch}</p>}
       </div>
+      {toolbar}
+      {sizeMismatch && (
+        <p data-slot="image-comparison-size-mismatch" className="w-full text-xs text-muted-foreground">
+          {sizeMismatch}
+        </p>
+      )}
     </div>
   );
 }

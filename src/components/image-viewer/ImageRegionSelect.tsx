@@ -9,6 +9,8 @@ export interface IImageRegionSelectProps {
   region?: IImageRect;
   /** Receives each placed region in normalized image coordinates, each value from 0 to 1. */
   onRegionChange: (region: IImageRect) => void;
+  /** Runs when a new drag or click starts on the image, with its normalized start point. */
+  onStart?: (point: INormalizedImagePoint) => void;
 }
 
 /** Pointer travel, in CSS pixels, below which a press is a click rather than a region drag. */
@@ -51,7 +53,7 @@ function toBox(region: IImageRect): { left: string; top: string; width: string; 
  * turned a region tool on, so pans and pinches stay navigation otherwise. Its pointer is kept from panning the stage; a
  * second finger cancels the drawing and pinch-zooms instead.
  */
-export function ImageRegionSelect({ region, onRegionChange }: IImageRegionSelectProps): ReactElement {
+export function ImageRegionSelect({ region, onRegionChange, onStart }: IImageRegionSelectProps): ReactElement {
   const drag = useRef<IDrag | null>(null);
   const pendingClick = useRef<IPendingClick | null>(null);
   const [draft, setDraft] = useState<IImageRect>();
@@ -89,7 +91,9 @@ export function ImageRegionSelect({ region, onRegionChange }: IImageRegionSelect
         if (event.pointerType === "mouse" && event.button !== 0) return;
         event.preventDefault();
         event.currentTarget.setPointerCapture(event.pointerId);
-        drag.current = { pointerId: event.pointerId, start: point(event) };
+        const start = point(event);
+        onStart?.(start);
+        drag.current = { pointerId: event.pointerId, start };
       }}
       onPointerMove={(event) => {
         const current = drag.current;

@@ -44,6 +44,8 @@ export interface IImageRegionBadgePosition {
 export interface IImageRegionMarkerProps extends ComponentProps<"div"> {
   /** Which kind of region the marker outlines. Defaults to `comment`. */
   variant?: ImageRegionMarkerVariant;
+  /** Emphasizes the currently focused or stepped-to marker above its siblings. */
+  active?: boolean;
   /** The region's box inside the positioned image box. Lets consumers place the marker without passing `style`. */
   region?: IImageRegionBox;
 }
@@ -55,6 +57,7 @@ export interface IImageRegionMarkerProps extends ComponentProps<"div"> {
  */
 export function ImageRegionMarker({
   variant,
+  active = false,
   region,
   className,
   style,
@@ -64,7 +67,13 @@ export function ImageRegionMarker({
     <div
       data-slot="image-region-marker"
       data-variant={variant ?? "comment"}
-      className={cn(imageRegionMarkerVariants({ variant }), className)}
+      data-active={active ? "" : undefined}
+      className={cn(
+        imageRegionMarkerVariants({ variant }),
+        active && "z-10 outline-[3px]",
+        active && variant === "difference" && "bg-warning/20",
+        className,
+      )}
       style={region ? { ...style, ...region } : style}
       {...props}
     />

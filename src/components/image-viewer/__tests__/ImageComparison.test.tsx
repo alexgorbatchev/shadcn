@@ -1,5 +1,5 @@
 import { assert, beforeEach, expect, onTestFinished, test, vi } from "vitest";
-import { commands, page } from "vitest/browser";
+import { commands, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 import { observeScrollGuards } from "../../../utils/observeScrollGuards";
 import { Dialog, DialogContent, DialogTitle } from "../../Dialog";
@@ -67,12 +67,12 @@ test("original-size panes follow each other when one scrolls with the wheel", as
   await expect.poll(() => beforePane.scrollTop).toBe(afterPane.scrollTop);
 });
 
-test("the toolbar sits beside a wide fullscreen comparison and below a narrow one", async () => {
+test("the toolbar sits above a wide fullscreen comparison in one row and side-by-side stacks vertically on a phone", async () => {
   const screen = await render(
     <Dialog defaultOpen>
       <DialogContent size="fullscreen">
         <DialogTitle>Checkout evidence</DialogTitle>
-        <ImageComparison before={before} after={after} />
+        <ImageComparison before={before} after={after} defaultMode="side-by-side" />
       </DialogContent>
     </Dialog>,
   );
@@ -80,16 +80,90 @@ test("the toolbar sits beside a wide fullscreen comparison and below a narrow on
   const stage = toolbar.parentElement?.querySelector("[data-slot=image-comparison-stage]");
   assert(stage);
   await expect
-    .poll(() => toolbar.getBoundingClientRect().left)
-    .toBeGreaterThanOrEqual(stage.getBoundingClientRect().right);
-  expect(toolbar.getBoundingClientRect().top).toBe(stage.getBoundingClientRect().top);
-  await expect.element(screen.getByText("Mode")).toBeVisible();
-  await page.viewport(414, 800);
+    .poll(() => stage.getBoundingClientRect().top)
+    .toBeGreaterThanOrEqual(toolbar.getBoundingClientRect().bottom - 1);
+  expect(stage.getBoundingClientRect().width).toBeCloseTo(toolbar.getBoundingClientRect().width, 0);
+  // All direct control children fit on one horizontal row at 1280x800.
+  const visibleChildren = [...toolbar.children].filter(
+    (child) => child instanceof HTMLElement && child.getBoundingClientRect().width > 0,
+  );
+  const tops = visibleChildren.map((child) => Math.round(child.getBoundingClientRect().top));
+  expect(Math.max(...tops) - Math.min(...tops)).toBeLessThanOrEqual(8);
+
+  const beforePane = screen.getByRole("region", { name: /^Before(, \d+%)?$/ }).element();
+  const afterPane = screen.getByRole("region", { name: /^After(, \d+%)?$/ }).element();
   await expect
-    .poll(() => toolbar.getBoundingClientRect().top)
-    .toBeGreaterThanOrEqual(stage.getBoundingClientRect().bottom);
-  expect(toolbar.getBoundingClientRect().left).toBe(stage.getBoundingClientRect().left);
-  await expect.element(screen.getByRole("group", { name: "Mode" })).toBeVisible();
+    .poll(() => beforePane.getBoundingClientRect().right)
+    .toBeLessThanOrEqual(afterPane.getBoundingClientRect().left + 1);
+
+  await page.viewport(390, 844);
+  await expect
+    .poll(() => afterPane.getBoundingClientRect().top - beforePane.getBoundingClientRect().bottom)
+    .toBeGreaterThanOrEqual(-1);
+  expect(beforePane.getBoundingClientRect().width).toBeCloseTo(stage.getBoundingClientRect().width, 0);
+});
+
+test("switching to original size centers the first change and stepping centers every change with scroll hints", async () => {
+  const multiBefore = {
+    src: createSvgImageUrl(1600, 900, WHITE, [
+      { rect: { x: 40, y: 60, width: 120, height: 60 }, color: [37, 99, 235, 255] },
+      { rect: { x: 1400, y: 760, width: 120, height: 60 }, color: [37, 99, 235, 255] },
+    ]),
+    alt: "Multi-change before",
+  };
+  const multiAfter = {
+    src: createSvgImageUrl(1600, 900, WHITE, [
+      { rect: { x: 40, y: 60, width: 120, height: 60 }, color: [220, 38, 38, 255] },
+      { rect: { x: 1400, y: 760, width: 120, height: 60 }, color: [220, 38, 38, 255] },
+    ]),
+    alt: "Multi-change after",
+  };
+  const onCommentDifference = vi.fn();
+  const screen = await render(
+    <div className="h-120 w-180">
+      <ImageComparison
+        before={multiBefore}
+        after={multiAfter}
+        defaultMode="side-by-side"
+        defaultShowDifferences
+        onCommentDifference={onCommentDifference}
+      />
+    </div>,
+  );
+  await expect.element(screen.getByText("Change 1 of 2")).toBeVisible();
+  await screen.getByRole("button", { name: "Original size" }).click();
+  const beforePane = screen.getByRole("region", { name: /^Before, 100%$/ }).element();
+  const afterPane = screen.getByRole("region", { name: /^After, 100%$/ }).element();
+  // First change is near the top-left corner, so both panes open at the start edge rather than centered at 800,450.
+  await expect.poll(() => beforePane.scrollLeft).toBe(0);
+  expect(beforePane.scrollTop).toBe(0);
+  expect(afterPane.scrollLeft).toBe(0);
+  // Hidden content to the right and bottom shows visible scroll hints, while top/left edges do not.
+  const beforeFrame = beforePane.closest("[data-slot=image-viewport-frame]");
+  assert(beforeFrame);
+  await expect.poll(() => beforeFrame.querySelector("[data-edge=right]")).not.toBeNull();
+  expect(beforeFrame.querySelector("[data-edge=bottom]")).not.toBeNull();
+  expect(beforeFrame.querySelector("[data-edge=left]")).toBeNull();
+
+  const stepper = screen.getByRole("group", { name: "Changed regions" });
+  await screen.getByRole("button", { name: "Next change" }).click();
+  await expect.element(stepper.getByText("Change 2 of 2")).toBeVisible();
+  await expect
+    .poll(() => document.querySelector("[data-slot=image-comparison-change-announcement]")?.textContent)
+    .toBe("Change 2 of 2");
+  await expect.poll(() => beforePane.scrollLeft).toBeGreaterThan(200);
+  expect(beforePane.scrollTop).toBeGreaterThan(200);
+  expect(afterPane.scrollLeft).toBe(beforePane.scrollLeft);
+
+  // Pressing 1 on the focused stage returns to the first change at 100%.
+  afterPane.focus();
+  await userEvent.keyboard("1");
+  await expect.poll(() => beforePane.scrollLeft).toBe(0);
+  await expect.element(stepper.getByText("Change 1 of 2")).toBeVisible();
+
+  await screen.getByRole("button", { name: "Comment on change 1 of 2" }).click();
+  expect(onCommentDifference).toHaveBeenCalledTimes(1);
+  expect(onCommentDifference.mock.calls[0]?.[1]).toBe(0);
 });
 
 test.each(["toggle", "swipe", "side-by-side"] as const)(
