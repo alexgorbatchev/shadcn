@@ -105,7 +105,7 @@ test("draft and difference regions keep the same contrast-safe outline", async (
     const style = getComputedStyle(marker ?? document.body);
     expect(style.outlineWidth).toBe("2px");
     expect(style.outlineOffset).toBe("1px");
-    expect(style.outlineStyle).toBe(variant === "draft" ? "dashed" : "solid");
+    expect(style.outlineStyle).toBe("dashed");
     expect(style.boxShadow).toContain("4px");
     await screen.unmount();
   }

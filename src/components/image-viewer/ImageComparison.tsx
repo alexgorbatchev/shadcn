@@ -85,7 +85,7 @@ function ComparisonPane({ header, children }: IComparisonPaneProps): ReactElemen
     <div data-slot="image-comparison-pane" data-scroll="none" className="flex min-h-0 min-w-0 flex-1 flex-col">
       <div
         data-slot="image-comparison-pane-header"
-        className="flex h-control shrink-0 items-center justify-between gap-2 px-control-x text-xs font-medium text-muted-foreground"
+        className="flex h-control shrink-0 items-center justify-between gap-2 text-xs font-medium text-muted-foreground"
       >
         {header}
       </div>
@@ -372,7 +372,7 @@ export function ImageComparison({
     content = (
       <div
         data-slot="image-comparison-panes"
-        className={cn("flex min-h-0 min-w-0 flex-1", orientation === "vertical" ? "flex-col" : "flex-row")}
+        className={cn("flex min-h-0 min-w-0 flex-1", orientation === "vertical" ? "flex-col gap-2" : "flex-row gap-3")}
       >
         <ComparisonPane header={<span>{beforeLabel}</span>}>
           <ImageViewport

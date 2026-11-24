@@ -1,5 +1,15 @@
 export { ImageViewer } from "./ImageViewer.js";
 export type { IImageViewerProps } from "./ImageViewer.js";
+export { DiagramSurface } from "./DiagramSurface.js";
+export type { IDiagramSurfaceProps } from "./DiagramSurface.js";
+export { DiagramViewer } from "./DiagramViewer.js";
+export type { IDiagramViewerProps } from "./DiagramViewer.js";
+export { getMermaidThemeConfig, resolveCssColorToHex } from "./mermaidTheme.js";
+export type { IMermaidThemeConfig, IMermaidThemeVariables } from "./mermaidTheme.js";
+export { useMermaidTheme } from "./hooks/useMermaidTheme.js";
+export type { IMermaidThemeState } from "./hooks/useMermaidTheme.js";
+export { getDiagramSvgSize, prepareDiagramSvg } from "./prepareDiagramSvg.js";
+export type { IPrepareDiagramSvgOptions } from "./prepareDiagramSvg.js";
 export { ImageZoomToggle } from "./ImageZoomToggle.js";
 export type { IImageZoomToggleProps } from "./ImageZoomToggle.js";
 export { ImageZoomControl } from "./ImageZoomControl.js";

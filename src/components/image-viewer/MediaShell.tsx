@@ -28,10 +28,17 @@ export function MediaShell({
 }: IMediaShellProps): ReactElement {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent size="fullscreen" density={density} data-slot="media-shell">
+      <DialogContent
+        size="fullscreen"
+        density={density}
+        data-slot="media-shell"
+        className="[@media(max-height:280px)]:gap-1.5 [@media(max-height:280px)]:p-2"
+      >
         <DialogHeader>
           <DialogTitle className="truncate">{title}</DialogTitle>
-          {description !== undefined && <DialogDescription>{description}</DialogDescription>}
+          {description !== undefined && (
+            <DialogDescription className="[@media(max-height:280px)]:sr-only">{description}</DialogDescription>
+          )}
         </DialogHeader>
         <div data-slot="media-shell-stage" data-scroll="none" className="flex min-h-0 min-w-0 flex-1 flex-col">
           {children}

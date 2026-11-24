@@ -369,7 +369,7 @@ export function ImageViewport({
           data-slot="image-viewport-scroll-hint"
           data-edge="left"
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 left-0 w-5 border-l border-foreground/30 bg-gradient-to-r from-black/35 via-black/15 to-transparent dark:from-black/55 dark:via-black/20"
+          className="pointer-events-none absolute inset-y-0 left-0 w-5 bg-gradient-to-r from-black/45 via-black/15 to-transparent dark:from-black/65 dark:via-black/25"
         />
       )}
       {scrollHints.right && (
@@ -377,7 +377,7 @@ export function ImageViewport({
           data-slot="image-viewport-scroll-hint"
           data-edge="right"
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 right-0 w-5 border-r border-foreground/30 bg-gradient-to-l from-black/35 via-black/15 to-transparent dark:from-black/55 dark:via-black/20"
+          className="pointer-events-none absolute inset-y-0 right-0 w-5 bg-gradient-to-l from-black/45 via-black/15 to-transparent dark:from-black/65 dark:via-black/25"
         />
       )}
       {scrollHints.top && (
@@ -385,7 +385,7 @@ export function ImageViewport({
           data-slot="image-viewport-scroll-hint"
           data-edge="top"
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 h-5 border-t border-foreground/30 bg-gradient-to-b from-black/35 via-black/15 to-transparent dark:from-black/55 dark:via-black/20"
+          className="pointer-events-none absolute inset-x-0 top-0 h-5 bg-gradient-to-b from-black/45 via-black/15 to-transparent dark:from-black/65 dark:via-black/25"
         />
       )}
       {scrollHints.bottom && (
@@ -393,7 +393,7 @@ export function ImageViewport({
           data-slot="image-viewport-scroll-hint"
           data-edge="bottom"
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-5 border-b border-foreground/30 bg-gradient-to-t from-black/35 via-black/15 to-transparent dark:from-black/55 dark:via-black/20"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-5 bg-gradient-to-t from-black/45 via-black/15 to-transparent dark:from-black/65 dark:via-black/25"
         />
       )}
     </div>
