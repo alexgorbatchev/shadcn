@@ -389,6 +389,82 @@ export const RowLayout: Story = {
   },
 };
 
+export const RowLayoutWithFullSpanOption: Story = {
+  render: (args) => (
+    <div className="flex flex-col gap-6">
+      <div className="w-[56rem]" data-testid="radio-row">
+        <OptionCardGroup aria-label="Hero direction" layout="row" {...args}>
+          <OptionCard
+            value="quiet"
+            label="Quiet"
+            description="Short description."
+            image={<img src={fixture_attachmentImage} alt="Quiet" className="block h-auto w-full" />}
+          />
+          <OptionCard
+            value="bold"
+            label="Bold"
+            description="A noticeably longer trade-off description that wraps onto multiple lines so sibling row cards must stretch to match its height."
+            image={<img src={fixture_attachmentImage} alt="Bold" className="block h-auto w-full" />}
+          />
+          <OptionCard
+            value="playful"
+            label="Playful"
+            description="Medium copy."
+            image={<img src={fixture_attachmentImage} alt="Playful" className="block h-auto w-full" />}
+          />
+          <OptionCard value="other" label="Something else" span="full" />
+        </OptionCardGroup>
+      </div>
+      <div className="w-[56rem]" data-testid="checkbox-row">
+        <OptionCheckboxGroup aria-label="Extra directions" layout="row">
+          <OptionCheckboxCard value="a" label="Alpha" description="Short." />
+          <OptionCheckboxCard
+            value="b"
+            label="Beta"
+            description="Multiple lines of description text that make this card taller than its sibling."
+          />
+          <OptionCheckboxCard value="other" label="Other direction" span="full" />
+        </OptionCheckboxGroup>
+      </div>
+    </div>
+  ),
+  play: async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+    const radioRow = canvas.getByTestId("radio-row");
+    const radioGroup = within(radioRow).getByRole("radiogroup", { name: "Hero direction" });
+    const rowCards = ["Quiet", "Bold", "Playful"].map((name) =>
+      within(radioRow).getByRole("radio", { name }).getBoundingClientRect(),
+    );
+    // Sibling cards in the same row match height even when descriptions differ in length.
+    await expect(new Set(rowCards.map((box) => Math.round(box.top))).size).toBe(1);
+    await expect(Math.abs(rowCards[0]!.height - rowCards[1]!.height)).toBeLessThanOrEqual(1);
+    await expect(Math.abs(rowCards[1]!.height - rowCards[2]!.height)).toBeLessThanOrEqual(1);
+    // The full-span card sits below the row and stretches across the entire group width.
+    const otherRadio = within(radioRow).getByRole("radio", { name: "Something else" });
+    const otherRadioBox = otherRadio.getBoundingClientRect();
+    const radioGroupBox = radioGroup.getBoundingClientRect();
+    await expect(otherRadioBox.top).toBeGreaterThanOrEqual(rowCards[1]!.bottom);
+    await expect(Math.abs(otherRadioBox.width - radioGroupBox.width)).toBeLessThanOrEqual(1);
+    await expect(otherRadio.closest('[data-slot="option-card-item"]')).toHaveAttribute("data-span", "full");
+    await userEvent.click(otherRadio);
+    await expect(otherRadio).toBeChecked();
+
+    // Checkbox cards share the same equal-height and full-span row behavior.
+    const checkboxRow = canvas.getByTestId("checkbox-row");
+    const checkboxGroup = within(checkboxRow).getByRole("group", { name: "Extra directions" });
+    const alphaBox = within(checkboxRow).getByRole("checkbox", { name: "Alpha" }).getBoundingClientRect();
+    const betaBox = within(checkboxRow).getByRole("checkbox", { name: "Beta" }).getBoundingClientRect();
+    await expect(Math.abs(alphaBox.height - betaBox.height)).toBeLessThanOrEqual(1);
+    const otherCheckbox = within(checkboxRow).getByRole("checkbox", { name: "Other direction" });
+    const otherCheckboxBox = otherCheckbox.getBoundingClientRect();
+    await expect(otherCheckboxBox.top).toBeGreaterThanOrEqual(betaBox.bottom);
+    await expect(Math.abs(otherCheckboxBox.width - checkboxGroup.getBoundingClientRect().width)).toBeLessThanOrEqual(1);
+    await userEvent.click(otherCheckbox);
+    await expect(otherCheckbox).toBeChecked();
+    await assertLayoutContained(canvasElement);
+  },
+};
+
 export const FoldedDescription: Story = {
   render: (args) => (
     <div className="w-96">

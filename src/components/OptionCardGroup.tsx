@@ -119,10 +119,18 @@ interface IOptionCardContentProps {
   marker?: ReactNode;
 }
 
+interface IOptionCardSpanProps {
+  /**
+   * How many columns the card occupies in a `layout="row"` group: `auto` (the default) takes one column; `full`
+   * spans the entire row, for a trailing text-only option such as "Something else" below image cards.
+   */
+  span?: "auto" | "full";
+}
+
 // A recommended card keeps the plain frame: only the checked card has a coloured frame, so a recommendation never
 // reads as the selection. Its Recommended tag says it.
 const CARD_CLASS =
-  "group/option-card grid w-full cursor-pointer grid-cols-[1.25rem_minmax(0,1fr)] items-start gap-x-2 rounded-md border border-input bg-card p-panel-sm text-start text-sm text-card-foreground transition-colors outline-none hover:bg-muted/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring focus-visible:outline-solid data-checked:border-primary data-checked:ring-1 data-checked:ring-primary forced-colors:data-checked:border-[color:Highlight] aria-invalid:not-data-checked:border-destructive data-disabled:cursor-not-allowed data-disabled:opacity-50 data-disabled:hover:bg-card data-readonly:cursor-default data-folding:pb-10";
+  "group/option-card grid h-full w-full cursor-pointer grid-cols-[1.25rem_minmax(0,1fr)] items-start gap-x-2 rounded-md border border-input bg-card p-panel-sm text-start text-sm text-card-foreground transition-colors outline-none hover:bg-muted/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring focus-visible:outline-solid data-checked:border-primary data-checked:ring-1 data-checked:ring-primary forced-colors:data-checked:border-[color:Highlight] aria-invalid:not-data-checked:border-destructive data-disabled:cursor-not-allowed data-disabled:opacity-50 data-disabled:hover:bg-card data-readonly:cursor-default data-folding:pb-10";
 
 const CARD_CONTROL_SELECTOR = '[data-slot="option-card"], [data-slot="option-checkbox-card"]';
 
@@ -293,7 +301,10 @@ function useOptionCardIds(): IOptionCardIds {
   return { label: `${id}-label`, tag: `${id}-recommended`, description: `${id}-description` };
 }
 
-type OptionCardProps = Omit<RadioPrimitive.Root.Props, "children"> & IDensityProps & IOptionCardContentProps;
+type OptionCardProps = Omit<RadioPrimitive.Root.Props, "children"> &
+  IDensityProps &
+  IOptionCardContentProps &
+  IOptionCardSpanProps;
 
 /**
  * One option of an `OptionCardGroup`: a bordered card with a leading radio mark and letter, a bold label and a muted
@@ -309,6 +320,7 @@ function OptionCard({
   reason,
   image,
   marker,
+  span = "auto",
   density,
   className,
   ...props
@@ -337,7 +349,11 @@ function OptionCard({
     marker: radioMarker,
   };
   return (
-    <div data-slot="option-card-item" className="relative min-w-0">
+    <div
+      data-slot="option-card-item"
+      data-span={span === "full" ? "full" : undefined}
+      className={cn("relative min-w-0", span === "full" && "col-span-full")}
+    >
       <RadioPrimitive.Root
         data-density={density}
         data-slot="option-card"
@@ -361,7 +377,10 @@ function OptionCard({
   );
 }
 
-type OptionCheckboxCardProps = Omit<CheckboxPrimitive.Root.Props, "children"> & IDensityProps & IOptionCardContentProps;
+type OptionCheckboxCardProps = Omit<CheckboxPrimitive.Root.Props, "children"> &
+  IDensityProps &
+  IOptionCardContentProps &
+  IOptionCardSpanProps;
 
 /**
  * One option of an `OptionCheckboxGroup`: the same card as `OptionCard`, with a checkbox in the leading column so the
@@ -375,6 +394,7 @@ function OptionCheckboxCard({
   recommendedLabel,
   reason,
   image,
+  span = "auto",
   density,
   className,
   ...props
@@ -391,7 +411,11 @@ function OptionCheckboxCard({
   );
   const content = { label, description, descriptionLines, recommended, recommendedLabel, reason, image, marker };
   return (
-    <div data-slot="option-card-item" className="relative min-w-0">
+    <div
+      data-slot="option-card-item"
+      data-span={span === "full" ? "full" : undefined}
+      className={cn("relative min-w-0", span === "full" && "col-span-full")}
+    >
       <CheckboxPrimitive.Root
         data-density={density}
         data-slot="option-checkbox-card"

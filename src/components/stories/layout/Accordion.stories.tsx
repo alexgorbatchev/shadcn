@@ -5,6 +5,7 @@ import { Button } from "../../Button";
 import { DirectionProvider } from "../../DirectionProvider";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../../Card";
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "../../Accordion";
+import { assertLayoutContained } from "../../../../.storybook/assertLayoutContained";
 
 const meta: Meta<typeof Accordion> = {
   title: "@alexgorbatchev/shadcn/components/layout/Accordion",
@@ -369,5 +370,50 @@ export const InlineChevron: Story = {
     const label = range.getBoundingClientRect();
     await expect(icon).not.toBeNull();
     await expect((icon?.getBoundingClientRect().left ?? 0) - label.right).toBeLessThan(16);
+  },
+};
+
+export const NarrowWrappingAndNestedProse: Story = {
+  render: () => (
+    <div className="w-60" data-testid="narrow-accordion">
+      <Accordion multiple defaultValue={["direct", "nested"]}>
+        <AccordionItem value="direct">
+          <AccordionTrigger>
+            deployment-rollout-strategy-for-production-edge-workers-2026 with extra trailing words
+          </AccordionTrigger>
+          <AccordionContent>
+            <p data-testid="direct-first">First direct paragraph.</p>
+            <p data-testid="direct-second">Second direct paragraph.</p>
+          </AccordionContent>
+        </AccordionItem>
+        <AccordionItem value="nested">
+          <AccordionTrigger>Nested typeset content</AccordionTrigger>
+          <AccordionContent>
+            <div className="typeset" data-testid="nested-prose">
+              <p data-testid="nested-first">First nested paragraph.</p>
+              <p data-testid="nested-second">Second nested paragraph.</p>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const container = canvas.getByTestId("narrow-accordion");
+    const trigger = canvas.getByRole("button", {
+      name: "deployment-rollout-strategy-for-production-edge-workers-2026 with extra trailing words",
+    });
+    // Long unbroken trigger text wraps inside the narrow container instead of overflowing horizontally.
+    await expect(trigger.getBoundingClientRect().right).toBeLessThanOrEqual(
+      container.getBoundingClientRect().right + 1,
+    );
+    await expect(container.scrollWidth).toBeLessThanOrEqual(container.clientWidth + 1);
+    // Direct paragraph children keep their bottom margin, while nested .typeset paragraphs keep their own rhythm.
+    const directMargin = Number.parseFloat(getComputedStyle(canvas.getByTestId("direct-first")).marginBottom);
+    const nestedMargin = Number.parseFloat(getComputedStyle(canvas.getByTestId("nested-first")).marginBottom);
+    await expect(directMargin).toBeGreaterThan(0);
+    await expect(nestedMargin).toBe(0);
+    await assertLayoutContained(canvasElement);
   },
 };

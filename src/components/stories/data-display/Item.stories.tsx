@@ -145,6 +145,61 @@ export const WrappedTitle: Story = {
   },
 };
 
+export const TruncatedTitle: Story = {
+  render: (args) => {
+    const longTitle =
+      "Q1 · Should the homelab security audit accept the webhook endpoint as an approved ingress route?";
+    return (
+      <div className="flex flex-col gap-4">
+        <div data-testid="narrow-item" className="w-80">
+          <Item {...args} size="xs" variant="outline">
+            <ItemContent>
+              <ItemTitle truncate title={longTitle}>
+                {longTitle}
+              </ItemTitle>
+            </ItemContent>
+            <ItemActions>
+              <ItemDescription>waiting 1 d</ItemDescription>
+            </ItemActions>
+          </Item>
+        </div>
+        <div data-testid="wide-item" className="w-[64rem]">
+          <Item {...args} size="xs" variant="outline">
+            <ItemContent>
+              <ItemTitle truncate title={longTitle}>
+                {longTitle}
+              </ItemTitle>
+            </ItemContent>
+            <ItemActions>
+              <ItemDescription>waiting 1 d</ItemDescription>
+            </ItemActions>
+          </Item>
+        </div>
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const narrowBox = canvas.getByTestId("narrow-item");
+    const narrowTitle = narrowBox.querySelector<HTMLElement>('[data-slot="item-title"]')!;
+    const narrowActions = narrowBox.querySelector<HTMLElement>('[data-slot="item-actions"]')!;
+    // In a narrow container, the title truncates with CSS ellipsis on one line and leaves actions on the same row.
+    await expect(getComputedStyle(narrowTitle).textOverflow).toBe("ellipsis");
+    await expect(narrowTitle.scrollWidth).toBeGreaterThan(narrowTitle.clientWidth);
+    await expect(
+      Math.abs(narrowTitle.getBoundingClientRect().top - narrowActions.getBoundingClientRect().top),
+    ).toBeLessThan(8);
+    await expect(narrowActions.getBoundingClientRect().right).toBeLessThanOrEqual(
+      narrowBox.getBoundingClientRect().right + 1,
+    );
+
+    // When room is available, the full title renders without overflowing.
+    const wideBox = canvas.getByTestId("wide-item");
+    const wideTitle = wideBox.querySelector<HTMLElement>('[data-slot="item-title"]')!;
+    await expect(wideTitle.scrollWidth).toBeLessThanOrEqual(wideTitle.clientWidth + 1);
+  },
+};
+
 const separatorClassName = fn((state: Separator.State) =>
   state.orientation === "horizontal" ? "data-[orientation=horizontal]:h-2" : "data-[orientation=vertical]:w-2",
 );

@@ -125,7 +125,7 @@ function ItemContent({ density, className, ...props }: ItemContentProps): ReactE
       data-density={density}
       data-slot="item-content"
       className={cn(
-        "flex flex-1 flex-col gap-1 group-data-[size=xs]/item:gap-0 [&+[data-slot=item-content]]:flex-none",
+        "flex min-w-0 flex-1 flex-col gap-1 group-data-[size=xs]/item:gap-0 [&+[data-slot=item-content]]:flex-none",
         className,
       )}
       {...props}
@@ -137,17 +137,24 @@ type ItemTitleProps = ComponentProps<"div"> &
   IDensityProps & {
     /** Keep the complete title visible, including long unbroken names. */
     wrap?: boolean;
+    /** Clip to a single line with an ellipsis only when the title overflows its available width. */
+    truncate?: boolean;
   };
 
-function ItemTitle({ density, className, wrap = false, ...props }: ItemTitleProps): ReactElement {
+function ItemTitle({ density, className, wrap = false, truncate = false, ...props }: ItemTitleProps): ReactElement {
   return (
     <div
       data-density={density}
       data-slot="item-title"
+      data-truncated={truncate || undefined}
       className={cn(
-        !wrap && "line-clamp-1",
-        "flex w-fit items-center gap-2 text-sm leading-snug font-medium underline-offset-4",
-        wrap && "min-w-0 max-w-full wrap-anywhere",
+        truncate
+          ? "block min-w-0 max-w-full truncate text-start text-sm leading-snug font-medium underline-offset-4"
+          : [
+              !wrap && "line-clamp-1",
+              "flex w-fit items-center gap-2 text-sm leading-snug font-medium underline-offset-4",
+              wrap && "min-w-0 max-w-full wrap-anywhere",
+            ],
         className,
       )}
       {...props}

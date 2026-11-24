@@ -6,6 +6,7 @@ import { Input } from "../../Input";
 import { Checkbox } from "../../Checkbox";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "../../Field";
 import { Button } from "../../Button";
+import { assertLayoutContained } from "../../../../.storybook/assertLayoutContained";
 
 const meta: Meta<typeof Label> = {
   title: "@alexgorbatchev/shadcn/components/forms/Label",
@@ -189,5 +190,27 @@ export const RightToLeftField: Story = {
     range.selectNodeContents(description);
     await expect(range.getBoundingClientRect().right).toBeCloseTo(description.getBoundingClientRect().right, 1);
     await InField.play?.(context);
+  },
+};
+
+export const NarrowWrap: Story = {
+  render: () => {
+    const id = useId();
+    return (
+      <div className="flex w-48 flex-col gap-2" data-testid="narrow-label-box">
+        <Label htmlFor={id}>Choose a rollout plan for very-long-unbroken-service-identifier-in-narrow-layout</Label>
+        <Input id={id} />
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const box = canvas.getByTestId("narrow-label-box");
+    const label = canvas.getByText(/Choose a rollout plan/);
+    const style = getComputedStyle(label);
+    await expect(Number.parseFloat(style.lineHeight)).toBeGreaterThan(Number.parseFloat(style.fontSize));
+    await expect(label.getBoundingClientRect().right).toBeLessThanOrEqual(box.getBoundingClientRect().right + 1);
+    await expect(box.scrollWidth).toBeLessThanOrEqual(box.clientWidth + 1);
+    await assertLayoutContained(canvasElement);
   },
 };

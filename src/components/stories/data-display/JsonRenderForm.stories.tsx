@@ -9,11 +9,14 @@ import { Button } from "../../Button";
 import {
   components,
   componentDefinitions,
+  JsonFieldValue,
   JsonFormProvider,
   stripRequiredMark,
+  useJsonField,
   useJsonReveal,
   type JsonFormMode,
 } from "../../json-render/index";
+import { assertLayoutContained } from "../../../../.storybook/assertLayoutContained";
 
 /** Reveal functions of the probes, by name, so a story's own button can open the containers hiding a probe. */
 const revealers = new Map<string, () => void>();
@@ -483,5 +486,57 @@ export const ToggleGroupOwnValidation: Story = {
       "aria-invalid",
       "true",
     );
+  },
+};
+
+function FieldValueSamples(): ReactElement {
+  const hiddenPlain = useJsonField({
+    path: "/answers/plain",
+    label: "Which rollout path should we ship first?",
+  });
+  const hiddenDefault = useJsonField({
+    path: "/answers/defaulted",
+    label: "Keep the existing retry window?",
+  });
+  const visibleNarrow = useJsonField({
+    path: "/answers/narrow",
+    label: "very-long-unbroken-deployment-configuration-key-name-for-mobile-viewports",
+  });
+  return (
+    <div className="flex w-60 flex-col gap-4" data-testid="narrow-values">
+      <JsonFieldValue field={hiddenPlain} text="Blue-green deployment" hideLabel />
+      <JsonFieldValue field={hiddenDefault} text="Yes, keep 30 seconds" hideLabel />
+      <JsonFieldValue
+        field={visibleNarrow}
+        text="https://deploy.example.com/releases/very-long-unbroken-artifact-identifier-2026"
+      />
+    </div>
+  );
+}
+
+export const FieldValueHideLabelAndNarrowWrap: Story = {
+  render: () => (
+    <JsonFormProvider mode="values" defaults={["/answers/defaulted"]}>
+      <FieldValueSamples />
+    </JsonFormProvider>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const plainGroup = canvas.getByRole("group", { name: "Which rollout path should we ship first?" });
+    await expect(plainGroup).toHaveTextContent("Blue-green deployment");
+    await expect(within(plainGroup).queryByText("Which rollout path should we ship first?")).not.toBeInTheDocument();
+    await expect(plainGroup.querySelector('[data-slot="json-field-label"]')).toBeNull();
+
+    const defaultGroup = canvas.getByRole("group", { name: "Keep the existing retry window?" });
+    await expect(defaultGroup).toHaveTextContent("Yes, keep 30 seconds");
+    await expect(within(defaultGroup).queryByText("Keep the existing retry window?")).not.toBeInTheDocument();
+    await expect(within(defaultGroup).getByText("Default")).toBeVisible();
+
+    const narrowGroup = canvas.getByRole("group", {
+      name: "very-long-unbroken-deployment-configuration-key-name-for-mobile-viewports",
+    });
+    const narrowBox = canvas.getByTestId("narrow-values");
+    await expect(narrowGroup.scrollWidth).toBeLessThanOrEqual(narrowBox.clientWidth + 1);
+    await assertLayoutContained(canvasElement);
   },
 };

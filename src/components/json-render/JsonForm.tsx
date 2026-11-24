@@ -170,7 +170,7 @@ export function JsonFieldTags({ field }: { field: IJsonField }): ReactElement | 
 export function JsonFieldLabel({ field, id, htmlFor }: IJsonFieldLabelProps): ReactElement | null {
   if (!field.label && !(field.isRequired && field.mode !== "values") && !field.isDefault) return null;
   return (
-    <div data-slot="json-field-label" className="flex flex-wrap items-center gap-2">
+    <div data-slot="json-field-label" className="flex min-w-0 flex-wrap items-center gap-2">
       {field.label && (
         <Label id={id} htmlFor={htmlFor}>
           {field.label}
@@ -198,20 +198,33 @@ export interface IJsonFieldValueProps {
   field: IJsonField;
   /** The value as text; empty renders "No answer". */
   text: string;
+  /** Hides the visible label when a surrounding heading already names this value; the group keeps its accessible name. */
+  hideLabel?: boolean;
 }
 
 /** The field as read-only text: its label, then its value, grouped and named by the label. */
-export function JsonFieldValue({ field, text }: IJsonFieldValueProps): ReactElement {
+export function JsonFieldValue({ field, text, hideLabel = false }: IJsonFieldValueProps): ReactElement {
   const labelId = useId();
   return (
     <div
       role="group"
-      aria-labelledby={field.label ? labelId : undefined}
+      aria-labelledby={!hideLabel && field.label ? labelId : undefined}
+      aria-label={hideLabel && field.label ? field.label : undefined}
       data-slot="json-field-value"
-      className="flex w-full flex-col gap-1"
+      className="flex w-full min-w-0 flex-col gap-1"
     >
-      <JsonFieldLabel field={field} id={labelId} />
-      <p className={text ? "text-sm whitespace-pre-wrap" : "text-sm text-muted-foreground"}>{text || "No answer"}</p>
+      {hideLabel ? (
+        field.isDefault && (
+          <div data-slot="json-field-label" className="flex min-w-0 flex-wrap items-center gap-2">
+            <JsonFieldTags field={field} />
+          </div>
+        )
+      ) : (
+        <JsonFieldLabel field={field} id={labelId} />
+      )}
+      <p className={text ? "text-sm wrap-break-word whitespace-pre-wrap" : "text-sm text-muted-foreground"}>
+        {text || "No answer"}
+      </p>
     </div>
   );
 }

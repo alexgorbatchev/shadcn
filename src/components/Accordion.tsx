@@ -34,7 +34,9 @@ function AccordionItem({ density, className, ...props }: AccordionItemProps): Re
     <AccordionPrimitive.Item
       data-density={density}
       data-slot="accordion-item"
-      className={(state) => cn("not-last:border-b", typeof className === "function" ? className(state) : className)}
+      className={(state) =>
+        cn("min-w-0 not-last:border-b", typeof className === "function" ? className(state) : className)
+      }
       {...props}
     />
   );
@@ -57,14 +59,14 @@ function AccordionTrigger({
   ...props
 }: AccordionTriggerProps): ReactElement {
   return (
-    <AccordionPrimitive.Header className="flex">
+    <AccordionPrimitive.Header className="flex min-w-0">
       <AccordionPrimitive.Trigger
         data-density={density}
         data-slot="accordion-trigger"
         data-chevron-placement={chevronPlacement}
         className={(state) =>
           cn(
-            "group/accordion-trigger relative flex flex-1 items-start rounded-sm border border-transparent py-2.5 text-start text-sm font-medium transition-colors outline-none hover:underline focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring focus-visible:after:border-ring aria-disabled:pointer-events-none aria-disabled:opacity-50 **:data-[slot=accordion-trigger-icon]:size-4 **:data-[slot=accordion-trigger-icon]:text-muted-foreground",
+            "group/accordion-trigger relative flex min-w-0 flex-1 items-start rounded-sm border border-transparent py-2.5 text-start text-sm font-medium wrap-break-word transition-colors outline-none hover:underline focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring focus-visible:after:border-ring aria-disabled:pointer-events-none aria-disabled:opacity-50 **:data-[slot=accordion-trigger-icon]:size-4 **:data-[slot=accordion-trigger-icon]:text-muted-foreground",
             chevronPlacement === "end"
               ? "justify-between **:data-[slot=accordion-trigger-icon]:ms-auto"
               : "justify-start gap-2 **:data-[slot=accordion-trigger-icon]:mt-0.5",
@@ -102,7 +104,7 @@ function AccordionContent({ density, className, children, ...props }: AccordionC
       }
       {...props}
     >
-      <div className="pt-0 pb-2.5 [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground [&_p:not(:last-child)]:mb-4">
+      <div className="min-w-0 pt-0 pb-2.5 [&_a]:underline [&_a]:underline-offset-3 [&_a]:hover:text-foreground [&>p:not(:last-child)]:mb-4">
         {children}
       </div>
     </AccordionPrimitive.Panel>
