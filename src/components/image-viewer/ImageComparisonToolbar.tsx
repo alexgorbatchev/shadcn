@@ -134,71 +134,74 @@ export function ImageComparisonToolbar({
           <ToggleGroupItem value="side-by-side">Side by side</ToggleGroupItem>
         </ToggleGroup>
       </ToolbarSection>
-      <ToolbarSection title="Shown image" titleId={`${id}-side`}>
-        <ToggleGroup
-          aria-labelledby={`${id}-side`}
-          aria-keyshortcuts="B A"
-          required
-          value={[side]}
-          onValueChange={(value) => onSideChange(value[0] === "before" ? "before" : "after")}
-          variant="outline"
-          size="sm"
-          spacing={0}
-          disabled={mode !== "toggle"}
-          density={density}
-        >
-          <ToggleGroupItem value="before">{beforeLabel}</ToggleGroupItem>
-          <ToggleGroupItem value="after">{afterLabel}</ToggleGroupItem>
-        </ToggleGroup>
-      </ToolbarSection>
-      <ToolbarSection title="Orientation" titleId={`${id}-orientation`}>
-        <ToggleGroup
-          aria-labelledby={`${id}-orientation`}
-          required
-          value={[orientation]}
-          onValueChange={(value) => onOrientationChange(value[0] === "vertical" ? "vertical" : "horizontal")}
-          variant="outline"
-          size="sm"
-          spacing={0}
-          disabled={mode !== "side-by-side"}
-          density={density}
-        >
-          <ToggleGroupItem value="horizontal">
-            <Columns2Icon data-icon="inline-start" />
-            Horizontal
-          </ToggleGroupItem>
-          <ToggleGroupItem value="vertical">
-            <Rows2Icon data-icon="inline-start" />
-            Vertical
-          </ToggleGroupItem>
-        </ToggleGroup>
-      </ToolbarSection>
+      {mode === "toggle" && (
+        <ToolbarSection title="Shown image" titleId={`${id}-side`}>
+          <ToggleGroup
+            aria-labelledby={`${id}-side`}
+            aria-keyshortcuts="B A"
+            required
+            value={[side]}
+            onValueChange={(value) => onSideChange(value[0] === "before" ? "before" : "after")}
+            variant="outline"
+            size="sm"
+            spacing={0}
+            density={density}
+          >
+            <ToggleGroupItem value="before">{beforeLabel}</ToggleGroupItem>
+            <ToggleGroupItem value="after">{afterLabel}</ToggleGroupItem>
+          </ToggleGroup>
+        </ToolbarSection>
+      )}
+      {mode === "side-by-side" && (
+        <ToolbarSection title="Orientation" titleId={`${id}-orientation`}>
+          <ToggleGroup
+            aria-labelledby={`${id}-orientation`}
+            required
+            value={[orientation]}
+            onValueChange={(value) => onOrientationChange(value[0] === "vertical" ? "vertical" : "horizontal")}
+            variant="outline"
+            size="sm"
+            spacing={0}
+            density={density}
+          >
+            <ToggleGroupItem value="horizontal">
+              <Columns2Icon data-icon="inline-start" />
+              Horizontal
+            </ToggleGroupItem>
+            <ToggleGroupItem value="vertical">
+              <Rows2Icon data-icon="inline-start" />
+              Vertical
+            </ToggleGroupItem>
+          </ToggleGroup>
+        </ToolbarSection>
+      )}
       <ToolbarSection title="Zoom" titleId={`${id}-zoom`}>
         <ImageZoomToggle zoom={zoom} onZoomChange={onZoomChange} density={density} />
       </ToolbarSection>
-      <Button
-        variant="outline"
-        size="sm"
-        density={density}
-        disabled={mode !== "toggle"}
-        className="shrink-0 touch-none"
-        onPointerDown={(event) => {
-          if (event.button === 0) onPeekChange(true);
-        }}
-        onPointerUp={releasePeek}
-        onPointerLeave={releasePeek}
-        onPointerCancel={releasePeek}
-        onKeyDown={(event) => {
-          if (isPeekKey(event)) onPeekChange(true);
-        }}
-        onKeyUp={(event) => {
-          if (isPeekKey(event)) releasePeek();
-        }}
-        onBlur={releasePeek}
-        onContextMenu={(event) => event.preventDefault()}
-      >
-        {`Hold to show ${side === "before" ? "after" : "before"}`}
-      </Button>
+      {mode === "toggle" && (
+        <Button
+          variant="outline"
+          size="sm"
+          density={density}
+          className="shrink-0 touch-none"
+          onPointerDown={(event) => {
+            if (event.button === 0) onPeekChange(true);
+          }}
+          onPointerUp={releasePeek}
+          onPointerLeave={releasePeek}
+          onPointerCancel={releasePeek}
+          onKeyDown={(event) => {
+            if (isPeekKey(event)) onPeekChange(true);
+          }}
+          onKeyUp={(event) => {
+            if (isPeekKey(event)) releasePeek();
+          }}
+          onBlur={releasePeek}
+          onContextMenu={(event) => event.preventDefault()}
+        >
+          {`Hold to show ${side === "before" ? "after" : "before"}`}
+        </Button>
+      )}
       <div className="flex shrink-0 flex-wrap items-center gap-2">
         <div className="flex items-center gap-1.5">
           <Switch

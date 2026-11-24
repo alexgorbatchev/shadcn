@@ -263,7 +263,7 @@ export function SplitView({
         isWide && "h-full",
         contentPadding === "panel" && "p-4",
         // An overlay leaves the content in the document's flow, so the page scrolls as one document.
-        isFill && (isOverlay ? "flex flex-1 flex-col" : "flex min-h-0 flex-1 flex-col overflow-hidden"),
+        isFill && (isOverlay ? "flex min-h-0 flex-1 flex-col" : "flex min-h-0 flex-1 flex-col overflow-hidden"),
       )}
     >
       {children}
@@ -347,7 +347,7 @@ export function SplitView({
     </Resizable>
   ) : isOverlay ? (
     <>
-      <div className={cn("flex min-w-0 flex-col bg-card", isFill && "flex-1")}>{contentSlot}</div>
+      <div className={cn("flex min-w-0 flex-col bg-card", isFill && "h-full min-h-0 flex-1")}>{contentSlot}</div>
       <Drawer
         open={sidebarOpen}
         onOpenChange={(open) => onSidebarOpenChange?.(open)}

@@ -2,8 +2,9 @@ import { assert, beforeEach, expect, onTestFinished, test, vi } from "vitest";
 import { commands, page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 import { observeScrollGuards } from "../../../utils/observeScrollGuards";
-import { Dialog, DialogContent, DialogTitle } from "../../Dialog";
+import { SplitView } from "../../resizable/SplitView";
 import { ImageComparison } from "../ImageComparison";
+import { MediaShell } from "../MediaShell";
 import { createSvgImageUrl, loadCrossOriginImage, type Rgba } from "./helpers";
 import "../../../../.storybook/preview.css";
 
@@ -69,13 +70,27 @@ test("original-size panes follow each other when one scrolls with the wheel", as
 
 test("the toolbar sits above a wide fullscreen comparison in one row and side-by-side stacks vertically on a phone", async () => {
   const screen = await render(
-    <Dialog defaultOpen>
-      <DialogContent size="fullscreen">
-        <DialogTitle>Checkout evidence</DialogTitle>
-        <ImageComparison before={before} after={after} defaultMode="side-by-side" />
-      </DialogContent>
-    </Dialog>,
+    <MediaShell open onOpenChange={() => undefined} title="Checkout evidence">
+      <div className="min-h-0 flex-1">
+        <SplitView
+          storageKey="native-comparison-phone-fill"
+          sidebarPosition="end"
+          sidebarOpen={false}
+          narrowLayout="drawer"
+          layout="fill"
+          sidebarLabel="Comments"
+          contentLabel="Image"
+          resizeLabel="Resize comments"
+          sidebarPadding="none"
+          contentPadding="none"
+          sidebar={<p>Comments</p>}
+        >
+          <ImageComparison before={before} after={after} defaultMode="side-by-side" defaultShowDifferences />
+        </SplitView>
+      </div>
+    </MediaShell>,
   );
+  await expect.element(screen.getByRole("group", { name: "Changed regions" })).toBeVisible();
   const toolbar = screen.getByRole("group", { name: "Comparison controls" }).element();
   const stage = toolbar.parentElement?.querySelector("[data-slot=image-comparison-stage]");
   assert(stage);
@@ -83,7 +98,7 @@ test("the toolbar sits above a wide fullscreen comparison in one row and side-by
     .poll(() => stage.getBoundingClientRect().top)
     .toBeGreaterThanOrEqual(toolbar.getBoundingClientRect().bottom - 1);
   expect(stage.getBoundingClientRect().width).toBeCloseTo(toolbar.getBoundingClientRect().width, 0);
-  // All direct control children fit on one horizontal row at 1280x800.
+  // All direct control children (including the difference stepper) fit on one horizontal row at 1280x800.
   const visibleChildren = [...toolbar.children].filter(
     (child) => child instanceof HTMLElement && child.getBoundingClientRect().width > 0,
   );
@@ -101,6 +116,13 @@ test("the toolbar sits above a wide fullscreen comparison in one row and side-by
     .poll(() => afterPane.getBoundingClientRect().top - beforePane.getBoundingClientRect().bottom)
     .toBeGreaterThanOrEqual(-1);
   expect(beforePane.getBoundingClientRect().width).toBeCloseTo(stage.getBoundingClientRect().width, 0);
+  // Both stacked panes keep visible height inside a narrow drawer SplitView rather than collapsing to zero.
+  await expect
+    .poll(() => screen.getByRole("img", { name: "Before capture" }).element().getBoundingClientRect().height)
+    .toBeGreaterThan(100);
+  await expect
+    .poll(() => screen.getByRole("img", { name: "After capture" }).element().getBoundingClientRect().height)
+    .toBeGreaterThan(100);
 });
 
 test("switching to original size centers the first change and stepping centers every change with scroll hints", async () => {

@@ -157,7 +157,7 @@ export const Toggle: Story = {
     const hold = canvas.getByRole("button", { name: "Hold to show before" });
     await expect(showing).toHaveTextContent("Showing After");
     await expect(canvas.queryByRole("img", { name: BEFORE_ALT })).toBeNull();
-    await expect(canvas.getByRole("button", { name: "Horizontal" })).toBeDisabled();
+    await expect(canvas.queryByRole("button", { name: "Horizontal" })).toBeNull();
 
     await userEvent.pointer({ keys: "[MouseLeft>]", target: hold });
     await expect(showing).toHaveTextContent("Showing Before");
@@ -231,7 +231,8 @@ export const ShownSide: Story = {
     await userEvent.click(after);
     await expect(showing).toHaveTextContent("Showing After");
     await userEvent.click(canvas.getByRole("button", { name: "Side by side" }));
-    await expect(canvas.getByRole("button", { name: "Before" })).toBeDisabled();
+    await expect(canvas.queryByRole("button", { name: "Before" })).toBeNull();
+    await expect(canvas.queryByRole("button", { name: "Hold to show before" })).toBeNull();
   },
 };
 
@@ -242,7 +243,8 @@ export const Swipe: Story = {
     const afterImage = await findAfterImage(canvas);
     const beforeImage = canvas.getByRole("img", { name: BEFORE_ALT });
     const slider = await canvas.findByRole("slider", { name: "Swipe divider" });
-    await expect(canvas.getByRole("button", { name: "Hold to show before" })).toBeDisabled();
+    await expect(canvas.queryByRole("button", { name: "Hold to show before" })).toBeNull();
+    await expect(canvas.queryByRole("button", { name: "Horizontal" })).toBeNull();
     await expect(slider).toHaveAttribute("aria-valuenow", "50");
     await expect(slider).toHaveAttribute("aria-valuetext", "Before 50%, After 50%");
     await expect(elementAt(afterImage, 0.25, 0.3)).toBe(beforeImage);
@@ -437,14 +439,22 @@ export const ModeChangesKeepViewedCenter: Story = {
     await waitFor(() =>
       expect(toggleViewport.scrollLeft).toBe(toggleViewport.scrollWidth - toggleViewport.clientWidth),
     );
-    const scrollLeft = toggleViewport.scrollLeft;
-    const scrollTop = toggleViewport.scrollTop;
+    const expectedCenterX = (toggleViewport.scrollLeft + toggleViewport.clientWidth / 2) / toggleViewport.scrollWidth;
+    const expectedCenterY = (toggleViewport.scrollTop + toggleViewport.clientHeight / 2) / toggleViewport.scrollHeight;
     await userEvent.click(canvas.getByRole("button", { name: "Swipe" }));
     await expect(args.onModeChange).toHaveBeenLastCalledWith("swipe");
     const swipeViewport = getViewport(await findAfterImage(canvas));
     await waitFor(() => {
-      expect(swipeViewport.scrollLeft).toBeCloseTo(scrollLeft, 0);
-      expect(swipeViewport.scrollTop).toBeCloseTo(scrollTop, 0);
+      const targetLeft = Math.min(
+        swipeViewport.scrollWidth - swipeViewport.clientWidth,
+        Math.max(0, expectedCenterX * swipeViewport.scrollWidth - swipeViewport.clientWidth / 2),
+      );
+      const targetTop = Math.min(
+        swipeViewport.scrollHeight - swipeViewport.clientHeight,
+        Math.max(0, expectedCenterY * swipeViewport.scrollHeight - swipeViewport.clientHeight / 2),
+      );
+      expect(swipeViewport.scrollLeft).toBeCloseTo(targetLeft, 0);
+      expect(swipeViewport.scrollTop).toBeCloseTo(targetTop, 0);
     });
     await expect(args.onZoomChange).not.toHaveBeenCalled();
   },
