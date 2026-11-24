@@ -276,7 +276,7 @@ export function ImageComparisonToolbar({
                 aria-label={`Comment on change ${activeRegionIndex + 1} of ${regionCount}`}
                 onClick={onCommentActiveDifference}
               >
-                Comment
+                Comment on change
               </Button>
             )}
           </div>
@@ -289,7 +289,14 @@ export function ImageComparisonToolbar({
           {statusText}
         </p>
       </div>
-      {toolbar}
+      {toolbar && (
+        <div
+          data-slot="image-comparison-toolbar-extra"
+          className="flex min-w-0 flex-wrap items-center gap-2 @2xl:border-s @2xl:border-border @2xl:ps-2"
+        >
+          {toolbar}
+        </div>
+      )}
       {sizeMismatch && (
         <p data-slot="image-comparison-size-mismatch" className="w-full text-xs text-muted-foreground">
           {sizeMismatch}
