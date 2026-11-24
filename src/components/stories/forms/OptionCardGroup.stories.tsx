@@ -339,6 +339,56 @@ export const NarrowWidth: Story = {
 const LONG_TRADE_OFF =
   "Starts a full copy of the service beside the running one and switches traffic over at once. Rollback is instant because the old copy keeps running until the switch is confirmed. It needs twice the capacity during the release, which matters on the database tier, where a second copy also doubles connection pool usage and replication lag for the length of the cut-over.";
 
+function HeroOption({ value, label }: { value: string; label: string }): ReactElement {
+  return (
+    <OptionCard
+      value={value}
+      label={label}
+      description="A hero direction for the homepage."
+      image={<img src={fixture_attachmentImage} alt={label} className="block h-auto w-full" />}
+    />
+  );
+}
+
+export const RowLayout: Story = {
+  render: (args) => (
+    <div className="flex flex-col gap-6">
+      <div className="w-[56rem]" data-testid="wide">
+        <OptionCardGroup aria-label="Hero direction" layout="row" {...args}>
+          <HeroOption value="quiet" label="Quiet" />
+          <HeroOption value="bold" label="Bold" />
+          <HeroOption value="playful" label="Playful" />
+        </OptionCardGroup>
+      </div>
+      <div className="w-72" data-testid="narrow">
+        <OptionCheckboxGroup aria-label="Hero directions" layout="row">
+          <OptionCheckboxCard value="quiet" label="Quiet narrow" />
+          <OptionCheckboxCard value="bold" label="Bold narrow" />
+        </OptionCheckboxGroup>
+      </div>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    // Three image options sit in one row at equal widths, each image uncropped: its rendered box keeps the source shape.
+    const tops = ["Quiet", "Bold", "Playful"].map((name) =>
+      canvas.getByRole("radio", { name }).getBoundingClientRect(),
+    );
+    await expect(new Set(tops.map((box) => Math.round(box.top))).size).toBe(1);
+    await expect(Math.abs(tops[0]!.width - tops[2]!.width)).toBeLessThan(1);
+    const image = canvas.getByRole("img", { name: "Quiet" }) as HTMLImageElement;
+    await waitFor(() => expect(image.naturalWidth).toBeGreaterThan(0));
+    const box = image.getBoundingClientRect();
+    await expect(box.width / box.height).toBeCloseTo(image.naturalWidth / image.naturalHeight, 1);
+    // A narrow group falls back to one card per row.
+    const narrow = ["Quiet narrow", "Bold narrow"].map((name) =>
+      canvas.getByRole("checkbox", { name }).getBoundingClientRect(),
+    );
+    await expect(narrow[1]!.top).toBeGreaterThan(narrow[0]!.bottom);
+    await assertLayoutContained(canvasElement);
+  },
+};
+
 export const FoldedDescription: Story = {
   render: (args) => (
     <div className="w-96">

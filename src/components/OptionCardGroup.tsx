@@ -12,15 +12,33 @@ import { cn } from "../utils/cn.js";
 import { Badge } from "./Badge.js";
 import { Button } from "./Button.js";
 
-type OptionCardGroupProps = IAnalyticsProps & RadioGroupPrimitive.Props & IDensityProps;
+/**
+ * How a group places its cards: `stack` (the default) puts one card per row; `row` puts cards side by side in equal
+ * columns at least 14rem wide, as many as the group's width fits, so options with images can be compared at a glance.
+ */
+type OptionCardGroupLayout = "stack" | "row";
 
-const GROUP_CLASS = "grid w-full gap-2";
+interface IOptionCardGroupLayoutProps {
+  layout?: OptionCardGroupLayout;
+}
+
+type OptionCardGroupProps = IAnalyticsProps & RadioGroupPrimitive.Props & IDensityProps & IOptionCardGroupLayoutProps;
+
+function getGroupClass(layout: OptionCardGroupLayout): string {
+  return cn("grid w-full gap-2", layout === "row" && "grid-cols-[repeat(auto-fit,minmax(min(100%,14rem),1fr))]");
+}
 
 /**
  * A single-choice group of option cards. Each card is a radio: arrow keys move the selection between cards, Space
  * selects the focused card, and `name`, `required` and `form` take part in native form submission and validation.
  */
-function OptionCardGroup({ analytics, density, className, ...props }: OptionCardGroupProps): ReactElement {
+function OptionCardGroup({
+  analytics,
+  density,
+  layout = "stack",
+  className,
+  ...props
+}: OptionCardGroupProps): ReactElement {
   const trackedOnValueChange = useAnalyticsCallback(
     "OptionCardGroup",
     analytics,
@@ -32,20 +50,30 @@ function OptionCardGroup({ analytics, density, className, ...props }: OptionCard
     <RadioGroupPrimitive
       data-density={density}
       data-slot="option-card-group"
-      className={(state) => cn(GROUP_CLASS, typeof className === "function" ? className(state) : className)}
+      data-layout={layout}
+      className={(state) => cn(getGroupClass(layout), typeof className === "function" ? className(state) : className)}
       {...props}
       onValueChange={trackedOnValueChange}
     />
   );
 }
 
-type OptionCheckboxGroupProps = IAnalyticsProps & CheckboxGroupPrimitive.Props & IDensityProps;
+type OptionCheckboxGroupProps = IAnalyticsProps &
+  CheckboxGroupPrimitive.Props &
+  IDensityProps &
+  IOptionCardGroupLayoutProps;
 
 /**
  * A multiple-choice group of option cards, laid out like `OptionCardGroup`. Each card is a checkbox: Tab moves between
  * cards and Space toggles the focused one. `value` lists the checked cards' values.
  */
-function OptionCheckboxGroup({ analytics, density, className, ...props }: OptionCheckboxGroupProps): ReactElement {
+function OptionCheckboxGroup({
+  analytics,
+  density,
+  layout = "stack",
+  className,
+  ...props
+}: OptionCheckboxGroupProps): ReactElement {
   const trackedOnValueChange = useAnalyticsCallback(
     "OptionCheckboxGroup",
     analytics,
@@ -57,7 +85,8 @@ function OptionCheckboxGroup({ analytics, density, className, ...props }: Option
     <CheckboxGroupPrimitive
       data-density={density}
       data-slot="option-checkbox-group"
-      className={(state) => cn(GROUP_CLASS, typeof className === "function" ? className(state) : className)}
+      data-layout={layout}
+      className={(state) => cn(getGroupClass(layout), typeof className === "function" ? className(state) : className)}
       {...props}
       onValueChange={trackedOnValueChange}
     />
