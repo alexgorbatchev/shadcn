@@ -11,6 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "./Dialog.js";
+import { cn } from "../utils/cn.js";
 import { ScrollArea } from "./ScrollArea.js";
 
 interface IFormDialogProps extends IDensityProps {
@@ -48,9 +49,10 @@ export function FormDialog({
   error,
   children,
 }: IFormDialogProps): ReactElement {
+  const isFullscreen = size === "fullscreen";
   const body = (
     <>
-      <ScrollArea density={density}>
+      <ScrollArea density={density} grow={isFullscreen}>
         {children}
         {error && (
           <Alert variant="destructive" density={density}>
@@ -86,7 +88,7 @@ export function FormDialog({
         </DialogHeader>
         {onSubmit ? (
           <form
-            className="flex min-h-0 flex-col gap-panel"
+            className={cn("flex min-h-0 flex-col gap-panel", isFullscreen && "flex-1")}
             onSubmit={(event) => {
               if (isBusy) event.preventDefault();
               else onSubmit(event);

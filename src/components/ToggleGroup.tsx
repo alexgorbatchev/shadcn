@@ -69,7 +69,7 @@ export function ToggleGroup({
       className={(state) =>
         cn(
           "group/toggle-group flex w-fit flex-row items-center rounded-sm data-[orientation=vertical]:flex-col data-[orientation=vertical]:items-stretch",
-          layout === "fill" && "w-full",
+          layout === "fill" ? "w-full" : spacing > 0 && orientation === "horizontal" && "max-w-full flex-wrap",
           typeof className === "function" ? className(state) : className,
         )
       }

@@ -465,6 +465,42 @@ export const NativeLink: Story = {
     await expect(canvas.queryByRole("button")).not.toBeInTheDocument();
   },
 };
+
+export const InteractiveCurrent: Story = {
+  render: function Render() {
+    const [current, setCurrent] = useState("first");
+    return (
+      <ItemGroup aria-label="Queue decisions">
+        {(["first", "second"] as const).map((id) => (
+          <div key={id} role="listitem">
+            <Item
+              size="xs"
+              variant="outline"
+              aria-current={current === id ? "true" : undefined}
+              render={<button type="button" onClick={() => setCurrent(id)} />}
+            >
+              <ItemContent>
+                <ItemTitle>{id === "first" ? "First decision" : "Second decision"}</ItemTitle>
+              </ItemContent>
+            </Item>
+          </div>
+        ))}
+      </ItemGroup>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const first = canvas.getByRole("button", { name: "First decision" });
+    const second = canvas.getByRole("button", { name: "Second decision" });
+    await expect(first).toHaveAttribute("aria-current", "true");
+    await expect(getComputedStyle(first).borderTopStyle).toBe("solid");
+    await expect(getComputedStyle(second).borderTopStyle).toBe("solid");
+    await expect(getComputedStyle(first).borderTopColor).not.toBe(getComputedStyle(second).borderTopColor);
+    await userEvent.click(second);
+    await expect(second).toHaveAttribute("aria-current", "true");
+    await expect(first).not.toHaveAttribute("aria-current");
+  },
+};
 export const InDropdown: Story = {
   render: function Render() {
     const [owner, setOwner] = useState("");

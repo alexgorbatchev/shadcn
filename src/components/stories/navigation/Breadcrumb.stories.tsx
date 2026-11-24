@@ -43,6 +43,10 @@ export const Default: Story = {
   play: async ({ canvasElement }) => {
     const navigation = within(within(canvasElement).getByRole("navigation", { name: "breadcrumb" }));
     await expect(navigation.getByRole("link", { name: "Home" })).toHaveAttribute("href", "#home");
+    const homeLink = navigation.getByRole("link", { name: "Home" });
+    await expect(homeLink.getBoundingClientRect().height).toBeGreaterThanOrEqual(24);
+    await expect(getComputedStyle(homeLink).borderBottomStyle).toBe("solid");
+    await expect(Number.parseFloat(getComputedStyle(homeLink).borderBottomWidth)).toBeGreaterThan(0);
     await expect(navigation.getByRole("link", { name: "Components" })).toHaveAttribute("aria-current", "page");
     await expect(navigation.getByRole("link", { name: "Components" })).toHaveAttribute("aria-disabled", "true");
   },

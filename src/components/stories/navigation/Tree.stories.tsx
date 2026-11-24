@@ -167,6 +167,7 @@ export const LinkRows: Story = {
     const canvas = within(canvasElement);
     const source = canvas.getByRole("treeitem", { name: "Source" });
     await expect(source.tagName).toBe("A");
+    await expect(source.getBoundingClientRect().height).toBeGreaterThanOrEqual(24);
     await expect(source).toHaveAttribute("href", "#src");
     await expect(source).toHaveAttribute("aria-current", "page");
     await expect(sourceLinkRef).toHaveBeenLastCalledWith(source);

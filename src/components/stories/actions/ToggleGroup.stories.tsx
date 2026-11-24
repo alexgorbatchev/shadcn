@@ -354,3 +354,28 @@ export const RightToLeft: Story = {
     await expect(next).toHaveAttribute("aria-pressed", "true");
   },
 };
+
+export const WrapsWhenNarrow: Story = {
+  args: { multiple: true, variant: "outline", spacing: 2, defaultValue: ["email"] },
+  render: (args) => (
+    <div data-testid="narrow-toggle-container" className="w-44">
+      <ToggleGroup {...args}>
+        <ToggleGroupItem value="email">Email</ToggleGroupItem>
+        <ToggleGroupItem value="chat">Chat</ToggleGroupItem>
+        <ToggleGroupItem value="phone">Phone</ToggleGroupItem>
+        <ToggleGroupItem value="forum">Forum</ToggleGroupItem>
+      </ToggleGroup>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const container = canvas.getByTestId("narrow-toggle-container");
+    const containerBox = container.getBoundingClientRect();
+    const buttons = ["Email", "Chat", "Phone", "Forum"].map((name) => canvas.getByRole("button", { name }));
+    for (const button of buttons) {
+      await expect(button.getBoundingClientRect().right).toBeLessThanOrEqual(containerBox.right + 1);
+    }
+    // Narrow containers wrap the trailing option onto a second row instead of clipping it.
+    await expect(buttons[3]!.getBoundingClientRect().top).toBeGreaterThan(buttons[0]!.getBoundingClientRect().top);
+  },
+};

@@ -64,7 +64,10 @@ function BreadcrumbLink({ analytics, density, className, render, ...props }: Bre
     defaultTagName: "a",
     props: mergeProps<"a">(
       {
-        className: cn("transition-colors hover:text-foreground", className),
+        className: cn(
+          "inline-block cursor-pointer border-b border-input leading-6 transition-colors hover:border-foreground hover:text-foreground",
+          className,
+        ),
       },
       { ...props, onClick },
     ),
@@ -86,7 +89,7 @@ function BreadcrumbPage({ density, className, ...props }: BreadcrumbPageProps): 
       role="link"
       aria-disabled="true"
       aria-current="page"
-      className={cn("font-normal text-foreground", className)}
+      className={cn("inline-block border-b border-transparent leading-6 font-normal text-foreground", className)}
       {...props}
     />
   );

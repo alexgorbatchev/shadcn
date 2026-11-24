@@ -127,3 +127,22 @@ export const LongContent: Story = {
     await userEvent.click(within(dialog).getByRole("button", { name: "Cancel" }));
   },
 };
+
+export const Fullscreen: Story = {
+  args: { size: "fullscreen" },
+  play: async ({ canvasElement, userEvent }) => {
+    await userEvent.click(within(canvasElement).getByRole("button", { name: "Edit project" }));
+    const dialog = await within(canvasElement.ownerDocument.body).findByRole("dialog", { name: "Edit project" });
+    await waitFor(() => expect(dialog).toBeVisible());
+    const footer = dialog.querySelector('[data-slot="dialog-footer"]') as HTMLElement;
+    const viewport = dialog.querySelector('[data-slot="scroll-area-viewport"]') as HTMLElement;
+    await expect(footer).toBeInTheDocument();
+    await expect(viewport).toBeInTheDocument();
+    // In a fullscreen form dialog, the body stretches to pin the footer at the bottom edge.
+    await expect(
+      Math.abs(footer.getBoundingClientRect().bottom - dialog.getBoundingClientRect().bottom),
+    ).toBeLessThanOrEqual(2);
+    await expect(viewport.getBoundingClientRect().height).toBeGreaterThan(100);
+    await userEvent.click(within(dialog).getByRole("button", { name: "Cancel" }));
+  },
+};

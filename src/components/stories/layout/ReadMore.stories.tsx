@@ -45,6 +45,11 @@ export const Folded: Story = {
     await expect(content.getBoundingClientRect().height).toBeLessThanOrEqual(96);
     const more = await canvas.findByRole("button", { name: "More" });
     await expect(more).toHaveAttribute("aria-expanded", "false");
+    await expect(more).toHaveAttribute("data-size", "xs");
+    await expect(getComputedStyle(more).borderTopStyle).toBe("solid");
+    await expect(
+      Math.abs(more.getBoundingClientRect().left - content.getBoundingClientRect().left),
+    ).toBeLessThanOrEqual(1);
     await userEvent.click(more);
     await waitFor(() => expect(content.getBoundingClientRect().height).toBeGreaterThan(96));
     // Unfolded for good: the button goes away, nothing offers Less, and focus rests on the content it unfolded.

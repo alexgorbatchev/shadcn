@@ -273,7 +273,7 @@ export function TreeItem<T>({
         ...nativeProps,
         ref: undefined,
         className: cn(
-          "flex min-w-0 flex-1 items-center gap-2 outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          "flex min-w-0 flex-1 items-center gap-2 self-stretch -my-1 py-1 outline-none focus-visible:ring-2 focus-visible:ring-ring",
           faded,
         ),
         children: label,

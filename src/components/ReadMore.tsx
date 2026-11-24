@@ -58,8 +58,8 @@ function ReadMore({ maxHeight, density, className, style, children, ...props }: 
       {isOverflowing && isFolded && (
         <Button
           type="button"
-          variant="link"
-          size="sm"
+          variant="outline"
+          size="xs"
           data-slot="read-more-toggle"
           aria-expanded={false}
           aria-controls={`${id}-content`}
