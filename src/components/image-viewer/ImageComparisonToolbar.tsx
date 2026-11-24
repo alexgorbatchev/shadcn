@@ -185,7 +185,7 @@ export function ImageComparisonToolbar({
         onBlur={releasePeek}
         onContextMenu={(event) => event.preventDefault()}
       >
-        Hold to show {side === "before" ? "after" : "before"}
+        {`Hold to show ${side === "before" ? "after" : "before"}`}
       </Button>
       <Field orientation="horizontal">
         <Switch
