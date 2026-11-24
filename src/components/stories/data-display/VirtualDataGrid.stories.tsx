@@ -338,10 +338,16 @@ export const RowCursorKeyboard: Story = {
     await expect(selectedNames(canvasElement)).toHaveLength(4);
     // End reaches a row far outside the rendered window and keeps it focused and in view.
     await userEvent.keyboard("{End}");
-    const last = await waitFor(() => rowOf(canvasElement, "File 999"));
-    await expect(last).toHaveFocus();
-    const viewport = canvas.getByRole("region", { name: "Files" }).getBoundingClientRect();
-    await waitFor(() => expect(last.getBoundingClientRect().bottom).toBeLessThanOrEqual(viewport.bottom + 1));
+    await waitFor(async () => {
+      // Let the virtual rows and spacers commit their measurements before checking visibility.
+      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      const viewport = canvas.getByRole("region", { name: "Files" });
+      const last = rowOf(canvasElement, "File 999");
+      await expect(last).toHaveFocus();
+      await expect(last.getBoundingClientRect().bottom).toBeLessThanOrEqual(
+        viewport.getBoundingClientRect().top + viewport.clientHeight + 1,
+      );
+    });
     await userEvent.keyboard("{Home}");
     await waitFor(() => expect(rowOf(canvasElement, "File 0")).toHaveFocus());
     await userEvent.keyboard(`{${MOD}>}a{/${MOD}}`);

@@ -95,6 +95,49 @@ function renderDefaultRow<T extends RowData>(row: DataGridRow<T>, props: IVirtua
   );
 }
 
+function revealRow(viewport: HTMLElement, row: HTMLElement, focus: boolean): (() => void) | undefined {
+  const keepInView = (): void => {
+    const header = viewport.querySelector("thead")?.getBoundingClientRect().height ?? 0;
+    const view = viewport.getBoundingClientRect();
+    const bounds = row.getBoundingClientRect();
+    const top = view.top + header;
+    const bottom = view.top + viewport.clientHeight;
+    if (bounds.top < top || bounds.height > bottom - top) viewport.scrollTop += bounds.top - top;
+    else if (bounds.bottom > bottom) viewport.scrollTop += bounds.bottom - bottom;
+  };
+
+  keepInView();
+  if (!focus) return undefined;
+  row.focus({ preventScroll: true });
+  const table = row.closest("table");
+  if (row.ownerDocument.activeElement !== row || !table) return undefined;
+
+  // Virtual row measurements can change the spacers and adjust scrollTop after
+  // the jump. Keep the keyboard target visible until the user takes over.
+  const input = new AbortController();
+  let frame = 0;
+  const schedule = (): void => {
+    if (frame) return;
+    frame = requestAnimationFrame(() => {
+      frame = 0;
+      if (row === row.ownerDocument.activeElement) keepInView();
+    });
+  };
+  const observer = new ResizeObserver(schedule);
+  const stop = (): void => {
+    cancelAnimationFrame(frame);
+    observer.disconnect();
+    input.abort();
+  };
+  for (const event of ["wheel", "pointerdown", "touchstart", "keydown"]) {
+    viewport.addEventListener(event, stop, { signal: input.signal, passive: true, capture: true });
+  }
+  row.addEventListener("blur", stop, { signal: input.signal });
+  viewport.addEventListener("scroll", schedule, { signal: input.signal, passive: true });
+  observer.observe(table);
+  return stop;
+}
+
 function handleRowKeys(cursor: IDataGridRowCursor, event: KeyboardEvent<HTMLTableRowElement>): void {
   if (event.target !== event.currentTarget || event.altKey) return;
   const isMod = event.metaKey || event.ctrlKey;
@@ -169,13 +212,7 @@ export function VirtualDataGrid<T extends RowData, TSelected>({
     const viewport = scope.current?.querySelector<HTMLElement>("[data-testid='VirtualTable']");
     const row = viewport?.querySelector<HTMLElement>(`tr[data-row-id="${CSS.escape(reveal.rowId)}"]`);
     if (!viewport || !row) return;
-    // Keep the whole row in view below the sticky header, scrolling as little as possible.
-    const header = viewport.querySelector("thead")?.getBoundingClientRect().height ?? 0;
-    const view = viewport.getBoundingClientRect();
-    const bounds = row.getBoundingClientRect();
-    if (bounds.top < view.top + header) viewport.scrollTop -= view.top + header - bounds.top;
-    else if (bounds.bottom > view.bottom) viewport.scrollTop += bounds.bottom - view.bottom;
-    if (reveal.focus) row.focus({ preventScroll: true });
+    return revealRow(viewport, row, reveal.focus);
   }, [reveal]);
   const cursorProps = (row: DataGridRow<T>): Partial<IVirtualDataGridRowProps> =>
     rowCursor
