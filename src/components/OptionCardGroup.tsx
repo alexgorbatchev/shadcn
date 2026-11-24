@@ -25,7 +25,9 @@ interface IOptionCardGroupLayoutProps {
 type OptionCardGroupProps = IAnalyticsProps & RadioGroupPrimitive.Props & IDensityProps & IOptionCardGroupLayoutProps;
 
 function getGroupClass(layout: OptionCardGroupLayout): string {
-  return cn("grid w-full gap-2", layout === "row" && "grid-cols-[repeat(auto-fit,minmax(min(100%,14rem),1fr))]");
+  return layout === "row"
+    ? "flex w-full flex-wrap gap-2 [&>[data-slot=option-card-item]:not([data-span=full])]:min-w-[min(100%,14rem)] [&>[data-slot=option-card-item]:not([data-span=full])]:flex-1 [&>[data-slot=option-card-item][data-span=full]]:basis-full"
+    : "grid w-full gap-2";
 }
 
 /**
@@ -130,7 +132,7 @@ interface IOptionCardSpanProps {
 // A recommended card keeps the plain frame: only the checked card has a coloured frame, so a recommendation never
 // reads as the selection. Its Recommended tag says it.
 const CARD_CLASS =
-  "group/option-card grid h-full w-full cursor-pointer grid-cols-[1.25rem_minmax(0,1fr)] items-start gap-x-2 rounded-md border border-input bg-card p-panel-sm text-start text-sm text-card-foreground transition-colors outline-none hover:bg-muted/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring focus-visible:outline-solid data-checked:border-primary data-checked:ring-1 data-checked:ring-primary forced-colors:data-checked:border-[color:Highlight] aria-invalid:not-data-checked:border-destructive data-disabled:cursor-not-allowed data-disabled:opacity-50 data-disabled:hover:bg-card data-readonly:cursor-default data-folding:pb-10";
+  "group/option-card grid h-full w-full cursor-pointer grid-cols-[1.25rem_minmax(0,1fr)] content-start items-start gap-x-2 rounded-md border border-input bg-card p-panel-sm text-start text-sm text-card-foreground transition-colors outline-none hover:bg-muted/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring focus-visible:outline-solid data-checked:border-primary data-checked:ring-1 data-checked:ring-primary forced-colors:data-checked:border-[color:Highlight] aria-invalid:not-data-checked:border-destructive data-disabled:cursor-not-allowed data-disabled:opacity-50 data-disabled:hover:bg-card data-readonly:cursor-default data-folding:pb-10";
 
 const CARD_CONTROL_SELECTOR = '[data-slot="option-card"], [data-slot="option-checkbox-card"]';
 
@@ -215,6 +217,14 @@ function OptionCardContent({
   const isFolded = descriptionLines !== undefined && !fold.isOpen;
   return (
     <>
+      {image !== undefined && (
+        <span
+          data-slot="option-card-image"
+          className="col-span-full mb-2 block overflow-hidden rounded-sm border border-border"
+        >
+          {image}
+        </span>
+      )}
       <span
         data-slot="option-card-marker"
         aria-hidden="true"
@@ -223,11 +233,6 @@ function OptionCardContent({
         {marker}
       </span>
       <span className="flex min-w-0 flex-col gap-1">
-        {image !== undefined && (
-          <span data-slot="option-card-image" className="mb-1 block overflow-hidden rounded-sm border border-border">
-            {image}
-          </span>
-        )}
         <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
           <span id={ids.label} data-slot="option-card-label" className="leading-5 font-semibold wrap-break-word">
             {label}

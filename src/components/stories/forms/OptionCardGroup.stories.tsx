@@ -439,17 +439,29 @@ export const RowLayoutWithFullSpanOption: Story = {
     await expect(new Set(rowCards.map((box) => Math.round(box.top))).size).toBe(1);
     await expect(Math.abs(rowCards[0]!.height - rowCards[1]!.height)).toBeLessThanOrEqual(1);
     await expect(Math.abs(rowCards[1]!.height - rowCards[2]!.height)).toBeLessThanOrEqual(1);
-    // The full-span card sits below the row and stretches across the entire group width.
+    // The full-span card sits below the row and shares left and right edges with the row cards above it.
     const otherRadio = within(radioRow).getByRole("radio", { name: "Something else" });
     const otherRadioBox = otherRadio.getBoundingClientRect();
     const radioGroupBox = radioGroup.getBoundingClientRect();
     await expect(otherRadioBox.top).toBeGreaterThanOrEqual(rowCards[1]!.bottom);
     await expect(Math.abs(otherRadioBox.width - radioGroupBox.width)).toBeLessThanOrEqual(1);
+    await expect(Math.abs(rowCards[2]!.right - otherRadioBox.right)).toBeLessThanOrEqual(1);
+    // An option card's image spans symmetrically across the full inner card width, above the radio mark and label.
+    const quietCard = within(radioRow).getByRole("radio", { name: "Quiet" });
+    const quietImage = quietCard.querySelector<HTMLElement>('[data-slot="option-card-image"]');
+    const quietRadio = quietCard.querySelector<HTMLElement>('[data-slot="option-card-marker"]');
+    await expect(quietImage).not.toBeNull();
+    await expect(quietRadio).not.toBeNull();
+    const quietImageBox = quietImage!.getBoundingClientRect();
+    await expect(
+      Math.abs(quietImageBox.left - rowCards[0]!.left - (rowCards[0]!.right - quietImageBox.right)),
+    ).toBeLessThanOrEqual(1);
+    await expect(quietRadio!.getBoundingClientRect().top).toBeGreaterThanOrEqual(quietImageBox.bottom - 1);
     await expect(otherRadio.closest('[data-slot="option-card-item"]')).toHaveAttribute("data-span", "full");
     await userEvent.click(otherRadio);
     await expect(otherRadio).toBeChecked();
 
-    // Checkbox cards share the same equal-height and full-span row behavior.
+    // Checkbox cards share the same equal-height, shared right-edge, and full-span row behavior.
     const checkboxRow = canvas.getByTestId("checkbox-row");
     const checkboxGroup = within(checkboxRow).getByRole("group", { name: "Extra directions" });
     const alphaBox = within(checkboxRow).getByRole("checkbox", { name: "Alpha" }).getBoundingClientRect();
@@ -459,6 +471,7 @@ export const RowLayoutWithFullSpanOption: Story = {
     const otherCheckboxBox = otherCheckbox.getBoundingClientRect();
     await expect(otherCheckboxBox.top).toBeGreaterThanOrEqual(betaBox.bottom);
     await expect(Math.abs(otherCheckboxBox.width - checkboxGroup.getBoundingClientRect().width)).toBeLessThanOrEqual(1);
+    await expect(Math.abs(betaBox.right - otherCheckboxBox.right)).toBeLessThanOrEqual(1);
     await userEvent.click(otherCheckbox);
     await expect(otherCheckbox).toBeChecked();
     await assertLayoutContained(canvasElement);
