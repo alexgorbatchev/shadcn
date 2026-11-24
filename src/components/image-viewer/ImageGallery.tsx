@@ -111,7 +111,7 @@ function CompareAllPane({
         <span className="truncate">{item.label}</span>
         {item.selected && <Badge variant="default">Chosen</Badge>}
       </div>
-      <div className={cn("flex min-h-0 w-full shrink-0", zoom === "fit" ? "aspect-[16/10]" : "h-[min(60dvh,32rem)]")}>
+      <div className={cn("flex w-full shrink-0", zoom === "fit" ? "aspect-[16/10]" : "h-[min(60dvh,32rem)]")}>
         <ImageViewport
           label={item.label}
           zoom={zoom}
@@ -141,7 +141,7 @@ function CompareAllPane({
       {(item.description || (footer !== undefined && footer !== null)) && (
         <div
           data-slot="image-gallery-compare-footer"
-          className="flex shrink-0 flex-col gap-2 border-t border-border p-panel-sm"
+          className="flex flex-1 shrink-0 flex-col justify-between gap-2 border-t border-border p-panel-sm"
         >
           {item.description && <p className="text-xs text-muted-foreground">{item.description}</p>}
           {footer !== undefined && footer !== null && (
@@ -264,7 +264,7 @@ export function ImageGallery({
         <div
           data-slot="image-gallery-compare-grid"
           className={cn(
-            "grid min-h-0 min-w-0 flex-1 content-start grid-cols-1 gap-3 overflow-y-auto pb-2",
+            "grid min-h-0 min-w-0 flex-1 auto-rows-max content-start grid-cols-1 gap-3 overflow-y-auto p-0.5 pb-2",
             count === 2 ? "@2xl:grid-cols-2" : "@xl:grid-cols-2 @3xl:grid-cols-3",
           )}
         >

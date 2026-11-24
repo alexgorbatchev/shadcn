@@ -4,6 +4,7 @@ import { render } from "vitest-browser-react";
 import { observeScrollGuards } from "../../../utils/observeScrollGuards";
 import { SplitView } from "../../resizable/SplitView";
 import { ImageComparison } from "../ImageComparison";
+import { ImageGallery } from "../ImageGallery";
 import { MediaShell } from "../MediaShell";
 import { createSvgImageUrl, loadCrossOriginImage, type Rgba } from "./helpers";
 import "../../../../.storybook/preview.css";
@@ -125,6 +126,65 @@ test("the toolbar sits above a wide fullscreen comparison in one row and side-by
   await expect
     .poll(() => screen.getByRole("img", { name: "After capture" }).element().getBoundingClientRect().height)
     .toBeGreaterThan(100);
+});
+
+test("gallery compare-all preserves every card footer and scrolls to the last option on a phone", async () => {
+  await page.viewport(390, 844);
+  const items = [
+    { key: "quiet", src: before.src, alt: "Quiet option", label: "Quiet", description: "Generous space." },
+    { key: "bold", src: after.src, alt: "Bold option", label: "Bold", description: "Saturated accent." },
+    {
+      key: "playful",
+      src: before.src,
+      alt: "Playful option",
+      label: "Playful",
+      description: "Rounded shapes.",
+      selected: true,
+    },
+  ];
+  const screen = await render(
+    <MediaShell open onOpenChange={() => undefined} title="Compare options · 3 options">
+      <div className="flex min-h-0 flex-1 flex-col">
+        <SplitView
+          storageKey="native-gallery-phone-compare"
+          sidebarPosition="end"
+          sidebarOpen={false}
+          narrowLayout="drawer"
+          layout="fill"
+          sidebarLabel="Comments"
+          contentLabel="Image"
+          resizeLabel="Resize comments"
+          sidebarPadding="none"
+          contentPadding="none"
+          sidebar={<p>Comments</p>}
+        >
+          <ImageGallery
+            items={items}
+            index={0}
+            onIndexChange={() => undefined}
+            defaultCompareAll
+            renderItemFooter={(entry) => (
+              <button type="button">{entry.selected ? `${entry.label} chosen` : `Choose ${entry.label}`}</button>
+            )}
+          />
+        </SplitView>
+      </div>
+    </MediaShell>,
+  );
+  const grid = document.querySelector<HTMLElement>("[data-slot=image-gallery-compare-grid]");
+  assert(grid);
+  await expect.poll(() => grid.scrollHeight).toBeGreaterThan(grid.clientHeight);
+  // Every option card must keep its footer inside the card's own bounds (never clipped by overflow-hidden).
+  for (const label of ["Quiet", "Bold", "Playful"]) {
+    const pane = screen.getByRole("region", { name: label, exact: true }).element();
+    const footer = pane.querySelector<HTMLElement>("[data-slot=image-gallery-compare-footer]");
+    assert(footer);
+    expect(footer.getBoundingClientRect().bottom).toBeLessThanOrEqual(pane.getBoundingClientRect().bottom + 1);
+  }
+  grid.scrollTo({ top: grid.scrollHeight, behavior: "instant" });
+  const chosenBtn = screen.getByRole("button", { name: "Playful chosen" }).element();
+  await expect.poll(() => chosenBtn.getBoundingClientRect().bottom).toBeLessThanOrEqual(844);
+  expect(chosenBtn.getBoundingClientRect().top).toBeGreaterThan(0);
 });
 
 test("switching to original size centers the first change and stepping centers every change with scroll hints", async () => {
