@@ -71,16 +71,21 @@ const fieldVariants = cva("group/field flex w-full gap-2 data-[invalid=true]:tex
   },
 });
 
-type FieldProps = ComponentProps<"div"> & VariantProps<typeof fieldVariants> & IDensityProps;
+type FieldProps = ComponentProps<"div"> &
+  VariantProps<typeof fieldVariants> &
+  IDensityProps & {
+    /** Stretch inside a flex container (for example, a fullscreen FormDialog holding a growing picker). */
+    grow?: boolean;
+  };
 
-function Field({ density, className, orientation = "vertical", ...props }: FieldProps): ReactElement {
+function Field({ density, className, orientation = "vertical", grow = false, ...props }: FieldProps): ReactElement {
   return (
     <div
       role="group"
       data-density={density}
       data-slot="field"
       data-orientation={orientation}
-      className={cn(fieldVariants({ orientation }), className)}
+      className={cn(fieldVariants({ orientation }), grow && "min-h-0 flex-1", className)}
       {...props}
     />
   );

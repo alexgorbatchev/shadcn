@@ -110,8 +110,10 @@ export function TextDiff({
       <div
         data-testid="TextDiff--legend"
         className={cn(
-          "flex min-h-control-lg items-center gap-control-gap border-b border-frame-edge px-control-x text-xs font-medium tracking-wide text-muted-foreground",
-          isSplit && "[&>*]:w-1/2",
+          "flex min-h-control-lg items-center border-b border-frame-edge text-xs font-medium tracking-wide text-muted-foreground",
+          isSplit
+            ? "[&>*]:w-1/2 [&>*:first-child]:border-e [&>*:first-child]:border-frame-edge [&>*:first-child]:ps-control-x [&>*:first-child]:pe-control-x [&>*:last-child]:px-control-x"
+            : "gap-control-gap px-control-x",
         )}
       >
         <SignLabel sign="-" label={beforeLabel} />
@@ -124,11 +126,14 @@ export function TextDiff({
           const regionId = `${idPrefix}-${segment.start}`;
           return (
             <Fragment key={segmentIndex}>
-              <div className="flex px-control-x py-0.5 font-sans">
+              <div
+                data-slot="text-diff-fold"
+                className="my-1 flex items-center border-y border-frame-edge bg-muted/40 px-control-x py-1 font-sans"
+              >
                 <Button
                   type="button"
-                  variant="ghost"
-                  size="sm"
+                  variant="outline"
+                  size="xs"
                   aria-expanded={isExpanded}
                   aria-controls={regionId}
                   onClick={() => toggle(segment.start)}

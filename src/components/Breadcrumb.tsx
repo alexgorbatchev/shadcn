@@ -65,7 +65,7 @@ function BreadcrumbLink({ analytics, density, className, render, ...props }: Bre
     props: mergeProps<"a">(
       {
         className: cn(
-          "inline-block cursor-pointer border-b border-input leading-6 transition-colors hover:border-foreground hover:text-foreground",
+          "inline-block cursor-pointer rounded-xs border-b border-input px-0.5 -mx-0.5 leading-6 transition-colors outline-none hover:border-foreground hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring",
           className,
         ),
       },

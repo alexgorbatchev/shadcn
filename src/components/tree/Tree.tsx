@@ -21,6 +21,8 @@ type TreeProps<T> = IAnalyticsProps &
     tree: TreeInstance<T>;
     label: string;
     variant?: "default" | "sidebar";
+    /** Take remaining vertical space inside a flex parent while keeping rows packed from the top. */
+    grow?: boolean;
     renderIcon?: (item: ItemInstance<T>) => ReactNode;
     renderLabel?: (item: ItemInstance<T>) => ReactNode;
     renderItem?: (item: ItemInstance<T>) => ReactNode;
@@ -35,6 +37,7 @@ function Tree<T>({
   tree,
   label,
   variant = "default",
+  grow = false,
   renderIcon,
   renderLabel,
   renderItem,
@@ -53,6 +56,7 @@ function Tree<T>({
         className={cn(
           "grid min-w-0 grid-cols-1 gap-1",
           variant === "default" && "rounded-sm border border-border bg-card p-2",
+          grow && "min-h-0 flex-1 content-start",
         )}
         onKeyDown={(event: KeyboardEvent<HTMLDivElement>) => {
           if (event.target instanceof Element && event.target.closest("input,textarea,select,form,button,[role=menu]"))

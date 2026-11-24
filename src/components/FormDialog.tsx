@@ -53,12 +53,14 @@ export function FormDialog({
   const body = (
     <>
       <ScrollArea density={density} grow={isFullscreen}>
-        {children}
-        {error && (
-          <Alert variant="destructive" density={density}>
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
+        <div className={cn("flex flex-col gap-panel", isFullscreen && "min-h-full")}>
+          {children}
+          {error && (
+            <Alert variant="destructive" density={density}>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+        </div>
       </ScrollArea>
       <DialogFooter density={density}>
         <DialogClose render={<Button variant="outline" density={density} disabled={isBusy} />}>

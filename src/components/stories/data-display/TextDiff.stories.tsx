@@ -80,6 +80,10 @@ export const SideBySide: Story = {
     const row = canvas.getByText("workers = 4").closest("[data-slot=diff-viewer-split-line]");
     await expect(row).not.toBeNull();
     await expect(within(row as HTMLElement).getByText("workers = 8")).toBeVisible();
+    const diff = canvas.getByTestId("TextDiff");
+    const fold = diff.querySelector<HTMLElement>("[data-slot=text-diff-fold]");
+    await expect(fold).not.toBeNull();
+    await expect(Math.abs((fold?.getBoundingClientRect().width ?? 0) - diff.clientWidth)).toBeLessThanOrEqual(2);
   },
 };
 

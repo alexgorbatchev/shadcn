@@ -74,14 +74,40 @@ export const Hierarchy: Story = {
     await expect(within(tree).getByRole("treeitem", { name: "Navigation" })).toHaveAccessibleDescription(
       "Current location",
     );
+    await expect(within(tree).getByRole("treeitem", { name: "Navigation" })).toHaveAttribute("data-dimmed", "");
     const archived = within(tree).getByRole("treeitem", { name: "Old explorations" });
     await expect(archived).toHaveAccessibleDescription("Archived");
     await expect(archived).toHaveAttribute("aria-disabled", "true");
     await userEvent.click(archived);
     await expect(choose).not.toHaveBeenCalled();
-    await userEvent.click(within(tree).getByRole("treeitem", { name: "Homepage" }));
+    const homepage = within(tree).getByRole("treeitem", { name: "Homepage" });
+    await userEvent.click(homepage);
     await expect(choose).toHaveBeenCalledWith("homepage");
     await expect(canvas.getByLabelText("Chosen")).toHaveTextContent("homepage");
+    await expect(homepage.querySelector("[data-slot=tree-item-marker] svg")).not.toBeNull();
+    await expect(getComputedStyle(homepage).borderTopColor).not.toBe("rgba(0, 0, 0, 0)");
+  },
+};
+
+export const GrowingHeight: Story = {
+  render: () => (
+    <div className="flex h-[500px] w-[360px] flex-col">
+      <TreeSelect
+        nodes={destinations.slice(0, 1)}
+        value="homepage"
+        currentId="navigation"
+        label="Destination"
+        filterLabel="Filter places"
+        filterPlaceholder="Filter places"
+        grow
+        onValueChange={choose}
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const tree = canvas.getByRole("tree", { name: "Destination" });
+    await expect(tree.getBoundingClientRect().height).toBeGreaterThan(350);
   },
 };
 

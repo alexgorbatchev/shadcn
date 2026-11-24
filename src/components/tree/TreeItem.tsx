@@ -48,6 +48,8 @@ type TreeItemProps<T> = useRender.ComponentProps<"div", TreeItemState> &
      * never rests on colour.
      */
     tone?: "default" | "warning";
+    /** Selected row highlight: `subtle` uses the neutral accent fill; `accent` adds a primary border for pickers. */
+    selectionStyle?: "subtle" | "accent";
     endEnhancer?: ReactNode;
     expandOn?: "click" | "doubleClick" | "disclosure";
     isEditing?: boolean;
@@ -198,6 +200,7 @@ export function TreeItem<T>({
   isUnread = false,
   hasIcon = true,
   tone = "default",
+  selectionStyle = "subtle",
   leading,
   marker,
   linkProps,
@@ -338,8 +341,11 @@ export function TreeItem<T>({
           : {}),
         style: { paddingInlineStart: `${item.getItemMeta().level * (item.getTree().getConfig().indent ?? 20) + 8}px` },
         className: cn(
-          "relative flex min-h-control min-w-0 cursor-default items-center gap-2 rounded-sm py-1 pr-2 text-sm outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring",
-          (isSelected || isDropTarget || isInsideTarget) && "bg-accent text-accent-foreground",
+          "relative flex min-h-control min-w-0 cursor-default items-center gap-2 rounded-sm border border-transparent py-1 pr-2 text-sm outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring",
+          (isSelected || isDropTarget || isInsideTarget) &&
+            (selectionStyle === "accent" && isSelected
+              ? "border-primary bg-muted/60 font-medium text-foreground"
+              : "bg-accent text-accent-foreground"),
           tone === "warning" &&
             "before:pointer-events-none before:absolute before:inset-y-1 before:start-0 before:w-0.5 before:rounded-full before:bg-warning",
           isDimmed && "group/tree-item",

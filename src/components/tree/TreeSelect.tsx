@@ -1,7 +1,9 @@
 import { useEffect, useId, useMemo, useState } from "react";
 import type { ReactElement } from "react";
+import { CheckIcon } from "lucide-react";
 import { hotkeysCoreFeature, selectionFeature, syncDataLoaderFeature } from "@headless-tree/core";
 import { useTree } from "@headless-tree/react";
+import { cn } from "../../utils/cn.js";
 import { Input } from "../Input.js";
 import { Tree } from "./Tree.js";
 import { TreeItem } from "./TreeItem.js";
@@ -32,6 +34,8 @@ export interface ITreeSelectProps {
   currentLabel?: string | undefined;
   /** Shown when the filter matches nothing; defaults to "No matches". */
   emptyLabel?: string | undefined;
+  /** Stretch the destination list to fill remaining vertical space inside a flex parent. */
+  grow?: boolean | undefined;
   isDisabled?: boolean | undefined;
 }
 
@@ -80,6 +84,7 @@ export function TreeSelect({
   currentId,
   currentLabel = "Current location",
   emptyLabel = "No matches",
+  grow = false,
   isDisabled = false,
 }: ITreeSelectProps): ReactElement {
   const filterId = useId();
@@ -137,7 +142,11 @@ export function TreeSelect({
   }, [tree, visibleKey]);
   const hasItems = visible.size > 0;
   return (
-    <div data-testid="TreeSelect" data-slot="tree-select" className="flex min-w-0 flex-col gap-2">
+    <div
+      data-testid="TreeSelect"
+      data-slot="tree-select"
+      className={cn("flex min-w-0 flex-col gap-2", grow && "min-h-0 flex-1")}
+    >
       <Input
         id={filterId}
         type="search"
@@ -161,18 +170,23 @@ export function TreeSelect({
         <Tree
           tree={tree}
           label={label}
+          grow={grow}
           renderItem={(item) => {
             const node = item.getItemData();
-            const description = node.disabledReason ?? (node.id === currentId ? currentLabel : undefined);
+            const isCurrent = node.id === currentId;
+            const isChoice = node.id === value && !isCurrent && !node.disabledReason;
+            const description = node.disabledReason ?? (isCurrent ? currentLabel : undefined);
             return (
               <TreeItem
                 item={item}
                 expandOn="disclosure"
                 hasIcon={false}
+                selectionStyle="accent"
                 description={description}
-                isDimmed={Boolean(node.disabledReason)}
+                marker={isChoice ? <CheckIcon aria-hidden="true" className="size-3.5 text-primary" /> : undefined}
+                isDimmed={Boolean(node.disabledReason) || isCurrent}
                 aria-disabled={node.disabledReason || isDisabled ? true : undefined}
-                data-current={node.id === currentId ? "" : undefined}
+                data-current={isCurrent ? "" : undefined}
                 onKeyDown={(event) => {
                   if (event.key !== " ") return;
                   event.preventDefault();
