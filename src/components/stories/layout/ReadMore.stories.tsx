@@ -18,7 +18,7 @@ const meta: Meta<typeof ReadMore> = {
     docs: {
       description: {
         component:
-          "ReadMore folds long content to `maxHeight` with a More button, and Less folds it again. Content that fits shows in full without a button.",
+          "ReadMore folds long content to `maxHeight` with a More button that unfolds it for good: no Less button follows. Content that fits shows in full without a button.",
       },
     },
   },
@@ -47,8 +47,10 @@ export const Folded: Story = {
     await expect(more).toHaveAttribute("aria-expanded", "false");
     await userEvent.click(more);
     await waitFor(() => expect(content.getBoundingClientRect().height).toBeGreaterThan(96));
-    await userEvent.click(canvas.getByRole("button", { name: "Less" }));
-    await waitFor(() => expect(content.getBoundingClientRect().height).toBeLessThanOrEqual(96));
+    // Unfolded for good: the button goes away, nothing offers Less, and focus rests on the content it unfolded.
+    await expect(canvas.queryByRole("button")).not.toBeInTheDocument();
+    await expect(canvas.queryByText("Less")).not.toBeInTheDocument();
+    await expect(content).toHaveFocus();
   },
 };
 

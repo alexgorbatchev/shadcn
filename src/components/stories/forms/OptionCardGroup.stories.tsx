@@ -356,9 +356,11 @@ export const FoldedDescription: Story = {
     const card = canvas.getByRole("radio", { name: "Blue-green" });
     const folded = card.getBoundingClientRect().height;
     await userEvent.click(more);
-    await expect(more).toHaveAttribute("aria-expanded", "true");
-    await expect(more).toHaveTextContent("Less");
     await waitFor(() => expect(card.getBoundingClientRect().height).toBeGreaterThan(folded));
+    // Unfolded for good: More goes away, nothing offers Less, and focus moves to the card's control.
+    await expect(canvas.queryByRole("button", { name: "More" })).not.toBeInTheDocument();
+    await expect(canvas.queryByRole("button", { name: "Less" })).not.toBeInTheDocument();
+    await expect(card).toHaveFocus();
     await expect(card).not.toBeChecked();
     await expect(args.onValueChange).not.toHaveBeenCalled();
   },

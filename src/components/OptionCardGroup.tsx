@@ -70,8 +70,9 @@ interface IOptionCardContentProps {
   /** A short explanation shown below the label, such as the option's trade-off. */
   description?: ReactNode;
   /**
-   * Folds the description after this many lines, with a More button that shows the rest. The button sits inside the
-   * card's border but outside the card's control, so pressing it never changes the choice.
+   * Folds the description after this many lines, with a More button that shows the rest for good: once unfolded, the
+   * description stays open and the button goes away. The button sits inside the card's border but outside the card's
+   * control, so pressing it never changes the choice.
    */
   descriptionLines?: number;
   /** Marks the option the author recommends with a tag after its label and a tinted border. */
@@ -94,17 +95,19 @@ interface IOptionCardContentProps {
 const CARD_CLASS =
   "group/option-card grid w-full cursor-pointer grid-cols-[1.25rem_minmax(0,1fr)] items-start gap-x-2 rounded-md border border-input bg-card p-panel-sm text-start text-sm text-card-foreground transition-colors outline-none hover:bg-muted/40 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring focus-visible:outline-solid data-checked:border-primary data-checked:ring-1 data-checked:ring-primary forced-colors:data-checked:border-[color:Highlight] aria-invalid:not-data-checked:border-destructive data-disabled:cursor-not-allowed data-disabled:opacity-50 data-disabled:hover:bg-card data-readonly:cursor-default data-folding:pb-10";
 
+const CARD_CONTROL_SELECTOR = '[data-slot="option-card"], [data-slot="option-checkbox-card"]';
+
 interface IFold {
   ref: RefObject<HTMLSpanElement | null>;
   /** The folded height in pixels: whole lines of the description's own text. */
   height?: number;
-  /** The description is taller than its fold, or open, so the More or Less button shows. */
+  /** The description is folded and taller than its fold, so the More button shows. */
   isFoldable: boolean;
   isOpen: boolean;
-  toggle: VoidFunction;
+  open: VoidFunction;
 }
 
-/** Measures whether a folded description hides text, and holds whether the person opened it. */
+/** Measures whether a folded description hides text, and holds whether the person opened it; it never folds again. */
 function useFold(lines: number | undefined): IFold {
   const ref = useRef<HTMLSpanElement>(null);
   const [isOverflowing, setIsOverflowing] = useState(false);
@@ -125,9 +128,9 @@ function useFold(lines: number | undefined): IFold {
   return {
     ref,
     height,
-    isFoldable: lines !== undefined && (isOverflowing || isOpen),
+    isFoldable: lines !== undefined && isOverflowing && !isOpen,
     isOpen,
-    toggle: () => setIsOpen((open) => !open),
+    open: () => setIsOpen(true),
   };
 }
 
@@ -225,7 +228,10 @@ function OptionCardContent({
   );
 }
 
-/** The More or Less button of a folded description, placed inside the card's border but outside its control. */
+/**
+ * The More button of a folded description, placed inside the card's border but outside its control. Pressing it
+ * unfolds the description for good and removes the button, so focus moves to the card's own control.
+ */
 interface IFoldToggleProps {
   fold: IFold;
   descriptionId: string;
@@ -240,12 +246,15 @@ function FoldToggle({ fold, descriptionId }: IFoldToggleProps): ReactElement | n
       variant="outline"
       size="xs"
       data-slot="option-card-fold"
-      aria-expanded={fold.isOpen}
+      aria-expanded={false}
       aria-controls={descriptionId}
       className="absolute end-3 bottom-1.5"
-      onClick={fold.toggle}
+      onClick={() => {
+        fold.ref.current?.closest<HTMLElement>(CARD_CONTROL_SELECTOR)?.focus();
+        fold.open();
+      }}
     >
-      {fold.isOpen ? "Less" : "More"}
+      More
     </Button>
   );
 }
