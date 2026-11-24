@@ -116,6 +116,8 @@ test("the toolbar sits above a wide fullscreen comparison in one row and side-by
     .poll(() => afterPane.getBoundingClientRect().top - beforePane.getBoundingClientRect().bottom)
     .toBeGreaterThanOrEqual(-1);
   expect(beforePane.getBoundingClientRect().width).toBeCloseTo(stage.getBoundingClientRect().width, 0);
+  // The difference controls wrap within the phone toolbar instead of overflowing horizontally.
+  expect(toolbar.scrollWidth).toBeLessThanOrEqual(toolbar.clientWidth);
   // Both stacked panes keep visible height inside a narrow drawer SplitView rather than collapsing to zero.
   await expect
     .poll(() => screen.getByRole("img", { name: "Before capture" }).element().getBoundingClientRect().height)

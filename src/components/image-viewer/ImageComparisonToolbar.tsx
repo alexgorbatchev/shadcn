@@ -202,7 +202,7 @@ export function ImageComparisonToolbar({
           {`Hold to show ${side === "before" ? "after" : "before"}`}
         </Button>
       )}
-      <div className="flex shrink-0 flex-wrap items-center gap-2">
+      <div className="flex min-w-0 flex-wrap items-center gap-2">
         <div className="flex items-center gap-1.5">
           <Switch
             id={`${id}-differences`}
@@ -235,7 +235,7 @@ export function ImageComparisonToolbar({
             role="group"
             aria-label="Changed regions"
             data-slot="image-comparison-stepper"
-            className="flex items-center gap-1.5 border-s border-border ps-2"
+            className="flex items-center gap-1.5"
           >
             <span
               data-slot="image-comparison-change-count"
