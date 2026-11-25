@@ -3,6 +3,7 @@ import { Button, buttonVariants } from "../../Button";
 import { expect, fn, waitFor, within } from "storybook/test";
 
 import { ArrowRightIcon, BookmarkIcon } from "lucide-react";
+import { Alert, AlertDescription } from "../../Alert";
 import { Spinner } from "../../Spinner";
 import { useState, type ReactElement, type FormEvent, type ComponentProps } from "react";
 
@@ -450,6 +451,35 @@ export const ContentHeight: Story = {
       canvas.getByRole("region", { name: "Choice area" }).getBoundingClientRect().width,
     );
     await userEvent.click(button);
+    await expect(args.onClick).toHaveBeenCalledOnce();
+  },
+};
+
+export const OutlineInsideDestructiveAlert: Story = {
+  args: { variant: "outline", size: "sm", children: "Load update" },
+  render: (args) => (
+    <div className="flex flex-col gap-3">
+      <Button type="button" variant="outline" size="sm">
+        Baseline outline
+      </Button>
+      <Alert variant="destructive">
+        <AlertDescription>
+          <div className="flex flex-col items-start gap-2">
+            <p>Could not deliver the update.</p>
+            <Button {...args} />
+          </div>
+        </AlertDescription>
+      </Alert>
+    </div>
+  ),
+  play: async ({ canvasElement, args, userEvent }) => {
+    const canvas = within(canvasElement);
+    const baseline = canvas.getByRole("button", { name: "Baseline outline" });
+    const recovery = canvas.getByRole("button", { name: "Load update" });
+    const message = canvas.getByText("Could not deliver the update.");
+    await expect(getComputedStyle(recovery).color).toBe(getComputedStyle(baseline).color);
+    await expect(getComputedStyle(recovery).color).not.toBe(getComputedStyle(message).color);
+    await userEvent.click(recovery);
     await expect(args.onClick).toHaveBeenCalledOnce();
   },
 };
