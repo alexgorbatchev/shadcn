@@ -26,7 +26,16 @@ export const Default: Story = {
     );
   },
 };
-export const Destructive: Story = { ...Default, args: { variant: "destructive" } };
+export const Destructive: Story = {
+  args: { variant: "destructive" },
+  play: async ({ canvasElement }) => {
+    const alert = within(canvasElement).getByRole("alert");
+    await expect(alert).toHaveTextContent("Changes savedYour project is up to date.");
+    const style = getComputedStyle(alert);
+    await expect(style.backgroundColor).not.toBe("rgba(0, 0, 0, 0)");
+    await expect(style.borderTopColor).not.toBe("rgba(0, 0, 0, 0)");
+  },
+};
 export const Success: Story = { ...Default, args: { variant: "success" } };
 export const Info: Story = { ...Default, args: { variant: "info" } };
 export const Compact: Story = { ...Default, args: { density: "compact" } };

@@ -121,7 +121,9 @@ export const LongContent: Story = {
     await waitFor(() => expect(viewport.scrollTop).toBeGreaterThan(0));
     await expect(heading.getBoundingClientRect().top).toBe(headerTop);
     await expect(save.getBoundingClientRect().top).toBe(footerTop);
-    await expect(within(viewport).getByRole("alert")).toBeVisible();
+    const alert = within(viewport).getByRole("alert");
+    await expect(alert).toBeVisible();
+    await expect(alert.querySelector("svg")).toHaveAttribute("aria-hidden", "true");
     await expect(dialog.getBoundingClientRect().top).toBeGreaterThanOrEqual(0);
     await expect(dialog.getBoundingClientRect().bottom).toBeLessThanOrEqual(window.innerHeight);
     await userEvent.click(within(dialog).getByRole("button", { name: "Cancel" }));

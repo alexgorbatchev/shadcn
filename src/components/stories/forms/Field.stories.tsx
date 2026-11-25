@@ -768,6 +768,22 @@ export const FormComposition: Story = {
 };
 
 /** Choice cards whose title and description can be selected and quoted; a drag never picks the option. */
+export const AccentSeparator: Story = {
+  render: () => (
+    <div className="flex w-72 flex-col gap-4">
+      <FieldSeparator>Earlier</FieldSeparator>
+      <FieldSeparator tone="accent">New</FieldSeparator>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const defaultLabel = canvas.getByText("Earlier");
+    const accentLabel = canvas.getByText("New");
+    await expect(accentLabel.closest("[data-slot=field-separator]")).toHaveAttribute("data-tone", "accent");
+    await expect(getComputedStyle(accentLabel).color).not.toBe(getComputedStyle(defaultLabel).color);
+  },
+};
+
 export const SelectableChoiceLabel: Story = {
   render: function Render() {
     const storyId = useId();

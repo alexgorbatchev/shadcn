@@ -32,7 +32,7 @@ function Textarea({
       data-start-height={startHeight}
       rows={startHeight === "line" ? 1 : undefined}
       className={cn(
-        "flex field-sizing-content w-full rounded-sm border border-input bg-secondary px-control-x text-base transition-colors outline-none placeholder:text-faint-foreground focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:bg-input/50 disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive",
+        "flex field-sizing-content w-full rounded-sm border border-input bg-background px-control-x text-base transition-colors outline-none placeholder:text-faint-foreground focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:bg-muted disabled:opacity-60 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive dark:bg-secondary",
         // One line: the input's padding, and a line height that fills the rest of the control height.
         startHeight === "line"
           ? "min-h-control resize-none py-1 leading-[calc(var(--ag-control-h)-10px)]"

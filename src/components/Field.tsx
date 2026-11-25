@@ -176,21 +176,35 @@ function FieldDescription({ density, className, ...props }: FieldDescriptionProp
   );
 }
 
-type FieldSeparatorProps = ComponentProps<"div"> & IDensityProps;
+type FieldSeparatorProps = ComponentProps<"div"> &
+  IDensityProps & {
+    /** Accent tone highlights section boundaries such as an unread divider using the primary color. */
+    tone?: "default" | "accent";
+  };
 
-function FieldSeparator({ density, children, className, ...props }: FieldSeparatorProps): ReactElement {
+function FieldSeparator({
+  density,
+  tone = "default",
+  children,
+  className,
+  ...props
+}: FieldSeparatorProps): ReactElement {
   return (
     <div
       data-density={density}
       data-slot="field-separator"
+      data-tone={tone === "default" ? undefined : tone}
       data-content={!!children}
       className={cn("relative -my-2 h-5 text-sm group-data-[variant=outline]/field-group:-mb-2", className)}
       {...props}
     >
-      <Separator className="absolute inset-0 top-1/2" />
+      <Separator className={cn("absolute inset-0 top-1/2", tone === "accent" && "bg-primary/45")} />
       {children && (
         <span
-          className="relative mx-auto block w-fit bg-background px-2 text-muted-foreground"
+          className={cn(
+            "relative mx-auto block w-fit bg-background px-2",
+            tone === "accent" ? "text-xs font-medium text-primary" : "text-muted-foreground",
+          )}
           data-slot="field-separator-content"
         >
           {children}

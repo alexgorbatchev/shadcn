@@ -348,7 +348,7 @@ export function TreeItem<T>({
         className: cn(
           "relative flex min-h-control min-w-0 cursor-default items-center gap-2 rounded-sm border border-transparent py-1 pr-2 text-sm outline-none",
           isAriaDisabled
-            ? "cursor-not-allowed focus-visible:bg-muted/40 focus-visible:outline-1 focus-visible:outline-dashed focus-visible:outline-muted-foreground/60 focus-visible:-outline-offset-1"
+            ? "cursor-not-allowed focus-visible:outline-1 focus-visible:outline-ring/60 focus-visible:-outline-offset-1"
             : "hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring",
           (isSelected || isDropTarget || isInsideTarget) &&
             (selectionStyle === "accent" && isSelected
@@ -433,12 +433,13 @@ export function TreeItem<T>({
               </span>
             )}
             {((description !== undefined && description !== null) || actions) && (
-              <div className={cn("flex shrink-0 items-center gap-1 text-xs tabular-nums", faded)}>
+              <div className="flex shrink-0 items-center gap-1 text-xs tabular-nums">
                 {description !== undefined && description !== null && (
                   <span
                     aria-hidden="true"
                     id={descriptionLabel ? undefined : descriptionId}
                     data-slot="tree-item-description"
+                    className="text-muted-foreground"
                   >
                     {description}
                   </span>
@@ -447,7 +448,7 @@ export function TreeItem<T>({
                   <div
                     aria-hidden="true"
                     data-slot="tree-item-actions"
-                    className="flex items-center gap-1"
+                    className={cn("flex items-center gap-1", faded)}
                     onClick={(event) => event.stopPropagation()}
                     onDoubleClick={(event) => event.stopPropagation()}
                     onKeyDown={(event) => event.stopPropagation()}

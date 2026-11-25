@@ -1,4 +1,5 @@
 import type { ComponentProps, FormEventHandler, ReactElement, ReactNode } from "react";
+import { CircleAlertIcon } from "lucide-react";
 import type { IDensityProps } from "../density/types.js";
 import { Alert, AlertDescription } from "./Alert.js";
 import { Button } from "./Button.js";
@@ -57,6 +58,7 @@ export function FormDialog({
           {children}
           {error && (
             <Alert variant="destructive" density={density}>
+              <CircleAlertIcon aria-hidden="true" />
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}

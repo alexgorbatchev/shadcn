@@ -202,8 +202,16 @@ export const RefusedChoiceUnselected: Story = {
     await expect(getComputedStyle(homepage).cursor).toBe("not-allowed");
     homepage.focus();
     await expect(getComputedStyle(homepage).boxShadow).toBe("none");
+    await expect(getComputedStyle(homepage).backgroundColor).toBe("rgba(0, 0, 0, 0)");
     const dimmedLabel = homepage.querySelector<HTMLElement>("[data-slot=tree-item-description]");
     await expect(dimmedLabel).not.toBeNull();
-    await expect(Number.parseFloat(getComputedStyle(dimmedLabel!.parentElement!).opacity)).toBeLessThan(0.9);
+    const labelText = within(homepage).getByText("Homepage").parentElement;
+    await expect(labelText).not.toBeNull();
+    await expect(Number.parseFloat(getComputedStyle(labelText!).opacity)).toBeLessThan(0.9);
+    const currentDescription = canvas
+      .getByRole("treeitem", { name: "Navigation" })
+      .querySelector<HTMLElement>("[data-slot=tree-item-description]");
+    await expect(currentDescription).not.toBeNull();
+    await expect(getComputedStyle(currentDescription!).color).not.toBe(getComputedStyle(canvasElement).color);
   },
 };
