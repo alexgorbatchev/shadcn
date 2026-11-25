@@ -254,9 +254,14 @@ export function TreeItem<T>({
     if (!event.shiftKey) item.getTree().getDataRef<SelectionDataRef>().current.selectUpToAnchorId = item.getId();
     item.primaryAction();
   };
-  // A dimmed row fades its content rather than itself, so the marker can stay at full opacity; hovering the row or
-  // focusing anything inside it restores the content.
-  const faded = isDimmed && "opacity-70 group-hover/tree-item:opacity-100 group-focus-within/tree-item:opacity-100";
+  // A dimmed row fades its content rather than itself, so the marker can stay at full opacity; hovering or focusing a
+  // choosable dimmed row restores the content, while an aria-disabled row stays dimmed so it never looks active.
+  const isAriaDisabled = props["aria-disabled"] === true || props["aria-disabled"] === "true";
+  const faded =
+    isDimmed &&
+    (isAriaDisabled
+      ? "opacity-70"
+      : "opacity-70 group-hover/tree-item:opacity-100 group-focus-within/tree-item:opacity-100");
   const label = (
     <>
       {(hasIcon || startEnhancer) && (
@@ -341,7 +346,10 @@ export function TreeItem<T>({
           : {}),
         style: { paddingInlineStart: `${item.getItemMeta().level * (item.getTree().getConfig().indent ?? 20) + 8}px` },
         className: cn(
-          "relative flex min-h-control min-w-0 cursor-default items-center gap-2 rounded-sm border border-transparent py-1 pr-2 text-sm outline-none hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring",
+          "relative flex min-h-control min-w-0 cursor-default items-center gap-2 rounded-sm border border-transparent py-1 pr-2 text-sm outline-none",
+          isAriaDisabled
+            ? "focus-visible:ring-1 focus-visible:ring-muted-foreground"
+            : "hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring",
           (isSelected || isDropTarget || isInsideTarget) &&
             (selectionStyle === "accent" && isSelected
               ? "border-primary bg-muted/60 font-medium text-foreground"

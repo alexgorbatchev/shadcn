@@ -36,7 +36,7 @@ function FilterChip({
       data-density={density}
       data-slot="filter-chip"
       className={cn(
-        "inline-flex max-w-full min-w-0 items-center gap-1 rounded-sm border border-border bg-muted ps-2 text-xs text-foreground",
+        "inline-flex max-w-full min-w-0 items-center gap-2 rounded-sm border border-border bg-muted py-0.5 ps-2.5 pe-1 text-xs text-foreground",
         className,
       )}
       onKeyDown={(event) => {

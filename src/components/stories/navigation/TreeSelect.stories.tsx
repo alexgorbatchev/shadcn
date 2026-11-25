@@ -160,3 +160,48 @@ export const Disabled: Story = {
     await expect(choose).not.toHaveBeenCalled();
   },
 };
+
+/** A previously chosen node that later becomes disabled loses active selection styling and stays dimmed on focus. */
+export const RefusedChoiceUnselected: Story = {
+  render: function Render() {
+    const [refused, setRefused] = useState(false);
+    const dynamicNodes: ITreeSelectNode[] = destinations.map((root) =>
+      root.id !== "website"
+        ? root
+        : {
+            ...root,
+            children: root.children?.map((child) =>
+              child.id === "homepage" && refused ? { ...child, disabledReason: "Can't move here" } : child,
+            ),
+          },
+    );
+    return (
+      <div className="flex w-[360px] flex-col gap-2">
+        <TreeSelect
+          nodes={dynamicNodes}
+          value="homepage"
+          currentId="navigation"
+          label="Destination"
+          onValueChange={choose}
+        />
+        <button type="button" onClick={() => setRefused(true)}>
+          Refuse choice
+        </button>
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const homepage = canvas.getByRole("treeitem", { name: "Homepage" });
+    await expect(homepage).toHaveAttribute("aria-selected", "true");
+    await userEvent.click(canvas.getByRole("button", { name: "Refuse choice" }));
+    await waitFor(() => expect(homepage).toHaveAttribute("aria-disabled", "true"));
+    await expect(homepage).toHaveAttribute("aria-selected", "false");
+    await expect(homepage.querySelector("[data-slot=tree-item-marker] svg")).toBeNull();
+    await expect(getComputedStyle(homepage).borderTopColor).toBe("rgba(0, 0, 0, 0)");
+    homepage.focus();
+    const dimmedLabel = homepage.querySelector<HTMLElement>("[data-slot=tree-item-description]");
+    await expect(dimmedLabel).not.toBeNull();
+    await expect(Number.parseFloat(getComputedStyle(dimmedLabel!.parentElement!).opacity)).toBeLessThan(0.9);
+  },
+};

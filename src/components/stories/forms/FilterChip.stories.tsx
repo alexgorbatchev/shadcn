@@ -91,3 +91,24 @@ export const FilteredList: Story = {
     await expect(canvas.queryByRole("group")).toBeNull();
   },
 };
+
+/** Keeps breathing room between the summary label and the clear button, with the button inset from the chip edges. */
+export const NarrowSpacing: Story = {
+  render: () => (
+    <div className="w-[280px]">
+      <FilterChip onClear={fn()}>Showing 2 of 2 threads · New</FilterChip>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const chip = canvas.getByRole("group");
+    const label = chip.querySelector<HTMLElement>("[data-slot='filter-chip-label']");
+    const clear = within(chip).getByRole("button", { name: "Show all" });
+    await expect(label).not.toBeNull();
+    const chipRect = chip.getBoundingClientRect();
+    const labelRect = label!.getBoundingClientRect();
+    const clearRect = clear.getBoundingClientRect();
+    await expect(clearRect.left - labelRect.right).toBeGreaterThanOrEqual(7);
+    await expect(chipRect.right - clearRect.right).toBeGreaterThanOrEqual(3);
+  },
+};

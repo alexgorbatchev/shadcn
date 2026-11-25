@@ -111,7 +111,8 @@ export function TreeSelect({
     () => parents.filter((id) => isFiltering || !collapsed.has(id)),
     [parents, isFiltering, collapsed],
   );
-  const selectedItems = useMemo(() => (value ? [value] : []), [value]);
+  const isSelectedChoosable = Boolean(value && value !== currentId && !index.get(value)?.node.disabledReason);
+  const selectedItems = useMemo(() => (value && isSelectedChoosable ? [value] : []), [value, isSelectedChoosable]);
   const choose = (id: string) => {
     if (isDisabled || index.get(id)?.node.disabledReason) return;
     onValueChange(id);
