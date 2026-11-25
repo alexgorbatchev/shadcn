@@ -378,6 +378,11 @@ export const Scrollable: Story = {
     await waitFor(() => expect(input).toHaveFocus());
     const list = within(dialog).getByRole("listbox", { name: "Project actions" });
     await expect(list.scrollHeight).toBeGreaterThan(list.clientHeight);
+    // A long list grows to 28rem or 60% of the viewport, whichever is smaller, so a palette shows more than seven
+    // rows on a desktop window without leaving the screen on a phone.
+    const rem = Number.parseFloat(getComputedStyle(list.ownerDocument.documentElement).fontSize);
+    const expectedHeight = Math.min(28 * rem, 0.6 * window.innerHeight);
+    await expect(list.getBoundingClientRect().height).toBeCloseTo(expectedHeight, 0);
     await userEvent.keyboard("{End}");
     const last = within(dialog).getByRole("option", { name: "Project 40" });
     await waitFor(() => expect(last).toHaveAttribute("aria-selected", "true"));
