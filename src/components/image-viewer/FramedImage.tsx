@@ -4,13 +4,18 @@ import { cn } from "../../utils/cn.js";
 
 const framedImageVariants = cva(
   // A 1px edge in the media-edge token keeps at least 3:1 against the page in both themes, so a white screenshot in
-  // the light theme and a black one in the dark theme still show where they end.
-  "rounded-xs border border-media-edge",
+  // the light theme and a black one in the dark theme still show where they end. object-contain keeps the image's
+  // ratio whatever box it gets, so it is never stretched or squashed.
+  "rounded-xs border border-media-edge object-contain",
   {
     variants: {
       size: {
-        /** Natural size, scaled down to the column width and to at most 70% of the viewport height, never cropped. */
-        intrinsic: "h-auto max-h-[70vh] w-auto max-w-full",
+        /**
+         * Natural size, scaled down to the column width and to at most 70% of the viewport height, never cropped. It
+         * starts its row in a flex column instead of stretching to the column's width, which would squash a tall image
+         * capped by the height limit.
+         */
+        intrinsic: "h-auto max-h-[70vh] w-auto max-w-full self-start",
         /** Fills its container's width, as in a grid of thumbnails. */
         fill: "block h-auto w-full",
       },

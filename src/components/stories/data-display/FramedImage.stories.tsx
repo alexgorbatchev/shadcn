@@ -46,6 +46,23 @@ export const TallCappedAtSeventyPercentOfTheViewport: Story = {
   },
 };
 
+/** In a flex column, as in a figure with a caption, a tall image keeps its ratio instead of stretching to the width. */
+export const TallInFlexColumn: Story = {
+  args: { src: fixture_tallScreenshot, alt: "Tall page" },
+  render: (args) => (
+    <figure className="flex w-full max-w-3xl flex-col gap-1">
+      <FramedImage {...args} />
+      <figcaption>Caption</figcaption>
+    </figure>
+  ),
+  play: async ({ canvasElement }) => {
+    const image = within(canvasElement).getByRole("img", { name: "Tall page" });
+    await waitFor(() => expect(image.getBoundingClientRect().height).toBeGreaterThan(0));
+    const box = image.getBoundingClientRect();
+    await expect(box.width / box.height).toBeCloseTo(800 / 1200, 1);
+  },
+};
+
 export const Fill: Story = {
   args: { size: "fill" },
   play: async ({ canvasElement }) => {
