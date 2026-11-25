@@ -99,6 +99,7 @@ test("MediaShell at 320x200 keeps Close aligned with the title, separates it fro
 
   const closeRect = close.element().getBoundingClientRect();
   const titleRect = title.element().getBoundingClientRect();
+  const scrollRightRect = scrollRight.element().getBoundingClientRect();
   const toolbarEl = document.querySelector("[data-slot=diagram-viewer-toolbar]");
   assert(toolbarEl);
   const toolbarRect = toolbarEl.getBoundingClientRect();
@@ -111,6 +112,7 @@ test("MediaShell at 320x200 keeps Close aligned with the title, separates it fro
     2,
   );
   expect(toolbarRect.top).toBeGreaterThanOrEqual(closeRect.bottom + 4);
+  expect(scrollRightRect.left).toBeGreaterThanOrEqual(toolbarRect.right);
   expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(320);
 
   await scrollRight.click();
