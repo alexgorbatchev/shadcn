@@ -199,7 +199,9 @@ export const RefusedChoiceUnselected: Story = {
     await expect(homepage).toHaveAttribute("aria-selected", "false");
     await expect(homepage.querySelector("[data-slot=tree-item-marker] svg")).toBeNull();
     await expect(getComputedStyle(homepage).borderTopColor).toBe("rgba(0, 0, 0, 0)");
+    await expect(getComputedStyle(homepage).cursor).toBe("not-allowed");
     homepage.focus();
+    await expect(getComputedStyle(homepage).boxShadow).toBe("none");
     const dimmedLabel = homepage.querySelector<HTMLElement>("[data-slot=tree-item-description]");
     await expect(dimmedLabel).not.toBeNull();
     await expect(Number.parseFloat(getComputedStyle(dimmedLabel!.parentElement!).opacity)).toBeLessThan(0.9);

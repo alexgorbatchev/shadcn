@@ -347,10 +347,17 @@ export const HighlightDifferences: Story = {
     await expect(regions).toHaveLength(1);
     const image = afterImage.getBoundingClientRect();
     const region = regions[0].getBoundingClientRect();
-    await expect((region.left - image.left) / image.width).toBeCloseTo(fixture_changedRegion.x / AFTER_SIZE.width, 2);
-    await expect((region.top - image.top) / image.height).toBeCloseTo(fixture_changedRegion.y / AFTER_SIZE.height, 2);
-    await expect(region.width / image.width).toBeCloseTo(fixture_changedRegion.width / AFTER_SIZE.width, 2);
-    await expect(region.height / image.height).toBeCloseTo(fixture_changedRegion.height / AFTER_SIZE.height, 2);
+    const pad = 8;
+    const expectedLeft = Math.max(0, fixture_changedRegion.x - pad);
+    const expectedTop = Math.max(0, fixture_changedRegion.y - pad);
+    const expectedWidth =
+      Math.min(AFTER_SIZE.width, fixture_changedRegion.x + fixture_changedRegion.width + pad) - expectedLeft;
+    const expectedHeight =
+      Math.min(AFTER_SIZE.height, fixture_changedRegion.y + fixture_changedRegion.height + pad) - expectedTop;
+    await expect((region.left - image.left) / image.width).toBeCloseTo(expectedLeft / AFTER_SIZE.width, 2);
+    await expect((region.top - image.top) / image.height).toBeCloseTo(expectedTop / AFTER_SIZE.height, 2);
+    await expect(region.width / image.width).toBeCloseTo(expectedWidth / AFTER_SIZE.width, 2);
+    await expect(region.height / image.height).toBeCloseTo(expectedHeight / AFTER_SIZE.height, 2);
 
     await userEvent.pointer({
       keys: "[MouseLeft>]",

@@ -4,6 +4,7 @@ import { expect, fn, waitFor, within } from "storybook/test";
 
 import { ArrowRightIcon, BookmarkIcon } from "lucide-react";
 import { Alert, AlertDescription } from "../../Alert";
+import { Kbd } from "../../Kbd";
 import { Spinner } from "../../Spinner";
 import { useState, type ReactElement, type FormEvent, type ComponentProps } from "react";
 
@@ -481,5 +482,30 @@ export const OutlineInsideDestructiveAlert: Story = {
     await expect(getComputedStyle(recovery).color).not.toBe(getComputedStyle(message).color);
     await userEvent.click(recovery);
     await expect(args.onClick).toHaveBeenCalledOnce();
+  },
+};
+
+/** Solid primary and outline xs buttons match height edge-to-edge, and Kbd adapts cleanly inside solid xs buttons. */
+export const ExtraSmallPairWithKbd: Story = {
+  render: () => (
+    <div className="flex items-center gap-2">
+      <Button type="button" variant="outline" size="xs">
+        Cancel
+      </Button>
+      <Button type="button" variant="default" size="xs">
+        Post comment
+        <Kbd>⌘⏎</Kbd>
+      </Button>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const cancel = canvas.getByRole("button", { name: "Cancel" });
+    const post = canvas.getByRole("button", { name: /Post comment/ });
+    const kbd = post.querySelector<HTMLElement>("[data-slot='kbd']")!;
+    await expect(getComputedStyle(post).backgroundClip).toBe("border-box");
+    await expect(post.getBoundingClientRect().height).toBeCloseTo(cancel.getBoundingClientRect().height, 1);
+    await expect(post.getBoundingClientRect().height - kbd.getBoundingClientRect().height).toBeGreaterThanOrEqual(2);
+    await expect(getComputedStyle(kbd).color).toBe(getComputedStyle(post).color);
   },
 };

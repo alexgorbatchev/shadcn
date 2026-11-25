@@ -312,10 +312,13 @@ export function SplitView({
         // The panel reports its new width only after this change, so the width comes from the group's layout, whose
         // shares divide the group's width without its divider.
         const dividers = Array.from(group.querySelectorAll(":scope > [role='separator']"));
-        const width = dividers.reduce(
-          (total, divider) => total - divider.getBoundingClientRect().width,
-          group.getBoundingClientRect().width,
-        );
+        const width = dividers.reduce((total, divider) => {
+          const style = getComputedStyle(divider);
+          return (
+            total -
+            (divider.getBoundingClientRect().width + parseFloat(style.marginLeft) + parseFloat(style.marginRight))
+          );
+        }, group.getBoundingClientRect().width);
         openSize.current = (width * share) / 100;
         writeSidebarWidth(storage, storageKey, openSize.current);
       }}
@@ -323,10 +326,11 @@ export function SplitView({
       {sidebarPosition === "start" ? sidebarPanel : contentPanel}
       {/* A closed sidebar leaves no divider behind; the handle stays laid out, which the panel group's map requires. */}
       <ResizableHandle
+        withHandle
         thickness="strong"
         disabled={!sidebarOpen}
         aria-label={resizeLabel}
-        className={cn(!sidebarOpen && "invisible w-0")}
+        className={cn(!sidebarOpen && "invisible mx-0 w-0 [clip-path:none]")}
       />
       {sidebarPosition === "start" ? contentPanel : sidebarPanel}
     </Resizable>
@@ -340,7 +344,7 @@ export function SplitView({
       <ResizablePanel id="strip" defaultSize="40%" minSize="15%" maxSize="70%">
         {sidebarSlot}
       </ResizablePanel>
-      <ResizableHandle thickness="strong" aria-label={resizeLabel} />
+      <ResizableHandle withHandle thickness="strong" aria-label={resizeLabel} />
       <ResizablePanel id="content" minSize="25%">
         {contentSlot}
       </ResizablePanel>

@@ -25,7 +25,7 @@ const badgeVariants = cva(
       },
       wrap: {
         false: "h-tag shrink-0 py-0 whitespace-nowrap",
-        true: "h-auto min-h-tag max-w-full shrink flex-wrap justify-start py-1 text-start leading-snug whitespace-normal break-words",
+        true: "h-auto min-h-tag max-w-full shrink flex-wrap justify-start py-1.5 text-start leading-relaxed whitespace-normal break-words",
       },
       tone: {
         default: "",
@@ -36,7 +36,7 @@ const badgeVariants = cva(
       {
         variant: "outline",
         wrap: true,
-        className: "rounded-[10px] px-2.5",
+        className: "rounded-[10px] px-3",
       },
       {
         variant: "outline",

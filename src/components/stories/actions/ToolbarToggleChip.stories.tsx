@@ -2,6 +2,7 @@ import { useState, type ReactElement } from "react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, fn, within } from "storybook/test";
 import { Toolbar } from "../../Toolbar";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../Select";
 import { ToolbarToggleChip, type ToggleChipPressed } from "../../ToolbarToggleChip";
 
 const meta: Meta<typeof ToolbarToggleChip> = {
@@ -135,11 +136,54 @@ export const PressedCheck: Story = {
     const canvas = within(canvasElement);
     const chip = canvas.getByRole("button", { name: "Dark" });
     await expect(chip.querySelector("[data-slot='toolbar-toggle-chip-check']")).toBeNull();
+    await expect(chip.querySelector("[data-slot='toolbar-toggle-chip-indicator']")).toBeInTheDocument();
     await userEvent.click(chip);
     await expect(chip).toHaveAttribute("aria-pressed", "true");
     await expect(chip.querySelector("[data-slot='toolbar-toggle-chip-check']")).toBeInTheDocument();
+    await expect(chip.querySelector("[data-slot='toolbar-toggle-chip-indicator']")).toBeNull();
     await expect(
       canvas.getByRole("button", { name: "Bright" }).querySelector("[data-slot='toolbar-toggle-chip-check']"),
     ).toBeNull();
+  },
+};
+
+/** Toggle chips read as pills with a state indicator in both states, distinct from a rectangular Select beside them. */
+export const BesideSelect: Story = {
+  render: function Example(): ReactElement {
+    const [onlyNew, setOnlyNew] = useState(true);
+    const [onlyMine, setOnlyMine] = useState(false);
+    const [order, setOrder] = useState("page");
+    return (
+      <Toolbar aria-label="Filter and sort">
+        <ToolbarToggleChip pressed={onlyNew} onPressedChange={setOnlyNew}>
+          New
+        </ToolbarToggleChip>
+        <ToolbarToggleChip pressed={onlyMine} onPressedChange={setOnlyMine}>
+          Mine
+        </ToolbarToggleChip>
+        <Select value={order} onValueChange={(next) => next && setOrder(next)}>
+          <SelectTrigger size="sm" aria-label="Sort order">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="page">Page order</SelectItem>
+            <SelectItem value="newest">Newest first</SelectItem>
+          </SelectContent>
+        </Select>
+      </Toolbar>
+    );
+  },
+  play: async ({ canvasElement, userEvent }) => {
+    const canvas = within(canvasElement);
+    const mine = canvas.getByRole("button", { name: "Mine" });
+    const select = canvas.getByRole("combobox", { name: "Sort order" });
+    // An unpressed toggle chip keeps a pill radius and an off-state indicator, distinct from the rectangular select.
+    await expect(Number.parseFloat(getComputedStyle(mine).borderTopLeftRadius)).toBeGreaterThan(
+      Number.parseFloat(getComputedStyle(select).borderTopLeftRadius),
+    );
+    await expect(mine.querySelector("[data-slot='toolbar-toggle-chip-indicator']")).toBeInTheDocument();
+    await userEvent.click(mine);
+    await expect(mine).toHaveAttribute("aria-pressed", "true");
+    await expect(mine.querySelector("[data-slot='toolbar-toggle-chip-check']")).toBeInTheDocument();
   },
 };

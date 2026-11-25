@@ -117,9 +117,9 @@
     --faint-foreground: #929ba7;
     --accent: #282c33;
     --accent-foreground: #eceff3;
-    --destructive: #ff6159;
+    --destructive: #ff7a73;
     --destructive-foreground: #1f0000;
-    --destructive-soft: rgb(255 97 89 / 0.16);
+    --destructive-soft: rgb(255 122 115 / 0.16);
     --success: #3ddc84;
     --success-foreground: #00210f;
     --warning: #ffb224;
@@ -157,9 +157,9 @@
     --faint-foreground: #929ba7;
     --accent: #282c33;
     --accent-foreground: #eceff3;
-    --destructive: #ff6159;
+    --destructive: #ff7a73;
     --destructive-foreground: #1f0000;
-    --destructive-soft: rgb(255 97 89 / 0.16);
+    --destructive-soft: rgb(255 122 115 / 0.16);
     --success: #3ddc84;
     --success-foreground: #00210f;
     --warning: #ffb224;

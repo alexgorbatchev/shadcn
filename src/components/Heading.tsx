@@ -36,7 +36,7 @@ function Heading({ level, size, truncate = false, density, className, render, ..
     props: mergeProps<"h2">(
       {
         className: cn(
-          "min-w-0 font-semibold text-foreground",
+          "min-w-0 rounded-sm font-semibold text-foreground outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
           SIZE_CLASSES[size ?? DEFAULT_SIZES[level]],
           truncate ? "truncate" : "break-words",
           className,

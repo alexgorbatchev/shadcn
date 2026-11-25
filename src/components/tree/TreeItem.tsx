@@ -260,7 +260,7 @@ export function TreeItem<T>({
   const faded =
     isDimmed &&
     (isAriaDisabled
-      ? "opacity-70"
+      ? "text-muted-foreground opacity-80"
       : "opacity-70 group-hover/tree-item:opacity-100 group-focus-within/tree-item:opacity-100");
   const label = (
     <>
@@ -348,7 +348,7 @@ export function TreeItem<T>({
         className: cn(
           "relative flex min-h-control min-w-0 cursor-default items-center gap-2 rounded-sm border border-transparent py-1 pr-2 text-sm outline-none",
           isAriaDisabled
-            ? "focus-visible:ring-1 focus-visible:ring-muted-foreground"
+            ? "cursor-not-allowed focus-visible:bg-muted/40 focus-visible:outline-1 focus-visible:outline-dashed focus-visible:outline-muted-foreground/60 focus-visible:-outline-offset-1"
             : "hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring",
           (isSelected || isDropTarget || isInsideTarget) &&
             (selectionStyle === "accent" && isSelected

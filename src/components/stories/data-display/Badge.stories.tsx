@@ -282,8 +282,9 @@ export const Wrap: Story = {
     await expect(warningWrap.getBoundingClientRect().width).toBeLessThanOrEqual(containerRect.width + 0.5);
     await expect(outlineWrap.getBoundingClientRect().height).toBeGreaterThan(singleLine.getBoundingClientRect().height);
     await expect(warningWrap.getBoundingClientRect().height).toBeGreaterThan(singleLine.getBoundingClientRect().height);
-    await expect(Number.parseFloat(getComputedStyle(outlineWrap).paddingTop)).toBeGreaterThanOrEqual(4);
-    await expect(Number.parseFloat(getComputedStyle(outlineWrap).paddingBottom)).toBeGreaterThanOrEqual(4);
+    await expect(Number.parseFloat(getComputedStyle(outlineWrap).paddingTop)).toBeGreaterThanOrEqual(6);
+    await expect(Number.parseFloat(getComputedStyle(outlineWrap).paddingBottom)).toBeGreaterThanOrEqual(6);
+    await expect(Number.parseFloat(getComputedStyle(outlineWrap).paddingLeft)).toBeGreaterThanOrEqual(12);
     await expect(container.scrollWidth).toBeLessThanOrEqual(container.clientWidth);
   },
 };

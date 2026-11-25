@@ -194,7 +194,16 @@ async function exercisePlacement(
     };
     expect(popup).toHaveAttribute("data-side", nativeSide);
     expect(Math.abs(gaps[side] - 4)).toBeLessThanOrEqual(1);
-    const arrow = popup.querySelector('[aria-hidden="true"]')!.getBoundingClientRect();
+    const arrowElement = popup.querySelector<HTMLElement>('[aria-hidden="true"]')!;
+    const arrow = arrowElement.getBoundingClientRect();
+    const arrowStyle = getComputedStyle(arrowElement);
+    const arrowBorders: Record<PhysicalSide, [string, string]> = {
+      top: [arrowStyle.borderRightWidth, arrowStyle.borderBottomWidth],
+      bottom: [arrowStyle.borderTopWidth, arrowStyle.borderLeftWidth],
+      left: [arrowStyle.borderTopWidth, arrowStyle.borderRightWidth],
+      right: [arrowStyle.borderBottomWidth, arrowStyle.borderLeftWidth],
+    };
+    expect(arrowBorders[side]).toEqual(["1px", "1px"]);
     const centerX = (arrow.left + arrow.right) / 2,
       centerY = (arrow.top + arrow.bottom) / 2;
     const arrowEdges: Record<PhysicalSide, number> = {

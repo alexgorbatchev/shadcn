@@ -40,7 +40,8 @@ export const Persistent: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
     const handle = canvas.getByRole("separator", { name: "Resize navigation" });
-    await expect(handle.getBoundingClientRect().width).toBe(2);
+    await expect(handle.getBoundingClientRect().width).toBeGreaterThanOrEqual(24);
+    await expect(handle.querySelector("[data-slot='resizable-handle-grip']")).toBeInTheDocument();
     const sidebar = canvas.getByRole("complementary", { name: "Navigation" });
     const content = canvas.getByRole("region", { name: "Content" });
     await expect(canvas.getByRole("heading", { name: "Navigation heading" }).getBoundingClientRect().y).toBe(

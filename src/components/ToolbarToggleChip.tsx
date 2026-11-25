@@ -3,7 +3,7 @@ import { useAnalyticsCallback } from "../hooks/useAnalyticsCallback.js";
 import type { IDensityProps } from "../density/types.js";
 import { useId, type KeyboardEvent, type MouseEvent, type ReactElement, type ReactNode } from "react";
 import { Toolbar as ToolbarPrimitive } from "@base-ui/react/toolbar";
-import { CheckIcon } from "lucide-react";
+import { CheckIcon, MinusIcon } from "lucide-react";
 import { cn } from "../utils/cn.js";
 import { buttonVariants } from "./Button.js";
 import { Kbd } from "./Kbd.js";
@@ -99,8 +99,10 @@ export function ToolbarToggleChip({
       focusableWhenDisabled
       className={cn(
         buttonVariants({ variant: "outline", size: hideLabel ? "icon-sm" : "sm" }),
+        "rounded-full bg-secondary/70 text-muted-foreground hover:text-foreground",
+        !hideLabel && "gap-1.5 ps-2.5 pe-3",
         "data-[pressed=true]:border-primary data-[pressed=true]:bg-primary/15 data-[pressed=true]:text-foreground",
-        "data-[pressed=mixed]:border-dashed data-[pressed=mixed]:border-primary data-[pressed=mixed]:bg-primary/5",
+        "data-[pressed=mixed]:border-dashed data-[pressed=mixed]:border-primary data-[pressed=mixed]:bg-primary/5 data-[pressed=mixed]:text-foreground",
         className,
       )}
       onMouseDown={onMouseDown}
@@ -110,9 +112,19 @@ export function ToolbarToggleChip({
         if (!isDisabled) trackedChange(pressed !== true);
       }}
     >
-      {/* A check marks a pressed chip, so on reads apart from off and from a select beside it, not only by color. */}
-      {pressed === true && !swatch && (
+      {/* A toggle indicator in every state sets a filter chip apart from a select trigger beside it. */}
+      {!swatch && !hideLabel && pressed === true && (
         <CheckIcon aria-hidden="true" data-slot="toolbar-toggle-chip-check" className="size-3.5 shrink-0" />
+      )}
+      {!swatch && !hideLabel && pressed === "mixed" && (
+        <MinusIcon aria-hidden="true" data-slot="toolbar-toggle-chip-mixed" className="size-3.5 shrink-0" />
+      )}
+      {!swatch && !hideLabel && pressed === false && (
+        <span
+          aria-hidden="true"
+          data-slot="toolbar-toggle-chip-indicator"
+          className="size-2.5 shrink-0 rounded-full border border-current/70"
+        />
       )}
       {swatch && (
         <span

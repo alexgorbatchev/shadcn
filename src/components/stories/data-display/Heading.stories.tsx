@@ -98,3 +98,22 @@ export const Truncated: Story = {
     await expect(heading.scrollWidth).toBeGreaterThan(heading.clientWidth);
   },
 };
+
+/** Programmatic focus on a tabIndex={-1} heading uses the theme focus ring instead of the browser default outline. */
+export const ProgrammaticFocus: Story = {
+  render: () => (
+    <div className="p-4">
+      <Heading level={1} tabIndex={-1}>
+        Choose a hero direction
+      </Heading>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const heading = within(canvasElement).getByRole("heading", { name: "Choose a hero direction", level: 1 });
+    heading.focus();
+    await expect(heading).toHaveFocus();
+    const style = getComputedStyle(heading);
+    await expect(style.outlineStyle).toBe("none");
+    await expect(style.boxShadow).not.toBe("none");
+  },
+};
