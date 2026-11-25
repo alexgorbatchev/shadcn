@@ -17,6 +17,7 @@ const meta: Meta<typeof Badge> = {
       control: "select",
       options: ["default", "secondary", "outline", "destructive", "ghost", "success", "warning", "link"],
     },
+    wrap: { control: "boolean" },
   },
 };
 export default meta;
@@ -246,5 +247,34 @@ export const RightToLeft: Story = {
     await expect(trailingRtlIcon.left - trailingRtl.getBoundingClientRect().left).toBe(
       trailingLtr.getBoundingClientRect().right - trailingLtrIcon.right,
     );
+  },
+};
+
+export const Wrap: Story = {
+  render: () => (
+    <div data-testid="Badge--wrap-container" className="flex w-64 flex-col items-start gap-2">
+      <Badge variant="outline">Short</Badge>
+      <Badge variant="outline" wrap>
+        Reviewed · sent to your agent 10:35 · picked up 10:36 · follow-up in progress
+      </Badge>
+      <Badge variant="warning" wrap>
+        Reviewed · sent to your agent 10:06 · not picked up yet · 35 min
+      </Badge>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const container = canvas.getByTestId("Badge--wrap-container");
+    const singleLine = canvas.getByText("Short");
+    const outlineWrap = canvas.getByText(/picked up 10:36/);
+    const warningWrap = canvas.getByText(/not picked up yet/);
+    const containerRect = container.getBoundingClientRect();
+    await expect(outlineWrap).toHaveAttribute("data-wrap");
+    await expect(warningWrap).toHaveAttribute("data-wrap");
+    await expect(outlineWrap.getBoundingClientRect().width).toBeLessThanOrEqual(containerRect.width + 0.5);
+    await expect(warningWrap.getBoundingClientRect().width).toBeLessThanOrEqual(containerRect.width + 0.5);
+    await expect(outlineWrap.getBoundingClientRect().height).toBeGreaterThan(singleLine.getBoundingClientRect().height);
+    await expect(warningWrap.getBoundingClientRect().height).toBeGreaterThan(singleLine.getBoundingClientRect().height);
+    await expect(container.scrollWidth).toBeLessThanOrEqual(container.clientWidth);
   },
 };

@@ -6,7 +6,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "../utils/cn.js";
 
 const badgeVariants = cva(
-  "group/badge inline-flex h-tag w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-sm border border-transparent px-tag-x py-0 text-xs font-medium whitespace-nowrap transition-colors focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring has-data-[icon=inline-end]:pe-1.5 has-data-[icon=inline-start]:ps-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive [&>svg]:pointer-events-none [&>svg]:size-3!",
+  "group/badge inline-flex w-fit items-center justify-center gap-1 overflow-hidden rounded-sm border border-transparent px-tag-x text-xs font-medium transition-colors focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring has-data-[icon=inline-end]:pe-1.5 has-data-[icon=inline-start]:ps-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive [&>svg]:pointer-events-none [&>svg]:size-3!",
   {
     variants: {
       variant: {
@@ -23,22 +23,49 @@ const badgeVariants = cva(
         warning: "bg-warning text-warning-foreground",
         link: "text-primary underline-offset-4 hover:underline",
       },
+      wrap: {
+        false: "h-tag shrink-0 py-0 whitespace-nowrap",
+        true: "h-auto min-h-tag max-w-full shrink py-0.5 text-start leading-snug whitespace-normal break-words",
+      },
     },
+    compoundVariants: [
+      {
+        variant: "outline",
+        wrap: true,
+        className: "rounded-[10px] px-2.5",
+      },
+      {
+        variant: "warning",
+        wrap: true,
+        className: "px-2",
+      },
+    ],
     defaultVariants: {
       variant: "default",
+      wrap: false,
     },
   },
 );
 
-type BadgeState = { slot: "badge"; variant: VariantProps<typeof badgeVariants>["variant"]; density?: Density };
-type BadgeProps = useRender.ComponentProps<"span", BadgeState> & VariantProps<typeof badgeVariants> & IDensityProps;
+type BadgeState = {
+  slot: "badge";
+  variant: VariantProps<typeof badgeVariants>["variant"];
+  wrap: boolean;
+  density?: Density;
+};
+type BadgeProps = useRender.ComponentProps<"span", BadgeState> &
+  Omit<VariantProps<typeof badgeVariants>, "wrap"> &
+  IDensityProps & {
+    /** Allow long labels to wrap onto multiple lines within the available width. */
+    wrap?: boolean;
+  };
 
-function Badge({ density, className, variant = "default", render, ...props }: BadgeProps): ReactElement {
+function Badge({ density, className, variant = "default", wrap = false, render, ...props }: BadgeProps): ReactElement {
   return useRender({
     defaultTagName: "span",
     props: mergeProps<"span">(
       {
-        className: cn(badgeVariants({ variant }), className),
+        className: cn(badgeVariants({ variant, wrap }), className),
       },
       props,
     ),
@@ -46,6 +73,7 @@ function Badge({ density, className, variant = "default", render, ...props }: Ba
     state: {
       slot: "badge",
       variant,
+      wrap,
       density,
     },
   });
