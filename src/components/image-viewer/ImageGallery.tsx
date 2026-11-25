@@ -254,7 +254,7 @@ export function ImageGallery({
       >
         <div
           data-slot="image-gallery-toolbar"
-          className="flex shrink-0 flex-wrap items-center gap-control-gap border-b border-border pb-2 *:shrink-0"
+          className="flex shrink-0 flex-wrap items-center gap-2 border-b border-border pb-2 *:shrink-0"
         >
           <ImageZoomToggle zoom={compareZoom} onZoomChange={setCompareZoom} density={density} />
           <Toggle variant="outline" size="sm" density={density} pressed onPressedChange={setCompareAll}>

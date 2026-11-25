@@ -505,6 +505,12 @@ export const DisabledReasons: Story = {
     await expect(move).toHaveAttribute("aria-disabled", "true");
     await expect(move).toHaveAccessibleDescription("One track only");
     await expect(canvas.getByText("One track only")).toBeVisible();
+    const shortcut = move.querySelector<HTMLElement>('[data-slot="command-shortcut"]')!;
+    const moveBox = move.getBoundingClientRect();
+    const shortcutBox = shortcut.getBoundingClientRect();
+    await expect(
+      Math.abs((shortcutBox.top + shortcutBox.bottom) / 2 - (moveBox.top + moveBox.bottom) / 2),
+    ).toBeLessThanOrEqual(2);
     await userEvent.click(canvas.getByRole("combobox", { name: "Search commands" }));
     await expect(canvas.getByRole("option", { name: "Analyze…" })).toHaveAttribute("aria-selected", "true");
     await userEvent.keyboard("{ArrowDown}");

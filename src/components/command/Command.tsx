@@ -1,6 +1,8 @@
 import type { IAnalyticsProps } from "../../analytics/types.js";
 import { useAnalyticsCallback } from "../../hooks/useAnalyticsCallback.js";
 import {
+  Children,
+  isValidElement,
   useEffect,
   useId,
   useLayoutEffect,
@@ -9,6 +11,7 @@ import {
   type ComponentProps,
   type KeyboardEvent,
   type ReactElement,
+  type ReactNode,
 } from "react";
 import type { IDensityProps } from "../../density/types.js";
 import { Command as CommandPrimitive } from "cmdk";
@@ -251,13 +254,24 @@ function CommandItem({
     return () => element.removeEventListener(DISABLED_SELECT, select);
   }, [disabledReason]);
 
+  let contentChildren: ReactNode = children;
+  const shortcutChildren: ReactNode[] = [];
+  if (disabledReason) {
+    const rest: ReactNode[] = [];
+    for (const child of Children.toArray(children)) {
+      if (isValidElement(child) && child.type === CommandShortcut) shortcutChildren.push(child);
+      else rest.push(child);
+    }
+    contentChildren = rest;
+  }
+
   return (
     <CommandPrimitive.Item
       ref={mergedRef}
       data-slot="command-item"
       data-disabled-reason={disabledReason ? "" : undefined}
       className={cn(
-        "group/command-item relative flex min-h-control cursor-default content-center items-center gap-x-control-gap gap-y-0.5 rounded-sm px-control-x text-sm outline-none select-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-[selected=true]:bg-muted data-[selected=true]:text-foreground data-disabled-reason:flex-wrap data-disabled-reason:py-1 data-disabled-reason:data-[disabled=true]:pointer-events-auto data-disabled-reason:data-[disabled=true]:opacity-100 data-disabled-reason:data-[disabled=true]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:size-4",
+        "group/command-item relative flex min-h-control cursor-default items-center gap-control-gap rounded-sm px-control-x text-sm outline-none select-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-[selected=true]:bg-muted data-[selected=true]:text-foreground data-disabled-reason:py-1 data-disabled-reason:data-[disabled=true]:pointer-events-auto data-disabled-reason:data-[disabled=true]:opacity-100 data-disabled-reason:data-[disabled=true]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:size-4",
         touchTarget && "pointer-coarse:min-h-11",
         className,
       )}
@@ -270,16 +284,21 @@ function CommandItem({
       onClickCapture={disabledReason ? () => onDisabledSelect?.() : props.onClickCapture}
       onSelect={trackedOnSelect}
     >
-      {children}
+      {disabledReason ? (
+        <span className="flex min-w-0 flex-1 flex-col">
+          <span className="flex min-w-0 items-center gap-control-gap">{contentChildren}</span>
+          <span id={reasonId} data-slot="command-item-reason" className="text-xs text-muted-foreground">
+            {disabledReason}
+          </span>
+        </span>
+      ) : (
+        children
+      )}
+      {disabledReason && shortcutChildren}
       <CheckIcon
         aria-hidden="true"
         className="ms-auto opacity-0 group-has-data-[slot=command-shortcut]/command-item:hidden group-data-[checked=true]/command-item:opacity-100"
       />
-      {disabledReason && (
-        <span id={reasonId} data-slot="command-item-reason" className="basis-full text-xs text-muted-foreground">
-          {disabledReason}
-        </span>
-      )}
     </CommandPrimitive.Item>
   );
 }

@@ -161,7 +161,7 @@ export function DiagramViewer({
       className="flex size-full min-h-0 min-w-0 flex-1 flex-col gap-2"
     >
       {hasToolbar && (
-        <div ref={toolbarContainerRef} className="flex min-w-0 shrink-0 items-center gap-control-gap">
+        <div ref={toolbarContainerRef} className="flex min-w-0 shrink-0 items-center gap-2">
           {toolbarOverflow.left && (
             <Button
               type="button"
@@ -180,7 +180,7 @@ export function DiagramViewer({
             data-slot="diagram-viewer-toolbar"
             onScroll={updateToolbarOverflow}
             style={toolbarMaskImage ? { maskImage: toolbarMaskImage, WebkitMaskImage: toolbarMaskImage } : undefined}
-            className="flex min-w-0 flex-1 flex-wrap items-center gap-control-gap *:shrink-0 [@media(max-height:280px)]:flex-nowrap [@media(max-height:280px)]:overflow-x-auto [@media(max-height:280px)]:[scrollbar-width:none] [@media(max-height:280px)]:[&::-webkit-scrollbar]:hidden"
+            className="flex min-w-0 flex-1 flex-wrap items-center gap-2 *:shrink-0 [@media(max-height:280px)]:flex-nowrap [@media(max-height:280px)]:overflow-x-auto [@media(max-height:280px)]:[scrollbar-width:none] [@media(max-height:280px)]:[&::-webkit-scrollbar]:hidden"
           >
             {showZoomControl && (
               <ImageZoomControl

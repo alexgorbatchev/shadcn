@@ -143,10 +143,7 @@ export function ImageViewer({
       className="flex size-full min-h-0 min-w-0 flex-1 flex-col gap-2"
     >
       {(showZoomControl || toolbar !== undefined) && (
-        <div
-          data-slot="image-viewer-toolbar"
-          className="flex shrink-0 flex-wrap items-center gap-control-gap *:shrink-0"
-        >
+        <div data-slot="image-viewer-toolbar" className="flex shrink-0 flex-wrap items-center gap-2 *:shrink-0">
           {showZoomControl && (
             <ImageZoomControl zoom={shownZoom} scale={scale} scales={scales} onZoomChange={setZoom} density={density} />
           )}
