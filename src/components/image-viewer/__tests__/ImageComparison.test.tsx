@@ -250,6 +250,22 @@ test("switching to original size centers the first change and stepping centers e
   expect(onCommentDifference.mock.calls[0]?.[1]).toBe(0);
 });
 
+test("showZoomControl exposes Fit, Fit width, zoom steps, and percent readout", async () => {
+  const screen = await render(
+    <div className="h-120 w-180">
+      <ImageComparison before={before} after={after} defaultMode="side-by-side" showZoomControl />
+    </div>,
+  );
+  await expect.element(screen.getByRole("button", { name: "Fit", exact: true })).toBeVisible();
+  await expect.element(screen.getByRole("button", { name: "Fit width" })).toBeVisible();
+  const zoomIn = screen.getByRole("button", { name: "Zoom in" });
+  await expect.element(zoomIn).toBeVisible();
+  await zoomIn.click();
+  await expect
+    .poll(() => Number(document.querySelector("[data-slot=image-viewport]")?.getAttribute("data-zoom")))
+    .toBeGreaterThan(0);
+});
+
 test.each(["toggle", "swipe", "side-by-side"] as const)(
   "%s mode keeps every non-scrolling surface stationary at both zoom levels",
   async (mode) => {

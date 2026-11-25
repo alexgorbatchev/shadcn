@@ -4,9 +4,11 @@ import type { IDensityProps } from "../../density/types.js";
 import { Button } from "../Button.js";
 import { Switch } from "../Switch.js";
 import { ToggleGroup, ToggleGroupItem } from "../ToggleGroup.js";
+import { ImageZoomControl } from "./ImageZoomControl.js";
 import { ImageZoomToggle } from "./ImageZoomToggle.js";
 import type {
   IImageSize,
+  IImageZoomScales,
   ImageComparisonMode,
   ImageComparisonOrientation,
   ImageComparisonSide,
@@ -23,6 +25,9 @@ interface IImageComparisonToolbarProps extends IDensityProps {
   onOrientationChange: (orientation: ImageComparisonOrientation) => void;
   zoom: ImageZoom;
   onZoomChange: (zoom: ImageZoom) => void;
+  showZoomControl?: boolean;
+  zoomScale?: number;
+  zoomScales?: IImageZoomScales;
   showDifferences: boolean;
   onShowDifferencesChange: (showDifferences: boolean) => void;
   differences: ImageDifferenceState;
@@ -86,6 +91,9 @@ export function ImageComparisonToolbar({
   onOrientationChange,
   zoom,
   onZoomChange,
+  showZoomControl = false,
+  zoomScale,
+  zoomScales,
   showDifferences,
   onShowDifferencesChange,
   differences,
@@ -118,7 +126,7 @@ export function ImageComparisonToolbar({
       aria-label="Comparison controls"
       data-slot="image-comparison-toolbar"
       data-density={density}
-      className="flex shrink-0 flex-wrap items-center gap-x-2 gap-y-2 border-b border-border py-2"
+      className="flex shrink-0 flex-wrap items-center gap-1.5 border-b border-border py-2"
     >
       <ToolbarSection title="Mode" titleId={`${id}-mode`}>
         <ToggleGroup
@@ -166,19 +174,29 @@ export function ImageComparisonToolbar({
             spacing={0}
             density={density}
           >
-            <ToggleGroupItem value="horizontal">
+            <ToggleGroupItem value="horizontal" aria-label="Horizontal">
               <Columns2Icon data-icon="inline-start" />
-              Horizontal
+              <span className="hidden @md:inline">Horizontal</span>
             </ToggleGroupItem>
-            <ToggleGroupItem value="vertical">
+            <ToggleGroupItem value="vertical" aria-label="Vertical">
               <Rows2Icon data-icon="inline-start" />
-              Vertical
+              <span className="hidden @md:inline">Vertical</span>
             </ToggleGroupItem>
           </ToggleGroup>
         </ToolbarSection>
       )}
       <ToolbarSection title="Zoom" titleId={`${id}-zoom`}>
-        <ImageZoomToggle zoom={zoom} onZoomChange={onZoomChange} density={density} />
+        {showZoomControl ? (
+          <ImageZoomControl
+            zoom={zoom}
+            scale={zoomScale}
+            scales={zoomScales}
+            onZoomChange={onZoomChange}
+            density={density}
+          />
+        ) : (
+          <ImageZoomToggle zoom={zoom} onZoomChange={onZoomChange} density={density} />
+        )}
       </ToolbarSection>
       {mode === "toggle" && (
         <Button
@@ -204,83 +222,22 @@ export function ImageComparisonToolbar({
           {`Hold to show ${side === "before" ? "after" : "before"}`}
         </Button>
       )}
-      <div className="flex min-w-0 flex-wrap items-center gap-2">
-        <div className="flex items-center gap-1.5">
-          <Switch
-            id={`${id}-differences`}
-            aria-describedby={`${id}-differences-status`}
-            checked={showDifferences && !isUnavailable}
-            disabled={isUnavailable}
-            onCheckedChange={onShowDifferencesChange}
-          />
-          <label
-            htmlFor={`${id}-differences`}
-            className="cursor-pointer text-sm leading-none font-medium whitespace-nowrap select-none"
-          >
-            Highlight differences
-          </label>
-        </div>
-        {showDifferences && differences.status === "ready" && (
-          <span
-            data-slot="image-comparison-legend"
-            className="flex items-center gap-1.5 text-xs whitespace-nowrap text-muted-foreground"
-          >
-            <span
-              aria-hidden="true"
-              className="mx-[3px] size-2.5 shrink-0 rounded-xs bg-warning/10 ring-1 ring-background outline-2 outline-offset-1 outline-warning"
-            />
-            Changed region
-          </span>
-        )}
-        {hasStepper && (
-          <div
-            role="group"
-            aria-label="Changed regions"
-            data-slot="image-comparison-stepper"
-            className="flex flex-wrap items-center gap-1.5"
-          >
-            <span aria-hidden="true" className="text-muted-foreground">
-              ·
-            </span>
-            <span
-              data-slot="image-comparison-change-count"
-              className="text-xs whitespace-nowrap text-muted-foreground tabular-nums"
-            >
-              Change {activeRegionIndex + 1} of {regionCount}
-            </span>
-            <Button
-              variant="outline"
-              size="icon-sm"
-              density={density}
-              aria-label="Previous change"
-              aria-keyshortcuts="Shift+N"
-              onClick={() => onStepChange(-1)}
-            >
-              <ChevronLeftIcon />
-            </Button>
-            <Button
-              variant="outline"
-              size="icon-sm"
-              density={density}
-              aria-label="Next change"
-              aria-keyshortcuts="N"
-              onClick={() => onStepChange(1)}
-            >
-              <ChevronRightIcon />
-            </Button>
-            {onCommentActiveDifference && (
-              <Button
-                variant="outline"
-                size="sm"
-                density={density}
-                aria-label={`Comment on change ${activeRegionIndex + 1} of ${regionCount}`}
-                onClick={onCommentActiveDifference}
-              >
-                Comment on change
-              </Button>
-            )}
-          </div>
-        )}
+      <div className="flex shrink-0 items-center gap-1.5">
+        <Switch
+          id={`${id}-differences`}
+          aria-labelledby={`${id}-differences-label`}
+          aria-describedby={`${id}-differences-status`}
+          checked={showDifferences && !isUnavailable}
+          disabled={isUnavailable}
+          onCheckedChange={onShowDifferencesChange}
+        />
+        <label
+          id={`${id}-differences-label`}
+          htmlFor={`${id}-differences`}
+          className="cursor-pointer text-sm leading-none font-medium whitespace-nowrap select-none"
+        >
+          Highlight differences
+        </label>
         <p
           id={`${id}-differences-status`}
           role="status"
@@ -289,11 +246,64 @@ export function ImageComparisonToolbar({
           {statusText}
         </p>
       </div>
-      {toolbar && (
+      {hasStepper && (
         <div
-          data-slot="image-comparison-toolbar-extra"
-          className="flex min-w-0 flex-wrap items-center gap-2 @2xl:border-s @2xl:border-border @2xl:ps-2"
+          role="group"
+          aria-label="Changed regions"
+          data-slot="image-comparison-stepper"
+          className="flex flex-wrap items-center gap-1.5"
         >
+          <span
+            data-slot="image-comparison-legend"
+            className="flex items-center gap-1.5 text-xs whitespace-nowrap text-muted-foreground"
+          >
+            <span
+              aria-hidden="true"
+              className="mx-[3px] size-2.5 shrink-0 rounded-xs bg-warning/10 ring-1 ring-background outline-2 outline-offset-1 outline-warning"
+            />
+            <span className="hidden @md:inline">Changed region</span>
+          </span>
+          <span
+            data-slot="image-comparison-change-count"
+            className="text-xs whitespace-nowrap text-muted-foreground tabular-nums"
+          >
+            Change {activeRegionIndex + 1} of {regionCount}
+          </span>
+          <Button
+            variant="outline"
+            size="icon-sm"
+            density={density}
+            aria-label="Previous change"
+            aria-keyshortcuts="Shift+N"
+            onClick={() => onStepChange(-1)}
+          >
+            <ChevronLeftIcon />
+          </Button>
+          <Button
+            variant="outline"
+            size="icon-sm"
+            density={density}
+            aria-label="Next change"
+            aria-keyshortcuts="N"
+            onClick={() => onStepChange(1)}
+          >
+            <ChevronRightIcon />
+          </Button>
+          {onCommentActiveDifference && (
+            <Button
+              variant="outline"
+              size="sm"
+              density={density}
+              aria-label={`Comment on change ${activeRegionIndex + 1} of ${regionCount}`}
+              onClick={onCommentActiveDifference}
+            >
+              Comment on change
+            </Button>
+          )}
+        </div>
+      )}
+      {toolbar && (
+        <div data-slot="image-comparison-toolbar-extra" className="flex min-w-0 flex-wrap items-center gap-1.5">
           {toolbar}
         </div>
       )}

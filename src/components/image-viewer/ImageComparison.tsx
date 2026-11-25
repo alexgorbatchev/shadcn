@@ -7,6 +7,7 @@ import { ImageComparisonToolbar } from "./ImageComparisonToolbar.js";
 import { ImageDifferenceOverlay } from "./ImageDifferenceOverlay.js";
 import { ImageSwipeDivider } from "./ImageSwipeDivider.js";
 import { ImageViewport } from "./ImageViewport.js";
+import { getImageZoomScales, resolveImageZoomScale } from "./imageZoom.js";
 import { useElementSize } from "./hooks/useElementSize.js";
 import { useImageDifferences } from "./hooks/useImageDifferences.js";
 import { useImageLoad } from "./hooks/useImageLoad.js";
@@ -55,6 +56,8 @@ export interface IImageComparisonProps extends IDensityProps {
   onShowDifferencesChange?: (showDifferences: boolean) => void;
   /** Shows the comparison controls. Defaults to true. */
   showToolbar?: boolean;
+  /** Uses the incremental zoom control (Fit, Fit width, −, %, +) instead of the two-way Fit/Original toggle. */
+  showZoomControl?: boolean;
   /** Further controls in the toolbar row after the comparison controls, such as comment actions. */
   toolbar?: ReactNode;
   /** Content positioned over the before image (before pane in side-by-side, stage in toggle and swipe). */
@@ -133,6 +136,7 @@ export function ImageComparison({
   defaultShowDifferences = false,
   onShowDifferencesChange,
   showToolbar = true,
+  showZoomControl = false,
   toolbar,
   beforeOverlay,
   afterOverlay,
@@ -198,6 +202,12 @@ export function ImageComparison({
   const expectedScrollRef = useRef(new WeakMap<HTMLElement, IScrollPosition>());
   const center = useRef<INormalizedImagePoint>({ x: 0.5, y: 0.5 });
   const stageSize = useElementSize(stageRef);
+  const singleViewportSize = useElementSize(singleViewportRef);
+  const afterViewportSize = useElementSize(afterViewportRef);
+  const activeViewportSize = mode === "side-by-side" ? afterViewportSize : singleViewportSize;
+  const zoomScales =
+    afterImage.size && activeViewportSize ? getImageZoomScales(afterImage.size, activeViewportSize) : undefined;
+  const zoomScale = zoomScales ? resolveImageZoomScale(zoom, zoomScales) : undefined;
   const autoOrientation: ImageComparisonOrientation =
     stageSize && stageSize.height > stageSize.width ? "vertical" : "horizontal";
   const orientation = chosenOrientation ?? autoOrientation;
@@ -504,6 +514,9 @@ export function ImageComparison({
           onOrientationChange={setOrientation}
           zoom={zoom}
           onZoomChange={setZoom}
+          showZoomControl={showZoomControl}
+          zoomScale={zoomScale}
+          zoomScales={zoomScales}
           showDifferences={showDifferences}
           onShowDifferencesChange={setShowDifferences}
           differences={differences}

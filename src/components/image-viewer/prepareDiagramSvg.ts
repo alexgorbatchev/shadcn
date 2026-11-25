@@ -172,7 +172,13 @@ export function prepareDiagramSvg(
     imported.style.height = "100%";
   } else {
     imported.removeAttribute("height");
-    imported.style.maxWidth = "100%";
+    if (size.width > 0) {
+      imported.setAttribute("width", String(size.width));
+      imported.style.width = "100%";
+      imported.style.maxWidth = `${size.width}px`;
+    } else {
+      imported.style.maxWidth = "100%";
+    }
     imported.style.height = "auto";
     imported.style.marginInline = "auto";
   }

@@ -110,7 +110,7 @@ export function DiagramViewer({
       {(showZoomControl || toolbar !== undefined) && (
         <div
           data-slot="diagram-viewer-toolbar"
-          className="flex shrink-0 flex-wrap items-center gap-control-gap *:shrink-0"
+          className="flex shrink-0 flex-wrap items-center gap-control-gap *:shrink-0 [@media(max-height:280px)]:flex-nowrap [@media(max-height:280px)]:overflow-x-auto"
         >
           {showZoomControl && (
             <ImageZoomControl zoom={shownZoom} scale={scale} scales={scales} onZoomChange={setZoom} density={density} />
@@ -128,10 +128,7 @@ export function DiagramViewer({
         onStageKeyDown={onStageKeyDown}
         stageKeyShortcuts={stageKeyShortcuts}
       >
-        <div
-          data-slot="diagram-viewer-frame"
-          className="size-full bg-card outline-1 -outline-offset-1 outline-media-edge"
-        >
+        <div data-slot="diagram-viewer-frame" className="size-full bg-card">
           <DiagramSurface svg={svg} label={label} description={description} fit="fill" />
         </div>
       </ImageViewport>

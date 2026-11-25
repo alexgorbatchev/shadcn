@@ -81,7 +81,7 @@ export const Difference: Story = {
   play: async ({ canvasElement }) => {
     const marker = canvasElement.querySelector<HTMLElement>("[data-slot=image-region-marker]");
     await expect(marker).toHaveAttribute("data-variant", "difference");
-    await expect(getComputedStyle(marker ?? canvasElement).outlineStyle).toBe("solid");
+    await expect(getComputedStyle(marker ?? canvasElement).outlineStyle).toBe("dashed");
   },
 };
 

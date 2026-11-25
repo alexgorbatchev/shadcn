@@ -61,7 +61,8 @@ describe("prepareDiagramSvg", () => {
     expect(svg.getAttribute("aria-labelledby")).toBe("caption-1");
     expect(svg.hasAttribute("aria-label")).toBe(false);
     expect(svg.getAttribute("viewBox")).toBe("0 0 300 150");
-    expect(svg.style.maxWidth).toBe("100%");
+    expect(svg.style.width).toBe("100%");
+    expect(svg.style.maxWidth).toBe("300px");
     expect(svg.style.height).toBe("auto");
   });
 
