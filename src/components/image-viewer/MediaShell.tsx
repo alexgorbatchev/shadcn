@@ -34,7 +34,7 @@ export function MediaShell({
         data-slot="media-shell"
         className="[@media(max-height:280px)]:gap-1.5 [@media(max-height:280px)]:p-2"
       >
-        <DialogHeader>
+        <DialogHeader className="[@media(max-height:280px)]:min-h-control-sm [@media(max-height:280px)]:justify-center [@media(max-height:280px)]:pe-8">
           <DialogTitle className="truncate">{title}</DialogTitle>
           {description !== undefined && (
             <DialogDescription className="[@media(max-height:280px)]:sr-only">{description}</DialogDescription>

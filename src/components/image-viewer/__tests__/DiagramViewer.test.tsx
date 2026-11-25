@@ -1,5 +1,5 @@
 import { useState, type ReactElement } from "react";
-import { expect, test } from "vitest";
+import { assert, expect, test } from "vitest";
 import { page, userEvent } from "vitest/browser";
 import { render } from "vitest-browser-react";
 import { ThemeProvider } from "../../ThemeProvider";
@@ -69,7 +69,7 @@ test("DiagramViewer opens no narrower than openingWidth, zooms to 400% via keys,
   await expect.poll(() => stage.element().getAttribute("data-zoom")).toBe("fit");
 });
 
-test("MediaShell at 320x200 keeps Close visible without scrolling and truncates the title", async () => {
+test("MediaShell at 320x200 keeps Close aligned with the title, separates it from the toolbar, and reveals overflowing toolbar actions", async () => {
   await page.viewport(320, 200);
   const screen = await render(
     <MediaShell
@@ -78,18 +78,44 @@ test("MediaShell at 320x200 keeps Close visible without scrolling and truncates 
       title="Payments failure sequence with a very long descriptive title"
       description="Drag to pan; pinch or zoom."
     >
-      <DiagramViewer svg={sequenceSvg} label="Payments failure sequence" showZoomControl />
+      <DiagramViewer
+        svg={sequenceSvg}
+        label="Payments failure sequence"
+        showZoomControl
+        toolbar={
+          <Button type="button" variant="outline" size="sm">
+            Diagram source
+          </Button>
+        }
+      />
     </MediaShell>,
   );
 
   const close = screen.getByRole("button", { name: "Close" });
+  const title = screen.getByRole("heading", { name: /Payments failure sequence/ });
+  const scrollRight = screen.getByRole("button", { name: "Scroll toolbar right" });
   await expect.element(close).toBeVisible();
-  const rect = close.element().getBoundingClientRect();
-  expect(rect.left).toBeGreaterThanOrEqual(0);
-  expect(rect.top).toBeGreaterThanOrEqual(0);
-  expect(rect.right).toBeLessThanOrEqual(320);
-  expect(rect.bottom).toBeLessThanOrEqual(200);
+  await expect.element(scrollRight).toBeVisible();
+
+  const closeRect = close.element().getBoundingClientRect();
+  const titleRect = title.element().getBoundingClientRect();
+  const toolbarEl = document.querySelector("[data-slot=diagram-viewer-toolbar]");
+  assert(toolbarEl);
+  const toolbarRect = toolbarEl.getBoundingClientRect();
+
+  expect(closeRect.left).toBeGreaterThanOrEqual(0);
+  expect(closeRect.top).toBeGreaterThanOrEqual(0);
+  expect(closeRect.right).toBeLessThanOrEqual(320);
+  expect(closeRect.bottom).toBeLessThanOrEqual(200);
+  expect(Math.abs(titleRect.top + titleRect.height / 2 - (closeRect.top + closeRect.height / 2))).toBeLessThanOrEqual(
+    2,
+  );
+  expect(toolbarRect.top).toBeGreaterThanOrEqual(closeRect.bottom + 4);
   expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(320);
+
+  await scrollRight.click();
+  await expect.poll(() => toolbarEl.scrollLeft).toBeGreaterThan(0);
+  await expect.element(screen.getByRole("button", { name: "Scroll toolbar left" })).toBeVisible();
 });
 
 test("DiagramSurface mounts inline and expanded copies with isolated IDs", async () => {

@@ -369,7 +369,7 @@ export function ImageViewport({
           data-slot="image-viewport-scroll-hint"
           data-edge="left"
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 left-0 w-5 bg-gradient-to-r from-black/45 via-black/15 to-transparent dark:from-black/75 dark:via-black/30 dark:shadow-[inset_8px_0_12px_-8px_rgba(255,255,255,0.28)]"
+          className="pointer-events-none absolute inset-y-0 left-0 w-5 bg-gradient-to-r from-black/45 via-black/15 to-transparent dark:from-black/75 dark:via-black/30 dark:shadow-[inset_1px_0_0_rgba(255,255,255,0.22),inset_10px_0_14px_-8px_rgba(255,255,255,0.38)]"
         />
       )}
       {scrollHints.right && (
@@ -377,7 +377,7 @@ export function ImageViewport({
           data-slot="image-viewport-scroll-hint"
           data-edge="right"
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 right-0 w-5 bg-gradient-to-l from-black/45 via-black/15 to-transparent dark:from-black/75 dark:via-black/30 dark:shadow-[inset_-8px_0_12px_-8px_rgba(255,255,255,0.28)]"
+          className="pointer-events-none absolute inset-y-0 right-0 w-5 bg-gradient-to-l from-black/45 via-black/15 to-transparent dark:from-black/75 dark:via-black/30 dark:shadow-[inset_-1px_0_0_rgba(255,255,255,0.22),inset_-10px_0_14px_-8px_rgba(255,255,255,0.38)]"
         />
       )}
       {scrollHints.top && (
@@ -385,7 +385,7 @@ export function ImageViewport({
           data-slot="image-viewport-scroll-hint"
           data-edge="top"
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 top-0 h-5 bg-gradient-to-b from-black/45 via-black/15 to-transparent dark:from-black/75 dark:via-black/30 dark:shadow-[inset_0_8px_12px_-8px_rgba(255,255,255,0.28)]"
+          className="pointer-events-none absolute inset-x-0 top-0 h-5 bg-gradient-to-b from-black/45 via-black/15 to-transparent dark:from-black/75 dark:via-black/30 dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.22),inset_0_10px_14px_-8px_rgba(255,255,255,0.38)]"
         />
       )}
       {scrollHints.bottom && (
@@ -393,7 +393,7 @@ export function ImageViewport({
           data-slot="image-viewport-scroll-hint"
           data-edge="bottom"
           aria-hidden="true"
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-5 bg-gradient-to-t from-black/45 via-black/15 to-transparent dark:from-black/75 dark:via-black/30 dark:shadow-[inset_0_-8px_12px_-8px_rgba(255,255,255,0.28)]"
+          className="pointer-events-none absolute inset-x-0 bottom-0 h-5 bg-gradient-to-t from-black/45 via-black/15 to-transparent dark:from-black/75 dark:via-black/30 dark:shadow-[inset_0_-1px_0_rgba(255,255,255,0.22),inset_0_-10px_14px_-8px_rgba(255,255,255,0.38)]"
         />
       )}
     </div>

@@ -227,7 +227,7 @@ export function ImageComparisonToolbar({
           {toolbar}
         </div>
       )}
-      <div className="flex shrink-0 items-center gap-1.5">
+      <div className="flex min-h-control-sm shrink-0 items-center gap-1.5">
         <Switch
           id={`${id}-differences`}
           aria-labelledby={`${id}-differences-label`}

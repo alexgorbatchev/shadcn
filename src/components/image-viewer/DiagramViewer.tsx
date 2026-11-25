@@ -1,8 +1,19 @@
 import { useControlled } from "@base-ui/utils/useControlled";
 import { useIsoLayoutEffect } from "@base-ui/utils/useIsoLayoutEffect";
 import { useMergedRefs } from "@base-ui/utils/useMergedRefs";
-import { useMemo, useRef, useState, type KeyboardEvent, type ReactElement, type ReactNode, type Ref } from "react";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import {
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type ReactElement,
+  type ReactNode,
+  type Ref,
+} from "react";
 import type { IDensityProps } from "../../density/types.js";
+import { Button } from "../Button.js";
 import { DiagramSurface } from "./DiagramSurface.js";
 import { ImageViewport } from "./ImageViewport.js";
 import { ImageZoomControl } from "./ImageZoomControl.js";
@@ -74,12 +85,39 @@ export function DiagramViewer({
   });
   const center = useRef<INormalizedImagePoint>({ x: 0.5, y: 0.5 });
   const viewportRef = useRef<HTMLDivElement>(null);
+  const toolbarRef = useRef<HTMLDivElement>(null);
   const mergedStageRef = useMergedRefs(viewportRef, stageRef);
   const viewportSize = useElementSize(viewportRef);
   const parsedSize = useMemo(() => getDiagramSvgSize(svg), [svg]);
   const naturalSize = naturalSizeProp ?? parsedSize;
   const [openingZoom, setOpeningZoom] = useState<ImageZoom>();
+  const [toolbarOverflow, setToolbarOverflow] = useState({ left: false, right: false });
   const scales = naturalSize && viewportSize ? getImageZoomScales(naturalSize, viewportSize) : undefined;
+  const hasToolbar = showZoomControl || toolbar !== undefined;
+
+  const updateToolbarOverflow = useCallback((): void => {
+    const el = toolbarRef.current;
+    if (!el) {
+      setToolbarOverflow((current) => (current.left || current.right ? { left: false, right: false } : current));
+      return;
+    }
+    const left = el.scrollLeft > 1;
+    const right = el.scrollLeft + el.clientWidth < el.scrollWidth - 1;
+    setToolbarOverflow((current) => (current.left === left && current.right === right ? current : { left, right }));
+  }, []);
+
+  useIsoLayoutEffect(() => {
+    const el = toolbarRef.current;
+    if (!el) return undefined;
+    updateToolbarOverflow();
+    const observer = new ResizeObserver(updateToolbarOverflow);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [hasToolbar, updateToolbarOverflow]);
+
+  const scrollToolbar = (delta: number): void => {
+    toolbarRef.current?.scrollBy({ left: delta, behavior: "smooth" });
+  };
 
   useIsoLayoutEffect(() => {
     if (zoom !== undefined || openingZoom !== undefined || !naturalSize || !viewportSize) return;
@@ -107,15 +145,55 @@ export function DiagramViewer({
       data-zoom={shownZoom}
       className="flex size-full min-h-0 min-w-0 flex-1 flex-col gap-2"
     >
-      {(showZoomControl || toolbar !== undefined) && (
-        <div
-          data-slot="diagram-viewer-toolbar"
-          className="flex shrink-0 flex-wrap items-center gap-control-gap *:shrink-0 [@media(max-height:280px)]:flex-nowrap [@media(max-height:280px)]:overflow-x-auto"
-        >
-          {showZoomControl && (
-            <ImageZoomControl zoom={shownZoom} scale={scale} scales={scales} onZoomChange={setZoom} density={density} />
+      {hasToolbar && (
+        <div className="relative flex min-w-0 shrink-0 items-center">
+          <div
+            ref={toolbarRef}
+            data-slot="diagram-viewer-toolbar"
+            onScroll={updateToolbarOverflow}
+            className="flex min-w-0 flex-1 flex-wrap items-center gap-control-gap *:shrink-0 [@media(max-height:280px)]:flex-nowrap [@media(max-height:280px)]:overflow-x-auto [@media(max-height:280px)]:[scrollbar-width:none] [@media(max-height:280px)]:[&::-webkit-scrollbar]:hidden"
+          >
+            {showZoomControl && (
+              <ImageZoomControl
+                zoom={shownZoom}
+                scale={scale}
+                scales={scales}
+                onZoomChange={setZoom}
+                density={density}
+              />
+            )}
+            {toolbar}
+          </div>
+          {toolbarOverflow.left && (
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center bg-gradient-to-r from-background via-background/95 to-transparent pe-4">
+              <Button
+                type="button"
+                variant="outline"
+                size="icon-sm"
+                density={density}
+                aria-label="Scroll toolbar left"
+                className="pointer-events-auto bg-background"
+                onClick={() => scrollToolbar(-120)}
+              >
+                <ChevronLeftIcon />
+              </Button>
+            </div>
           )}
-          {toolbar}
+          {toolbarOverflow.right && (
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center bg-gradient-to-l from-background via-background/95 to-transparent ps-4">
+              <Button
+                type="button"
+                variant="outline"
+                size="icon-sm"
+                density={density}
+                aria-label="Scroll toolbar right"
+                className="pointer-events-auto bg-background"
+                onClick={() => scrollToolbar(120)}
+              >
+                <ChevronRightIcon />
+              </Button>
+            </div>
+          )}
         </div>
       )}
       <ImageViewport
