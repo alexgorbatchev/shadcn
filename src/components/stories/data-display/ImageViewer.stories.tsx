@@ -363,7 +363,8 @@ export const RegionTool: Story = {
     await userEvent.keyboard("{ArrowRight}");
     await expect(output).toHaveTextContent("Region 60% × 50% at 30%, 25%");
     await expect(viewport.scrollLeft).toBe(left);
-    const width = canvas.getByRole("textbox", { name: "Width" });
+    const width = canvas.getByRole("textbox", { name: "Width (%)" });
+    await expect(canvasElement.querySelectorAll("[data-slot=image-region-unit]")).toHaveLength(4);
     await userEvent.clear(width);
     await userEvent.type(width, "30");
     await userEvent.tab();

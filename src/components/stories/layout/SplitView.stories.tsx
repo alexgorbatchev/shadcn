@@ -593,3 +593,42 @@ export const NarrowHalfDrawer: Story = {
     );
   },
 };
+
+export const NarrowSheetCustomHeader: Story = {
+  render: function Example(args) {
+    const [open, setOpen] = useState(false);
+    return (
+      <div className="flex w-[600px] flex-col gap-2">
+        <Button onClick={() => setOpen(true)}>Open navigation</Button>
+        <SplitView
+          {...args}
+          sidebarLabel="Pages"
+          sheetHeader={<span>Workspace brand</span>}
+          sidebarOpen={open}
+          onSidebarOpenChange={setOpen}
+          wideQuery="(min-width: 100000px)"
+          narrowLayout="sheet"
+          layout="fill"
+          sidebar={
+            <nav aria-label="Projects and pages">
+              <button type="button" onClick={() => setOpen(false)}>
+                Home
+              </button>
+            </nav>
+          }
+        >
+          <h2>Incident review</h2>
+        </SplitView>
+      </div>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(canvasElement.ownerDocument.body);
+    await userEvent.click(canvas.getByRole("button", { name: "Open navigation" }));
+    const dialog = await body.findByRole("dialog", { name: "Pages" });
+    await expect(within(dialog).getByText("Workspace brand")).toBeVisible();
+    await userEvent.click(within(dialog).getByRole("button", { name: "Close" }));
+    await waitFor(() => expect(body.queryByRole("dialog")).not.toBeInTheDocument());
+  },
+};

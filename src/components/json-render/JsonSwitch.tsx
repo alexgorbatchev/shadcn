@@ -45,23 +45,10 @@ export const JsonSwitch = ({ props, bindings, emit }: BaseComponentProps<JsonPro
   return (
     <div className="space-y-1">
       <Field orientation="horizontal">
-        {/* The tags sit beside the label, not at the far edge of the row. */}
-        <div className="flex flex-auto flex-wrap items-center gap-2">
-          <FieldLabel htmlFor={id}>{field.label}</FieldLabel>
-          <JsonFieldTags field={field} />
-        </div>
-        {isNotSet && (
-          <span
-            id={notSetId}
-            data-slot="json-field-not-set"
-            className="shrink-0 text-sm whitespace-nowrap text-muted-foreground"
-          >
-            {NOT_SET_TEXT}
-          </span>
-        )}
         <Switch
           id={id}
           checked={checked}
+          indeterminate={isNotSet}
           disabled={field.mode === "locked"}
           {...field.controlProps}
           aria-describedby={describedBy}
@@ -71,6 +58,20 @@ export const JsonSwitch = ({ props, bindings, emit }: BaseComponentProps<JsonPro
             emit("change");
           }}
         />
+        {/* The switch leads its label like JsonCheckbox so sibling controls align on one edge and tags sit beside the label. */}
+        <div className="flex flex-auto flex-wrap items-center gap-2">
+          <FieldLabel htmlFor={id}>{field.label}</FieldLabel>
+          <JsonFieldTags field={field} />
+          {isNotSet && (
+            <span
+              id={notSetId}
+              data-slot="json-field-not-set"
+              className="shrink-0 text-sm whitespace-nowrap text-muted-foreground"
+            >
+              {NOT_SET_TEXT}
+            </span>
+          )}
+        </div>
       </Field>
       <JsonFieldMessage field={field} />
     </div>

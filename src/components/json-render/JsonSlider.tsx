@@ -23,9 +23,9 @@ export const JsonSlider = ({ props, bindings, emit }: BaseComponentProps<JsonPro
   if (field.mode === "values") return <JsonFieldValue field={field} text={valueText} />;
 
   return (
-    <div className="space-y-2">
+    <div className="w-full max-w-sm space-y-2">
       {(field.label || isNotSet) && (
-        <div className="flex items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <div className="flex flex-wrap items-center gap-2">
             {field.label && (
               <Label id={id} className="text-sm">
@@ -34,12 +34,16 @@ export const JsonSlider = ({ props, bindings, emit }: BaseComponentProps<JsonPro
             )}
             <JsonFieldTags field={field} />
           </div>
-          <span data-slot={isNotSet ? "json-field-not-set" : undefined} className="text-sm text-muted-foreground">
+          <span
+            data-slot={isNotSet ? "json-field-not-set" : undefined}
+            className="shrink-0 text-sm whitespace-nowrap text-muted-foreground"
+          >
             {valueText}
           </span>
         </div>
       )}
       <Slider
+        indeterminate={isNotSet}
         getAriaLabel={() => field.label || "Value"}
         getAriaValueText={isNotSet ? () => NOT_SET_TEXT : undefined}
         value={[value]}

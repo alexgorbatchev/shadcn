@@ -349,3 +349,13 @@ export const ReadonlyArrayValue: Story = {
     await expect(canvas.getByRole("status", { name: "Readonly range" })).toHaveTextContent("21, 80");
   },
 };
+
+export const Indeterminate: Story = {
+  args: { indeterminate: true, defaultValue: 0, getAriaValueText: () => "Not answered" },
+  play: async ({ canvasElement }) => {
+    const input = (await getSliderCanvas(canvasElement)).getByRole("slider", { name: "Volume" });
+    const root = input.closest("[data-slot=slider]") as HTMLElement;
+    await expect(root).toHaveAttribute("data-indeterminate");
+    await expect(input).toHaveAttribute("aria-valuetext", "Not answered");
+  },
+};

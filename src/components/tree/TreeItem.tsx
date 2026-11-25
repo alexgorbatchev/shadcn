@@ -346,7 +346,7 @@ export function TreeItem<T>({
           : {}),
         style: { paddingInlineStart: `${item.getItemMeta().level * (item.getTree().getConfig().indent ?? 20) + 8}px` },
         className: cn(
-          "relative flex min-h-control min-w-0 cursor-default items-center gap-2 rounded-sm border border-transparent py-1 pr-2 text-sm outline-none",
+          "relative flex min-h-control min-w-0 cursor-default items-center gap-2 rounded-sm border border-transparent py-1 pr-2 text-sm outline-none pointer-coarse:min-h-11",
           isAriaDisabled
             ? "cursor-not-allowed focus-visible:outline-1 focus-visible:outline-ring/60 focus-visible:-outline-offset-1"
             : "hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring",

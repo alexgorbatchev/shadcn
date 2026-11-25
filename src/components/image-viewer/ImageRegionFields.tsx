@@ -48,8 +48,11 @@ export function ImageRegionFields({
       className={cn("flex flex-wrap items-end gap-control-gap", className)}
     >
       {FIELDS.map(([key, name]) => (
-        <Field key={key} className="w-20">
-          <FieldLabel htmlFor={`${id}-${key}`}>{name}</FieldLabel>
+        <Field key={key} className="w-24">
+          <FieldLabel htmlFor={`${id}-${key}`}>
+            {name}
+            <span className="sr-only"> (%)</span>
+          </FieldLabel>
           <NumberField
             id={`${id}-${key}`}
             density={density}
@@ -65,7 +68,14 @@ export function ImageRegionFields({
             }}
           >
             <NumberFieldGroup>
-              <NumberFieldInput aria-describedby={`${id}-unit`} />
+              <NumberFieldInput className="pe-1" aria-describedby={`${id}-unit`} />
+              <span
+                aria-hidden="true"
+                data-slot="image-region-unit"
+                className="flex shrink-0 items-center pe-2 text-xs text-muted-foreground select-none"
+              >
+                %
+              </span>
             </NumberFieldGroup>
           </NumberField>
         </Field>

@@ -8,7 +8,10 @@ import { cn } from "../utils/cn.js";
 type SliderProps<Value extends number | readonly number[] = number | readonly number[]> =
   SliderPrimitive.Root.Props<Value> &
     IDensityProps &
-    Pick<SliderPrimitive.Thumb.Props, "getAriaLabel" | "getAriaValueText">;
+    Pick<SliderPrimitive.Thumb.Props, "getAriaLabel" | "getAriaValueText"> & {
+      /** Visually distinguishes an unset/unanswered slider from one explicitly set to its minimum. */
+      indeterminate?: boolean;
+    };
 
 function Slider<Value extends number | readonly number[] = number | readonly number[]>({
   analytics,
@@ -20,6 +23,7 @@ function Slider<Value extends number | readonly number[] = number | readonly num
   max = 100,
   getAriaLabel,
   getAriaValueText,
+  indeterminate = false,
   ...props
 }: SliderProps<Value> & IAnalyticsProps): ReactElement {
   const trackedOnValueCommitted = useAnalyticsCallback(
@@ -42,6 +46,7 @@ function Slider<Value extends number | readonly number[] = number | readonly num
       }
       data-density={density}
       data-slot="slider"
+      data-indeterminate={indeterminate ? "" : undefined}
       defaultValue={defaultValue}
       value={value}
       min={min}
@@ -57,17 +62,19 @@ function Slider<Value extends number | readonly number[] = number | readonly num
         >
           <SliderPrimitive.Indicator
             data-slot="slider-range"
-            className="bg-primary select-none data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full"
+            data-indeterminate={indeterminate ? "" : undefined}
+            className="bg-primary select-none data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full data-indeterminate:opacity-0"
           />
         </SliderPrimitive.Track>
         {Array.from({ length: thumbCount }, (_, index) => (
           <SliderPrimitive.Thumb
             data-slot="slider-thumb"
+            data-indeterminate={indeterminate ? "" : undefined}
             key={index}
             index={index}
             getAriaLabel={getAriaLabel}
             getAriaValueText={getAriaValueText}
-            className="relative block size-3 shrink-0 rounded-full border border-ring bg-background ring-ring transition-[color,box-shadow] select-none after:absolute after:-inset-2 hover:ring-3 focus-visible:ring-1 focus-visible:outline-hidden active:ring-3 data-disabled:pointer-events-none data-disabled:opacity-50"
+            className="relative block size-3 shrink-0 rounded-full border border-ring bg-background ring-ring transition-[color,box-shadow] select-none after:absolute after:-inset-2 hover:ring-3 focus-visible:ring-1 focus-visible:outline-hidden active:ring-3 data-indeterminate:border-dashed data-indeterminate:border-muted-foreground data-indeterminate:bg-muted data-disabled:pointer-events-none data-disabled:opacity-50"
           />
         ))}
       </SliderPrimitive.Control>

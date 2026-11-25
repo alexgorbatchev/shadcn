@@ -49,6 +49,8 @@ interface IJsonFormExampleProps {
   errors?: Record<string, string>;
   /** Binding paths whose value is still the author's default. */
   defaults?: string[];
+  /** Binding paths whose value differs from the last submitted answer. */
+  changed?: string[];
   /** Probe names, each with a button outside the spec that reveals and focuses the probe. */
   reveal?: string[];
 }
@@ -59,6 +61,7 @@ function JsonFormExample({
   mode,
   errors,
   defaults,
+  changed,
   reveal = [],
 }: IJsonFormExampleProps): ReactElement {
   const [store] = useState(() => createStateStore(state));
@@ -78,7 +81,7 @@ function JsonFormExample({
         </Button>
       ))}
       <JSONUIProvider registry={registry} store={store}>
-        <JsonFormProvider mode={mode} errors={errors} defaults={defaults}>
+        <JsonFormProvider mode={mode} errors={errors} defaults={defaults} changed={changed}>
           <Renderer spec={spec} registry={registry} />
         </JsonFormProvider>
       </JSONUIProvider>
@@ -368,24 +371,38 @@ export const DefaultTagsAndNotSet: Story = {
     spec: settingsSpec,
     state: { answers: { oncall: false, notify: null, budget: 5, risk: null, pilot: false, agree: false } },
     defaults: ["/answers/oncall", "/answers/budget", "/answers/pilot", "/answers/agree"],
+    changed: ["/answers/budget"],
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    // Each control still at the author's value carries a "Default" tag; controls left null carry none.
+    // Each control still at the author's value carries a "Default" tag; changed controls carry "Changed" beside their label.
     await expect(canvas.getAllByText("Default")).toHaveLength(4);
-    // A switch and a slider left null read "Not set" instead of off or their minimum.
-    await expect(canvas.getAllByText("Not set")).toHaveLength(2);
+    await expect(canvas.getAllByText("Changed")).toHaveLength(1);
+    // A switch and a slider left null read "Not answered" and render indeterminate visuals instead of off or their minimum.
+    await expect(canvas.getAllByText("Not answered")).toHaveLength(2);
     const notify = canvas.getByRole("switch", { name: "Notify support" });
-    await expect(notify).toHaveAccessibleDescription("Not set");
-    await expect(canvas.getByRole("switch", { name: "Page the on-call team" })).not.toHaveAccessibleDescription(
-      "Not set",
+    const oncall = canvas.getByRole("switch", { name: "Page the on-call team" });
+    await expect(notify).toHaveAccessibleDescription("Not answered");
+    await expect(notify).toHaveAttribute("data-indeterminate");
+    await expect(oncall).not.toHaveAccessibleDescription("Not answered");
+    await expect(oncall).not.toHaveAttribute("data-indeterminate");
+    // The switch sits beside its label on the left, matching checkboxes rather than stretching to the far right.
+    const notifyLabel = canvas.getByText("Notify support");
+    await expect(notify.getBoundingClientRect().right).toBeLessThanOrEqual(
+      notifyLabel.getBoundingClientRect().left + 1,
     );
-    await expect(canvas.getByRole("slider", { name: "Acceptable risk" })).toHaveAttribute("aria-valuetext", "Not set");
-    await expect(canvas.getByRole("slider", { name: "Budget cap" })).not.toHaveAttribute("aria-valuetext", "Not set");
-    // Choosing a value replaces "Not set".
+    const risk = canvas.getByRole("slider", { name: "Acceptable risk" });
+    await expect(risk).toHaveAttribute("aria-valuetext", "Not answered");
+    await expect(risk.closest("[data-slot=slider]")).toHaveAttribute("data-indeterminate");
+    await expect(canvas.getByRole("slider", { name: "Budget cap" })).not.toHaveAttribute(
+      "aria-valuetext",
+      "Not answered",
+    );
+    // Choosing a value replaces "Not answered" and clears indeterminate.
     await userEvent.click(notify);
-    await waitFor(() => expect(canvas.getAllByText("Not set")).toHaveLength(1));
+    await waitFor(() => expect(canvas.getAllByText("Not answered")).toHaveLength(1));
     await expect(notify).toHaveAttribute("aria-checked", "true");
+    await expect(notify).not.toHaveAttribute("data-indeterminate");
   },
 };
 
@@ -393,15 +410,17 @@ export const NotSetReadOnly: Story = {
   args: {
     spec: settingsSpec,
     state: { answers: { oncall: true, notify: null, budget: 5, risk: null, pilot: false, agree: false } },
+    changed: ["/answers/budget"],
     mode: "values",
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement);
-    await expect(canvas.getByRole("group", { name: "Notify support" })).toHaveTextContent("Not set");
-    await expect(canvas.getByRole("group", { name: "Acceptable risk" })).toHaveTextContent("Not set");
+    await expect(canvas.getByRole("group", { name: "Notify support" })).toHaveTextContent("Not answered");
+    await expect(canvas.getByRole("group", { name: "Acceptable risk" })).toHaveTextContent("Not answered");
     await expect(canvas.getByRole("group", { name: "Page the on-call team" })).toHaveTextContent("On");
     await expect(canvas.getByRole("group", { name: "Budget cap" })).toHaveTextContent("5");
     await expect(canvas.queryByText("Default")).not.toBeInTheDocument();
+    await expect(canvas.queryByText("Changed")).not.toBeInTheDocument();
   },
 };
 

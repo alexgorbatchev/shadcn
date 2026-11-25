@@ -293,3 +293,12 @@ export const Sizes: Story = {
 };
 
 export const SmallRightToLeft: Story = { ...RightToLeft, args: { size: "sm", dir: "rtl" } };
+
+export const Indeterminate: Story = {
+  args: { indeterminate: true },
+  play: async ({ canvasElement }) => {
+    const control = within(canvasElement).getByRole("switch", { name: "Enable notifications" });
+    await expect(control).toHaveAttribute("data-indeterminate");
+    await expect(control).not.toBeChecked();
+  },
+};

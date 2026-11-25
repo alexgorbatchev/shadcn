@@ -16,12 +16,14 @@ interface IJsonFormContext {
   mode: JsonFormMode;
   errors: Readonly<Record<string, string>>;
   defaults: readonly string[];
+  changed: readonly string[];
 }
 
 const JsonFormContext = createContext<IJsonFormContext | undefined>(undefined);
 
 const noErrors: Readonly<Record<string, string>> = {};
 const noDefaults: readonly string[] = [];
+const noChanged: readonly string[] = [];
 
 export interface IJsonFormProviderProps {
   mode?: JsonFormMode;
@@ -37,17 +39,23 @@ export interface IJsonFormProviderProps {
    * they never touched.
    */
   defaults?: readonly string[];
+  /**
+   * Binding paths whose value differs from the last submitted answer, such as `["/answers/headline"]`. Each of those
+   * controls shows a "Changed" tag in its own label row, beside Required and Default.
+   */
+  changed?: readonly string[];
   children?: ReactNode;
 }
 
-/** Sets the mode, the field messages and the default-valued fields of the bound controls rendered inside it. */
+/** Sets the mode, the field messages, the default-valued fields, and the changed fields of the bound controls inside it. */
 export function JsonFormProvider({
   mode = "edit",
   errors = noErrors,
   defaults = noDefaults,
+  changed = noChanged,
   children,
 }: IJsonFormProviderProps): ReactElement {
-  const value = useMemo(() => ({ mode, errors, defaults }), [mode, errors, defaults]);
+  const value = useMemo(() => ({ mode, errors, defaults, changed }), [mode, errors, defaults, changed]);
   return <JsonFormContext value={value}>{children}</JsonFormContext>;
 }
 
@@ -104,6 +112,8 @@ export interface IJsonField {
   isRequired: boolean;
   /** The value is still the author's default (`JsonFormProvider`'s `defaults`); the label shows a "Default" tag. */
   isDefault: boolean;
+  /** The value differs from the last submitted answer (`JsonFormProvider`'s `changed`); the label shows a "Changed" tag. */
+  isChanged: boolean;
   error?: string;
   mode: JsonFormMode;
   messageId: string;
@@ -130,6 +140,7 @@ export function useJsonField({ path, label, checks, ownErrors = [] }: IJsonField
     label: stripRequiredMark(label ?? ""),
     isRequired,
     isDefault: !!path && !!form?.defaults.includes(path),
+    isChanged: !!path && !!form?.changed.includes(path),
     error,
     mode: form?.mode ?? "edit",
     messageId,
@@ -148,12 +159,13 @@ export interface IJsonFieldLabelProps {
 }
 
 /**
- * The field's "Required" and "Default" tags, in that order; nothing when neither applies. "Required" asks for an
- * answer, so a read-only value never carries it.
+ * The field's "Required", "Default", and "Changed" tags, in that order; nothing when none apply. "Required" and
+ * "Changed" belong to editable forms, so read-only values omit them.
  */
 export function JsonFieldTags({ field }: { field: IJsonField }): ReactElement | null {
   const isRequiredShown = field.isRequired && field.mode !== "values";
-  if (!isRequiredShown && !field.isDefault) return null;
+  const isChangedShown = field.isChanged && field.mode !== "values";
+  if (!isRequiredShown && !field.isDefault && !isChangedShown) return null;
   return (
     <>
       {isRequiredShown && <Badge variant="outline">Required</Badge>}
@@ -162,13 +174,24 @@ export function JsonFieldTags({ field }: { field: IJsonField }): ReactElement | 
           Default
         </Badge>
       )}
+      {isChangedShown && (
+        <Badge variant="outline" data-slot="json-field-changed">
+          Changed
+        </Badge>
+      )}
     </>
   );
 }
 
-/** The field's label followed by its "Required" and "Default" tags. */
+/** The field's label followed by its "Required", "Default", and "Changed" tags. */
 export function JsonFieldLabel({ field, id, htmlFor }: IJsonFieldLabelProps): ReactElement | null {
-  if (!field.label && !(field.isRequired && field.mode !== "values") && !field.isDefault) return null;
+  if (
+    !field.label &&
+    !(field.isRequired && field.mode !== "values") &&
+    !field.isDefault &&
+    !(field.isChanged && field.mode !== "values")
+  )
+    return null;
   return (
     <div data-slot="json-field-label" className="flex min-w-0 flex-wrap items-center gap-2">
       {field.label && (
@@ -182,7 +205,7 @@ export function JsonFieldLabel({ field, id, htmlFor }: IJsonFieldLabelProps): Re
 }
 
 /** What an answer control the author left empty shows instead of a value it would not send. */
-export const NOT_SET_TEXT = "Not set";
+export const NOT_SET_TEXT = "Not answered";
 
 /** The field's message, referenced by the control's `aria-describedby`. */
 export function JsonFieldMessage({ field }: { field: IJsonField }): ReactElement | null {

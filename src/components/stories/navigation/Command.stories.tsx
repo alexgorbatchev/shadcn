@@ -547,3 +547,35 @@ export const LoopingDisabledReasons: Story = {
     await userEvent.keyboard("{Alt>}{ArrowDown}{/Alt}");
   },
 };
+
+export const WideDialog: Story = {
+  render: function Render() {
+    const [isOpen, setOpen] = useState(false);
+    return (
+      <>
+        <Button onClick={() => setOpen(true)}>Open wide palette</Button>
+        <CommandDialog open={isOpen} onOpenChange={setOpen} size="wide" title="Wide palette">
+          <Command label="Wide commands">
+            <CommandInput placeholder="Find a page…" aria-label="Find a page…" />
+            <CommandList>
+              <CommandGroup heading="Pages">
+                <CommandItem value="interview" onSelect={() => setOpen(false)}>
+                  Interview 35 — Ines
+                </CommandItem>
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </CommandDialog>
+      </>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const body = within(canvasElement.ownerDocument.body);
+    await userEvent.click(canvas.getByRole("button", { name: "Open wide palette" }));
+    const dialog = await body.findByRole("dialog", { name: "Wide palette" });
+    await waitFor(() => expect(dialog.getBoundingClientRect().width).toBeGreaterThan(420));
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() => expect(dialog).not.toBeInTheDocument());
+  },
+};

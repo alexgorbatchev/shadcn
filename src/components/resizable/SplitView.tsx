@@ -71,6 +71,11 @@ interface ISplitViewProps {
   /** Called when a "sheet" or "drawer" narrow layout asks to open or close the sidebar, such as on Escape or a swipe. */
   onSidebarOpenChange?: (open: boolean) => void;
   /**
+   * Custom leading header content for `narrowLayout="sheet"`, replacing the visible `DrawerTitle` so a navigation brand
+   * row does not stack beneath the sheet's own header. `sidebarLabel` stays the sheet's accessible title.
+   */
+  sheetHeader?: ReactNode;
+  /**
    * Where focus goes when a "sheet" or "drawer" narrow layout closes, as Base UI's `finalFocus`: by default the element
    * that had focus before it opened; return `false` from a function to leave focus where the consumer put it.
    */
@@ -183,6 +188,7 @@ export function SplitView({
   drawerHeight = "tall",
   drawerTopInset,
   onSidebarOpenChange,
+  sheetHeader,
   sidebarFinalFocus,
 }: ISplitViewProps): ReactElement {
   const isFill = layoutMode === "fill";
@@ -369,6 +375,7 @@ export function SplitView({
           aria-label={sidebarLabel}
           finalFocus={sidebarFinalFocus}
           className={cn(
+            narrowLayout === "sheet" && "data-[swipe-axis=x]:[--drawer-content-width:min(calc(100vw-2.5rem),24rem)]",
             narrowLayout === "drawer" &&
               "data-[swipe-axis=y]:[--drawer-content-max-height:100dvh] data-[swipe-axis=y]:rounded-t-none",
             narrowLayout === "drawer" &&
@@ -383,8 +390,15 @@ export function SplitView({
           style={drawerTopInset ? { ["--split-view-drawer-top" as string]: drawerTopInset } : undefined}
         >
           {narrowLayout === "sheet" && (
-            <div className="flex shrink-0 items-center justify-between gap-2 p-panel pb-0">
-              <DrawerTitle>{sidebarLabel}</DrawerTitle>
+            <div className="flex shrink-0 items-center justify-between gap-2 px-3 pt-3 pb-1">
+              {sheetHeader ? (
+                <>
+                  <DrawerTitle className="sr-only">{sidebarLabel}</DrawerTitle>
+                  <div className="flex min-w-0 flex-1 items-center gap-2">{sheetHeader}</div>
+                </>
+              ) : (
+                <DrawerTitle>{sidebarLabel}</DrawerTitle>
+              )}
               <DrawerClose render={<Button variant="ghost" size="sm" />}>
                 <XIcon aria-hidden="true" />
                 Close

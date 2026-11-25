@@ -121,6 +121,7 @@ type CommandDialogProps<Payload> = ComponentProps<typeof Dialog<Payload>> &
     description?: string;
     className?: string;
     showCloseButton?: boolean;
+    size?: ComponentProps<typeof DialogContent>["size"];
   };
 
 function CommandDialog<Payload>({
@@ -130,6 +131,7 @@ function CommandDialog<Payload>({
   density,
   className,
   showCloseButton = false,
+  size,
   ...props
 }: CommandDialogProps<Payload>): ReactElement {
   return (
@@ -137,6 +139,7 @@ function CommandDialog<Payload>({
       {(state) => (
         <DialogContent
           density={density}
+          size={size}
           className={cn(
             "overflow-hidden p-0",
             showCloseButton && "[&_[data-slot=command-input-wrapper]]:pe-10",
