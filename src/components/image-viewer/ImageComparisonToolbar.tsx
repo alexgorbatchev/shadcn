@@ -222,6 +222,11 @@ export function ImageComparisonToolbar({
           {`Hold to show ${side === "before" ? "after" : "before"}`}
         </Button>
       )}
+      {toolbar && (
+        <div data-slot="image-comparison-toolbar-extra" className="contents">
+          {toolbar}
+        </div>
+      )}
       <div className="flex shrink-0 items-center gap-1.5">
         <Switch
           id={`${id}-differences`}
@@ -262,6 +267,9 @@ export function ImageComparisonToolbar({
               className="mx-[3px] size-2.5 shrink-0 rounded-xs bg-warning/10 ring-1 ring-background outline-2 outline-offset-1 outline-warning"
             />
             <span className="hidden @md:inline">Changed region</span>
+            <span aria-hidden="true" className="hidden @md:inline">
+              ·
+            </span>
           </span>
           <span
             data-slot="image-comparison-change-count"
@@ -300,11 +308,6 @@ export function ImageComparisonToolbar({
               Comment on change
             </Button>
           )}
-        </div>
-      )}
-      {toolbar && (
-        <div data-slot="image-comparison-toolbar-extra" className="flex min-w-0 flex-wrap items-center gap-1.5">
-          {toolbar}
         </div>
       )}
       {sizeMismatch && (

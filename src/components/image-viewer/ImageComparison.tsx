@@ -1,4 +1,5 @@
 import { useControlled } from "@base-ui/utils/useControlled";
+import { useMergedRefs } from "@base-ui/utils/useMergedRefs";
 import { useRef, useState, type CSSProperties, type KeyboardEvent, type ReactElement, type ReactNode } from "react";
 import type { IDensityProps } from "../../density/types.js";
 import { cn } from "../../utils/cn.js";
@@ -199,12 +200,14 @@ export function ImageComparison({
   const singleViewportRef = useRef<HTMLDivElement>(null);
   const beforeViewportRef = useRef<HTMLDivElement>(null);
   const afterViewportRef = useRef<HTMLDivElement>(null);
+  const [singleViewportElement, setSingleViewportElement] = useState<HTMLDivElement | null>(null);
+  const [afterViewportElement, setAfterViewportElement] = useState<HTMLDivElement | null>(null);
+  const mergedSingleViewportRef = useMergedRefs(singleViewportRef, setSingleViewportElement);
+  const mergedAfterViewportRef = useMergedRefs(afterViewportRef, setAfterViewportElement);
   const expectedScrollRef = useRef(new WeakMap<HTMLElement, IScrollPosition>());
   const center = useRef<INormalizedImagePoint>({ x: 0.5, y: 0.5 });
   const stageSize = useElementSize(stageRef);
-  const singleViewportSize = useElementSize(singleViewportRef);
-  const afterViewportSize = useElementSize(afterViewportRef);
-  const activeViewportSize = mode === "side-by-side" ? afterViewportSize : singleViewportSize;
+  const activeViewportSize = useElementSize(mode === "side-by-side" ? afterViewportElement : singleViewportElement);
   const zoomScales =
     afterImage.size && activeViewportSize ? getImageZoomScales(afterImage.size, activeViewportSize) : undefined;
   const zoomScale = zoomScales ? resolveImageZoomScale(zoom, zoomScales) : undefined;
@@ -411,7 +414,7 @@ export function ImageComparison({
             center={center}
             onZoomChange={setZoom}
             fallback={fallback}
-            viewportRef={afterViewportRef}
+            viewportRef={mergedAfterViewportRef}
             onViewportScroll={(viewport) => syncScroll(viewport, beforeViewportRef.current)}
             onStageKeyDown={(event) => handleStageKey(event, "after")}
             stageKeyShortcuts={sharedStageKeys || undefined}
@@ -440,7 +443,7 @@ export function ImageComparison({
           center={center}
           onZoomChange={setZoom}
           fallback={fallback}
-          viewportRef={singleViewportRef}
+          viewportRef={mergedSingleViewportRef}
           onStageKeyDown={(event) => handleStageKey(event, position > 50 ? "before" : "after")}
           stageKeyShortcuts={sharedStageKeys || undefined}
         >
@@ -476,7 +479,7 @@ export function ImageComparison({
           center={center}
           onZoomChange={setZoom}
           fallback={fallback}
-          viewportRef={singleViewportRef}
+          viewportRef={mergedSingleViewportRef}
           onStageKeyDown={(event) => handleStageKey(event, shownSide)}
           stageKeyShortcuts={toggleStageKeys}
         >

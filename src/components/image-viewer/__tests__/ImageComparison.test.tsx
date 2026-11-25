@@ -250,16 +250,32 @@ test("switching to original size centers the first change and stepping centers e
   expect(onCommentDifference.mock.calls[0]?.[1]).toBe(0);
 });
 
-test("showZoomControl exposes Fit, Fit width, zoom steps, and percent readout", async () => {
+test("showZoomControl exposes Fit, Fit width, zoom steps, and percent readout across mode switches and phone viewports", async () => {
   const screen = await render(
     <div className="h-120 w-180">
-      <ImageComparison before={before} after={after} defaultMode="side-by-side" showZoomControl />
+      <ImageComparison before={before} after={after} defaultMode="toggle" showZoomControl />
     </div>,
   );
+  const zoomReadout = () => document.querySelector("[data-slot=image-zoom-level]")?.textContent?.trim();
+  const zoomIn = screen.getByRole("button", { name: "Zoom in" });
   await expect.element(screen.getByRole("button", { name: "Fit", exact: true })).toBeVisible();
   await expect.element(screen.getByRole("button", { name: "Fit width" })).toBeVisible();
-  const zoomIn = screen.getByRole("button", { name: "Zoom in" });
-  await expect.element(zoomIn).toBeVisible();
+  await expect.poll(zoomReadout).toMatch(/^\d+%$/);
+  await expect.element(zoomIn).toBeEnabled();
+
+  // Switching from toggle to side-by-side re-observes the active viewport and keeps zoom readout and steps live.
+  await screen.getByRole("button", { name: "Side by side" }).click();
+  await expect.poll(zoomReadout).toMatch(/^\d+%$/);
+  await expect.element(zoomIn).toBeEnabled();
+
+  await page.viewport(390, 844);
+  await expect.poll(zoomReadout).toMatch(/^\d+%$/);
+  await expect.element(zoomIn).toBeEnabled();
+
+  await screen.getByRole("button", { name: "Swipe" }).click();
+  await expect.poll(zoomReadout).toMatch(/^\d+%$/);
+  await expect.element(zoomIn).toBeEnabled();
+
   await zoomIn.click();
   await expect
     .poll(() => Number(document.querySelector("[data-slot=image-viewport]")?.getAttribute("data-zoom")))

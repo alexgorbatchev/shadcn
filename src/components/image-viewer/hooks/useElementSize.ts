@@ -3,10 +3,10 @@ import { useState, type RefObject } from "react";
 import type { IImageSize } from "../types.js";
 
 /** Tracks an element's client size, which excludes borders and scrollbars. */
-export function useElementSize(ref: RefObject<HTMLElement | null>): IImageSize | undefined {
+export function useElementSize(target: RefObject<HTMLElement | null> | HTMLElement | null): IImageSize | undefined {
   const [size, setSize] = useState<IImageSize>();
   useIsoLayoutEffect(() => {
-    const element = ref.current;
+    const element = target && "current" in target ? target.current : target;
     if (!element) return undefined;
     const measure = (): void => {
       const width = element.clientWidth;
@@ -17,6 +17,6 @@ export function useElementSize(ref: RefObject<HTMLElement | null>): IImageSize |
     const observer = new ResizeObserver(measure);
     observer.observe(element);
     return () => observer.disconnect();
-  }, [ref]);
-  return size;
+  }, [target]);
+  return target ? size : undefined;
 }
