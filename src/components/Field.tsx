@@ -158,15 +158,21 @@ function FieldTitle({ density, className, ...props }: FieldTitleProps): ReactEle
   );
 }
 
-type FieldDescriptionProps = ComponentProps<"p"> & IDensityProps;
+type FieldDescriptionProps = ComponentProps<"p"> &
+  IDensityProps & {
+    /** Line wrapping for horizontal/responsive fields: `"auto"` balances lines; `"normal"` uses full-width wrapping. */
+    wrap?: "auto" | "normal";
+  };
 
-function FieldDescription({ density, className, ...props }: FieldDescriptionProps): ReactElement {
+function FieldDescription({ density, wrap = "auto", className, ...props }: FieldDescriptionProps): ReactElement {
   return (
     <p
       data-density={density}
       data-slot="field-description"
       className={cn(
-        "text-start text-sm leading-normal font-normal text-muted-foreground group-data-[orientation=horizontal]/field:text-balance @md/field-group:group-data-[orientation=responsive]/field:text-balance [[data-variant=legend]+&]:-mt-1.5",
+        "text-start text-sm leading-normal font-normal text-muted-foreground [[data-variant=legend]+&]:-mt-1.5",
+        wrap === "auto" &&
+          "group-data-[orientation=horizontal]/field:text-balance @md/field-group:group-data-[orientation=responsive]/field:text-balance",
         "last:mt-0 nth-last-2:-mt-1",
         "[&>a]:underline [&>a]:underline-offset-4 [&>a:hover]:text-primary",
         className,

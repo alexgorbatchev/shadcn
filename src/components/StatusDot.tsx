@@ -13,8 +13,8 @@ const statusDotVariants = cva("inline-flex items-center gap-1 text-xs font-mediu
     placement: {
       /** In the line of text, before or after a label. */
       inline: "",
-      /** On the top end corner of a positioned parent, such as an icon button. */
-      corner: "pointer-events-none absolute -top-0.5 -end-0.5",
+      /** On the top end corner of a positioned parent, such as an icon button, knocked out from the surface behind it. */
+      corner: "pointer-events-none absolute -top-0.5 -end-0.5 rounded-full ring-2 ring-background",
     },
   },
   defaultVariants: { tone: "primary", placement: "inline" },
@@ -40,7 +40,11 @@ function StatusDot({ tone, placement, count, className, ...props }: StatusDotPro
       className={cn(statusDotVariants({ tone, placement }), className)}
       {...props}
     >
-      <svg viewBox="0 0 8 8" className="size-2 shrink-0" focusable="false">
+      <svg
+        viewBox="0 0 8 8"
+        className={cn("shrink-0", placement === "corner" ? "size-1.5" : "size-2")}
+        focusable="false"
+      >
         <circle cx="4" cy="4" r="4" fill="currentColor" />
       </svg>
       {count !== undefined && <span data-slot="status-dot-count">{count}</span>}

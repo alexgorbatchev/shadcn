@@ -19,9 +19,13 @@ function BubbleGroup({ density, className, ...props }: BubbleGroupProps): ReactE
 }
 
 const bubbleVariants = cva(
-  "group/bubble relative flex w-fit max-w-[80%] min-w-0 flex-col gap-1 group-data-[align=end]/message:self-end data-[align=end]:self-end data-[variant=ghost]:max-w-full",
+  "group/bubble relative flex w-fit min-w-0 flex-col gap-1 group-data-[align=end]/message:self-end data-[align=end]:self-end data-[variant=ghost]:max-w-full",
   {
     variants: {
+      maxWidth: {
+        default: "max-w-[80%]",
+        full: "max-w-full",
+      },
       variant: {
         default:
           "*:data-[slot=bubble-content]:bg-primary *:data-[slot=bubble-content]:text-primary-foreground [&>[data-slot=bubble-content]:is(button,a):hover]:bg-primary/80",
@@ -39,7 +43,7 @@ const bubbleVariants = cva(
           "*:data-[slot=bubble-content]:bg-destructive/10 *:data-[slot=bubble-content]:text-destructive [&>[data-slot=bubble-content]:is(button,a):hover]:bg-destructive/20",
       },
     },
-    defaultVariants: { variant: "default" },
+    defaultVariants: { variant: "default", maxWidth: "default" },
   },
 );
 
@@ -47,14 +51,21 @@ type BubbleProps = ComponentProps<"div"> &
   VariantProps<typeof bubbleVariants> &
   IDensityProps & { align?: "start" | "end" };
 
-function Bubble({ density, variant = "default", align = "start", className, ...props }: BubbleProps): ReactElement {
+function Bubble({
+  density,
+  variant = "default",
+  maxWidth = "default",
+  align = "start",
+  className,
+  ...props
+}: BubbleProps): ReactElement {
   return (
     <div
       data-density={density}
       data-slot="bubble"
       data-variant={variant}
       data-align={align}
-      className={cn(bubbleVariants({ variant }), className)}
+      className={cn(bubbleVariants({ variant, maxWidth }), className)}
       {...props}
     />
   );

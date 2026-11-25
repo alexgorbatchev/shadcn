@@ -2,7 +2,7 @@ import { useId, useState } from "react";
 import { useBoundProp } from "@json-render/react";
 import { useFieldValidation } from "@json-render/react";
 import { type BaseComponentProps } from "@json-render/react";
-import { Field, FieldLabel } from "../../index.js";
+import { Badge, Field, FieldLabel } from "../../index.js";
 import { Switch } from "../../index.js";
 import { type JsonProps } from "./catalog.js";
 import {
@@ -63,13 +63,9 @@ export const JsonSwitch = ({ props, bindings, emit }: BaseComponentProps<JsonPro
           <FieldLabel htmlFor={id}>{field.label}</FieldLabel>
           <JsonFieldTags field={field} />
           {isNotSet && (
-            <span
-              id={notSetId}
-              data-slot="json-field-not-set"
-              className="shrink-0 text-sm whitespace-nowrap text-muted-foreground"
-            >
+            <Badge id={notSetId} variant="outline" data-slot="json-field-not-set">
               {NOT_SET_TEXT}
-            </span>
+            </Badge>
           )}
         </div>
       </Field>

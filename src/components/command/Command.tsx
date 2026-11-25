@@ -160,7 +160,7 @@ function CommandDialog<Payload>({
 
 function CommandInput({ className, ...props }: ComponentProps<typeof CommandPrimitive.Input>): ReactElement {
   return (
-    <div data-slot="command-input-wrapper" className="p-1 pb-0">
+    <div data-slot="command-input-wrapper" className="p-2 pb-1">
       <InputGroup>
         <CommandPrimitive.Input asChild data-slot="input-group-control" className={className} {...props}>
           <InputGroupInput />
@@ -177,7 +177,7 @@ function CommandList({ className, ...props }: ComponentProps<typeof CommandPrimi
   return (
     <CommandPrimitive.List
       data-slot="command-list"
-      className={cn("max-h-72 scroll-py-1 overflow-x-hidden overflow-y-auto outline-none", className)}
+      className={cn("max-h-72 scroll-py-1 overflow-x-hidden overflow-y-auto pt-1 outline-none", className)}
       {...props}
     />
   );
@@ -257,7 +257,7 @@ function CommandItem({
       data-slot="command-item"
       data-disabled-reason={disabledReason ? "" : undefined}
       className={cn(
-        "group/command-item relative flex min-h-control cursor-default items-center gap-control-gap px-control-x text-sm outline-none select-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-[selected=true]:bg-muted data-[selected=true]:text-foreground data-disabled-reason:flex-wrap data-disabled-reason:py-1 data-disabled-reason:data-[disabled=true]:pointer-events-auto data-disabled-reason:data-[disabled=true]:opacity-100 data-disabled-reason:data-[disabled=true]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:size-4",
+        "group/command-item relative flex min-h-control cursor-default content-center items-center gap-x-control-gap gap-y-0.5 rounded-sm px-control-x text-sm outline-none select-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 data-[selected=true]:bg-muted data-[selected=true]:text-foreground data-disabled-reason:flex-wrap data-disabled-reason:py-1 data-disabled-reason:data-[disabled=true]:pointer-events-auto data-disabled-reason:data-[disabled=true]:opacity-100 data-disabled-reason:data-[disabled=true]:text-muted-foreground [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg]:size-4",
         touchTarget && "pointer-coarse:min-h-11",
         className,
       )}

@@ -5,6 +5,7 @@ import { mergeProps } from "@base-ui/react/merge-props";
 import { useRender } from "@base-ui/react/use-render";
 import type { ItemInstance, SelectionDataRef } from "@headless-tree/core";
 import {
+  ArchiveIcon,
   ChevronRightIcon,
   CircleAlertIcon,
   CircleCheckIcon,
@@ -113,7 +114,8 @@ export type TreeItemStatus =
   | "failed"
   | "held"
   | "handed-back"
-  | "handed-back-unsent";
+  | "handed-back-unsent"
+  | "archived";
 
 const STATUS_ICONS: Record<TreeItemStatus, typeof CircleIcon> = {
   "needs-answers": CircleDotIcon,
@@ -123,6 +125,7 @@ const STATUS_ICONS: Record<TreeItemStatus, typeof CircleIcon> = {
   held: HourglassIcon,
   "handed-back": CircleCheckIcon,
   "handed-back-unsent": CircleCheckIcon,
+  archived: ArchiveIcon,
 };
 
 interface ITreeItemStatusIconProps {
@@ -281,7 +284,7 @@ export function TreeItem<T>({
         ...nativeProps,
         ref: undefined,
         className: cn(
-          "flex min-w-0 flex-1 items-center gap-2 self-stretch -my-1 py-1 outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          "flex min-w-0 flex-1 items-center gap-2 self-stretch -my-1 py-1 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset",
           faded,
         ),
         children: label,
@@ -349,7 +352,7 @@ export function TreeItem<T>({
           "relative flex min-h-control min-w-0 cursor-default items-center gap-2 rounded-sm border border-transparent py-1 pr-2 text-sm outline-none pointer-coarse:min-h-11",
           isAriaDisabled
             ? "cursor-not-allowed focus-visible:outline-1 focus-visible:outline-ring/60 focus-visible:-outline-offset-1"
-            : "hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring",
+            : "hover:bg-accent focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset",
           (isSelected || isDropTarget || isInsideTarget) &&
             (selectionStyle === "accent" && isSelected
               ? "border-primary bg-muted/60 font-medium text-foreground"
@@ -381,17 +384,20 @@ export function TreeItem<T>({
                 <ChevronRightIcon className={cn(isExpanded && "rotate-90")} />
               </Button>
             ) : item.isFolder() ? (
-              <ChevronRightIcon
-                aria-hidden="true"
-                className={cn("size-3.5 shrink-0", isExpanded && "rotate-90", faded)}
-              />
-            ) : (
-              <span className={cn("shrink-0", expandOn === "disclosure" ? "size-control-xs" : "size-3.5")} />
-            )}
+              <span aria-hidden="true" className={cn("inline-flex size-4 shrink-0 items-center justify-center", faded)}>
+                <ChevronRightIcon className={cn("size-3.5", isExpanded && "rotate-90")} />
+              </span>
+            ) : leading === undefined ? (
+              <span className={cn("shrink-0", expandOn === "disclosure" ? "size-control-xs" : "size-4")} />
+            ) : null}
             {leading !== undefined && (
               <div
                 data-slot="tree-item-leading"
-                className={cn("flex size-control-xs shrink-0 items-center justify-center", faded)}
+                className={cn(
+                  "flex shrink-0 items-center justify-center",
+                  expandOn === "disclosure" ? "size-control-xs" : "size-4 has-[>button]:size-control-xs",
+                  faded,
+                )}
                 onClick={(event) => event.stopPropagation()}
                 onDoubleClick={(event) => event.stopPropagation()}
                 onKeyDown={(event) => event.stopPropagation()}

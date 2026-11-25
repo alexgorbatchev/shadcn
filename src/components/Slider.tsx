@@ -74,7 +74,7 @@ function Slider<Value extends number | readonly number[] = number | readonly num
             index={index}
             getAriaLabel={getAriaLabel}
             getAriaValueText={getAriaValueText}
-            className="relative block size-3 shrink-0 rounded-full border border-ring bg-background ring-ring transition-[color,box-shadow] select-none after:absolute after:-inset-2 hover:ring-3 focus-visible:ring-1 focus-visible:outline-hidden active:ring-3 data-indeterminate:border-dashed data-indeterminate:border-muted-foreground data-indeterminate:bg-muted data-disabled:pointer-events-none data-disabled:opacity-50"
+            className="relative block size-3 shrink-0 rounded-full border border-ring bg-background ring-ring transition-[color,box-shadow] select-none after:absolute after:-inset-2 hover:ring-3 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-background focus-visible:outline-hidden active:ring-3 data-indeterminate:size-3.5 data-indeterminate:border-dashed data-indeterminate:border-foreground/75 data-indeterminate:bg-background data-disabled:pointer-events-none data-disabled:opacity-50"
           />
         ))}
       </SliderPrimitive.Control>

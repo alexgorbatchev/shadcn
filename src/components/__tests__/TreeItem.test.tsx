@@ -312,3 +312,59 @@ test("a selected warning-toned row keeps the selection background and its bar", 
   expect(getComputedStyle(live.element()).backgroundColor).toBe(selectedBackground);
   expect(getComputedStyle(live.element(), "::before").width).toBe("2px");
 });
+
+function AlignedHierarchyTree(): ReactElement {
+  const tree = useTree<string>({
+    rootItemId: "root",
+    initialState: { expandedItems: ["Project", "Folder"] },
+    getItemName: (item) => item.getItemData(),
+    isItemFolder: (item) => item.getId() === "root" || item.getId() === "Project" || item.getId() === "Folder",
+    dataLoader: {
+      getItem: (id) => id,
+      getChildren: (id) =>
+        id === "root"
+          ? ["Project"]
+          : id === "Project"
+            ? ["Folder", "SiblingPage"]
+            : id === "Folder"
+              ? ["NestedArchived"]
+              : [],
+    },
+    indent: 16,
+    features: [syncDataLoaderFeature, hotkeysCoreFeature, selectionFeature],
+  });
+  return (
+    <ThemeProvider forcedTheme="light">
+      <Tree
+        tree={tree}
+        label="Aligned hierarchy"
+        variant="sidebar"
+        renderItem={(item) => (
+          <TreeItem
+            item={item}
+            hasIcon={false}
+            expandOn="click"
+            leading={
+              item.getId() === "SiblingPage" ? (
+                <TreeItemStatusIcon status="needs-answers" />
+              ) : item.getId() === "NestedArchived" ? (
+                <TreeItemStatusIcon status="archived" />
+              ) : undefined
+            }
+          />
+        )}
+      />
+    </ThemeProvider>
+  );
+}
+
+test("leaf leading status sits in the disclosure column so sibling folders and pages align by depth", async () => {
+  const screen = await render(<AlignedHierarchyTree />);
+  const labelLeft = (name: string) =>
+    screen.getByRole("treeitem", { name }).element().querySelector<HTMLElement>(".truncate")?.getBoundingClientRect()
+      .left ?? -1;
+  await expect.element(screen.getByRole("treeitem", { name: "NestedArchived" })).toBeVisible();
+  expect(labelLeft("SiblingPage")).toBe(labelLeft("Folder"));
+  expect(labelLeft("NestedArchived")).toBeGreaterThan(labelLeft("SiblingPage"));
+  expect(document.querySelector("[data-status='archived'] svg")).not.toBeNull();
+});
