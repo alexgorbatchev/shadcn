@@ -25,7 +25,11 @@ const badgeVariants = cva(
       },
       wrap: {
         false: "h-tag shrink-0 py-0 whitespace-nowrap",
-        true: "h-auto min-h-tag max-w-full shrink py-0.5 text-start leading-snug whitespace-normal break-words",
+        true: "h-auto min-h-tag max-w-full shrink flex-wrap justify-start py-0.5 text-start leading-snug whitespace-normal break-words",
+      },
+      tone: {
+        default: "",
+        warning: "",
       },
     },
     compoundVariants: [
@@ -33,6 +37,11 @@ const badgeVariants = cva(
         variant: "outline",
         wrap: true,
         className: "rounded-[10px] px-2.5",
+      },
+      {
+        variant: "outline",
+        tone: "warning",
+        className: "border-warning/50 bg-warning/8 text-warning [a]:hover:bg-warning/15 [a]:hover:text-warning",
       },
       {
         variant: "warning",
@@ -43,6 +52,7 @@ const badgeVariants = cva(
     defaultVariants: {
       variant: "default",
       wrap: false,
+      tone: "default",
     },
   },
 );
@@ -51,21 +61,32 @@ type BadgeState = {
   slot: "badge";
   variant: VariantProps<typeof badgeVariants>["variant"];
   wrap: boolean;
+  tone?: "warning";
   density?: Density;
 };
 type BadgeProps = useRender.ComponentProps<"span", BadgeState> &
-  Omit<VariantProps<typeof badgeVariants>, "wrap"> &
+  Omit<VariantProps<typeof badgeVariants>, "wrap" | "tone"> &
   IDensityProps & {
     /** Allow long labels to wrap onto multiple lines within the available width. */
     wrap?: boolean;
+    /** Semantic accent tone for subtle status tags such as `variant="outline"`. */
+    tone?: "default" | "warning";
   };
 
-function Badge({ density, className, variant = "default", wrap = false, render, ...props }: BadgeProps): ReactElement {
+function Badge({
+  density,
+  className,
+  variant = "default",
+  wrap = false,
+  tone = "default",
+  render,
+  ...props
+}: BadgeProps): ReactElement {
   return useRender({
     defaultTagName: "span",
     props: mergeProps<"span">(
       {
-        className: cn(badgeVariants({ variant, wrap }), className),
+        className: cn(badgeVariants({ variant, wrap, tone }), className),
       },
       props,
     ),
@@ -74,6 +95,7 @@ function Badge({ density, className, variant = "default", wrap = false, render, 
       slot: "badge",
       variant,
       wrap,
+      tone: tone === "default" ? undefined : tone,
       density,
     },
   });

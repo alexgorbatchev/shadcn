@@ -18,6 +18,7 @@ const meta: Meta<typeof Badge> = {
       options: ["default", "secondary", "outline", "destructive", "ghost", "success", "warning", "link"],
     },
     wrap: { control: "boolean" },
+    tone: { control: "select", options: ["default", "warning"] },
   },
 };
 export default meta;
@@ -257,7 +258,7 @@ export const Wrap: Story = {
       <Badge variant="outline" wrap>
         Reviewed · sent to your agent 10:35 · picked up 10:36 · follow-up in progress
       </Badge>
-      <Badge variant="warning" wrap>
+      <Badge variant="outline" tone="warning" wrap>
         Reviewed · sent to your agent 10:06 · not picked up yet · 35 min
       </Badge>
     </div>
@@ -270,7 +271,13 @@ export const Wrap: Story = {
     const warningWrap = canvas.getByText(/not picked up yet/);
     const containerRect = container.getBoundingClientRect();
     await expect(outlineWrap).toHaveAttribute("data-wrap");
+    await expect(outlineWrap).not.toHaveAttribute("data-tone");
     await expect(warningWrap).toHaveAttribute("data-wrap");
+    await expect(warningWrap).toHaveAttribute("data-tone", "warning");
+    await expect(getComputedStyle(warningWrap).borderTopLeftRadius).toBe(
+      getComputedStyle(outlineWrap).borderTopLeftRadius,
+    );
+    await expect(getComputedStyle(warningWrap).color).not.toBe(getComputedStyle(outlineWrap).color);
     await expect(outlineWrap.getBoundingClientRect().width).toBeLessThanOrEqual(containerRect.width + 0.5);
     await expect(warningWrap.getBoundingClientRect().width).toBeLessThanOrEqual(containerRect.width + 0.5);
     await expect(outlineWrap.getBoundingClientRect().height).toBeGreaterThan(singleLine.getBoundingClientRect().height);
