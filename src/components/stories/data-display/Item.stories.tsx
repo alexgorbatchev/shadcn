@@ -46,7 +46,7 @@ export const Default: Story = {
         <Item {...args} role="listitem">
           <ItemHeader>Workspace</ItemHeader>
           <ItemMedia variant="icon">
-            <FileIcon />
+            <FileIcon data-testid="default-item-icon" aria-hidden="true" />
           </ItemMedia>
           <ItemContent>
             <ItemTitle>Project notes</ItemTitle>
@@ -79,6 +79,10 @@ export const Default: Story = {
       "href",
       "#archive",
     );
+    const icon = canvas.getByTestId("default-item-icon").getBoundingClientRect();
+    const title = canvas.getByText("Project notes").getBoundingClientRect();
+    await expect(icon.top).toBeGreaterThanOrEqual(title.top - 1);
+    await expect(icon.bottom).toBeLessThanOrEqual(title.bottom + 1);
     await userEvent.click(canvas.getByRole("button", { name: "Save notes" }));
     await expect(canvas.getByRole("status", { name: "Save status" })).toHaveTextContent("Saved");
   },
@@ -263,6 +267,10 @@ export const RightToLeft: Story = {
     await expect(
       Math.abs(range.getBoundingClientRect().right - content.getBoundingClientRect().right),
     ).toBeLessThanOrEqual(1);
+    const icon = canvas.getByTestId("default-item-icon").getBoundingClientRect();
+    const title = canvas.getByText("Project notes").getBoundingClientRect();
+    await expect(icon.top).toBeGreaterThanOrEqual(title.top - 1);
+    await expect(icon.bottom).toBeLessThanOrEqual(title.bottom + 1);
     await userEvent.click(canvas.getByRole("button", { name: "Save notes" }));
     await expect(canvas.getByRole("status", { name: "Save status" })).toHaveTextContent("Saved");
   },
