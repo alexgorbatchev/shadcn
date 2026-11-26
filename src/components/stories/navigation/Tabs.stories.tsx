@@ -54,6 +54,52 @@ export const Default: Story = {
     await expect(overview).toHaveFocus();
   },
 };
+const selectedTabIsFilled: Story["play"] = async ({ canvasElement, userEvent, globals }) => {
+  const canvas = within(canvasElement);
+  // Measure the story's own theme, not the one the previous story left on the document.
+  await waitFor(() => expect(document.documentElement.dataset.theme).toBe(globals.theme));
+  const overview = canvas.getByRole("tab", { name: "Overview" });
+  const settings = canvas.getByRole("tab", { name: "Settings" });
+  const list = canvas.getByRole("tablist");
+  const transparent = "rgba(0, 0, 0, 0)";
+  const fill = (tab: HTMLElement): string => getComputedStyle(tab).backgroundColor;
+  const channels = (color: string): number[] => (color.match(/[\d.]+/g) ?? []).slice(0, 3).map(Number);
+  const distance = (a: string, b: string): number => {
+    const [x, y] = [channels(a), channels(b)];
+    return Math.hypot(...x.map((value, index) => value - (y[index] ?? 0)));
+  };
+  // The surface the list sits on: the nearest painted ancestor, or the page.
+  const surface = (): string => {
+    for (let element = list.parentElement; element; element = element.parentElement) {
+      const color = getComputedStyle(element).backgroundColor;
+      if (color !== transparent) return color;
+    }
+    return getComputedStyle(document.documentElement).backgroundColor;
+  };
+  // The tab's colors transition from the previous theme; measure the settled values.
+  await Promise.all(document.getAnimations().map((animation) => animation.finished));
+  // The selected tab stands further from the surface than the track does, so it reads as the filled one; the
+  // unselected tab shows the track through it.
+  await expect(distance(fill(overview), surface())).toBeGreaterThan(
+    distance(getComputedStyle(list).backgroundColor, surface()),
+  );
+  await expect(fill(settings)).toBe(transparent);
+  await userEvent.click(settings);
+  await waitFor(() => expect(fill(overview)).toBe(transparent));
+  await waitFor(() => expect(fill(settings)).not.toBe(transparent));
+};
+/** In light theme the selected tab is the filled one, as in dark, so the selection never reads inverted. */
+export const SelectedFilledLight: Story = {
+  args: { defaultValue: "overview" },
+  globals: { theme: "light" },
+  play: selectedTabIsFilled,
+};
+/** In dark theme the selected tab is the filled one. */
+export const SelectedFilledDark: Story = {
+  args: { defaultValue: "overview" },
+  globals: { theme: "dark" },
+  play: selectedTabIsFilled,
+};
 export const Settings: Story = {
   args: { defaultValue: "settings" },
   play: async ({ canvasElement, userEvent }) => {

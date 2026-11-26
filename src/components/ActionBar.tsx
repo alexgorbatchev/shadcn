@@ -57,8 +57,12 @@ function ActionBar({
 interface IActionBarRowProps extends ComponentProps<"div"> {
   /** How the row distributes its items; `between` puts the last item, usually the primary action, at the end. */
   justify?: "start" | "between" | "end";
-  /** `end` aligns items to the row's bottom, so an action lines up with the last line of a multi-line status. */
-  align?: "center" | "end";
+  /**
+   * `end` aligns items to the row's bottom, so an action lines up with the last line of a multi-line status. `start`
+   * aligns them to the top, so an action shares the centre line of the first row of a status group that wraps, when
+   * that row's tallest item is the action's height.
+   */
+  align?: "center" | "start" | "end";
   /** Whether items wrap onto further lines; a one-row bar sets it false. */
   wrap?: boolean;
 }
@@ -77,7 +81,7 @@ function ActionBarRow({
       className={cn(
         "flex min-w-0 gap-x-4 gap-y-1 text-xs",
         wrap ? "flex-wrap" : "flex-nowrap",
-        align === "end" ? "items-end" : "items-center",
+        align === "end" ? "items-end" : align === "start" ? "items-start" : "items-center",
         justify === "between" ? "justify-between" : justify === "end" ? "justify-end" : "justify-start",
         className,
       )}

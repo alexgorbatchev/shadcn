@@ -58,6 +58,34 @@ export const OneRowWithoutWrapping: Story = {
   },
 };
 
+/** `align="start"` keeps the action on the centre line of the first row when the status group beside it wraps. */
+export const ActionOnFirstRowOfWrappedStatus: Story = {
+  args: {
+    children: (
+      <ActionBarRow justify="between" align="start" wrap={false}>
+        <div data-testid="status" className="flex w-40 flex-wrap items-center gap-2">
+          <Button type="button" variant="outline">
+            7 of 11
+          </Button>
+          <Button type="button" variant="outline">
+            Next unanswered
+          </Button>
+        </div>
+        <Button type="button">I’m done</Button>
+      </ActionBarRow>
+    ),
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const first = canvas.getByRole("button", { name: "7 of 11" }).getBoundingClientRect();
+    const second = canvas.getByRole("button", { name: "Next unanswered" }).getBoundingClientRect();
+    const done = canvas.getByRole("button", { name: "I’m done" }).getBoundingClientRect();
+    // The status group wraps onto two rows, and the action shares the first row's centre line.
+    await expect(second.top).toBeGreaterThanOrEqual(first.bottom);
+    await expect(Math.abs(done.top + done.height / 2 - (first.top + first.height / 2))).toBeLessThanOrEqual(1);
+  },
+};
+
 export const StuckToTheBottom: Story = {
   args: { sticky: true, stuck: true, surface: "card", progress: 2, children: <Rows /> },
   decorators: [

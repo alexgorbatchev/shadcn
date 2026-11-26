@@ -38,7 +38,8 @@ const tabsListVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-muted ring-1 ring-input/70 dark:bg-secondary",
+        // The list is the quiet track and the selected tab carries the fill, in light and dark alike.
+        default: "bg-secondary ring-1 ring-input/70",
         line: "gap-1 bg-transparent",
       },
     },
@@ -75,7 +76,7 @@ function TabsTrigger({ density, className, ...props }: TabsTriggerProps): ReactE
         cn(
           "relative inline-flex h-full flex-1 items-center justify-center gap-control-gap rounded-sm border border-transparent px-2 py-0.5 text-sm font-medium whitespace-nowrap text-muted-foreground transition-colors group-data-[orientation=vertical]/tabs:w-full group-data-[orientation=vertical]/tabs:justify-start hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 has-data-[icon=inline-end]:pe-1 has-data-[icon=inline-start]:ps-1 aria-disabled:pointer-events-none aria-disabled:opacity-50 group-data-[variant=default]/tabs-list:data-active:shadow-sm group-data-[variant=line]/tabs-list:data-active:shadow-none [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
           "group-data-[variant=line]/tabs-list:bg-transparent group-data-[variant=line]/tabs-list:data-active:bg-transparent",
-          "data-active:bg-background data-active:text-foreground dark:data-active:border-input dark:data-active:bg-muted",
+          "data-active:border-input data-active:bg-muted data-active:text-foreground",
           "after:absolute after:bg-foreground after:opacity-0 after:transition-opacity group-data-[orientation=horizontal]/tabs:after:inset-x-0 group-data-[orientation=horizontal]/tabs:after:bottom-[-5px] group-data-[orientation=horizontal]/tabs:after:h-0.5 group-data-[orientation=vertical]/tabs:after:inset-y-0 group-data-[orientation=vertical]/tabs:after:-end-1 group-data-[orientation=vertical]/tabs:after:w-0.5 group-data-[variant=line]/tabs-list:data-active:after:opacity-100",
           typeof className === "function" ? className(state) : className,
         )
