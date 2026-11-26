@@ -509,6 +509,32 @@ export const InteractiveCurrent: Story = {
     await expect(first).not.toHaveAttribute("aria-current");
   },
 };
+
+/** A wrapped title in a button row starts every line at the row's start edge, as in a non-interactive row. */
+export const InteractiveWrappedTitle: Story = {
+  render: () => (
+    <div style={{ width: 280 }}>
+      <Item size="xs" variant="outline" render={<button type="button" />}>
+        <ItemContent>
+          <ItemTitle wrap>Supply-chain vendor quotes and proofs of delivery for the hardware refresh</ItemTitle>
+        </ItemContent>
+        <ItemActions>
+          <ItemDescription>waiting 2 h</ItemDescription>
+        </ItemActions>
+      </Item>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const title = within(canvasElement).getByText(/^Supply-chain vendor quotes/);
+    const range = document.createRange();
+    range.selectNodeContents(title);
+    const lines = Array.from(range.getClientRects()).filter((rect) => rect.width > 0);
+    const starts = new Set(lines.map((rect) => Math.round(rect.top)));
+    await expect(starts.size).toBeGreaterThan(1);
+    const left = title.getBoundingClientRect().left;
+    for (const line of lines) await expect(Math.abs(line.left - left)).toBeLessThan(1);
+  },
+};
 export const InDropdown: Story = {
   render: function Render() {
     const [owner, setOwner] = useState("");

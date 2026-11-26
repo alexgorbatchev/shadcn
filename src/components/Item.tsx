@@ -37,7 +37,7 @@ function ItemSeparator({ density, className, ...props }: ComponentProps<typeof S
 }
 
 const itemVariants = cva(
-  "group/item flex w-full flex-wrap items-center rounded-sm border text-sm transition-colors duration-100 outline-none focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring [&:is(a,button)]:cursor-pointer [&:is(a,button)]:transition-colors [&:is(a,button)]:hover:bg-muted aria-[current=true]:border-primary aria-[current=true]:bg-muted/60",
+  "group/item flex w-full flex-wrap items-center rounded-sm border text-sm transition-colors duration-100 outline-none focus-visible:border-ring focus-visible:ring-1 focus-visible:ring-ring [&:is(a,button)]:cursor-pointer [&:is(a,button)]:text-start [&:is(a,button)]:transition-colors [&:is(a,button)]:hover:bg-muted aria-[current=true]:border-primary aria-[current=true]:bg-muted/60",
   {
     variants: {
       variant: {
