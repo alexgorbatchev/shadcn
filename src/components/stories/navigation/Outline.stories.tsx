@@ -40,3 +40,25 @@ export const Default: Story = {
     await expect(goToJargon).toHaveBeenCalledOnce();
   },
 };
+
+/** A section title longer than the outline is wide wraps onto further lines instead of ending in an ellipsis. */
+export const LongSectionTitle: Story = {
+  args: {
+    className: "w-56",
+    children: (
+      <OutlineSection title="Q7 · Supply-chain vendor quotes and proofs of concept">
+        <OutlineItem label="What dependency data may go to vendors?" state="Not answered" onSelect={fn()} />
+      </OutlineSection>
+    ),
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const section = canvas.getByRole("region", { name: "Q7 · Supply-chain vendor quotes and proofs of concept" });
+    const title = within(section).getByText("Q7 · Supply-chain vendor quotes and proofs of concept");
+    if (title.getBoundingClientRect().width === 0) return;
+    await expect(title.scrollWidth).toBeLessThanOrEqual(title.clientWidth);
+    await expect(title.getBoundingClientRect().height).toBeGreaterThan(
+      parseFloat(getComputedStyle(title).lineHeight) * 1.5,
+    );
+  },
+};

@@ -19,7 +19,8 @@ function OutlineSection({ title, meta, children }: IOutlineSectionProps): ReactE
   return (
     <section aria-labelledby={titleId} data-slot="outline-section" className="flex min-w-0 flex-col gap-1">
       <div className="flex min-w-0 items-baseline justify-between gap-2">
-        <p id={titleId} className="min-w-0 truncate font-medium">
+        {/* A long title wraps like the items under it, so nothing is cut off in a narrow popover. */}
+        <p id={titleId} className="min-w-0 font-medium break-words">
           {title}
         </p>
         {meta != null && <span className="shrink-0 text-xs text-muted-foreground">{meta}</span>}
