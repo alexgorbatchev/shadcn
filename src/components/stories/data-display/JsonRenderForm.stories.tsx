@@ -51,6 +51,8 @@ interface IJsonFormExampleProps {
   defaults?: string[];
   /** Binding paths whose value differs from the last submitted answer. */
   changed?: string[];
+  /** Binding paths whose label a surrounding heading already shows. */
+  hiddenLabels?: string[];
   /** Probe names, each with a button outside the spec that reveals and focuses the probe. */
   reveal?: string[];
 }
@@ -62,6 +64,7 @@ function JsonFormExample({
   errors,
   defaults,
   changed,
+  hiddenLabels,
   reveal = [],
 }: IJsonFormExampleProps): ReactElement {
   const [store] = useState(() => createStateStore(state));
@@ -81,7 +84,7 @@ function JsonFormExample({
         </Button>
       ))}
       <JSONUIProvider registry={registry} store={store}>
-        <JsonFormProvider mode={mode} errors={errors} defaults={defaults} changed={changed}>
+        <JsonFormProvider mode={mode} errors={errors} defaults={defaults} changed={changed} hiddenLabels={hiddenLabels}>
           <Renderer spec={spec} registry={registry} />
         </JsonFormProvider>
       </JSONUIProvider>
@@ -233,6 +236,43 @@ export const RequiredAndMessages: Story = {
     await userEvent.tab();
     await expect(canvas.getAllByText(/Enter a name/)).toHaveLength(1);
     await expect(stripRequiredMark("Launch deadline **")).toBe("Launch deadline");
+  },
+};
+
+/**
+ * A heading above the form already asks "Company name" and "Notes": their labels are hidden visually and still name the
+ * controls; the Required tag stays visible, and a hidden label with no tags leaves no empty row.
+ */
+export const HiddenLabels: Story = {
+  args: {
+    spec: answerSpec,
+    state: { answers: { ...answers, company: "" } },
+    hiddenLabels: ["/answers/company", "/answers/notes", "/answers/plan"],
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    await expect(canvas.getByRole("textbox", { name: "Company name" })).toBeVisible();
+    await expect(canvas.getByText("Company name")).toHaveClass("sr-only");
+    const companyRow = canvas.getByText("Company name").closest('[data-slot="json-field-label"]');
+    await expect(companyRow).not.toHaveClass("sr-only");
+    await expect(companyRow).toHaveTextContent("Required");
+    await expect(canvas.getByRole("textbox", { name: "Notes" })).toBeVisible();
+    await expect(canvas.getByText("Notes").closest('[data-slot="json-field-label"]')).toHaveClass("sr-only");
+    await expect(canvas.getByRole("combobox", { name: "Plan" })).toBeVisible();
+    // Fields not listed keep their visible labels.
+    await expect(canvas.getByText("Frequency")).not.toHaveClass("sr-only");
+  },
+};
+
+/** A hidden label also leaves a read-only value named by its group. */
+export const HiddenLabelsReadOnly: Story = {
+  args: { spec: answerSpec, state: { answers }, mode: "values", hiddenLabels: ["/answers/company"] },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const company = canvas.getByRole("group", { name: "Company name" });
+    await expect(company).toHaveTextContent("Northwind Studio");
+    await expect(within(company).queryByText("Company name")).not.toBeInTheDocument();
+    await expect(canvas.getByRole("group", { name: "Plan" })).toHaveTextContent("PlanPro");
   },
 };
 

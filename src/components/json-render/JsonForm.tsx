@@ -1,6 +1,7 @@
 import { createContext, use, useCallback, useId, useMemo, type ReactElement, type ReactNode } from "react";
 import { Badge } from "../../index.js";
 import { Label } from "../../index.js";
+import { cn } from "../../utils/cn.js";
 
 /**
  * How bound answer controls render:
@@ -17,6 +18,7 @@ interface IJsonFormContext {
   errors: Readonly<Record<string, string>>;
   defaults: readonly string[];
   changed: readonly string[];
+  hiddenLabels: readonly string[];
 }
 
 const JsonFormContext = createContext<IJsonFormContext | undefined>(undefined);
@@ -24,6 +26,7 @@ const JsonFormContext = createContext<IJsonFormContext | undefined>(undefined);
 const noErrors: Readonly<Record<string, string>> = {};
 const noDefaults: readonly string[] = [];
 const noChanged: readonly string[] = [];
+const noHiddenLabels: readonly string[] = [];
 
 export interface IJsonFormProviderProps {
   mode?: JsonFormMode;
@@ -44,18 +47,32 @@ export interface IJsonFormProviderProps {
    * controls shows a "Changed" tag in its own label row, beside Required and Default.
    */
   changed?: readonly string[];
+  /**
+   * Binding paths whose label a surrounding heading already shows, such as `["/answers/goal"]` under a heading that asks
+   * the same question. Each of those controls hides its label visually and keeps it as its accessible name; its tags
+   * stay visible. Applies to controls whose label sits above them (Input, Textarea, Select, Radio, DropdownMenu,
+   * ToggleGroup) and to read-only values; a Switch, Checkbox or Slider keeps the label beside it, which names the control.
+   */
+  hiddenLabels?: readonly string[];
   children?: ReactNode;
 }
 
-/** Sets the mode, the field messages, the default-valued fields, and the changed fields of the bound controls inside it. */
+/**
+ * Sets the mode, the field messages, the default-valued fields, the changed fields, and the fields with hidden labels of
+ * the bound controls inside it.
+ */
 export function JsonFormProvider({
   mode = "edit",
   errors = noErrors,
   defaults = noDefaults,
   changed = noChanged,
+  hiddenLabels = noHiddenLabels,
   children,
 }: IJsonFormProviderProps): ReactElement {
-  const value = useMemo(() => ({ mode, errors, defaults, changed }), [mode, errors, defaults, changed]);
+  const value = useMemo(
+    () => ({ mode, errors, defaults, changed, hiddenLabels }),
+    [mode, errors, defaults, changed, hiddenLabels],
+  );
   return <JsonFormContext value={value}>{children}</JsonFormContext>;
 }
 
@@ -114,6 +131,8 @@ export interface IJsonField {
   isDefault: boolean;
   /** The value differs from the last submitted answer (`JsonFormProvider`'s `changed`); the label shows a "Changed" tag. */
   isChanged: boolean;
+  /** A surrounding heading already shows the label (`JsonFormProvider`'s `hiddenLabels`); it is hidden visually. */
+  isLabelHidden: boolean;
   error?: string;
   mode: JsonFormMode;
   messageId: string;
@@ -141,6 +160,7 @@ export function useJsonField({ path, label, checks, ownErrors = [] }: IJsonField
     isRequired,
     isDefault: !!path && !!form?.defaults.includes(path),
     isChanged: !!path && !!form?.changed.includes(path),
+    isLabelHidden: !!path && !!form?.hiddenLabels.includes(path),
     error,
     mode: form?.mode ?? "edit",
     messageId,
@@ -183,19 +203,26 @@ export function JsonFieldTags({ field }: { field: IJsonField }): ReactElement | 
   );
 }
 
-/** The field's label followed by its "Required", "Default", and "Changed" tags. */
-export function JsonFieldLabel({ field, id, htmlFor }: IJsonFieldLabelProps): ReactElement | null {
-  if (
-    !field.label &&
-    !(field.isRequired && field.mode !== "values") &&
-    !field.isDefault &&
-    !(field.isChanged && field.mode !== "values")
-  )
-    return null;
+function hasTags(field: IJsonField): boolean {
   return (
-    <div data-slot="json-field-label" className="flex min-w-0 flex-wrap items-center gap-2">
+    (field.isRequired && field.mode !== "values") || field.isDefault || (field.isChanged && field.mode !== "values")
+  );
+}
+
+/**
+ * The field's label followed by its "Required", "Default", and "Changed" tags. A hidden label stays in place for
+ * assistive technology; with no tags to show, the whole row is hidden visually.
+ */
+export function JsonFieldLabel({ field, id, htmlFor }: IJsonFieldLabelProps): ReactElement | null {
+  const isTagged = hasTags(field);
+  if (!field.label && !isTagged) return null;
+  return (
+    <div
+      data-slot="json-field-label"
+      className={field.isLabelHidden && !isTagged ? "sr-only" : "flex min-w-0 flex-wrap items-center gap-2"}
+    >
       {field.label && (
-        <Label id={id} htmlFor={htmlFor}>
+        <Label id={id} htmlFor={htmlFor} className={cn(field.isLabelHidden && "sr-only")}>
           {field.label}
         </Label>
       )}
@@ -226,8 +253,13 @@ export interface IJsonFieldValueProps {
 }
 
 /** The field as read-only text: its label, then its value, grouped and named by the label. */
-export function JsonFieldValue({ field, text, hideLabel = false }: IJsonFieldValueProps): ReactElement {
+export function JsonFieldValue({
+  field,
+  text,
+  hideLabel: isHideRequested = false,
+}: IJsonFieldValueProps): ReactElement {
   const labelId = useId();
+  const hideLabel = isHideRequested || field.isLabelHidden;
   return (
     <div
       role="group"
