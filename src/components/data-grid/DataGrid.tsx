@@ -360,7 +360,15 @@ function DataGridColumnHeader<T extends RowData, V extends CellData>({
 }): ReactElement {
   const sorted = column.getIsSorted();
   return column.getCanSort() ? (
-    <Button type="button" variant="ghost" size="inline" onClick={column.getToggleSortingHandler()}>
+    // A sortable header keeps the header's colour and weight, so it matches the headers that do not sort; its sort
+    // icon identifies it as a control, as an icon does for a borderless icon button, instead of the link colour.
+    <Button
+      type="button"
+      variant="plain"
+      size="inline"
+      className="underline-offset-4 hover:underline"
+      onClick={column.getToggleSortingHandler()}
+    >
       {children}
       {sorted === "asc" ? (
         <ArrowUpIcon aria-hidden="true" />

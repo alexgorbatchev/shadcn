@@ -110,15 +110,27 @@ function looksLikeLink(element: Element): boolean {
   return style.color === linkColor;
 }
 
+// A column header's sort button keeps the header's text style; its visible sort icon identifies it as a control,
+// as an icon identifies a borderless icon button.
+function isColumnHeaderSortButton(element: Element): boolean {
+  if (!element.closest('th, [role="columnheader"]')) return false;
+  return Array.from(element.querySelectorAll("svg")).some((icon) => {
+    const box = icon.getBoundingClientRect();
+    return box.width > 1 && box.height > 1;
+  });
+}
+
 /**
  * Lists the labels of rendered text buttons that read as plain text: no visible border, no fill distinct from the
- * surface, and no link styling. Icon-only buttons are exempt; their icon identifies them as controls.
+ * surface, and no link styling. Icon-only buttons are exempt; their icon identifies them as controls. So are column
+ * header buttons that show a sort icon.
  */
 export function findBorderlessTextButtons(root: ParentNode): string[] {
   return Array.from(root.querySelectorAll(textButtonSelector))
     .filter((element) => element.checkVisibility({ visibilityProperty: true, opacityProperty: true }))
     .filter((element) => !element.matches("[data-disabled], :disabled"))
     .filter(hasVisibleText)
+    .filter((element) => !isColumnHeaderSortButton(element))
     .filter((element) => boundaryContrast(element) < invisibleContrast && !looksLikeLink(element))
     .map((element) => element.textContent?.trim() ?? "");
 }

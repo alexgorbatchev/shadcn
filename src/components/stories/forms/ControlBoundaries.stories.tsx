@@ -1,6 +1,6 @@
 import { useState } from "react";
 import type { ReactElement } from "react";
-import { EllipsisIcon } from "lucide-react";
+import { ChevronsUpDownIcon, EllipsisIcon } from "lucide-react";
 import type { Meta, StoryObj } from "@storybook/react-vite";
 import { expect, within } from "storybook/test";
 import { Button } from "../../Button";
@@ -9,6 +9,7 @@ import { Checkbox } from "../../Checkbox";
 import { Input } from "../../Input";
 import { OptionCard, OptionCardGroup } from "../../OptionCardGroup";
 import { RadioGroup, RadioGroupItem } from "../../RadioGroup";
+import { Table, TableHead, TableHeader, TableRow } from "../../Table";
 import { Textarea } from "../../Textarea";
 import { Toggle } from "../../Toggle";
 import { ToggleGroup, ToggleGroupItem } from "../../ToggleGroup";
@@ -126,18 +127,40 @@ function BorderlessTextDetection(): ReactElement {
       <Button variant="outline" onClick={() => setShowsLabelLikeButton(false)}>
         Remove the label-like button
       </Button>
+      <Table aria-label="Header buttons">
+        <TableHeader>
+          <TableRow>
+            <TableHead>
+              <Button variant="plain" size="inline">
+                Name
+                <ChevronsUpDownIcon aria-hidden="true" />
+              </Button>
+            </TableHead>
+            <TableHead>
+              {showsLabelLikeButton ? (
+                <Button variant="plain" size="inline">
+                  Status
+                </Button>
+              ) : (
+                "Status"
+              )}
+            </TableHead>
+          </TableRow>
+        </TableHeader>
+      </Table>
     </div>
   );
 }
 
 /**
- * The catalog-wide check: a text button with no border, no fill and no link styling is reported; icon buttons and
- * link-styled actions are not. Every story test runs this check after it finishes.
+ * The catalog-wide check: a text button with no border, no fill and no link styling is reported; icon buttons,
+ * column header buttons that show a sort icon and link-styled actions are not. A column header button without an
+ * icon is still reported. Every story test runs this check after it finishes.
  */
 export const BorderlessTextButtonsAreReported: Story = {
   render: () => <BorderlessTextDetection />,
   play: async ({ canvasElement, userEvent }) => {
-    await expect(findBorderlessTextButtons(canvasElement)).toEqual(["Looks like a label"]);
+    await expect(findBorderlessTextButtons(canvasElement)).toEqual(["Looks like a label", "Status"]);
     await userEvent.click(within(canvasElement).getByRole("button", { name: "Remove the label-like button" }));
     await expect(findBorderlessTextButtons(canvasElement)).toEqual([]);
   },

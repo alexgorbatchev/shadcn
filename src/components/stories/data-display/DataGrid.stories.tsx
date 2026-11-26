@@ -142,6 +142,31 @@ export const WithoutPagination: Story = {
   },
 };
 
+/** A sortable header reads as a header: the plain header's colour and semibold weight, not the link colour. */
+export const SortableHeaderMatchesPlainHeader: Story = {
+  render: () => <Example pagination={false} />,
+  play: async ({ canvasElement, userEvent }) => {
+    const c = within(canvasElement);
+    const sortable = c.getByRole("button", { name: "Name" });
+    const plain = c.getByRole("columnheader", { name: "Email" });
+    const probe = document.createElement("span");
+    probe.className = "text-primary";
+    plain.append(probe);
+    const linkColor = getComputedStyle(probe).color;
+    probe.remove();
+    const sortableStyle = getComputedStyle(sortable);
+    const plainStyle = getComputedStyle(plain);
+    await expect(sortableStyle.color).not.toBe(linkColor);
+    await expect(sortableStyle.color).toBe(plainStyle.color);
+    await expect(sortableStyle.fontWeight).toBe("600");
+    await expect(plainStyle.fontWeight).toBe("600");
+    await expect(sortableStyle.textDecorationLine).toBe("none");
+    // Sorting still works from the restyled header.
+    await userEvent.click(sortable);
+    await expect(c.getByRole("columnheader", { name: "Name" })).toHaveAttribute("aria-sort", "ascending");
+  },
+};
+
 export const FilteredSelection: Story = {
   render: () => <Example restricted />,
   play: async ({ canvasElement, userEvent }) => {

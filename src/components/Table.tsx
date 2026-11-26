@@ -152,7 +152,7 @@ function TableHead({
       data-density={density}
       data-slot="table-head"
       className={cn(
-        "h-control-lg px-control-x align-middle leading-(--ag-cell-leading) font-medium whitespace-nowrap text-foreground [&:has([role=checkbox])]:pe-0",
+        "h-control-lg px-control-x align-middle leading-(--ag-cell-leading) font-semibold whitespace-nowrap text-foreground [&:has([role=checkbox])]:pe-0 [&_[data-slot=button]]:font-[weight:inherit]",
         alignmentClasses[textAlign],
         truncate && "truncate",
         visibleFrom && visibilityClasses[visibleFrom],
