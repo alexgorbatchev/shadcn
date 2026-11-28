@@ -133,6 +133,9 @@ test("forced colors fill the selected tree row with the system selection colours
   const highlight = getComputedStyle(probe).backgroundColor;
   expect(getComputedStyle(selected).backgroundColor).toBe(highlight);
   expect(getComputedStyle(other).backgroundColor).not.toBe(highlight);
+  // Without this, Chrome paints a Canvas backplate behind the HighlightText title, hiding it.
+  expect(getComputedStyle(selected).forcedColorAdjust).toBe("none");
+  expect(getComputedStyle(other).forcedColorAdjust).toBe("auto");
 });
 
 /** WCAG relative luminance of an `rgb()` colour. */
