@@ -733,3 +733,81 @@ export const TabsWithPanels: Story = {
     await expect(canvas.getByText("Shown under every tab")).toBeVisible();
   },
 };
+
+const rolloutOptions = [
+  ["Rolling update", "Replaces pods in batches of 10% while traffic keeps flowing.", "Rollback: 6 min"],
+  ["Blue-green", "Brings up a full second fleet and switches traffic at the load balancer.", "Rollback: 10 s"],
+  ["Canary", "Sends 5% of traffic to the new release and widens it while errors stay flat.", "Rollback: 30 s"],
+] as const;
+
+const rolloutGrid: Spec = {
+  root: "grid",
+  elements: {
+    grid: {
+      type: "Grid",
+      props: { columns: 3, gap: "md" },
+      children: rolloutOptions.map((_, index) => `card${index}`),
+    },
+    ...Object.fromEntries(
+      rolloutOptions.flatMap(([title, text, rollback], index) => [
+        [
+          `card${index}`,
+          {
+            type: "Card",
+            props: { title, description: null, maxWidth: "full" },
+            children: [`text${index}`, `badge${index}`],
+          },
+        ],
+        [`text${index}`, { type: "Text", props: { text } }],
+        [`badge${index}`, { type: "Badge", props: { text: rollback, variant: "outline" } }],
+      ]),
+    ),
+  },
+};
+
+/** Container widths and the columns a `columns: 3` grid shows in each with the default 240 px minimum column width. */
+const reflowWidths = [
+  [320, 1],
+  [342, 1],
+  [390, 1],
+  [508, 2],
+  [748, 3],
+  [768, 3],
+  [1280, 3],
+] as const;
+
+function GridReflowExample(): ReactElement {
+  return (
+    <div className="flex flex-col gap-8">
+      {reflowWidths.map(([width]) => (
+        <section key={width} data-width={width} style={{ width: `${width}px` }}>
+          <JsonExample spec={rolloutGrid} />
+        </section>
+      ))}
+    </div>
+  );
+}
+
+/**
+ * Grid stacks by its own width, not the viewport's: `columns` is a maximum, and the grid shows only as many columns as
+ * fit at 240 px each, so cards never squeeze into unreadable slivers or clip their badges on a phone.
+ */
+export const GridReflow: Story = {
+  render: () => <GridReflowExample />,
+  play: async ({ canvasElement }) => {
+    for (const [width, expected] of reflowWidths) {
+      const section = canvasElement.querySelector<HTMLElement>(`[data-width="${width}"]`);
+      const grid = section?.querySelector<HTMLElement>('[data-slot="json-grid"]');
+      await expect(grid).not.toBeNull();
+      const cells = [...(grid?.children ?? [])].filter((cell): cell is HTMLElement => cell instanceof HTMLElement);
+      const columns = new Set(cells.map((cell) => Math.round(cell.getBoundingClientRect().left))).size;
+      await expect({ width, columns }).toEqual({ width, columns: expected });
+      for (const cell of cells) {
+        await expect(cell.scrollWidth).toBeLessThanOrEqual(cell.clientWidth);
+        const badge = within(cell).getByText(/^Rollback: /);
+        await expect(badge.getBoundingClientRect().right).toBeLessThanOrEqual(cell.getBoundingClientRect().right);
+        await expect(badge.scrollWidth).toBeLessThanOrEqual(badge.clientWidth);
+      }
+    }
+  },
+};
