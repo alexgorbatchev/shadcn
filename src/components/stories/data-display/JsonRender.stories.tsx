@@ -811,3 +811,32 @@ export const GridReflow: Story = {
     }
   },
 };
+
+/** minColumnWidth picks the library Grid's sizes: at xs (128 px) a 342 px phone column fits two of three cards. */
+export const GridMinColumnWidth: Story = {
+  decorators: [
+    (Story) => (
+      <div style={{ width: "342px" }}>
+        <Story />
+      </div>
+    ),
+  ],
+  args: {
+    spec: {
+      ...rolloutGrid,
+      elements: {
+        ...rolloutGrid.elements,
+        grid: {
+          type: "Grid",
+          props: { columns: 3, gap: "md", minColumnWidth: "xs" },
+          children: ["card0", "card1", "card2"],
+        },
+      },
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const grid = canvasElement.querySelector<HTMLElement>('[data-slot="json-grid"]');
+    const lefts = [...(grid?.children ?? [])].map((cell) => Math.round(cell.getBoundingClientRect().left));
+    await expect(new Set(lefts).size).toBe(2);
+  },
+};

@@ -61,19 +61,18 @@ export const componentDefinitions = {
     props: z.object({
       columns: z.number().nullable().describe("The most columns to show, 1-6."),
       minColumnWidth: z
-        .number()
-        .int()
-        .min(120)
-        .max(600)
+        .enum(["xs", "sm", "md", "lg"])
         .nullable()
         .optional()
-        .describe("The narrowest a column may be, in pixels (default 240). The grid shows fewer columns below it."),
+        .describe(
+          "The narrowest a column may be: xs 128 px, sm 192 px, md 256 px or lg 352 px; null or absent is 240 px. The grid shows fewer columns below it.",
+        ),
       gap: z.enum(["sm", "md", "lg", "xl"]).nullable(),
       className: z.string().nullable().describe("Additional CSS classes"),
     }),
     slots: ["default"],
     description:
-      "Grid layout of up to 6 columns. Fills the width of its parent and stacks by its own width: it shows only as many columns as fit at minColumnWidth (default 240 px) each, so columns: 3 shows 3 columns at 744 px and wider, 2 from 492 px and 1 below.",
+      "Grid layout of up to 6 columns. Fills the width of its parent and stacks by its own width: it shows only as many columns as fit at 240 px each (or minColumnWidth), so columns: 3 shows 3 columns at 744 px and wider, 2 from 492 px and 1 below.",
     example: { columns: 3, gap: "md" },
   },
 
