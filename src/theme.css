@@ -308,6 +308,15 @@
     --sidebar-ring: oklch(0.708 0 0);
   }
 
+  /* With Increase contrast (prefers-contrast: more), dividers and card and table borders take the input border colour,
+     at least 3:1 against the page in both schemes. */
+  @media (prefers-contrast: more) {
+    :root:not([data-theme-preset="shadcn"]),
+    [data-theme]:not([data-theme-preset="shadcn"]) {
+      --border: var(--input);
+    }
+  }
+
   [data-density="comfortable"] {
     --ag-text-xs: 11px;
     --ag-control-text: 12px;
@@ -709,5 +718,14 @@
   @media (forced-colors: active) {
     outline: 4px solid Highlight;
     outline-offset: 0;
+  }
+}
+
+/* Forced colours (Windows contrast themes) drop box-shadow focus rings, so every keyboard focus gets a system outline.
+   Unlayered, so it wins over the outline-none utilities that hide the browser's own outline in normal themes. */
+@media (forced-colors: active) {
+  :focus-visible {
+    outline: 2px solid Highlight;
+    outline-offset: -2px;
   }
 }

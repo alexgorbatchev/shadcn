@@ -2,6 +2,7 @@ import { defineConfig } from "vitest/config";
 import { playwright } from "@vitest/browser-playwright";
 import react from "@vitejs/plugin-react";
 import tailwindcss from "@tailwindcss/vite";
+import { emulateContrast } from "./emulateContrast.ts";
 import { emulateForcedColors } from "./emulateForcedColors.ts";
 import { nativeScrub } from "./nativeScrub.ts";
 import { nativeSwipe } from "./nativeSwipe.ts";
@@ -85,6 +86,7 @@ export default defineConfig({
       commands: {
         treeDropGeometry,
         emulateForcedColors,
+        emulateContrast,
         nativeScrub,
         nativeSwipe,
         nativeWheel,

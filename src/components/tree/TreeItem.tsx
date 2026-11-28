@@ -357,6 +357,9 @@ export function TreeItem<T>({
             (selectionStyle === "accent" && isSelected
               ? "border-primary bg-muted/60 font-medium text-foreground"
               : "bg-accent text-accent-foreground"),
+          // Forced colours drop the tint, so the selected row fills with the system selection colours instead.
+          isSelected &&
+            "forced-colors:bg-[Highlight] forced-colors:text-[HighlightText] forced-colors:[&_*]:text-[HighlightText]",
           tone === "warning" &&
             "before:pointer-events-none before:absolute before:inset-y-1 before:start-0 before:w-0.5 before:rounded-full before:bg-warning",
           isDimmed && "group/tree-item",
