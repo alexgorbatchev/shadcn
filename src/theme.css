@@ -220,6 +220,50 @@
     --ag-shadow: 0 6px 22px rgb(0 0 0 / 0.3);
   }
 
+  /* Before a script sets data-theme, the page follows the system: a light-mode visitor's first frame is light, not the
+     dark :root default (no dark flash while the bundle loads). data-theme overrides it either way. */
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme]) {
+      color-scheme: light;
+      --background: #fcfcfd;
+      --foreground: #0c0e11;
+      --card: #fcfcfd;
+      --card-foreground: #0c0e11;
+      --popover: #fcfcfd;
+      --popover-foreground: #0c0e11;
+      --primary: #b8168c;
+      --primary-foreground: #ffffff;
+      --secondary: #eef0f3;
+      --secondary-foreground: #0c0e11;
+      --muted: #e0e4ea;
+      --muted-foreground: #4b535e;
+      --faint-foreground: #5b6470;
+      --accent: #e0e4ea;
+      --accent-foreground: #0c0e11;
+      --destructive: #cc1f1f;
+      --destructive-foreground: #ffffff;
+      --destructive-soft: rgb(204 31 31 / 0.1);
+      --success: #0a7d40;
+      --success-foreground: #ffffff;
+      --warning: #a35400;
+      --warning-foreground: #ffffff;
+      --chart-1: #2a78d6;
+      --chart-2: #eb6834;
+      --chart-3: #1baf7a;
+      --chart-4: #eda100;
+      --chart-5: #e87ba4;
+      --border: #c7ccd4;
+      --input: #747c88;
+      --ring: #b8168c;
+      --frame-edge: rgb(0 0 0 / 0.42);
+      --media-edge: var(--input);
+      --frame-halo: rgb(255 255 255 / 0.95);
+      --backdrop: rgb(10 12 16 / 0.55);
+      --terminal-background: #ffffff;
+      --ag-shadow: 0 6px 22px rgb(0 0 0 / 0.3);
+    }
+  }
+
   [data-theme-preset="shadcn"] {
     --ag-font:
       ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
@@ -726,6 +770,6 @@
 @media (forced-colors: active) {
   :focus-visible {
     outline: 2px solid Highlight;
-    outline-offset: -2px;
+    outline-offset: 1px;
   }
 }

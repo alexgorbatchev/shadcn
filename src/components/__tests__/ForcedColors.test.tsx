@@ -44,6 +44,8 @@ test("forced colors outline every keyboard-focused control", async () => {
   const style = getComputedStyle(first);
   expect(style.outlineStyle).toBe("solid");
   expect(style.outlineWidth).toBe("2px");
+  // Outside the control, so the outline never covers its first glyph.
+  expect(Number.parseFloat(style.outlineOffset)).toBeGreaterThan(0);
   await userEvent.keyboard("{Tab}");
   expect(getComputedStyle(screen.getByRole("button", { name: "Second" }).element()).outlineStyle).toBe("solid");
 });
